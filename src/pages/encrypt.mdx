@@ -1,43 +1,13 @@
 export const description =
   'On this page, we’ll dive into the different contact endpoints you can use to manage contacts programmatically.'
 
-# Contacts
+# Encrypt
 
-As the name suggests, contacts are a core part of Protocol — the very reason Protocol exists is so you can have secure conversations with your contacts. On this page, we'll dive into the different contact endpoints you can use to manage contacts programmatically. We'll look at how to query, create, update, and delete contacts. {{ className: 'lead' }}
+Easily add client side encryption with 2 lines of code. {{ className: 'lead' }}
 
-## The contact model
+## Requirments
 
-The contact model contains all the information about your contacts, such as their username, avatar, and phone number. It also contains a reference to the conversation between you and the contact and information about when they were last active on Protocol.
-
-### Properties
-
-<Properties>
-  <Property name="id" type="string">
-    Unique identifier for the contact.
-  </Property>
-  <Property name="username" type="string">
-    The username for the contact.
-  </Property>
-  <Property name="phone_number" type="string">
-    The phone number for the contact.
-  </Property>
-  <Property name="avatar_url" type="string">
-    The avatar image URL for the contact.
-  </Property>
-  <Property name="display_name" type="string">
-    The contact display name in the contact list. By default, this is just the
-    username.
-  </Property>
-  <Property name="conversation_id" type="string">
-    Unique identifier for the conversation associated with the contact.
-  </Property>
-  <Property name="last_active_at" type="timestamp">
-    Timestamp of when the contact was last active on the platform.
-  </Property>
-  <Property name="created_at" type="timestamp">
-    Timestamp of when the contact was created.
-  </Property>
-</Properties>
+- AppID
 
 ---
 
@@ -59,60 +29,22 @@ The contact model contains all the information about your contacts, such as thei
   </Col>
   <Col sticky>
 
-    <CodeGroup title="Request" tag="GET" label="/v1/contacts">
+    <CodeGroup>
+    ```js {{ title: 'JavaScript' }}
+      import phase from '@phase/sdk'
 
-    ```bash {{ title: 'cURL' }}
-    curl -G https://api.protocol.chat/v1/contacts \
-      -H "Authorization: Bearer {token}" \
-      -d active=true \
-      -d limit=10
-    ```
+      // Encrypt data with Phase SDK
+      const encryptedData = await phase.encrypt(data)
 
-    ```js
-    import ApiClient from '@example/protocol-api'
-
-    const client = new ApiClient(token)
-
-    await client.contacts.list()
-    ```
-
-    ```python
-    from protocol_api import ApiClient
-
-    client = ApiClient(token)
-
-    client.contacts.list()
-    ```
-
-    ```php
-    $client = new \Protocol\ApiClient($token);
-
-    $client->contacts->list();
+      // Store it on your own infrastructure
+      await fetch(https://api.myapp.com, {
+          method: POST, 
+          body: JSON.stringify(encryptedData)
+      })
     ```
 
     </CodeGroup>
 
-    ```json {{ title: 'Response' }}
-    {
-      "has_more": false,
-      "data": [
-        {
-          "id": "WAz8eIbvDR60rouK",
-          "username": "FrankMcCallister",
-          "phone_number": "1-800-759-3000",
-          "avatar_url": "https://assets.protocol.chat/avatars/frank.jpg",
-          "display_name": null,
-          "conversation_id": "xgQQXg3hrtjh7AvZ",
-          "last_active_at": 705103200,
-          "created_at": 692233200
-        },
-        {
-          "id": "hSIhXBhNe8X1d8Et"
-          // ...
-        }
-      ]
-    }
-    ```
 
   </Col>
 </Row>

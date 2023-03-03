@@ -199,11 +199,16 @@ export const navigation = [
   {
     title: 'Resources',
     links: [
-      { title: 'Contacts', href: '/contacts' },
-      { title: 'Conversations', href: '/conversations' },
-      { title: 'Messages', href: '/messages' },
-      { title: 'Groups', href: '/groups' },
-      { title: 'Attachments', href: '/attachments' },
+      { title: 'Encrypt', href: '/encrypt' },
+      { title: 'Decrypt', href: '/decrypt' },
+    ],
+  },
+  {
+    title: 'Security',
+    links: [
+      { title: 'Overview', href: '/security/overview' },
+      { title: 'Cryptography', href: '/security/cryptography' },
+
     ],
   },
 ]

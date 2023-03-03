@@ -4,16 +4,15 @@ import { motion, useMotionTemplate, useMotionValue } from 'framer-motion'
 import { GridPattern } from '@/components/GridPattern'
 import { Heading } from '@/components/Heading'
 import { ChatBubbleIcon } from '@/components/icons/ChatBubbleIcon'
-import { EnvelopeIcon } from '@/components/icons/EnvelopeIcon'
+import { PackageIcon } from '@/components/icons/PackageIcon'
 import { UserIcon } from '@/components/icons/UserIcon'
-import { UsersIcon } from '@/components/icons/UsersIcon'
 
 const resources = [
   {
-    href: '/contacts',
-    name: 'Contacts',
+    href: '/encrypt',
+    name: 'Encrypt',
     description:
-      'Learn about the contact model and how to create, retrieve, update, delete, and list contacts.',
+      'Easily encrypt data with a few lines of code.',
     icon: UserIcon,
     pattern: {
       y: 16,
@@ -24,11 +23,11 @@ const resources = [
     },
   },
   {
-    href: '/conversations',
-    name: 'Conversations',
+    href: '/decrypt',
+    name: 'Decrypt',
     description:
-      'Learn about the conversation model and how to create, retrieve, update, delete, and list conversations.',
-    icon: ChatBubbleIcon,
+      'Decrypt and process data server side.',
+    icon: PackageIcon,
     pattern: {
       y: -6,
       squares: [
@@ -36,7 +35,7 @@ const resources = [
         [1, 3],
       ],
     },
-  },
+  },/*
   {
     href: '/messages',
     name: 'Messages',
@@ -61,7 +60,7 @@ const resources = [
       y: 22,
       squares: [[0, 1]],
     },
-  },
+  },*/
 ]
 
 function ResourceIcon({ icon: Icon }) {
