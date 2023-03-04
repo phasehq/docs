@@ -3,49 +3,100 @@ export const description =
 
 # Overview
 
-## Authentication
-
-You'll need to authenticate your requests to access any of the endpoints in the Protocol API. In this guide, we'll look at how authentication works. Protocol offers two ways to authenticate your API requests: Basic authentication and OAuth2 with a token — OAuth2 is the recommended way. {{ className: 'lead' }}
-
-
 ## Data structure
-### Phase encrypted is encoded with the following data structure:
-```
-ph:dataType:ephPublicKey:ciphertext+nonce:tag
-```
 
-| Parameter         | Encoding     | Description |
-|--------------|-----------|------------|
-| **ph** | Plain text      | Helps identify data encrypted with Phase SDKs        |
-| **dataType**      | Plain text  | Identifies the type of data encrypted       |
-| **ephPublicKey**      | Hex  | An ephemeral ED25519 public key used to derive XChaCha20 shared secret        |
-| **ciphertext**      | Hex  | XChaCha20-Poly1305 encrytped data       |
-| **nonce**      | Hex  | A randomly generated 192bit initialization vector       |
-| **tag**      | Plain text  |        |
+<Row>
+  <Col>
 
-Phase app secret data structure:
-```
-pss:appToken:appID:share0:symmetricWrap
-```
-| Parameter         | Encoding     | Description |
-|--------------|-----------|------------|
-| **ph** | Plain text      | Helps identify data encrypted with Phase SDKs        |
-| **dataType**      | Plain text  | Identifies the type of data encrypted       |
-| **ephPublicKey**      | Hex  | An ephemeral ED25519 public key used for Diffie Hellman handshake        |
-| **ciphertext**      | Hex  | XChaCha20-Poly1305 encrytped data       |
-| **nonce**      | Hex  | A randomly generated 192bit initialization vector       |
-| **tag**      | Plain text  | 5234       |
+    ## Phase appID {{ tag: 'PUBLIC',  label: 'applicaton ID, can be public' }}
+
+    <Properties>
+      <Property name="phID" type="plain text">
+        Helps identify Phase SDK appID
+      </Property>
+      <Property name="appID" type="hex">
+        ED25519 public application public key
+      </Property>
+
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    ```
+    -> phID:appID
+    ```
+  </Col>
+</Row>
+
+---
+
+<Row>
+  <Col>
+
+    ## Phase encrypted is encoded with the following data structure: {{ tag: 'ENCRYPTED',  label: 'secure encrypted information' }}
+
+    <Properties>
+      <Property name="ph" type="plain text">
+        Helps identify data encrypted with Phase SDKs
+      </Property>
+      <Property name="dataType" type="plain text">
+        Identifies the type of data encrypted
+      </Property>
+            <Property name="ephPublicKey" type="hex">
+        An ephemeral ED25519 public key used to derive XChaCha20 shared secret
+      </Property>
+            <Property name="ciphertext" type="hex">
+        XChaCha20-Poly1305 encrytped data
+      </Property>
+            <Property name="nonce" type="hex">
+        A randomly generated 192bit initialization vector
+      </Property>
+            <Property name="tag" type="plain text">
+        An optional user supplied string 
+      </Property>
+
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    ```
+    -> ph:dataType:ephPublicKey:ciphertext+nonce:tag
+    ```
+  </Col>
+</Row>
+
+---
 
 
-## Using an SDK
+<Row>
+  <Col>
 
-If you use one of our official SDKs, you won't have to worry about any of the above — fetch your access token from the [Protocol dashboard](#) under API settings, and the client library will take care of the rest. All the client libraries use OAuth2 behind the scenes.
+    ## Phase app secret construction: {{ tag: 'SECRET', label: 'sensitive credential, keep safe' }}
 
-<div className="not-prose">
-  <Button
-    href="/sdks"
-    variant="text"
-    arrow="right"
-    children="Check out our list of first-party SDKs"
-  />
-</div>
+    <Properties>
+      <Property name="pss" type="plain text">
+        Helps identify Phase SDK secret
+      </Property>
+      <Property name="appToken" type="hex">
+        Used to authenticate to the Phase API
+      </Property>
+            <Property name="share0" type="hex">
+        S4 share of the application private key
+      </Property>
+            <Property name="wrapKey" type="hex">
+         A 32 bytes symmetric key used to wrarp s4 share1 
+      </Property>
+
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    ```
+    -> pss:appToken:appID:share0:wrapKey
+    ```
+  </Col>
+</Row>
+
