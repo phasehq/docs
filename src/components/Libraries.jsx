@@ -4,6 +4,7 @@ import { Button } from '@/components/Button'
 import { Heading } from '@/components/Heading'
 import logoGo from '@/images/logos/go.svg'
 import logoNode from '@/images/logos/node.svg'
+import logoJavaScript from '@/images/logos/javascript.svg'
 import logoPhp from '@/images/logos/php.svg'
 import logoPython from '@/images/logos/python.svg'
 import logoRuby from '@/images/logos/ruby.svg'
@@ -11,17 +12,17 @@ import logoRuby from '@/images/logos/ruby.svg'
 const libraries = [
   {
     href: '#',
-    name: 'PHP',
+    name: 'Python',
     description:
-      'A popular general-purpose scripting language that is especially suited to web development.',
-    logo: logoPhp,
+      'Python is a programming language that lets you work quickly and integrate systems more effectively.',
+    logo: logoPython,
   },
   {
     href: '#',
-    name: 'Ruby',
+    name: 'JavaScript - Browser ',
     description:
-      'A dynamic, open source programming language with a focus on simplicity and productivity.',
-    logo: logoRuby,
+      'Node.js® is an open-source, cross-platform JavaScript runtime environment.',
+    logo: logoJavaScript,
   },
   {
     href: '#',
@@ -32,14 +33,21 @@ const libraries = [
   },
   {
     href: '#',
-    name: 'Python',
+    name: 'PHP (Coming soon)',
     description:
-      'Python is a programming language that lets you work quickly and integrate systems more effectively.',
-    logo: logoPython,
+      'A popular general-purpose scripting language that is especially suited to web development.',
+    logo: logoPhp,
   },
   {
     href: '#',
-    name: 'Go',
+    name: 'Ruby (Coming soon)',
+    description:
+      'A dynamic, open source programming language with a focus on simplicity and productivity.',
+    logo: logoRuby,
+  },
+  {
+    href: '#',
+    name: 'Go (Coming soon)',
     description:
       'An open-source programming language supported by Google with built-in concurrency.',
     logo: logoGo,
