@@ -1,17 +1,21 @@
 export const description =
-  'On this page, we’ll dive into the different contact endpoints you can use to manage contacts programmatically.'
+  'On this page, we’ll dive into the different encryption methods'
 
 # Encrypt
 
-Easily add client side encryption with 2 lines of code. {{ className: 'lead' }}
+Encrypt data in just a few lines of code {{ className: 'lead' }}
 
-## Requirments
-
-- AppID
-
+<Note>
+  Before we begin please make sure to create a new application in the Phase console grab the relevant credentials.
+  
+  [Start here &raquo;](/quickstart)
+</Note>
 ---
 
-## List all contacts {{ tag: 'GET', label: '/v1/contacts' }}
+## Client side encryption {{ tag: 'GET', label: '/v1/contacts' }}
+
+### Requirments
+- AppID
 
 <Row>
   <Col>
@@ -51,7 +55,7 @@ Easily add client side encryption with 2 lines of code. {{ className: 'lead' }}
 
 ---
 
-## Create a contact {{ tag: 'POST', label: '/v1/contacts' }}
+## Application side encryption {{ tag: 'POST', label: '/v1/contacts' }}
 
 <Row>
   <Col>

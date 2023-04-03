@@ -12,7 +12,7 @@ export const sections = [
 <HeroPattern />
 
 # Introduction
-#### Phase abstracts the complexity of encryptions tools and makes it easy for developers to secure sensitive data in their applications. {{ className: 'lead' }}
+#### Phase abstracts the complexity of encryption and key management tools and makes it easy for developers to secure sensitive data in their applications. {{ className: 'lead' }}
 
 ---
 # TL;DR
@@ -21,38 +21,21 @@ export const sections = [
 3. **📋 Monitor key usage with logs**
 ---
 # The problem
-
-- Example: See the list of US companies within the last 24 months that have had a breach of unsecured ‘protected health information’ affecting 500 or more individuals.
-https://ocrportal.hhs.gov/ocr/breach/breach_report.jsf
-- The majority of B2B SaaS products collect sensitive customer data in order to execute business logic and provide core product value. This creates significant resistance to their adoption because of the risks and liabilities associated with the storage and transport of this data by a third party
-- Security conscious prospective buyers don’t trust their data sitting in a public cloud SaaS but aren't up for the headaches of going on-prem either
-- This forces B2B companies to try and implement their own application layer encryption
-- Encryption schemes and protocols are complicated. Lack of operational security understanding and key mismanagement can have serious undiscovered implications which can defeat the entire purpose and even cause permanent loss of data
-
-
-Introduce CI / CD
-Hire a team and migrate onto kubernetes
-Introduce terraform or other IaC
-Hiring good DevOps engineers is hard
-This leads to anti-patterns such as
-Observability of services and infrastructure is an after-thought
-Platform security best practices are not built into the product from the get-go
-Planning for a stack migration from say, Elastic Beanstalk onto ECS
-Navigating the multitude of tools to be integrated is a pain.
-This is a detraction from building stuff that users want
-This is a multi person-year evolution that all orgs go through.
+1. [Data braches](https://ocrportal.hhs.gov/ocr/breach/breach_report.jsf) are a 'when' not a 'if' problem. [Encryption](https://owasp.org/Top10/A02_2021-Cryptographic_Failures) is an effective solution
+2. But, adding encryption to your app; encrypting existing is difficult, complex and time consuming
+3. Relying on automatic database / bucket is useless since the data is automatically decrypted when retrieved. A breach is a single [SQL injection](https://owasp.org/Top10/A02_2021-Cryptographic_Failures/#example-attack-scenarios) or a [IAM misconfiguration](https://github.com/nagwww/s3-leaks) away
+4. Rolling your own encryption is risky. 
+4. Solving all of this is outside the scope of developers and a destraction from shipping features
+- Example: [See the list of US companies within the last 24 months that have had a breach of unsecured ‘protected health information’ affecting 500 or more individuals.](https://ocrportal.hhs.gov/ocr/breach/breach_report.jsf)
 
 ---
 # The solution
-- Phase SDKs sit within your application and scale with it, no need to add and managae another micro service.
-
-Argonaut is a control center to manage infrastructure, deployments, and third party apps on your cloud which provides:
-
-    Git based workflows for infrastructure and application management
-    Fully integrated with your favorite tools (github, AWS, GCP, terraform, datadog, grafana, ...) and a full fledged third party app library
-    You have full source and configurations of what is running on your cloud
-    No lock in. We hate lock-in as much as you do.
-    Made for fast paced startups, with no limitations on what you can do external to Argonaut
+1. [Open Source SDKs](/sdks) that let you [encrypt](/encrypt) / [decrypt](/decrypt) data with 2 lines of code
+2. Seamlessly generate and deploy keys to all your apps
+3. Decrypt and process data in memory only when you need to 
+4. Phase SDKs sit within your application, run on your own cloud and scale with it
+5. Observe and manage key usage with [Phase console](/quickstart)
+6. No lock in. You own your keys
 
 ---
 # Who is it for?

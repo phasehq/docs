@@ -1,101 +1,60 @@
 export const description =
-  'This guide will get you all set up and ready to use the Protocol API. We’ll cover how to get started an API client and how to make your first API request.'
+  'This guide will get you all set up and ready to use the Phase console.'
 
 # Quickstart
 
-This guide will get you all set up and ready to use the Protocol API. We'll cover how to get started using one of our API clients and how to make your first API request. We'll also look at where to go next to find all the information you need to take full advantage of our powerful REST API. {{ className: 'lead' }}
+In this guide we will cover how to your create a new:
+- Create a new **Phase account**
+- Set up account **recovery**
+- Create your first **app** and **app keys**
+
+... in under ⏱️ **3 minutes**.  {{ className: 'lead' }}
+
+
+## 1. Log into the Phase console
+
+- Launch the Phase console and log in with:
+  - Google
+  - GitHub
+  - GitLab
+
+- Choose a Team - A unique alphanumeric name for your team on the Phase console
+
+## 2. Set up account recovery
+A recovery phrase is a unique 24 word mnemonic used to encrypt and secure your application keys. 
+
+It looks something like this:
+```
+1. scout  2. angry 3. enter 4. aunt 5. word 6. express 
+7. enforce 8. measure 9. exhaust 10. genius 11. cook 12. pretty
+13. hundred 14. connect 15. hundred 16. marble 17. file 18. spirit
+19. era 20. angle 21. kidney 22. bacon 23. coffee 24. review
+```
+Only you have access to it. Please store it in a secure place.
 
 <Note>
-  Before you can make requests to the Protocol API, you will need to grab your
-  API key from your dashboard. You find it under [Settings &raquo; API](#).
+Depending on your threat model, you may choose to save it using:
+- A password manager
+- Write it down or printing it on a piece of paper and keep it somewhere safe eg. a vault
+- [Etch in a steel plate](https://www.blockplate.com/products/blockplate-24)
+- [A hardware secuiry module](https://en.wikipedia.org/wiki/Hardware_security_module) - Coming soon
+
+Keep in mind each method has its operational security tradeoffs and limitations.
 </Note>
 
-## Choose your client
+You will need to enter this phase:
+- To recover from a forgotten device password
+- Login to Phase console from a new device
 
-Before making your first API request, you need to pick which API client you will use. In addition to good ol' cURL HTTP requests, Protocol offers clients for JavaScript, Python, and PHP. In the following example, you can see how to install each client.
+You will be required to enter the recovery phrase in the correct order in the next screen to confirm it. (In case you have copied it, you can simply paste it.)
 
-<CodeGroup>
+## 3. Set up a device password
+A device password is used to secure data thats stored locally in your browser storage. This is not transmitted or stored on your backend. The only requirement is that its 16 characters long.
 
-```bash {{ title: 'cURL' }}
-# cURL is most likely already installed on your machine
-curl --version
-```
-
-```bash {{ language: 'js' }}
-# Install the Protocol JavaScript SDK
-npm install @example/protocol-api --save
-```
-
-```bash {{ language: 'python' }}
-# Install the Protocol Python SDK
-pip install protocol_api
-```
-
-```bash {{ language: 'php' }}
-# Install the Protocol PHP SDK
-composer require protocol/sdk
-```
-
-</CodeGroup>
-
-<div className="not-prose">
-  <Button
-    href="/sdks"
-    variant="text"
-    arrow="right"
-    children="Check out our list of first-party SDKs"
-  />
-</div>
-
-## Making your first API request
-
-After picking your preferred client, you are ready to make your first call to the Protocol API. Below, you can see how to send a GET request to the Conversations endpoint to get a list of all your conversations. In the cURL example, results are limited to ten conversations, the default page length for each client.
-
-<CodeGroup tag="GET" label="/v1/conversations">
-
-```bash {{ title: 'cURL' }}
-curl -G https://api.protocol.chat/v1/conversations \
-  -H "Authorization: Bearer {token}" \
-  -d limit=10
-```
-
-```js
-import ApiClient from '@example/protocol-api'
-
-const client = new ApiClient(token)
-
-await client.conversations.list()
-```
-
-```python
-from protocol_api import ApiClient
-
-client = ApiClient(token)
-
-client.conversations.list()
-```
-
-```php
-$client = new \Protocol\ApiClient($token);
-
-$client->conversations->list();
-```
-
-</CodeGroup>
-
-<div className="not-prose">
-  <Button
-    href="/conversations"
-    variant="text"
-    arrow="right"
-    children="Read the docs for the Conversations endpoint"
-  />
-</div>
+It will take a few seconds for the Phase console to generate keys on your machine.
 
 ## What's next?
 
 Great, you're now set up with an API client and have made your first request to the API. Here are a few links that might be handy as you venture further into the Protocol API:
 
-- [Grab your API key from the Protocol dashboard](#)
-- [Check out the Conversations endpoint](/conversations)
-- [Learn about the different error messages in Protocol](/errors)
+- [Create a your first app and app keys](#)
