@@ -4,23 +4,20 @@ export const description =
 # Quickstart
 
 In this guide we will cover how to your create a new:
-- Create a new **Phase account**
-- Set up account **recovery**
-- Create your first **app** and **app keys**
+- Create a new **Phase Account**
+- Set up account **Recovery**
+- Create your first **App** and **App Keys**
 
 ... in under ⏱️ **3 minutes**.  {{ className: 'lead' }}
 
 
-## 1. Log into the Phase console
+## Step 1
+Log into the Phase console with Google, GitHub or GitLab.
 
-- Launch the Phase console and log in with:
-  - Google
-  - GitHub
-  - GitLab
+Create a new team - A unique alphanumeric name for your team on the Phase console
 
-- Choose a Team - A unique alphanumeric name for your team on the Phase console
-
-## 2. Set up account recovery
+## Step 2
+### Set up account recovery:
 A recovery phrase is a unique 24 word mnemonic used to encrypt and secure your application keys. 
 
 It looks something like this:
@@ -33,28 +30,45 @@ It looks something like this:
 Only you have access to it. Please store it in a secure place.
 
 <Note>
-Depending on your threat model, you may choose to save it using:
+Depending on your threat model, you may choose to store it using:
 - A password manager
-- Write it down or printing it on a piece of paper and keep it somewhere safe eg. a vault
-- [Etch in a steel plate](https://www.blockplate.com/products/blockplate-24)
+- Writing it down or printing it on paper and keeping it somewhere safe eg. a vault
+- [Etch it in a steel plate](https://www.blockplate.com/products/blockplate-24)
 - [A hardware secuiry module](https://en.wikipedia.org/wiki/Hardware_security_module) - Coming soon
 
 Keep in mind each method has its operational security tradeoffs and limitations.
 </Note>
 
 You will need to enter this phase:
-- To recover from a forgotten device password
-- Login to Phase console from a new device
+- To recover from a forgotten Device password
+- Login to Phase console from a new Device
 
 You will be required to enter the recovery phrase in the correct order in the next screen to confirm it. (In case you have copied it, you can simply paste it.)
 
-## 3. Set up a device password
-A device password is used to secure data thats stored locally in your browser storage. This is not transmitted or stored on your backend. The only requirement is that its 16 characters long.
+## Step 3
+### Set up a Device password:
 
-It will take a few seconds for the Phase console to generate keys on your machine.
+A Device password is used to secure data thats stored locally in your browser storage. This is not transmitted or stored on your backend. The only requirement is that its 16 characters long.
+
+It will take a few seconds for the Phase console to generate keys on your machine. Once everything is ready, you will be dropped inside the Phase Console.
+
+## Step 4
+### Set up App and App Key:
+Create a new app by going to Apps and clicking '+'. Enter an alphanumeric name for your new application along with your Device password.
+
+You will be presented with
+AppID and App Secret which looks something like this:
+```js
+// Phase AppID
+ph_app:3a1e0710ced57e060109d8e94f06d52a8e5ffae88ed01506776c5bed664c8a96
+
+// Phase App Secret
+pss:a0c02d5de90c58c3c3ab3e5a71c87c9fb7ea134717fb7097bb17284ad4e02ef3:801b342264bfea0c8f8f7058392b99989595059201bc011f6bf7ed813a2f84b05cb5af6aef32cd893ee0930f2904f1194cb912bb2452a5e54f83d588704dbec40037f798e8a4c56aad7d3f4f929f2733e8f:138b021783f08bfe7a4e2f536fc2e743e3ff9b966c9c3af60f427cb3932d647a
+```
+
+Keep the app secret safe.
 
 ## What's next?
 
-Great, you're now set up with an API client and have made your first request to the API. Here are a few links that might be handy as you venture further into the Protocol API:
-
-- [Create a your first app and app keys](#)
+Great, you're now set up with your App Keys in the Phase Console. Up next, grab an SDK for your stack and start encrypting!
+- [See Phase SDKs](/sdks)

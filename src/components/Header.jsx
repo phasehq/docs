@@ -77,7 +77,7 @@ export const Header = forwardRef(function Header({ className }, ref) {
           <ModeToggle />
         </div>
         <div className="hidden min-[416px]:contents">
-          <Button href="https://console.phase.dev">Launch console</Button>
+          <Button href="https://console.phase.dev">Launch Console</Button>
         </div>
       </div>
     </motion.div>
