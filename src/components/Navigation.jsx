@@ -185,7 +185,7 @@ function NavigationGroup({ group, className }) {
 
 export const navigation = [
   {
-    title: 'Guides',
+    title: 'Getting Started',
     links: [
       { title: 'Introduction', href: '/' },
       { title: 'Quickstart', href: '/quickstart' },
@@ -199,14 +199,16 @@ export const navigation = [
     title: 'Resources',
     links: [
       { title: 'SDKs', href: '/sdks' },
-      { title: 'Encrypt', href: '/encrypt' },
-      { title: 'Decrypt', href: '/decrypt' },
+      { title: 'JavaScript - Browser SDK', href: '/sdks/js' },
+      { title: 'Node.js - Server SDK', href: '/sdks/node' },
+      //{ title: 'Encrypt', href: '/encrypt' },
+      //{ title: 'Decrypt', href: '/decrypt' },
     ],
   },
   {
     title: 'Security',
     links: [
-      { title: 'Overview', href: '/security/overview' },
+      { title: 'Phase Encryption', href: '/security/overview' },
       { title: 'Cryptography', href: '/security/cryptography' },
 
     ],

@@ -9,11 +9,11 @@ import { UserIcon } from '@/components/icons/UserIcon'
 
 const resources = [
   {
-    href: '/encrypt',
-    name: 'Encrypt',
+    href: '/sdks/js',
+    name: 'JavaScript - Browser SDK',
     description:
-      'Easily encrypt data with a few lines of code.',
-    icon: UserIcon,
+      'Encrypt data straight from your users browsers.',
+    icon: PackageIcon,
     pattern: {
       y: 16,
       squares: [
@@ -23,10 +23,10 @@ const resources = [
     },
   },
   {
-    href: '/decrypt',
-    name: 'Decrypt',
+    href: '/sdks/node',
+    name: 'Node.js - Server SDK',
     description:
-      'Decrypt and process data server side.',
+      'Encrypt / Decrypt data in your preferred JavaScript application server.',
     icon: PackageIcon,
     pattern: {
       y: -6,

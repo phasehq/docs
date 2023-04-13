@@ -1,40 +1,12 @@
 export const description =
   'In this guide, we’ll look at how authentication works. Protocol offers two ways to authenticate your API requests: Basic authentication and OAuth2 with a token.'
 
-# Overview
-
-## Data structure
+# Phase Encryption overview
 
 <Row>
   <Col>
 
-    ## Phase appID {{ tag: 'PUBLIC',  label: 'applicaton ID, can be public' }}
-
-    <Properties>
-      <Property name="phID" type="plain text">
-        Helps identify Phase SDK appID
-      </Property>
-      <Property name="appID" type="hex">
-        ED25519 public application public key
-      </Property>
-
-    </Properties>
-
-  </Col>
-  <Col sticky>
-
-    ```
-    -> ph_app:appID
-    ```
-  </Col>
-</Row>
-
----
-
-<Row>
-  <Col>
-
-    ## Phase encrypted is encoded with the following data structure: {{ tag: 'ENCRYPTED',  label: 'secure encrypted information' }}
+    ## Encrypted data {{ tag: 'ENCRYPTED',  label: 'secure encrypted information' }}
 
     <Properties>
       <Property name="ph" type="plain text">
@@ -69,11 +41,38 @@ export const description =
 
 ---
 
+<Row>
+  <Col>
+
+    ## APP_ID {{ tag: 'PUBLIC',  label: 'applicaton ID, can be public' }}
+
+    <Properties>
+      <Property name="phID" type="plain text">
+        Helps identify Phase SDK appID
+      </Property>
+      <Property name="appID" type="hex">
+        ED25519 public application public key
+      </Property>
+
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    ```
+    -> ph_app:appID
+    ```
+  </Col>
+</Row>
+
+---
+
+
 
 <Row>
   <Col>
 
-    ## Phase app secret construction: {{ tag: 'SECRET', label: 'sensitive credential, keep safe' }}
+    ## APP_SECRET {{ tag: 'SECRET', label: 'sensitive credential, keep safe' }}
 
     <Properties>
       <Property name="pss" type="plain text">

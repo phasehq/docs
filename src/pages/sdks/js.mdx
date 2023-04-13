@@ -1,0 +1,56 @@
+export const description =
+  'SDK to integrate Phase in client-side applications'
+
+# Javscript Client for Phase
+SDK to integrate Phase in client-side applications
+
+- [npm](https://www.npmjs.com/package/@phase.dev/phase-js)
+
+<Note>
+  Before we begin please make sure to create a new application in the Phase Console grab the `APP_ID` and add it to your `.env` file.
+  
+  [Quick start &raquo;](/quickstart)
+</Note>
+
+
+---
+
+## Add the SDK to your project
+
+
+    <CodeGroup title="Install">
+
+    ```bash {{ title: 'npm' }}
+    npm i @phase.dev/phase-js
+    ```
+
+    ```bash {{ title: 'yarn' }}
+    yarn add @phase.dev/phase-js
+    ```
+
+
+
+    </CodeGroup>
+---
+## Import
+
+```js
+import Phase from '@phase.dev/phase-js'
+```
+
+---
+
+## Initialize
+
+Initialize the SDK with your `APP_ID`:
+
+```js
+const phase = new Phase(`${APP_ID}`)
+```
+---
+
+## Usage 
+
+```js
+const ciphertext = await phase.encrypt('hello world')
+```

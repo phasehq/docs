@@ -1,9 +1,11 @@
 export const description =
   'In this guide, we’ll look at how authentication works. Protocol offers two ways to authenticate your API requests: Basic authentication and OAuth2 with a token.'
 
-# Cryptogrpahy
+# Encryption
 
-## Encryption - XChaCha20-Poly1305
+---
+
+### XChaCha20-Poly1305
 
 XChaCha20-Poly1305 is a cryptographic algorithm that provides authenticated encryption for data transmitted over a network. It is a variant of the ChaCha20-Poly1305 algorithm, which is widely used in internet security protocols such as TLS (Transport Layer Security) and IPsec (Internet Protocol Security).
 
@@ -17,9 +19,13 @@ Another advantage of XChaCha20-Poly1305 is its ability to handle nonces of diffe
 
 ![ChaCha20-Poly1305](/assets/ChaCha20-Poly1305_Encryption.svg)
 
+
+![Phase Net](/assets/phase-network.svg)
+
+![Phase Net](/assets/phase-ENCRYPT.png)
 ---
 
-## Key Exchange - X25519
+## Key Exchange
 
 The X25519 key exchange algorithm is based on the elliptic curve Diffie-Hellman (ECDH) protocol, which uses the mathematics of elliptic curves to generate shared secret keys. In X25519, the elliptic curve used is Curve25519, which is a popular and efficient curve that is designed to be secure and resistant to attacks.
 
@@ -29,11 +35,10 @@ Once both parties have exchanged their public keys, they can each calculate a sh
 
 The X25519 key exchange algorithm provides several security benefits. First, it ensures that the shared secret key is generated independently by both parties and cannot be intercepted or guessed by an attacker. Second, it provides forward secrecy, meaning that even if an attacker gains access to one of the private keys at a later time, they cannot use it to derive previous shared secret keys. Finally, the use of elliptic curves provides strong cryptographic properties that make it difficult for an attacker to compute the private key from the public key.
 
-
 ![ED25519](/assets/ed25519.png)
 ---
 
-## Key-splitting - S4
+## Secret-splitting
 
 Shamir's Secret Sharing is a cryptographic algorithm that allows a secret to be divided into multiple shares, each of which can be distributed to different individuals or stored in different locations. The secret can only be reconstructed if a sufficient number of shares are combined together, while individual shares reveal no information about the secret. This technique is often used to distribute encryption keys or to protect sensitive information against loss or theft.
 
@@ -45,6 +50,12 @@ To reconstruct the secret, a minimum number of shares equal to the threshold mus
 
 The strength of Shamir's Secret Sharing lies in the fact that individual shares reveal no information about the secret, as long as the number of shares distributed is greater than the threshold. This means that even if an attacker gains access to some of the shares, they cannot learn anything about the secret unless they obtain enough shares to reach the threshold.
 
+---
+
+## Key derivation
+Argon2i
+
+Blake2b
 
 ---
 

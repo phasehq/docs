@@ -10,27 +10,27 @@ import logoPython from '@/images/logos/python.svg'
 import logoRuby from '@/images/logos/ruby.svg'
 
 const libraries = [
-  {
+  /*{
     href: '#',
     name: 'Python',
     description:
       'Python is a programming language that lets you work quickly and integrate systems more effectively.',
     logo: logoPython,
-  },
+  },*/
   {
-    href: '#',
-    name: 'JavaScript - Browser ',
+    href: '/sdks/js',
+    name: 'JavaScript - Browser SDK',
     description:
-      'Node.js® is an open-source, cross-platform JavaScript runtime environment.',
+      'Encrypt data straight from your users browsers.',
     logo: logoJavaScript,
   },
   {
-    href: '#',
-    name: 'Node.js',
+    href: '/sdks/node',
+    name: 'Node.js - Server SDK',
     description:
-      'Node.js® is an open-source, cross-platform JavaScript runtime environment.',
+      'Encrypt / Decrypt data in your preferred JavaScript application server.',
     logo: logoNode,
-  },
+  },/*
   {
     href: '#',
     name: 'PHP (Coming soon)',
@@ -51,7 +51,7 @@ const libraries = [
     description:
       'An open-source programming language supported by Google with built-in concurrency.',
     logo: logoGo,
-  },
+  },*/
 ]
 
 export function Libraries() {
@@ -72,7 +72,7 @@ export function Libraries() {
               </p>
               <p className="mt-4">
                 <Button href={library.href} variant="text" arrow="right">
-                  Read more
+                  Explore
                 </Button>
               </p>
             </div>
