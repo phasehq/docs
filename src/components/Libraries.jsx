@@ -63,10 +63,31 @@ const serverSdks = [
   },
 ]
 
+function ArrowIcon(props) {
+  return (
+    <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" {...props}>
+      <path
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="m11.5 6.5 3 3.5m0 0-3 3.5m3-3.5h-9"
+      />
+    </svg>
+  )
+}
+
+let arrowIcon = (
+  <ArrowIcon
+    className={clsx(
+      'mt-0.5 h-5 w-5 -mr-1'
+    )}
+  />
+)
+
 export function Libraries() {
   return (
     <div className="my-16 xl:max-w-none">
-      <Heading level={2} id="official-libraries">
+      <Heading level={2} id="client">
         Client
       </Heading>
       <p>Client SDKs allow you encrypt data in client-side applications.</p>
@@ -81,12 +102,10 @@ export function Libraries() {
               <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
                 {library.description}
               </p>
-              <p className="mt-4">
-                {/* <Button href={library.href} variant="text" arrow="right">
-                  Explore
-                </Button> */
-                <div className="text-emerald-500">{'Expore ->'}</div>}
-              </p>
+              <div className="mt-4">
+                
+                <div className="text-emerald-500 flex items-center">Expore {arrowIcon}</div>
+              </div>
             </div>
             <Image
               src={library.logo}
@@ -100,7 +119,7 @@ export function Libraries() {
       </div>
       <hr />
 
-      <Heading level={2} id="official-libraries">
+      <Heading level={2} id="server">
         Server
       </Heading>
       <p>Server SDKs allow you to Encrypt and decrypt data on server-side applications.</p>
@@ -115,12 +134,10 @@ export function Libraries() {
               <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
                 {library.description}
               </p>
-              <p className="mt-4">
-                {/* <Button href={library.href} variant="text" arrow="right">
-                  Explore
-                </Button> */
-                <div className="text-emerald-500">{'Expore ->'}</div>}
-              </p>
+              <div className="mt-4">
+              
+              <div className="text-emerald-500 flex items-center">Expore {arrowIcon}</div>
+              </div>
             </div>
             <Image
               src={library.logo}
