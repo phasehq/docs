@@ -185,36 +185,43 @@ function NavigationGroup({ group, className }) {
 
 export const navigation = [
   {
-    title: 'Guides',
+    title: 'Getting Started',
     links: [
       { title: 'Introduction', href: '/' },
       { title: 'Quickstart', href: '/quickstart' },
-      { title: 'SDKs', href: '/sdks' },
-      { title: 'Authentication', href: '/authentication' },
-      { title: 'Pagination', href: '/pagination' },
-      { title: 'Errors', href: '/errors' },
-      { title: 'Webhooks', href: '/webhooks' },
+      //{ title: 'Authentication', href: '/authentication' },
+      //{ title: 'Pagination', href: '/pagination' },
+      //{ title: 'Errors', href: '/errors' },
+      //{ title: 'Webhooks', href: '/webhooks' },
     ],
   },
   {
     title: 'Resources',
     links: [
-      { title: 'Contacts', href: '/contacts' },
-      { title: 'Conversations', href: '/conversations' },
-      { title: 'Messages', href: '/messages' },
-      { title: 'Groups', href: '/groups' },
-      { title: 'Attachments', href: '/attachments' },
+      { title: 'SDKs', href: '/sdks' },
+      { title: 'JavaScript SDK', href: '/sdks/js' },
+      { title: 'Node.js SDK', href: '/sdks/node' },
+      //{ title: 'Encrypt', href: '/encrypt' },
+      //{ title: 'Decrypt', href: '/decrypt' },
     ],
   },
+  // {
+  //   title: 'Security',
+  //   links: [
+  //     { title: 'Phase Encryption', href: '/security/overview' },
+  //     { title: 'Cryptography', href: '/security/cryptography' },
+
+  //   ],
+  // },
 ]
 
 export function Navigation(props) {
   return (
     <nav {...props}>
       <ul role="list">
-        <TopLevelNavItem href="/">API</TopLevelNavItem>
+        {/* <TopLevelNavItem href="/">API</TopLevelNavItem>
         <TopLevelNavItem href="#">Documentation</TopLevelNavItem>
-        <TopLevelNavItem href="#">Support</TopLevelNavItem>
+        <TopLevelNavItem href="#">Support</TopLevelNavItem> */}
         {navigation.map((group, groupIndex) => (
           <NavigationGroup
             key={group.title}
@@ -223,8 +230,8 @@ export function Navigation(props) {
           />
         ))}
         <li className="sticky bottom-0 z-10 mt-6 min-[416px]:hidden">
-          <Button href="#" variant="filled" className="w-full">
-            Sign in
+          <Button href="https://console.phase.dev" target="_blank" variant="filled" className="w-full">
+            Launch Console
           </Button>
         </li>
       </ul>

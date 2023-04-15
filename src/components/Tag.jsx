@@ -37,6 +37,9 @@ const valueColorMap = {
   post: 'sky',
   put: 'amber',
   delete: 'rose',
+  encrypted: 'emerald',
+  public: 'emerald',
+  secret: 'rose',
 }
 
 export function Tag({

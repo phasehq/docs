@@ -1,0 +1,77 @@
+export const description =
+  'In this guide, we’ll look at how authentication works. Protocol offers two ways to authenticate your API requests: Basic authentication and OAuth2 with a token.'
+
+# Encryption
+
+---
+
+### XChaCha20-Poly1305
+
+XChaCha20-Poly1305 is a cryptographic algorithm that provides authenticated encryption for data transmitted over a network. It is a variant of the ChaCha20-Poly1305 algorithm, which is widely used in internet security protocols such as TLS (Transport Layer Security) and IPsec (Internet Protocol Security).
+
+The XChaCha20-Poly1305 algorithm combines two different cryptographic primitives to provide a secure and efficient means of encrypting and authenticating data. The first primitive, XChaCha20, is a modified version of the ChaCha20 stream cipher, which uses a 256-bit key and a 192-bit nonce to generate a stream of pseudo-random bytes. The second primitive, Poly1305, is a message authentication code (MAC) that provides integrity and authenticity to the encrypted data.
+
+The XChaCha20-Poly1305 algorithm encrypts data in a way that prevents unauthorized access and tampering. The algorithm generates a unique key and nonce for each message, ensuring that even if an attacker can break the encryption for one message, they cannot use that knowledge to decrypt other messages. Additionally, the algorithm provides integrity checks to detect any modification or corruption of the data.
+
+One advantage of XChaCha20-Poly1305 over AES-256-GCM is its resistance to certain types of side-channel attacks. Side-channel attacks can exploit information leaked during the cryptographic computation process, such as timing, power consumption, or electromagnetic radiation, to extract the encryption key. XChaCha20-Poly1305 is designed to be resistant to these types of attacks, whereas AES-256-GCM can be vulnerable if proper countermeasures are not taken.
+
+Another advantage of XChaCha20-Poly1305 is its ability to handle nonces of different lengths. In AES-256-GCM, the nonce must be 96 bits long, which can limit its use in certain scenarios where longer nonces are required. XChaCha20-Poly1305 can handle nonces of up to 192 bits long, which provides more flexibility in choosing nonce lengths.
+
+![ChaCha20-Poly1305](/assets/ChaCha20-Poly1305_Encryption.svg)
+
+
+![Phase Net](/assets/phase-network.svg)
+
+![Phase Net](/assets/phase-ENCRYPT.png)
+---
+
+## Key Exchange
+
+The X25519 key exchange algorithm is based on the elliptic curve Diffie-Hellman (ECDH) protocol, which uses the mathematics of elliptic curves to generate shared secret keys. In X25519, the elliptic curve used is Curve25519, which is a popular and efficient curve that is designed to be secure and resistant to attacks.
+
+The key exchange process begins with each party generating a private key, which is a random 256-bit number. The private key is then used to calculate a public key by performing a scalar multiplication of the private key with a base point on the elliptic curve. The resulting public key is a point on the curve that can be shared with the other party over an insecure channel.
+
+Once both parties have exchanged their public keys, they can each calculate a shared secret key by performing another scalar multiplication, this time using their own private key and the other party's public key. The resulting point on the curve is converted to a 256-bit shared secret key that can be used for subsequent encryption and decryption of messages.
+
+The X25519 key exchange algorithm provides several security benefits. First, it ensures that the shared secret key is generated independently by both parties and cannot be intercepted or guessed by an attacker. Second, it provides forward secrecy, meaning that even if an attacker gains access to one of the private keys at a later time, they cannot use it to derive previous shared secret keys. Finally, the use of elliptic curves provides strong cryptographic properties that make it difficult for an attacker to compute the private key from the public key.
+
+![ED25519](/assets/ed25519.png)
+---
+
+## Secret-splitting
+
+Shamir's Secret Sharing is a cryptographic algorithm that allows a secret to be divided into multiple shares, each of which can be distributed to different individuals or stored in different locations. The secret can only be reconstructed if a sufficient number of shares are combined together, while individual shares reveal no information about the secret. This technique is often used to distribute encryption keys or to protect sensitive information against loss or theft.
+
+The algorithm was developed by Adi Shamir in 1979 and is based on the mathematics of polynomial interpolation. To use the algorithm, a secret is first chosen, along with a threshold number of shares that must be combined to reconstruct the secret. A random polynomial of degree n-1 is then generated, where n is the total number of shares, and the coefficients of the polynomial are chosen randomly.
+
+Each share is then generated by evaluating the polynomial at a different point. For example, if there are five shares, the polynomial might be evaluated at x=1, 2, 3, 4, and 5, to generate five different shares. Each share consists of a pair of values (x,y), where x is the point at which the polynomial was evaluated and y is the result.
+
+To reconstruct the secret, a minimum number of shares equal to the threshold must be combined together. This is done by using polynomial interpolation to reconstruct the original polynomial from the shares and then evaluating the polynomial at x=0 to obtain the secret.
+
+The strength of Shamir's Secret Sharing lies in the fact that individual shares reveal no information about the secret, as long as the number of shares distributed is greater than the threshold. This means that even if an attacker gains access to some of the shares, they cannot learn anything about the secret unless they obtain enough shares to reach the threshold.
+
+---
+
+## Key derivation
+Argon2i
+
+Blake2b
+
+---
+
+## References
+
+[RFC 8439 - ChaCha20 and Poly1305 for IETF Protocols](https://www.rfc-editor.org/rfc/rfc8439
+)
+
+[ChaCha20-Poly1305 - Wikipedia](https://en.wikipedia.org/wiki/ChaCha20-Poly1305)
+
+[EdDSA - Wikipedia](https://en.wikipedia.org/wiki/EdDSA)
+
+[Ed2551 - Crypto++](https://www.cryptopp.com/wiki/Ed25519)
+
+[Ed25519: high-speed high-security signatures - cr.yp.to](https://ed25519.cr.yp.to/)
+
+[Shamir's Secret Sharing Scheme - Point-at-infinity](http://point-at-infinity.org/ssss/)
+
+[How to Share a Secret - Adi Shamir](https://dl.acm.org/doi/pdf/10.1145/359168.359176)

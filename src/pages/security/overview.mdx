@@ -1,0 +1,101 @@
+export const description =
+  'In this guide, we’ll look at how authentication works. Protocol offers two ways to authenticate your API requests: Basic authentication and OAuth2 with a token.'
+
+# Phase Encryption overview
+
+<Row>
+  <Col>
+
+    ## Encrypted data {{ tag: 'ENCRYPTED',  label: 'secure encrypted information' }}
+
+    <Properties>
+      <Property name="ph" type="plain text">
+        Helps identify data encrypted with Phase SDKs
+      </Property>
+      <Property name="dataType" type="plain text">
+        Identifies the type of data encrypted
+      </Property>
+            <Property name="ephPublicKey" type="hex">
+        An ephemeral ED25519 public key used to derive XChaCha20 shared secret
+      </Property>
+            <Property name="ciphertext" type="hex">
+        XChaCha20-Poly1305 encrytped data
+      </Property>
+            <Property name="nonce" type="hex">
+        A randomly generated 192bit initialization vector
+      </Property>
+            <Property name="tag" type="plain text">
+        An optional user supplied string 
+      </Property>
+
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    ```
+    -> ph:dataType:ephPublicKey:ciphertext+nonce:tag
+    ```
+  </Col>
+</Row>
+
+---
+
+<Row>
+  <Col>
+
+    ## APP_ID {{ tag: 'PUBLIC',  label: 'applicaton ID, can be public' }}
+
+    <Properties>
+      <Property name="phID" type="plain text">
+        Helps identify Phase SDK appID
+      </Property>
+      <Property name="appID" type="hex">
+        ED25519 public application public key
+      </Property>
+
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    ```
+    -> ph_app:appID
+    ```
+  </Col>
+</Row>
+
+---
+
+
+
+<Row>
+  <Col>
+
+    ## APP_SECRET {{ tag: 'SECRET', label: 'sensitive credential, keep safe' }}
+
+    <Properties>
+      <Property name="pss" type="plain text">
+        Helps identify Phase SDK secret
+      </Property>
+      <Property name="appToken" type="hex">
+        Used to authenticate to the Phase API
+      </Property>
+            <Property name="share0" type="hex">
+        S4 share of the application private key
+      </Property>
+            <Property name="wrapKey" type="hex">
+         A 32 bytes symmetric key used to wrarp s4 share1 
+      </Property>
+
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    ```
+    -> pss:appToken:appID:share0:wrapKey
+    ```
+  </Col>
+</Row>
+

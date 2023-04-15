@@ -1,101 +1,77 @@
 export const description =
-  'This guide will get you all set up and ready to use the Protocol API. We’ll cover how to get started an API client and how to make your first API request.'
+  'This guide will get you all set up and ready to use the Phase console.'
 
 # Quickstart
 
-This guide will get you all set up and ready to use the Protocol API. We'll cover how to get started using one of our API clients and how to make your first API request. We'll also look at where to go next to find all the information you need to take full advantage of our powerful REST API. {{ className: 'lead' }}
+Setup your account and start using Phase encryption in your App in under 3 minutes ⏱️.
 
-<Note>
-  Before you can make requests to the Protocol API, you will need to grab your
-  API key from your dashboard. You find it under [Settings &raquo; API](#).
-</Note>
+This guide will walk you through creating an account and securing it with a recovery phrase and sudo password. Then we'll create an App to use with [Phase Encryption](/security/overview).
 
-## Choose your client
+## Login and create a Team
 
-Before making your first API request, you need to pick which API client you will use. In addition to good ol' cURL HTTP requests, Protocol offers clients for JavaScript, Python, and PHP. In the following example, you can see how to install each client.
+You can login to the Phase <a href="https://console.phase.dev" target="_blank">console</a> with Google, GitHub or GitLab.
 
-<CodeGroup>
+Once you've logged in you'll be prompted to choose a name for your Team. Your Team name must be unique and alphanumeric. You can't use spaces or special characters. Enter your team name and click `Next`
 
-```bash {{ title: 'cURL' }}
-# cURL is most likely already installed on your machine
-curl --version
+## Set up account recovery
+
+You will now be shown your account recovery phrase. A recovery phrase is a unique 24 word mnemonic phrase used to encrypt and secure your application keys.
+
+It looks something like this:
+
+```
+1. scout  2. angry 3. enter 4. aunt 5. word 6. express
+7. enforce 8. measure 9. exhaust 10. genius 11. cook 12. pretty
+13. hundred 14. connect 15. hundred 16. marble 17. file 18. spirit
+19. era 20. angle 21. kidney 22. bacon 23. coffee 24. review
 ```
 
-```bash {{ language: 'js' }}
-# Install the Protocol JavaScript SDK
-npm install @example/protocol-api --save
-```
+<Warning>
+**Store this recovery phrase in a safe place. You won't be shown it again.**
 
-```bash {{ language: 'python' }}
-# Install the Protocol Python SDK
-pip install protocol_api
-```
+You will need to enter your account recovery phrase to:
 
-```bash {{ language: 'php' }}
-# Install the Protocol PHP SDK
-composer require protocol/sdk
-```
+- Login to the Phase console from a new device
+- Recover from a forgotten `sudo` password
 
-</CodeGroup>
+</Warning>
 
-<div className="not-prose">
-  <Button
-    href="/sdks"
-    variant="text"
-    arrow="right"
-    children="Check out our list of first-party SDKs"
-  />
-</div>
+Once you've stored your recovery phrase, click `Next`. You will then be asked to enter the recovery phrase in the correct order on the next screen to confirm it. (In case you have copied it, you can simply paste it.)
 
-## Making your first API request
+## Set up a `sudo` password
 
-After picking your preferred client, you are ready to make your first call to the Protocol API. Below, you can see how to send a GET request to the Conversations endpoint to get a list of all your conversations. In the cURL example, results are limited to ten conversations, the default page length for each client.
+The last step is to set up a `sudo` password. A `sudo` password is used to secure data thats stored locally in your browser storage. This is not transmittedto or stored on our backend. The only requirement is for it to be 16 characters long.
 
-<CodeGroup tag="GET" label="/v1/conversations">
+Enter a `sudo` password, type it again to confirm, and click `Next`
 
-```bash {{ title: 'cURL' }}
-curl -G https://api.protocol.chat/v1/conversations \
-  -H "Authorization: Bearer {token}" \
-  -d limit=10
-```
+It will take a few seconds for the Phase console to generate keys on your machine. Once everything is ready, you will be dropped inside the you Team Home. Your Phase account is ready to use! 🎉
+
+## Create an App
+
+In order to use Phase Encryption with your app, you'll need to create an App on Phase.
+
+Create a new app by going to `Apps` from the left sidebar and clicking '+'. Enter an alphanumeric name for your new App along with your `sudo` password and click `Create`. A new set of encryption keys will be created for your new App.
+
+You will be shown a pair of values: `APP_ID` and `APP_SECRET`
+They look something like this:
 
 ```js
-import ApiClient from '@example/protocol-api'
+// Phase APP_ID
+ph_app:3a1e0710ced57e060109d8e94f06d52a8e5ffae88ed01506776c5bed664c8a96
 
-const client = new ApiClient(token)
-
-await client.conversations.list()
+// Phase APP_SECRET
+pss:a0c02d5de90c58c3c3ab3e5a71c87c9fb7ea134717fb7097bb17284ad4e02ef3:801b342264bfea0c8f8f7058392b99989595059201bc011f6bf7ed813a2f84b05cb5af6aef32cd893ee0930f2904f1194cb912bb2452a5e54f83d588704dbec40037f798e8a4c56aad7d3f4f929f2733e8f:138b021783f08bfe7a4e2f536fc2e743e3ff9b966c9c3af60f427cb3932d647a
 ```
 
-```python
-from protocol_api import ApiClient
+These values will be used along with the Phase SDKs to encrypt and decrypt data in your application.
 
-client = ApiClient(token)
+You can always come back to view and copy your `APP_ID` This value isn't considered secret.
 
-client.conversations.list()
-```
+<Warning>
+  Keep the `APP_SECRET` safe. You won't see this value again, and if it is
+  leaked or stolen it will allow an attacker to decrypt data in your application
+</Warning>
 
-```php
-$client = new \Protocol\ApiClient($token);
+## Next steps
 
-$client->conversations->list();
-```
-
-</CodeGroup>
-
-<div className="not-prose">
-  <Button
-    href="/conversations"
-    variant="text"
-    arrow="right"
-    children="Read the docs for the Conversations endpoint"
-  />
-</div>
-
-## What's next?
-
-Great, you're now set up with an API client and have made your first request to the API. Here are a few links that might be handy as you venture further into the Protocol API:
-
-- [Grab your API key from the Protocol dashboard](#)
-- [Check out the Conversations endpoint](/conversations)
-- [Learn about the different error messages in Protocol](/errors)
+Now that you're now set up with your Phase account and App keys in the Phase Console, [grab an SDK](/sdks) for your stack and start encrypting!
