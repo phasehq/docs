@@ -1,0 +1,107 @@
+export const description =
+  'Phase Encryption overview'
+
+# Phase Encryption overview
+
+<Row>
+  <Col>
+
+    ## Encrypted data {{ tag: 'ENCRYPTED',  label: 'Secure encrypted information' }}
+
+    <Properties>
+      <Property name="ph" type="plain text">
+        Helps identify data encrypted with Phase SDKs
+      </Property>
+      <Property name="version" type="plain text">
+        Helps identify version of data encrypted with Phase 
+      </Property>
+            <Property name="ephPublicKey" type="hex">
+        An ephemeral X25519 public key used to derive XChaCha20 shared secret
+      </Property>
+            <Property name="ciphertext" type="base64">
+        XChaCha20-Poly1305 encrytped data
+      </Property>
+            <Property name="nonce" type="base64">
+        A randomly generated 192bit initialization vector
+      </Property>
+            <Property name="tag" type="plain text">
+        An optional user supplied string 
+      </Property>
+
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    ```
+    -> ph:version:ephPublicKey:ciphertext+nonce:tag
+    ```
+  </Col>
+</Row>
+
+---
+
+<Row>
+  <Col>
+
+    ## APP_ID {{ tag: 'PUBLIC',  label: 'Phase Applicaton ID' }}
+
+    <Properties>
+      <Property name="phID" type="plain text">
+        Helps identify Phase SDK appID
+      </Property>
+      <Property name="version" type="plain text">
+        Helps identify Phase SDK appID version
+      </Property>
+      <Property name="appID" type="hex">
+        X25519 public application public key
+      </Property>
+
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    ```
+    -> phApp:version:appID
+    ```
+  </Col>
+</Row>
+
+---
+
+
+
+<Row>
+  <Col>
+
+    ## APP_SECRET {{ tag: 'SECRET', label: 'Phase AppSecret' }}
+
+    <Properties>
+      <Property name="pss" type="plain text">
+        Helps identify Phase SDK secret
+      </Property>
+      <Property name="version" type="plain text">
+        Helps identify Phase SDK APP_SECRET version
+      </Property>
+      <Property name="appToken" type="hex">
+        Used to authenticate to the Phase Key Management Service (KMS)
+      </Property>
+      <Property name="share0" type="hex">
+        Share0 of the application private key
+      </Property>
+      <Property name="wrapKey" type="hex">
+         A 32 bytes symmetric key used to unwrap share1 
+      </Property>
+
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    ```
+    -> pss:version:appToken:share0:wrapKey
+    ```
+  </Col>
+</Row>
+
