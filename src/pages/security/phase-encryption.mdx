@@ -1,8 +1,108 @@
-export const description =
-  'Phase Encryption overview'
+export const description = 'Phase Encryption overview'
 
-# Phase Encryption overview
+# Phase Console Crypto
 
+## Client-side key generation
+
+![](/assets/phase-console-crypto.svg)
+
+1. **24 Word Account Recovery**: Generated using to [BIP39](https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki) Bitcoin spec.
+
+Note on BIP39: Since the native BIP39 implementations use PBKDF2 with SHA512 with 2048 iterations. Which out of the box, for our use cases provide insufficient protection. We instead use a two staged key derivation process where we only use BIP39 for the process of recovery phrase generation and use libsodium's strong implementation of [Argon2ID 1.3](https://doc.libsodium.org/password_hashing#argon2) for key derivation.
+
+2. **Account Seed**: The mnemonic phrase is securely hashed with a memory hardened key derivation function [Argon2ID](https://en.wikipedia.org/wiki/Argon2) `crypto_pwhash_ALG_ARGON2ID13` with the `crypto_pwhash_OPSLIMIT_SENSITIVE` & `crypto_pwhash_MEMLIMIT_SENSITIVE` params to generate a single high entropy 32 byte / 256 bit seed.
+
+3. This seed is then passed to libsodium's `crypto_kdf_derive_from_key` function with a unique `context` and `id` to create two 32 byte / 256 bit sub keys from a single high entropy seed. [More at: libsodium docs](https://doc.libsodium.org/key_derivation#deriving-keys-from-a-single-high-entropy-key)
+
+- **Symmetric Key**: Used to Encrypt all sensitive account data / keys. eg. App seed
+- **Signing Key Seed**: Used to generate a [ED25519](https://www.cryptopp.com/wiki/Ed25519) key pair that's used to sign challenges. A public key known as the **Account Identity Key** is generated from the **Signing Key Seed** using the `crypto_sign_seed_keypair` in libsodium, this key is stored on the Phase Console backend. (In the future this key can also be used to securely share data from one account to another using X25519.) eg. To securely validate 24 word account recovery via a challenge-response scheme, while trying to log into a new device.
+
+4. **Device Vault Key** - Is securely derived by hashing a user supplied 16 character local device password known as the `sudo` password with [Argon2ID](https://en.wikipedia.org/wiki/Argon2) `crypto_pwhash_ALG_ARGON2ID13` with `crypto_pwhash_OPSLIMIT_MODERATE` & `crypto_pwhash_MEMLIMIT_MODERATE` in the Phase Console and it's used to Encrypt any sensitive user data or wrapping keys with [XChaChaPoly1305](https://doc.libsodium.org/secret-key_cryptography/aead/chacha20-poly1305) before writing them to local device storage.
+
+<Note>
+  The **24 Word Account Recovery**, **Account Seed**, **Symmetric Keys** or
+  **Signing Keys** are generated deterministically with client-sided crypto on
+  your own machine and never transmitted or stored on Phase backend
+  infrastructure.
+</Note>
+
+- On device, encrypted with sudo password
+  - Why?
+  - sudo password → encryption key? (Argon2ID + params)
+  - Encrypted with XChaChaPoly1305
+- public key on backend in plaintext
+- How can I retrieve them?
+  - Mnemonic phrase
+  - New device login
+  - Key derivation from seed process
+  - Validation with public key on backend
+
+## App keys & secret generation
+
+- What they are used for
+- How are they generated?
+  - App seed (`crypto_kdf_keygen()`)
+  - App seed → app Keyring
+    - `crypto_kx_seed_keypair()`
+  - App token
+    - What is it for?
+    - How is it generated? `crypto_kdf_keygen()`
+  - App wrap key
+    - What is it for?
+    - How is generated? `crypto_kdf_keygen()`
+- App key shares?
+  - Why?
+  - How are keys split?
+  - Wrapped key
+    - Why?
+    - How?
+- How are app keys rotated?
+  - New key shares
+  - New app token
+  - New app wrap key
+  - New wrapped key
+  - New app secret
+  - Revoking old app token / wrapped key from Phase KMS
+- Where are app keys stored?
+  - Keyring on device
+  - encrypted app keyring on backend
+    - Encrypted with account symmetric key (XChaCha-Poly1305)
+- App secret?
+  - Why?
+  - What is it for?
+  - Format
+- App Id?
+  - Why?
+  - What is it for?
+  - Format
+
+## Data encryption (SDKs)
+
+![](/assets/phase-sdk-crypto.svg)
+
+- public key from `APP_ID`
+- Ephemeral key pair
+  - Why?
+  - How is it generated? `crypto_kx_keypair`
+- One time symmetric key
+  - Diffie-Hellman keys
+- Encryption
+  - XChaCha-Poly1305
+  - IV?
+  - Output format
+
+## Data decryption (SDKs)
+
+- App token from ciphertext → fetch wrapped share from Phase KMS
+  - Why?
+  - How?
+- Unwrapping wrapped share → share1
+- Combining key shares to reconstruct private key
+- Parsing public key from ciphertext
+- Diffie Hellman with app private key and ciphertext public key → Symmetric key
+- Decrypting with XChaCha-Poly1305
+
+<br></br>
 <Row>
   <Col>
 
@@ -13,7 +113,7 @@ export const description =
         Helps identify data encrypted with Phase SDKs
       </Property>
       <Property name="version" type="plain text">
-        Helps identify version of data encrypted with Phase 
+        Helps identify version of data encrypted with Phase
       </Property>
             <Property name="ephPublicKey" type="hex">
         An ephemeral X25519 public key used to derive XChaCha20 shared secret
@@ -25,7 +125,7 @@ export const description =
         A randomly generated 192bit initialization vector
       </Property>
             <Property name="tag" type="plain text">
-        An optional user supplied string 
+        An optional user supplied string
       </Property>
 
     </Properties>
@@ -36,6 +136,7 @@ export const description =
     ```
     -> ph:version:ephPublicKey:ciphertext+nonce:tag
     ```
+
   </Col>
 </Row>
 
@@ -65,12 +166,11 @@ export const description =
     ```
     -> phApp:version:appID
     ```
+
   </Col>
 </Row>
 
 ---
-
-
 
 <Row>
   <Col>
@@ -91,7 +191,7 @@ export const description =
         Share0 of the application private key
       </Property>
       <Property name="wrapKey" type="hex">
-         A 32 bytes symmetric key used to unwrap share1 
+         A 32 bytes symmetric key used to unwrap share1
       </Property>
 
     </Properties>
@@ -102,6 +202,6 @@ export const description =
     ```
     -> pss:version:appToken:share0:wrapKey
     ```
+
   </Col>
 </Row>
-
