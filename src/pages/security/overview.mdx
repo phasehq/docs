@@ -1,10 +1,19 @@
-export const description = 'An overview of Phase Encryption'
+export const description = 'Phase Encryption overview'
 
 # Overview
 
 Phase has been designed to give app developers access to the best cryptography available while being easy to integrate, manage and observe key usage; all while providing robust security.
 This involves various decisions around how encryption keys are generated and managed, how data is encrypted or decrypted, what algorithms are used for various cryptographic operations and how Phase interacts with your applications.
 In this document we will first provide an overview of high level concepts before explaining the details of how Phase encryption works.
+
+## Threat model and security assumptions
+
+- The Phase `APP_SECRET` is kept safe by you
+- The application runtime where you are using Phase to decrypt data is trusted
+- The device and operating system that is being used to access the Phase Console and generate keys is trusted
+- The JavaScript that you are executing when you are accessing the Phase Console is authentic and trusted. If this is a genuine concern, please consider self hosting the Phase Console. In the future, we plan to explore cryptographically signing JavaScript and validating it client side before execution.
+
+---
 
 ## Teams
 
@@ -28,6 +37,8 @@ Part of the signup / login process also involves setting up a `sudo` password. T
 
 If you want to login to the Phase console on a new device or browser, you will need to re-enter your recovery key and set up a new `sudo` password.
 
+---
+
 ## Apps
 
 To use Phase encryption with your application, you will need to create an App on Phase. Each Phase App is associated with the following cryptographic keys:
@@ -39,7 +50,9 @@ These two keys are used to create your `APP_ID` and `APP_SECRET`, which along wi
 
 The `APP_ID` is public and not considered a secret. You can add this value as an environment variable in front-end applications safely.
 
-The `APP_SECRET`, as the name suggests, is secret and should never be placed in front-end code. Anyone with access to this value will be able to decrypt data in your applcation.
+The `APP_SECRET`, as the name suggests, is secret and should never be placed in front-end code. Anyone with access to this value will be able to decrypt data in your application.
+
+---
 
 ## Dual-Key model
 
@@ -50,6 +63,8 @@ To solve this problem, Phase uses a Dual-Key model. Your App private key is spli
 During a decrypt operation, the Phase SDKs put these two shares together to reconstruct your App private key in memory, which is then used to decrypt application data.
 
 This means that your App private key is never stored in a single place where it could be accidentally committed to version control, stolen by an attacker or otherwise compromised.
+
+---
 
 ## Key rotation
 
