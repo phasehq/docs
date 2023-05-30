@@ -37,6 +37,15 @@ Part of the signup / login process also involves setting up a `sudo` password. T
 
 If you want to login to the Phase console on a new device or browser, you will need to re-enter your recovery key and set up a new `sudo` password.
 
+<div className="not-prose">
+  <Button
+    href="/security/phase-encryption#phase-console-client-side-key-generation"
+    variant="text"
+    arrow="right"
+    children="More info"
+  />
+</div>
+
 ---
 
 ## Apps
@@ -52,6 +61,15 @@ The `APP_ID` is public and not considered a secret. You can add this value as an
 
 The `APP_SECRET`, as the name suggests, is secret and should never be placed in front-end code. Anyone with access to this value will be able to decrypt data in your application.
 
+<div className="not-prose">
+  <Button
+    href="/security/phase-encryption#app-keys-and-secret-generation"
+    variant="text"
+    arrow="right"
+    children="More info"
+  />
+</div>
+
 ---
 
 ## Dual-Key model
@@ -64,9 +82,27 @@ During a decrypt operation, the Phase SDKs put these two shares together to reco
 
 This means that your App private key is never stored in a single place where it could be accidentally committed to version control, stolen by an attacker or otherwise compromised.
 
+<div className="not-prose">
+  <Button
+    href="/security/phase-encryption#app-keys-and-secret-generation"
+    variant="text"
+    arrow="right"
+    children="More info"
+  />
+</div>
+
 ---
 
 ## Key rotation
 
 The Dual-Key model also allows your `APP_SECRET` to be rotated in the event that this value is leaked. When you rotate an App key in the phase console, the encrypted share within Phase KMS is deleted, making it impossible to use the previous `APP_SECRET` to decrypt data.
 Your App private key is split into 2 brand new shares, and you will be provided with a new `APP_SECRET` to use in your application's environment variables.
+
+<div className="not-prose">
+  <Button
+    href="/security/phase-encryption#key-rotation-and-revocation"
+    variant="text"
+    arrow="right"
+    children="More info"
+  />
+</div>
