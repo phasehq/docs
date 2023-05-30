@@ -1,101 +1,49 @@
-export const description =
-  'In this guide, we’ll look at how authentication works. Protocol offers two ways to authenticate your API requests: Basic authentication and OAuth2 with a token.'
+export const description = 'An overview of Phase Encryption'
 
-# Phase Encryption overview
+# Overview
 
-<Row>
-  <Col>
+Phase has been designed to give app developers access to the best cryptography available while being easy to integrate, manage and track; all without making any compromises with security.
+This involves various decisions around how encryption keys are generated and managed, how data is encrypted or decrypted, what algorithms are used for various cryptographic operations and how Phase interacts with your applications.
+In this document we will first provide an overview of high level concepts before explaining the details of how Phase encryption works.
 
-    ## Encrypted data {{ tag: 'ENCRYPTED',  label: 'secure encrypted information' }}
+## Teams
 
-    <Properties>
-      <Property name="ph" type="plain text">
-        Helps identify data encrypted with Phase SDKs
-      </Property>
-      <Property name="dataType" type="plain text">
-        Identifies the type of data encrypted
-      </Property>
-            <Property name="ephPublicKey" type="hex">
-        An ephemeral ED25519 public key used to derive XChaCha20 shared secret
-      </Property>
-            <Property name="ciphertext" type="hex">
-        XChaCha20-Poly1305 encrytped data
-      </Property>
-            <Property name="nonce" type="hex">
-        A randomly generated 192bit initialization vector
-      </Property>
-            <Property name="tag" type="plain text">
-        An optional user supplied string 
-      </Property>
+When you sign up for Phase, you will create a Team. Part of the signup process will involve recording and safely storing a 24-word mnemonic phrase that is associated with your Team.
 
-    </Properties>
+The mnemonic phrase is used to derive the following cryptographic keys:
 
-  </Col>
-  <Col sticky>
+- Symmetric key - used to secure your App keys
+- Public / private keypair - used to validate your mnemonic phrase when reovering your account or logging in on a new device
 
-    ```
-    -> ph:dataType:ephPublicKey:ciphertext+nonce:tag
-    ```
-  </Col>
-</Row>
+When you create a Team, you are designated as the Team Owner and have sole access to the recovery phrase. It is extrememly important that you store your recovery phrase in a safe place, as it is the root source of entropy from which all other keys can be retrieved.
 
----
+Part of the signup / login process also involves setting up a `sudo` password. This password is used to encrypt your Team keys and store them locally in your browser.
 
-<Row>
-  <Col>
+If you want to login to the Phase console on a new device or browser, you will need to re-enter your recovery phrase and set up a new `sudo` password.
 
-    ## APP_ID {{ tag: 'PUBLIC',  label: 'applicaton ID, can be public' }}
+## Apps
 
-    <Properties>
-      <Property name="phID" type="plain text">
-        Helps identify Phase SDK appID
-      </Property>
-      <Property name="appID" type="hex">
-        ED25519 public application public key
-      </Property>
+To use Phase encryption with your application, you will need to create an App on Phase. Each Phase App is associated with the following cryptographic keys:
 
-    </Properties>
+- App public key - used to encrypt application data
+- App private key - used to decrypt application data
 
-  </Col>
-  <Col sticky>
+These two keys are used to create your `APP_ID` and `APP_SECRET`, which along with the Phase [SDKs](/sdks) allow you to encrypt and decrypt data in your applications.
 
-    ```
-    -> ph_app:appID
-    ```
-  </Col>
-</Row>
+The `APP_ID` is public and not considered a secret. You can add this value as an environment variable in front-end applications safely.
 
----
+The `APP_SECRET`, as the name suggests, is secret and should never be placed in front-end code. Anyone with access to this value will be able to decrypt data in your applcation.
 
+## Dual-Key model
 
+The App private key is used to decrypt data, however storing this private key in plaintext in a single location poses several security risks. A breach of this value is impossible to recover from, since the private key itself cannot be changed for given App.
 
-<Row>
-  <Col>
+To solve this problem, Phase uses a Dual-Key model. Your App private key is split into 2 shares. One of these shares is contained within the `APP_SECRET`, while the other is encrypted and stored on the Phase KMS (Key Management Service).
+The Phase SDKs put these two shares together to reconstruct your App private key in memory, which is then used to decrypt application data.
 
-    ## APP_SECRET {{ tag: 'SECRET', label: 'sensitive credential, keep safe' }}
+This means that your App private key is never stored in a single place where it could accidentlly be committed to version control, stolen by an attacker or otherwise compromised.
 
-    <Properties>
-      <Property name="pss" type="plain text">
-        Helps identify Phase SDK secret
-      </Property>
-      <Property name="appToken" type="hex">
-        Used to authenticate to the Phase API
-      </Property>
-            <Property name="share0" type="hex">
-        S4 share of the application private key
-      </Property>
-            <Property name="wrapKey" type="hex">
-         A 32 bytes symmetric key used to wrarp s4 share1 
-      </Property>
+## Key rotation
 
-    </Properties>
-
-  </Col>
-  <Col sticky>
-
-    ```
-    -> pss:appToken:appID:share0:wrapKey
-    ```
-  </Col>
-</Row>
-
+The Dual-Key model also allows your `APP_SECRET` to be rotated in the event that this value is leaked. When you rotate an App key in the phase console, the encrypted share within Phase KMS is deleted, making it impossible to use the existing `APP_SECRET` to decrypt data.
+Your App private key is split into 2 brand new shares, and you will be provided with a new `APP_SECRET` to use in your application's environment variables.

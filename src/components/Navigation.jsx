@@ -208,6 +208,7 @@ export const navigation = [
   {
     title: 'Security',
     links: [
+      { title: 'Overview', href: '/security/overview'},
       { title: 'Phase Encryption', href: '/security/phase-encryption' },
       { title: 'Cryptography', href: '/security/cryptography' },
 
