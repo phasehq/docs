@@ -2,31 +2,38 @@ export const description = 'An overview of Phase Encryption'
 
 # Overview
 
-Phase has been designed to give app developers access to the best cryptography available while being easy to integrate, manage and track; all without making any compromises with security.
+Phase has been designed to give app developers access to the best cryptography available while being easy to integrate, manage and observe key usage; all while providing robust security.
 This involves various decisions around how encryption keys are generated and managed, how data is encrypted or decrypted, what algorithms are used for various cryptographic operations and how Phase interacts with your applications.
 In this document we will first provide an overview of high level concepts before explaining the details of how Phase encryption works.
 
 ## Teams
 
-When you sign up for Phase, you will create a Team. Part of the signup process will involve recording and safely storing a 24-word mnemonic phrase that is associated with your Team.
+When you sign up for the Phase Console, you will create a Team. Part of the signup process will involve recording and safely storing a 24-word recovery key that is associated with your Team.
 
-The mnemonic phrase is used to derive the following cryptographic keys:
+The recovery key is used to derive the following cryptographic keys:
 
-- Symmetric key - used to secure your App keys
-- Public / private keypair - used to validate your mnemonic phrase when reovering your account or logging in on a new device
+- **[Symmetric Key](/security/phase-encryption#phase-console-client-side-key-generation)**- used to secure your App keys
+- **[Signing Key Seed](/security/phase-encryption#phase-console-client-side-key-generation)** - used to validate your recovery key when recovering your account or logging in on a new device
 
-When you create a Team, you are designated as the Team Owner and have sole access to the recovery phrase. It is extrememly important that you store your recovery phrase in a safe place, as it is the root source of entropy from which all other keys can be retrieved.
+When you create a Team, you are designated as the Team Owner and have sole access to the recovery key. It is extremely important that you store your recovery key in a safe place, as it is the root source of entropy from which all other keys are derived.
+
+Depending on your threat model, we recommend you:
+
+- Write or print the 24 word recovery down on paper and store it some place safe
+- Save it in a password manager or vault
+
+In the future we have plans to let users store their recovery key on a self custodial HSM like [YubiKey](https://en.wikipedia.org/wiki/YubiKey).
 
 Part of the signup / login process also involves setting up a `sudo` password. This password is used to encrypt your Team keys and store them locally in your browser.
 
-If you want to login to the Phase console on a new device or browser, you will need to re-enter your recovery phrase and set up a new `sudo` password.
+If you want to login to the Phase console on a new device or browser, you will need to re-enter your recovery key and set up a new `sudo` password.
 
 ## Apps
 
 To use Phase encryption with your application, you will need to create an App on Phase. Each Phase App is associated with the following cryptographic keys:
 
-- App public key - used to encrypt application data
-- App private key - used to decrypt application data
+- **[App Public Key](https://en.wikipedia.org/wiki/YubiKey)** - used to encrypt application data
+- **[App Private Key](https://en.wikipedia.org/wiki/YubiKey)** - used to decrypt application data
 
 These two keys are used to create your `APP_ID` and `APP_SECRET`, which along with the Phase [SDKs](/sdks) allow you to encrypt and decrypt data in your applications.
 
@@ -38,12 +45,13 @@ The `APP_SECRET`, as the name suggests, is secret and should never be placed in 
 
 The App private key is used to decrypt data, however storing this private key in plaintext in a single location poses several security risks. A breach of this value is impossible to recover from, since the private key itself cannot be changed for given App.
 
-To solve this problem, Phase uses a Dual-Key model. Your App private key is split into 2 shares. One of these shares is contained within the `APP_SECRET`, while the other is encrypted and stored on the Phase KMS (Key Management Service).
-The Phase SDKs put these two shares together to reconstruct your App private key in memory, which is then used to decrypt application data.
+To solve this problem, Phase uses a Dual-Key model. Your App private key is split into 2 shares. One of these shares is contained within the `APP_SECRET`, while the other is encrypted with a key present in the `APP_SECRET` and stored on the Phase KMS (Key Management Service). Each share on its on exposure no sensitive information about the private key.
 
-This means that your App private key is never stored in a single place where it could accidentlly be committed to version control, stolen by an attacker or otherwise compromised.
+During a decrypt operation, the Phase SDKs put these two shares together to reconstruct your App private key in memory, which is then used to decrypt application data.
+
+This means that your App private key is never stored in a single place where it could be accidentally committed to version control, stolen by an attacker or otherwise compromised.
 
 ## Key rotation
 
-The Dual-Key model also allows your `APP_SECRET` to be rotated in the event that this value is leaked. When you rotate an App key in the phase console, the encrypted share within Phase KMS is deleted, making it impossible to use the existing `APP_SECRET` to decrypt data.
+The Dual-Key model also allows your `APP_SECRET` to be rotated in the event that this value is leaked. When you rotate an App key in the phase console, the encrypted share within Phase KMS is deleted, making it impossible to use the previous `APP_SECRET` to decrypt data.
 Your App private key is split into 2 brand new shares, and you will be provided with a new `APP_SECRET` to use in your application's environment variables.
