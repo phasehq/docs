@@ -1,4 +1,11 @@
+import { Tag } from '@/components/Tag'
+import { HeroPattern } from '@/components/HeroPattern'
+
 export const description = 'Phase Encryption overview'
+
+<HeroPattern />
+
+<Tag variant="small">SECURITY</Tag>
 
 # Overview
 
@@ -15,25 +22,32 @@ In this document we will first provide an overview of high level concepts before
 
 ---
 
-## Teams
+## Account
 
-When you sign up for the Phase Console, you will create a Team. Part of the signup process will involve recording and safely storing a 24-word recovery key that is associated with your Team.
+Your Phase account is more than just a way to login and access the console. It is associated with cryptographic keys which help secure your Apps, and ensure that sensitive "admin" operations can only be performed by you.
 
-The recovery key is used to derive the following cryptographic keys:
+### Keyring
 
-- **[Symmetric Key](/security/phase-encryption#phase-console-client-side-key-generation)**- used to secure your App keys
-- **[Signing Key Seed](/security/phase-encryption#phase-console-client-side-key-generation)** - used to validate your recovery key when recovering your account or logging in on a new device
+When you sign up for the Phase Console, your Account will be setup with a set of cryptographic keys, caled an Account Keyring.
+Part of the signup process will involve recording and safely storing a 24-word recovery phrase that is used to recover these keys.
 
-When you create a Team, you are designated as the Team Owner and have sole access to the recovery key. It is extremely important that you store your recovery key in a safe place, as it is the root source of entropy from which all other keys are derived.
+The recovery phrase is used to derive the following cryptographic keys which comprise your Account Keyring:
+
+- **[Symmetric Key](/security/phase-encryption#phase-console-client-side-key-generation)** - used to secure your App keys.
+- **[Signing Key Pair](/security/phase-encryption#phase-console-client-side-key-generation)** - used to validate your recovery key when recovering your account or logging in on a new device.
+
+Once your Account is setup, you will have sole access to the recovery phrase. It is extremely important that you store your recovery phrase in a safe place, as it is the root source of entropy from which your Account Keyring can be retrieved.
 
 Depending on your threat model, we recommend you:
 
-- Write or print the 24 word recovery down on paper and store it some place safe
+- Write or print the 24-word recovery phrease down on paper and store it some place safe
 - Save it in a password manager or vault
 
 In the future we have plans to let users store their recovery key on a self custodial HSM like [YubiKey](https://en.wikipedia.org/wiki/YubiKey).
 
-Part of the signup / login process also involves setting up a `sudo` password. This password is used to encrypt your Team keys and store them locally in your browser.
+### `sudo` password
+
+Part of the signup / login process also involves setting up a `sudo` password. This password is used to encrypt your Account keys and store them locally in your browser. To perform certain operations such as creating an App, or rotating an `APP_SECRET`, you will be asked to enter this `sudo` password so that your Account Keyring can be decrypted in memory.
 
 If you want to login to the Phase console on a new device or browser, you will need to re-enter your recovery key and set up a new `sudo` password.
 
@@ -48,14 +62,14 @@ If you want to login to the Phase console on a new device or browser, you will n
 
 ---
 
-## Apps
+## App keys
 
 To use Phase encryption with your application, you will need to create an App on Phase. Each Phase App is associated with the following cryptographic keys:
 
 - **[App Public Key](https://en.wikipedia.org/wiki/YubiKey)** - used to encrypt application data
 - **[App Private Key](https://en.wikipedia.org/wiki/YubiKey)** - used to decrypt application data
 
-These two keys are used to create your `APP_ID` and `APP_SECRET`, which along with the Phase [SDKs](/sdks) allow you to encrypt and decrypt data in your applications.
+These two keys are used to create your `APP_ID` and `APP_SECRET` respectively. App keys are used by the Phase [SDKs](/sdks) to encrypt and decrypt data in your applications.
 
 The `APP_ID` is public and not considered a secret. You can add this value as an environment variable in front-end applications safely.
 
@@ -76,7 +90,7 @@ The `APP_SECRET`, as the name suggests, is secret and should never be placed in 
 
 The App private key is used to decrypt data, however storing this private key in plaintext in a single location poses several security risks. A breach of this value is impossible to recover from, since the private key itself cannot be changed for given App.
 
-To solve this problem, Phase uses a Dual-Key model. Your App private key is split into 2 shares. One of these shares is contained within the `APP_SECRET`, while the other is encrypted with a key present in the `APP_SECRET` and stored on the Phase KMS (Key Management Service). Each share on its on exposure no sensitive information about the private key.
+To solve this problem, Phase uses a Dual-Key model. Your App private key is split into 2 shares. One of these shares is contained within the `APP_SECRET`, while the other is stored on the Phase KMS (Key Management Service). Each share on its own cannot be used to recreate your private key.
 
 During a decrypt operation, the Phase SDKs put these two shares together to reconstruct your App private key in memory, which is then used to decrypt application data.
 
@@ -93,7 +107,7 @@ This means that your App private key is never stored in a single place where it 
 
 ---
 
-## Key rotation
+## Secret rotation
 
 The Dual-Key model also allows your `APP_SECRET` to be rotated in the event that this value is leaked. When you rotate an App key in the phase console, the encrypted share within Phase KMS is deleted, making it impossible to use the previous `APP_SECRET` to decrypt data.
 Your App private key is split into 2 brand new shares, and you will be provided with a new `APP_SECRET` to use in your application's environment variables.
