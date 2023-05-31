@@ -20,7 +20,17 @@ In this document we will first provide an overview of high level concepts before
 - The device and operating system that is being used to access the Phase Console and generate keys is trusted
 - The JavaScript that you are executing when you are accessing the Phase Console is authentic and trusted. If this is a genuine concern, please consider self hosting the Phase Console. In the future, we plan to explore cryptographically signing JavaScript and validating it client side before execution.
 
-Phases uses strong and robust cryptographic libraries and implementations such as [libsodium](https://doc.libsodium.org/) which have gone though a formal audit. [More about the audit](https://www.privateinternetaccess.com/blog/libsodium-v1-0-12-and-v1-0-13-security-assessment/)
+## Security audits
+
+Phases uses strong and robust cryptographic libraries and implementations such as [libsodium](https://doc.libsodium.org/) which have gone though a formal audit. We plan to go through a similar formal security assessment and audit with the Phase Console.
+
+From the libsodium report:
+
+> Our review of libsodium did not uncover any critical flaws or vulnerabilities in the core library. Libsodium developers have followed best practices in terms of cryptographic design and secure development in C. The library provides the right level of abstraction for application developers that need a secure, easy-to-use API for cryptography. Moreover, the library provides secure defaults for every cryptographic primitive with production-level quality...
+
+The audit was sponsored by [Private Internet Access](https://www.privateinternetaccess.com/blog/libsodium-v1-0-12-and-v1-0-13-security-assessment/) (PIA) VPN.
+
+[Download the report](/assets/libsodium_audit.pdf)
 
 ---
 
