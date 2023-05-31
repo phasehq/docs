@@ -189,10 +189,6 @@ export const navigation = [
     links: [
       { title: 'Introduction', href: '/' },
       { title: 'Quickstart', href: '/quickstart' },
-      //{ title: 'Authentication', href: '/authentication' },
-      //{ title: 'Pagination', href: '/pagination' },
-      //{ title: 'Errors', href: '/errors' },
-      //{ title: 'Webhooks', href: '/webhooks' },
     ],
   },
   {
@@ -201,8 +197,6 @@ export const navigation = [
       { title: 'SDKs', href: '/sdks' },
       { title: 'JavaScript SDK', href: '/sdks/js' },
       { title: 'Node.js SDK', href: '/sdks/node' },
-      //{ title: 'Encrypt', href: '/encrypt' },
-      //{ title: 'Decrypt', href: '/decrypt' },
     ],
   },
   {
