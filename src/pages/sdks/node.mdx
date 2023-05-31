@@ -1,3 +1,5 @@
+import { Tag } from '@/components/Tag'
+
 export const description =
   'SDK to integrate Phase in server-side applications running Node.js.'
 
@@ -8,13 +10,16 @@ export const sections = [
   { title: 'Usage', id: 'usage' },
 ]
 
+<Tag variant="small">RESOURCES</Tag>
+
 # Node.js SDK
 
 SDK to integrate Phase in server-side applications running Node.js.
 
 The Node.js SDK allows you to encrypt data server-side, as well as decrypt data.
 
-- [npm](https://www.npmjs.com/package/@phase.dev/phase-node)
+- [@phase.dev/phase-node](https://www.npmjs.com/package/@phase.dev/phase-node)
+- [github.com/phasehq/node-sdk](https://github.com/phasehq/node-sdk)
 
 <Note>
   In order to use the Node.js SDK you will need to create a new App on the Phase
@@ -51,7 +56,7 @@ The Node.js SDK is distributed via [npm](https://www.npmjs.com/package/@phase.de
 Once installed, you can import the Node.js SDK into your project.
 
 ```js
-const Phase = require('@phase.dev/phase-node').default
+const Phase = require('@phase.dev/phase-node')
 ```
 
 ---

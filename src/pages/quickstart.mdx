@@ -1,5 +1,9 @@
+import { Tag } from '@/components/Tag'
+
 export const description =
   'This guide will get you all set up and ready to use the Phase console.'
+
+<Tag variant="small">GETTING STARTED</Tag>
 
 # Quickstart
 
@@ -11,20 +15,16 @@ This guide will walk you through creating an account and securing it with a reco
 
 You can login to the Phase <a href="https://console.phase.dev" target="_blank">console</a> with Google, GitHub or GitLab.
 
-Once you've logged in you'll be prompted to choose a name for your Team. Your Team name must be unique and alphanumeric. You can't use spaces or special characters. Enter your team name and click `Next`
+Once you've logged in you'll be prompted to choose a name for your Team. Your Team name must be unique and alphanumeric. You can't use spaces or special characters. Enter your team name and click 'Next'
 
 ## Set up account recovery
 
-You will now be shown your account recovery phrase. A recovery phrase is a unique 24 word mnemonic phrase used to encrypt and secure your application keys.
+You will now be shown your account recovery phrase. A recovery phrase is a unique 24-word mnemonic phrase used to encrypt and secure your application keys.
+The phrase will be hidden but you can hover on each word with your mouse to reveal it, or simply click the 'Copy' button to copy it to your clipboard.
 
 It looks something like this:
 
-```
-1. scout  2. angry 3. enter 4. aunt 5. word 6. express
-7. enforce 8. measure 9. exhaust 10. genius 11. cook 12. pretty
-13. hundred 14. connect 15. hundred 16. marble 17. file 18. spirit
-19. era 20. angle 21. kidney 22. bacon 23. coffee 24. review
-```
+![account keys](/assets/accountPhrase.png)
 
 <Warning>
 **Store this recovery phrase in a safe place. You won't be shown it again.**
@@ -36,32 +36,28 @@ You will need to enter your account recovery phrase to:
 
 </Warning>
 
-Once you've stored your recovery phrase, click `Next`. You will then be asked to enter the recovery phrase in the correct order on the next screen to confirm it. (In case you have copied it, you can simply paste it.)
+Once you've stored your recovery phrase, click 'Next'. You will then be asked to enter the recovery phrase in the correct order on the next screen to confirm it. In case you have copied the phrase to your clipboard, you can simply paste it here. If you have entered all the words correctly, you will see each input field turn green with a small check, like this:
+
+![account keys entered correctly](/assets/accountPhraseCorrect.png)
 
 ## Set up a `sudo` password
 
 The last step is to set up a `sudo` password. A `sudo` password is used to secure data thats stored locally in your browser storage. This is not transmittedto or stored on our backend. The only requirement is for it to be 16 characters long.
 
-Enter a `sudo` password, type it again to confirm, and click `Next`
+Enter a `sudo` password, type it again to confirm, and click 'Next'
 
-It will take a few seconds for the Phase console to generate keys on your machine. Once everything is ready, you will be dropped inside the you Team Home. Your Phase account is ready to use! 🎉
+It will take a few seconds for the Phase console to generate keys on your machine. Once everything is ready, you will be dropped inside the you Team Home. Your Phase account is now ready to use! 🎉
 
 ## Create an App
 
-In order to use Phase Encryption with your app, you'll need to create an App on Phase.
+In order to use Phase Encryption within your applications, you'll need to create an App on Phase.
 
 Create a new app by going to `Apps` from the left sidebar and clicking '+'. Enter an alphanumeric name for your new App along with your `sudo` password and click `Create`. A new set of encryption keys will be created for your new App.
 
 You will be shown a pair of values: `APP_ID` and `APP_SECRET`
 They look something like this:
 
-```js
-// Phase APP_ID
-ph_app:3a1e0710ced57e060109d8e94f06d52a8e5ffae88ed01506776c5bed664c8a96
-
-// Phase APP_SECRET
-pss:a0c02d5de90c58c3c3ab3e5a71c87c9fb7ea134717fb7097bb17284ad4e02ef3:801b342264bfea0c8f8f7058392b99989595059201bc011f6bf7ed813a2f84b05cb5af6aef32cd893ee0930f2904f1194cb912bb2452a5e54f83d588704dbec40037f798e8a4c56aad7d3f4f929f2733e8f:138b021783f08bfe7a4e2f536fc2e743e3ff9b966c9c3af60f427cb3932d647a
-```
+![app keys](/assets/appKeys.png)
 
 These values will be used along with the Phase SDKs to encrypt and decrypt data in your application.
 
