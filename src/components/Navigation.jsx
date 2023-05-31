@@ -201,17 +201,16 @@ export const navigation = [
       { title: 'SDKs', href: '/sdks' },
       { title: 'JavaScript SDK', href: '/sdks/js' },
       { title: 'Node.js SDK', href: '/sdks/node' },
-      //{ title: 'Encrypt', href: '/encrypt' },
+      { title: 'Python SDK', href: '/sdks/python' },
       //{ title: 'Decrypt', href: '/decrypt' },
     ],
   },
   {
     title: 'Security',
     links: [
-      { title: 'Overview', href: '/security/overview'},
+      { title: 'Overview', href: '/security/overview' },
       { title: 'Phase Encryption', href: '/security/phase-encryption' },
       { title: 'Cryptography', href: '/security/cryptography' },
-
     ],
   },
 ]
@@ -231,7 +230,12 @@ export function Navigation(props) {
           />
         ))}
         <li className="sticky bottom-0 z-10 mt-6 min-[416px]:hidden">
-          <Button href="https://console.phase.dev" target="_blank" variant="filled" className="w-full">
+          <Button
+            href="https://console.phase.dev"
+            target="_blank"
+            variant="filled"
+            className="w-full"
+          >
             Launch Console
           </Button>
         </li>

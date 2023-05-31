@@ -1,0 +1,77 @@
+export const description =
+  'SDK to integrate Phase in server-side Python applications.'
+
+export const sections = [
+  { title: 'Install', id: 'install-the-sdk' },
+  { title: 'Import', id: 'import-the-sdk' },
+  { title: 'Initialize', id: 'initialize-the-sdk' },
+  { title: 'Usage', id: 'usage' },
+]
+
+# Python SDK
+
+SDK to integrate Phase in server-side applications running Python.
+
+The Python SDK allows you to encrypt data server-side, as well as decrypt data.
+
+- [PyPi](https://www.npmjs.com/package/@phase.dev/phase-node)
+
+<Note>
+  In order to use the Python SDK you will need to create a new App on the Phase
+  Console. Add the `APP_ID` and `APP_SECRET` to your application, preferably
+  using environment variables. [Quick start &raquo;](/quickstart)
+</Note>
+
+---
+
+## Install the SDK
+
+The Python SDK is distributed via [pip](https://www.npmjs.com/package/@phase.dev/phase-node). You can install it using the following command for your preferred package manager.
+
+<CodeGroup title="Install">
+
+    ```bash {{ title: 'pip' }}
+    pip install phase-sdk
+    ```
+
+</CodeGroup>
+
+---
+
+## Import the SDK
+
+Once installed, you can import the Python SDK into your project.
+
+```python
+from phase import Phase;
+```
+
+---
+
+## Initialize the SDK
+
+Initialize the SDK with your `APP_ID` and `APP_SECRET`.
+
+```python
+phase = Phase(APP_ID, APP_SECRET)
+```
+
+---
+
+## Usage
+
+### Encrypt
+
+The `encrypt` API allows you to encrypt data.
+
+```python
+ciphertext = phase.encrypt("hello world");
+```
+
+### Decrypt
+
+The `decrypt` API allows you to decrypt a Phase encrypted data `ph:` string.
+
+```python
+plaintext = phase.decrypt(ciphertext);
+```
