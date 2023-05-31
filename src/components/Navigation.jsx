@@ -205,14 +205,15 @@ export const navigation = [
       //{ title: 'Decrypt', href: '/decrypt' },
     ],
   },
-  // {
-  //   title: 'Security',
-  //   links: [
-  //     { title: 'Phase Encryption', href: '/security/overview' },
-  //     { title: 'Cryptography', href: '/security/cryptography' },
+  {
+    title: 'Security',
+    links: [
+      { title: 'Overview', href: '/security'},
+      { title: 'Phase Cryptography', href: '/security/phase-encryption' },
+      { title: 'Cryptographic Algorithms', href: '/security/cryptography' },
 
-  //   ],
-  // },
+    ],
+  },
 ]
 
 export function Navigation(props) {

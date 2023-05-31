@@ -1,0 +1,134 @@
+import { Tag } from '@/components/Tag'
+import { HeroPattern } from '@/components/HeroPattern'
+
+export const description = 'Phase Encryption overview'
+
+<HeroPattern />
+
+<Tag variant="small">SECURITY</Tag>
+
+# Overview
+
+Phase has been designed to give app developers access to the best cryptography available while being easy to integrate, manage and observe key usage; all while providing robust security.
+This involves various decisions around how encryption keys are generated and managed, how data is encrypted or decrypted, what algorithms are used for various cryptographic operations and how Phase interacts with your applications.
+In this document we will first provide an overview of high level concepts before explaining the details of how Phase encryption works.
+
+## Threat model and security assumptions
+
+- The Phase `APP_SECRET` is kept safe by you
+- The application runtime where you are using Phase to decrypt data is trusted
+- The device and operating system that is being used to access the Phase Console and generate keys is trusted
+- The JavaScript that you are executing when you are accessing the Phase Console is authentic and trusted. If this is a genuine concern, please consider self hosting the Phase Console. In the future, we plan to explore cryptographically signing JavaScript and validating it client side before execution.
+
+## Security audits
+
+Phases uses strong and robust cryptographic libraries and implementations such as [libsodium](https://doc.libsodium.org/) which have gone though a formal audit. We plan to go through a similar formal security assessment and audit with the Phase Console.
+
+From the libsodium report:
+
+> Our review of libsodium did not uncover any critical flaws or vulnerabilities in the core library. Libsodium developers have followed best practices in terms of cryptographic design and secure development in C. The library provides the right level of abstraction for application developers that need a secure, easy-to-use API for cryptography. Moreover, the library provides secure defaults for every cryptographic primitive with production-level quality...
+
+The audit was sponsored by [Private Internet Access](https://www.privateinternetaccess.com/blog/libsodium-v1-0-12-and-v1-0-13-security-assessment/) (PIA) VPN.
+
+[Download the report](/assets/libsodium_audit.pdf)
+
+---
+
+## Account
+
+Your Phase account is more than just a way to login and access the Phase Console. It is associated with cryptographic keys which help secure your Apps, and ensure that sensitive privileged operations can only be performed by you.
+
+### Keyring
+
+When you sign up for the Phase Console, your Account will be setup with a set of cryptographic keys, called an Account Keyring.
+Part of the signup process will involve recording and safely storing a 24-word recovery phrase that is used to recover these keys.
+
+The recovery phrase is used to deterministically derive the following cryptographic keys which comprise your Account Keyring:
+
+- **[Symmetric Key](/security/phase-encryption#phase-console-client-side-key-generation)** - used to secure your App keys.
+- **[Signing Key Pair](/security/phase-encryption#phase-console-client-side-key-generation)** - used to validate your recovery key when recovering your account or logging in on a new device.
+
+Once your Account is setup, you will have sole access to the recovery phrase. It is extremely important that you store your recovery phrase in a safe place, as it is the root source of entropy from which your Account Keyring can be retrieved.
+
+Depending on your threat model, we recommend you:
+
+- Write or print the 24-word recovery phrease down on paper and store it some place safe
+- Save it in a password manager or vault
+
+In the future we have plans to let users store their recovery key on a self custodial HSM like [YubiKey](https://en.wikipedia.org/wiki/YubiKey).
+
+### The `sudo` password
+
+Part of the signup / login process also involves setting up a `sudo` password. This password is used to encrypt your Account keys and store them locally in your browser. To perform certain operations such as creating an App, or rotating an `APP_SECRET`, you will be asked to enter this `sudo` password so that your Account Keyring can be decrypted in memory.
+
+If you want to login to the Phase console on a new device or browser, you will need to re-enter your recovery key and set up a new `sudo` password.
+
+<div className="not-prose">
+  <Button
+    href="/security/phase-encryption#phase-console-client-side-key-generation"
+    variant="text"
+    arrow="right"
+    children="More info"
+  />
+</div>
+
+---
+
+## App keys
+
+To use Phase encryption with your application, you will need to create an App on Phase. Each Phase App is associated with the following cryptographic keys:
+
+- **[App Public Key](https://en.wikipedia.org/wiki/YubiKey)** - used to encrypt application data
+- **[App Private Key](https://en.wikipedia.org/wiki/YubiKey)** - used to decrypt application data
+
+These two keys are used to create your `APP_ID` and `APP_SECRET` respectively. App keys are used by the Phase [SDKs](/sdks) to encrypt and decrypt data in your applications.
+
+The `APP_ID` is public and not considered a secret. You can add this value as an environment variable in front-end applications safely.
+
+The `APP_SECRET`, as the name suggests, is secret and should never be placed in front-end code. Anyone with access to this value will be able to decrypt data in your application.
+
+<div className="not-prose">
+  <Button
+    href="/security/phase-encryption#app-keys-and-secret-generation"
+    variant="text"
+    arrow="right"
+    children="More info"
+  />
+</div>
+
+---
+
+## Dual-Key model
+
+The App private key is used to decrypt data, however storing this private key in plaintext in a single location poses several security risks. A breach of this value is impossible to recover from, since the private key itself cannot be changed for given App.
+
+To solve this problem, Phase uses a Dual-Key model. Your App private key is split into 2 shares. One of these shares is contained within the `APP_SECRET`, while the other is stored on the Phase KMS (Key Management Service). Each share on its own cannot be used to recreate your private key.
+
+During a decrypt operation, the Phase SDKs put these two shares together to reconstruct your App private key in memory, which is then used to decrypt application data.
+
+This means that your App private key is never stored in a single place where it could be accidentally committed to version control, stolen by an attacker or otherwise compromised.
+
+<div className="not-prose">
+  <Button
+    href="/security/phase-encryption#app-keys-and-secret-generation"
+    variant="text"
+    arrow="right"
+    children="More info"
+  />
+</div>
+
+---
+
+## Secret rotation
+
+The Dual-Key model also allows your `APP_SECRET` to be rotated in the event that this value is leaked. When you rotate an App key in the phase console, the encrypted share within Phase KMS is deleted, making it impossible to use the previous `APP_SECRET` to decrypt data.
+Your App private key is split into 2 brand new shares, and you will be provided with a new `APP_SECRET` to use in your application's environment variables.
+
+<div className="not-prose">
+  <Button
+    href="/security/phase-encryption#key-rotation-and-revocation"
+    variant="text"
+    arrow="right"
+    children="More info"
+  />
+</div>
