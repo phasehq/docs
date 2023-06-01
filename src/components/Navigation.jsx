@@ -195,8 +195,9 @@ export const navigation = [
     title: 'Resources',
     links: [
       { title: 'SDKs', href: '/sdks' },
-      { title: 'JavaScript SDK', href: '/sdks/js' },
-      { title: 'Node.js SDK', href: '/sdks/node' },
+      { title: 'JavaScript', href: '/sdks/js' },
+      { title: 'Node.js', href: '/sdks/node' },
+      { title: 'Python', href: '/sdks/python' },
     ],
   },
   {

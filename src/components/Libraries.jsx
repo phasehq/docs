@@ -30,12 +30,12 @@ const serverSdks = [
     available: true
   },
   {
-    href: '',
-    name: 'Python (Coming soon)',
+    href: '/sdks/python',
+    name: 'Python',
     description:
     'Encrypt and decrypt data in your preferred Python application server.',
     logo: logoPython,
-    available: false
+    available: true
   },
   {
     href: '',
