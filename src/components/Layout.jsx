@@ -20,9 +20,9 @@ export function Layout({ children, sections = [] }) {
             <div className="hidden lg:flex">
               <Link href="/" aria-label="Home" className="flex items-center gap-1">
                 <Logo className="h-6" /> 
-                <div className="flex gap-1 border-none md:text-xl font-light text-white">
+                <div className="flex gap-1 border-none md:text-xl font-light dark:text-white">
                   phase 
-                  <span className="font-bold uppercase text-transparent bg-clip-text bg-gradient-to-br from-violet-400 to-sky-600">docs</span>
+                  <span className="font-semibold uppercase tracking-wider">docs</span>
                 </div>
               </Link>
             </div>

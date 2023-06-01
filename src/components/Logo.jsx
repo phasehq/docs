@@ -1,6 +1,6 @@
 export function Logo(props) {
   return (
-<svg width="32" height="32" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="32" height="32" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg" className="invert dark:invert-0">
 <path d="M22 146.495C85.6927 18.9856 85.313 24.9378 116.746 147.947C149.419 269.955 204 155.947 204 147.947" stroke="white" stroke-opacity="0.2" stroke-width="4" class="svg-elem-1"></path>
 <path d="M36 147.947C99.6927 20.4374 100.313 24.9377 131.746 147.947C164.419 269.955 219 155.947 219 147.947" stroke="white" stroke-opacity="0.5" stroke-width="4" class="svg-elem-2"></path>
 <path d="M20 146.995C23.5834 146.995 165.493 146.995 236 146.995" stroke="white" stroke-width="4" class="svg-elem-3"></path>
