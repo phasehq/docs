@@ -5,14 +5,13 @@ import { GridPattern } from '@/components/GridPattern'
 import { Heading } from '@/components/Heading'
 import { ChatBubbleIcon } from '@/components/icons/ChatBubbleIcon'
 import { PackageIcon } from '@/components/icons/PackageIcon'
-import { UserIcon } from '@/components/icons/UserIcon'
+import { CheckIcon } from '@/components/icons/CheckIcon'
 
 const resources = [
   {
     href: '/sdks/js',
     name: 'JavaScript - Browser SDK',
-    description:
-      'Encrypt data straight from your users browsers.',
+    description: 'Encrypt data straight from your users browsers.',
     icon: PackageIcon,
     pattern: {
       y: 16,
@@ -24,9 +23,8 @@ const resources = [
   },
   {
     href: '/sdks/node',
-    name: 'Node.js - Server SDK',
-    description:
-      'Encrypt / Decrypt data in your preferred JavaScript application server.',
+    name: 'Node.js SDK',
+    description: 'Secure data in your preferred JavaScript application server.',
     icon: PackageIcon,
     pattern: {
       y: -6,
@@ -35,7 +33,20 @@ const resources = [
         [1, 3],
       ],
     },
-  },/*
+  },
+  {
+    href: '/sdks/python',
+    name: 'Python SDK',
+    description: 'Secure data in your preferred Python application server.',
+    icon: PackageIcon,
+    pattern: {
+      y: -8,
+      squares: [
+        [0, 2],
+        [1, 4],
+      ],
+    },
+  } /*
   {
     href: '/messages',
     name: 'Messages',
@@ -60,7 +71,7 @@ const resources = [
       y: 22,
       squares: [[0, 1]],
     },
-  },*/
+  },*/,
 ]
 
 function ResourceIcon({ icon: Icon }) {

@@ -1,0 +1,82 @@
+import { Tag } from '@/components/Tag'
+
+export const description =
+  'SDK to integrate Phase in server-side applications running Python.'
+
+export const sections = [
+  { title: 'Install', id: 'install-the-sdk' },
+  { title: 'Import', id: 'import-the-sdk' },
+  { title: 'Initialize', id: 'initialize-the-sdk' },
+  { title: 'Usage', id: 'usage' },
+]
+
+<Tag variant="small">RESOURCES</Tag>
+
+# Python SDK
+
+SDK to integrate Phase in server-side applications running Python.
+
+The Python SDK allows you to encrypt data server-side, as well as decrypt data.
+
+- [phase-dev](https://pypi.org/project/phase-dev/) on PyPI
+- [github.com/phasehq/python-sdk](https://github.com/phasehq/python-sdk)
+
+<Note>
+  In order to use the Python SDK you will need to create a new App on the Phase
+  Console. Add the `APP_ID` and `APP_SECRET` to your application, preferably
+  using environment variables. [Quick start &raquo;](/quickstart)
+</Note>
+
+---
+
+## Install the SDK
+
+The Python SDK is distributed via [PyPI](https://pypi.org/project/phase-dev/). You can install it using the following command.
+
+<CodeGroup title="Install">
+
+    ```bash {{ title: 'pip' }}
+    pip install phase-dev
+    ```
+
+</CodeGroup>
+
+---
+
+## Import the SDK
+
+Once installed, you can import the Python SDK into your project.
+
+```python
+from phase import Phase;
+```
+
+---
+
+## Initialize the SDK
+
+Initialize the SDK with your `APP_ID` and `APP_SECRET`.
+
+```python
+phase = Phase(APP_ID, APP_SECRET)
+```
+
+---
+
+## Usage
+
+### Encrypt
+
+The `encrypt` API allows you to encrypt data. It returns an encrypted string in the Phase Ciphertext format.
+
+```python
+ciphertext = phase.encrypt('hello world')
+```
+
+### Decrypt
+
+The `decrypt` API allows you to decrypt a Phase Ciphertext string. It returns a plaintext string.
+
+```python
+plaintext = phase.decrypt(ciphertext)
+```
