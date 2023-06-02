@@ -19,7 +19,7 @@ The [SDKs](/sdks) use this cryptographic architecture to encrypt and decrypt dat
 
 ## Account keyring
 
-Each Phase account is created with an Account Keyring on signup, which comprises a an [`XChaCha-Poly1305`](https://doc.libsodium.org/secret-key_cryptography/aead/chacha20-poly1305) symmetric key and a [`ED25519`](https://www.cryptopp.com/wiki/Ed25519) signing keypair.
+Each Phase account is created with an Account Keyring on signup, which comprises an [`XChaCha-Poly1305`](https://doc.libsodium.org/secret-key_cryptography/aead/chacha20-poly1305) symmetric key and an [`Ed25519`](https://www.cryptopp.com/wiki/Ed25519) signing keypair.
 
 An Account Keyring is generated as follows:
 
@@ -55,7 +55,7 @@ The **Account Seed** is passed to [libsodium](https://doc.libsodium.org/key_deri
 with a unique `ctx` (context) and `subkey_id` to create the two following 256 bit **Account Keys** from a single high entropy seed:
 
 - **_Symmetric Key_**: Used to encrypt all sensitive account data / keys in the Phase Console client. eg. [App seed](/security/phase-encryption#app-keys-and-secret-generation)
-- **_Signing Key Seed_**: Is used to generate a [`ED25519`](https://www.cryptopp.com/wiki/Ed25519) key pair that's used to sign challenges.
+- **_Signing Key Seed_**: Is used to generate an [`Ed25519`](https://www.cryptopp.com/wiki/Ed25519) key pair that's used to sign challenges.
   A public key known as the **Account Identity Key** is generated from the **_Signing Key Seed_** using the `crypto_sign_seed_keypair()` in libsodium.
   This public key is stored on the Phase Console backend to cryptographically validate an Account Recovery phrase while trying to log into a new device.
   (In the future this key can also be used to securely share data from one user to another using `X25519`)
@@ -85,7 +85,7 @@ The encrypted seed is stored on the Phase Console backend.
 
 ### 2. Key derivation from seed
 
-The seed is passed to `crypto_kx_seed_keypair()` which returns a `X25519` public / private keypair.
+The seed is passed to `crypto_kx_seed_keypair()` which returns an `Ed25519` public / private keypair.
 
 ### 2. App Token
 
@@ -143,7 +143,7 @@ Each encryption operation uses a unique symmetric key derived using a key-exchan
 
 ### Encryption
 
-1. Create an ephemeral `X25519` key pair with libsodium's `crypto_kx_keypair()` utility.
+1. Create an ephemeral `Ed25519` key pair with libsodium's `crypto_kx_keypair()` utility.
 2. Create a 256 bit symmetric `sessionKey` via the `X25519` Elliptic Curve Diffie-Hellman key exchange algorithm with the public key from [`APP_ID`](/security/phase-encryption#app-id) and ephemeral key pair.
 3. Use the `sessionKey` to encrypt data with libsodium's `crypto_aead_xchacha20poly1305_ietf_encrypt()`.
 4. Return Phase encrypted data in the [`ph:`](/security/phase-encryption#phase-encrypted-data) format.
@@ -160,20 +160,22 @@ Each encryption operation uses a unique symmetric key derived using a key-exchan
 
 ## Data Structure
 
+<br className="mt-2" />
+
 <Row>
   <Col>
 
-    ## Phase encrypted data {{ tag: 'ENCRYPTED',  label: 'Secure encrypted information' }}
+    ## Phase encrypted data {{ tag: 'ENCRYPTED' }}
 
     <Properties>
-      <Property name="ph" type="plain text">
+      <Property name="ph" type="plaintext">
         Helps identify data encrypted with Phase SDKs
       </Property>
-      <Property name="version" type="plain text">
+      <Property name="version" type="plaintext">
         Helps identify version of data encrypted with Phase
       </Property>
             <Property name="ephPublicKey" type="hex">
-        An ephemeral X25519 public key used to derive XChaCha20 shared secret
+        An ephemeral Ed25519 public key used to derive XChaCha20-Poly1305 shared symmetric key
       </Property>
             <Property name="ciphertext" type="base64">
         XChaCha20-Poly1305 encrytped data
@@ -181,7 +183,7 @@ Each encryption operation uses a unique symmetric key derived using a key-exchan
             <Property name="nonce" type="base64">
         A randomly generated 192bit initialization vector
       </Property>
-            <Property name="tag" type="plain text">
+            <Property name="tag" type="plaintext">
         An optional user supplied string
       </Property>
 
@@ -191,28 +193,28 @@ Each encryption operation uses a unique symmetric key derived using a key-exchan
   <Col sticky>
 
     ```
-    -> ph:version:ephPublicKey:ciphertext+nonce:tag
+    ph:version:ephPublicKey:ciphertext+nonce:tag
     ```
 
   </Col>
 </Row>
 
----
+<br className="mt-8" />
 
 <Row>
   <Col>
 
-    ## `APP_ID` {{ tag: 'PUBLIC',  label: 'Phase Applicaton ID' }}
+    ## `APP_ID` {{ tag: 'PUBLIC' }}
 
     <Properties>
-      <Property name="phID" type="plain text">
+      <Property name="phID" type="plaintext">
         Helps identify Phase SDK appID
       </Property>
-      <Property name="version" type="plain text">
+      <Property name="version" type="plaintext">
         Helps identify Phase SDK appID version
       </Property>
       <Property name="appID" type="hex">
-        X25519 public application public key
+        Ed25519 public application public key
       </Property>
 
     </Properties>
@@ -221,24 +223,24 @@ Each encryption operation uses a unique symmetric key derived using a key-exchan
   <Col sticky>
 
     ```
-    -> phApp:version:appID
+    phApp:version:appID
     ```
 
   </Col>
 </Row>
 
----
+<br className="mt-8" />
 
 <Row>
   <Col>
 
-    ## `APP_SECRET` {{ tag: 'SECRET', label: 'Phase AppSecret' }}
+    ## `APP_SECRET` {{ tag: 'SECRET' }}
 
     <Properties>
-      <Property name="pss" type="plain text">
+      <Property name="pss" type="plaintext">
         Helps identify Phase SDK secret
       </Property>
-      <Property name="version" type="plain text">
+      <Property name="version" type="plaintext">
         Helps identify Phase SDK `APP_SECRET` version
       </Property>
       <Property name="appToken" type="hex">
@@ -257,11 +259,13 @@ Each encryption operation uses a unique symmetric key derived using a key-exchan
   <Col sticky>
 
     ```
-    -> pss:version:appToken:share0:wrapKey
+    pss:version:appToken:share0:wrapKey
     ```
 
   </Col>
 </Row>
+
+---
 
 ## Key storage
 
