@@ -55,7 +55,7 @@ The **Account Seed** is passed to [libsodium](https://doc.libsodium.org/key_deri
 with a unique `ctx` (context) and `subkey_id` to create the two following 256 bit **Account Keys** from a single high entropy seed:
 
 - **_Symmetric Key_**: Used to encrypt all sensitive account data / keys in the Phase Console client. eg. [App seed](/security/phase-encryption#app-keys-and-secret-generation)
-- **_Signing Key Seed_**: Is used to generate a [`Ed25519`](https://www.cryptopp.com/wiki/Ed25519) key pair that's used to sign challenges.
+- **_Signing Key Seed_**: Is used to generate an [`Ed25519`](https://www.cryptopp.com/wiki/Ed25519) key pair that's used to sign challenges.
   A public key known as the **Account Identity Key** is generated from the **_Signing Key Seed_** using the `crypto_sign_seed_keypair()` in libsodium.
   This public key is stored on the Phase Console backend to cryptographically validate an Account Recovery phrase while trying to log into a new device.
   (In the future this key can also be used to securely share data from one user to another using `X25519`)
