@@ -35,7 +35,7 @@ export default function App({ Component, pageProps }) {
         openGraph={{
           title: router.pathname === '/' ? 'Phase Docs' : `${pageProps.title} - Phase Docs`,
           description: pageProps.description,
-          url: window.location.href,
+          url: `https://docs.phase.dev${router.pathname}`,
           locale: 'en',
           site_name: 'Phase DOCS',
           images: [
@@ -43,7 +43,7 @@ export default function App({ Component, pageProps }) {
               url: `${router.basePath}/assets/images/docs-meta.png`,
               width: 1200,
               height: 630,
-              alt: 'docs.hase.dev',
+              alt: 'https://docs.phase.dev',
               type: 'image/png',
             },
           ],
