@@ -70,10 +70,24 @@ function Feedback() {
   function onSubmit(event) {
     event.preventDefault()
 
-    // event.nativeEvent.submitter.dataset.response
-    // => "yes" or "no"
+    const data = {
+      page: window.location.href,
+      wasHelpful: event.nativeEvent.submitter.dataset.response,
+    }
 
-    setSubmitted(true)
+    fetch('https://phase.dev/1f611df5-9d6b-4f49-aa58-31e2370f3f98/submit', {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        origin: 'Phase Docs',
+        action: 'Docs feedback',
+        data,
+      }),
+    }).then(() => {
+      setSubmitted(true)
+    })
   }
 
   return (
