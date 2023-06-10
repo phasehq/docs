@@ -203,10 +203,10 @@ export const navigation = [
   {
     title: 'Security',
     links: [
-      { title: 'Overview', href: '/security'},
+      { title: 'Overview', href: '/security' },
+      { title: 'Phase Cloud', href: '/security/phase-cloud' },
       { title: 'Phase Cryptography', href: '/security/phase-encryption' },
       { title: 'Cryptographic Algorithms', href: '/security/cryptography' },
-
     ],
   },
 ]
@@ -226,7 +226,12 @@ export function Navigation(props) {
           />
         ))}
         <li className="sticky bottom-0 z-10 mt-6 min-[416px]:hidden">
-          <Button href="https://console.phase.dev" target="_blank" variant="filled" className="w-full">
+          <Button
+            href="https://console.phase.dev"
+            target="_blank"
+            variant="filled"
+            className="w-full"
+          >
             Launch Console
           </Button>
         </li>
