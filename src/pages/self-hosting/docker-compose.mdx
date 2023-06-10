@@ -21,7 +21,7 @@ Learn how to set up the Phase Console using the Docker Compose template
 
 ```bash
 # Ubuntu
-sudo apt update && sudo apt upgrade && sudo apt install docker-compose
+sudo apt update && sudo apt upgrade -y && sudo apt install -y docker-compose
 ```
 
 ## 2. Download the configurations
@@ -41,7 +41,7 @@ wget -O docker-compose.yml https://raw.githubusercontent.com/phasehq/console/mai
 **Nginx** Dockerfile & config
 
 ```bash
-mkdir nginx && wget -O ./nginx/default.conf https://raw.githubusercontent.com/Infisical/infisical/main/nginx/default.dev.conf
+mkdir nginx && wget -O ./nginx/default.conf https://raw.githubusercontent.com/phasehq/console/main/nginx/default.dev.conf
 ```
 
 ## 3. Update your configuration
