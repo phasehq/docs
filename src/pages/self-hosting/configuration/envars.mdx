@@ -1,0 +1,118 @@
+import { Tag } from '@/components/Tag'
+import { HeroPattern } from '@/components/HeroPattern'
+import { Deployments } from '@/components/Deployments'
+
+export const description =
+  'Overview of Phase Console deployment environment variables'
+
+<HeroPattern />
+
+<Tag variant="small">Self-Host Phase</Tag>
+
+# All environment variables
+
+Configure your environment variables when self-hosting Phase.
+
+Depending on your chosen self hosted deployment method, you may need to configured at least the required environment variable listed below. Other environment variables are listed below to increase the functionality of your self hosted instance based on your use case.
+
+**Required:**
+
+Single sign on (SS0): (At least **one** of the following SSO provider is **required** to authenticate with the Phase Console)
+
+Google SSO:
+
+<Properties>
+  <Property name="GOOGLE_CLIENT_ID" type="string">
+    Unique identifier for the contact.
+  </Property>
+  <Property name="GOOGLE_CLIENT_SECRET" type="string">
+    The username for the contact.
+  </Property>
+</Properties>
+
+GitHub SSO:
+
+<Properties>
+  <Property name="GITHUB_CLIENT_ID" type="string">
+    The phone number for the contact.
+  </Property>
+  <Property name="GITHUB_CLIENT_SECRET" type="string">
+    The avatar image URL for the contact.
+  </Property>
+</Properties>
+
+GitLab SSO:
+
+<Properties>
+  <Property name="GITHUB_CLIENT_ID" type="string">
+    The phone number for the contact.
+  </Property>
+  <Property name="GITHUB_CLIENT_SECRET" type="string">
+    The avatar image URL for the contact.
+  </Property>
+</Properties>
+
+Application secrets:
+
+<Properties>
+  <Property name="NEXTAUTH_SECRET" type="timestamp">
+    A random 32 byte hex string. Can be generated with `openssl rand -hex 32`
+  </Property>
+  <Property name="SECRET_KEY" type="timestamp">
+    A random 32 byte hex string. Can be generated with `openssl rand -hex 32`
+  </Property>
+</Properties>
+
+URLs and API endpoints:
+
+<Properties>
+  <Property name="NEXT_PUBLIC_BACKEND_API_BASE" type="timestamp">
+    A random 32 byte hex string. Can be generated with `openssl rand -hex 32`
+  </Property>
+  <Property name="NEXTAUTH_URL" type="string">
+    The contact display name in the contact list. By default, this is just the
+    username.
+  </Property>
+  <Property name="ALLOWED_HOSTS" type="string">
+    Unique identifier for the conversation associated with the contact.
+  </Property>
+  <Property name="ALLOWED_ORIGINS" type="timestamp">
+    A random 32 byte hex string. Can be generated with `openssl rand -hex 32`
+  </Property>
+  <Property name="SESSION_COOKIE_DOMAIN" type="timestamp">
+    A random 32 byte hex string. Can be generated with `openssl rand -hex 32`
+  </Property>
+  <Property name="OAUTH_REDIRECT_URI" type="string">
+    The contact display name in the contact list. By default, this is just the
+    username.
+  </Property>
+</Properties>
+
+Database config:
+
+<Properties>
+  <Property name="DATABASE_HOST" type="string">
+    Unique identifier for the conversation associated with the contact.
+  </Property>
+  <Property name="DATABASE_NAME" type="timestamp">
+    A random 32 byte hex string. Can be generated with `openssl rand -hex 32`
+  </Property>
+  <Property name="DATABASE_USER" type="timestamp">
+    A random 32 byte hex string. Can be generated with `openssl rand -hex 32`
+  </Property>
+  <Property name="DATABASE_PASSWORD" type="string">
+    The contact display name in the contact list. By default, this is just the
+    username.
+  </Property>
+  <Property name="DATABASE_PORT" type="string">
+    Unique identifier for the conversation associated with the contact.
+  </Property>
+</Properties>
+
+**Optional**:
+
+<Properties>
+  <Property name="DEBUG" type="timestamp">
+    A random 32 byte hex string. Can be generated with `openssl rand -hex 32`
+  </Property>
+</Properties>
