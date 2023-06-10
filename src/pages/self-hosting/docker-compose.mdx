@@ -1,0 +1,56 @@
+import { Tag } from '@/components/Tag'
+
+export const description =
+  'Run Phase on your own infrastructure with docker-compose.'
+
+<Tag variant="small">Deployment options</Tag>
+
+# Docker Compose
+
+Learn how to set up the Phase Console using the Docker Compose template
+
+<Note>
+  When self hosting Phase services on your own infrastructure, you assume sole
+  responsibility for security, reliability and availability. It is up to you to
+  set up valid **TLS certificates**, **database backups** and **replication**,
+  **DDoS protection**, **rate limiting**, **SSOs** etc.
+</Note>
+
+## 1. Install docker on your machine
+
+```bash
+# Ubuntu
+sudo apt update && sudo apt upgrade && sudo apt install docker-compose
+```
+
+## 2. Download the configurations
+
+**.env** template:
+
+```bash
+wget -O .env https://raw.githubusercontent.com/phasehq/console/main/.env.example
+```
+
+**Docker Compose** template:
+
+```bash
+wget -O docker-compose.yml https://raw.githubusercontent.com/phasehq/console/main/docker-compose.yml
+```
+
+**Nginx** Dockerfile & config
+
+```bash
+mkdir nginx && wget -O ./nginx/default.conf https://raw.githubusercontent.com/Infisical/infisical/main/nginx/default.dev.conf
+```
+
+## 3. Update your configuration
+
+Please make changes to the `.env` file to suite your environment. Refer to the available [environment variables](/self-hosting/configuration/envars)
+
+## 4. Start services
+
+```bash
+docker-compose -f docker-compose.yml up -d
+```
+
+Your Phase console deployment will be available at `https://localhost:80`. By default Phase will provision a self-signed TLS certificate using nginx. Please use a valid TLS certificate for your own domain in production.
