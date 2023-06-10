@@ -12,8 +12,7 @@ const deployment_methods = [
   {
     href: '/self-hosting/docker-compose',
     name: 'Docker Compose',
-    description:
-      'Encrypt and decrypt data in your preferred Node.js application server.',
+    description: 'Deploy Phase Console via Docker Compose on any machine.',
     logo: logoDocker,
     available: true,
   },
@@ -23,22 +22,22 @@ const deployment_methods = [
     description:
       'Deploy Phase Console on a EC2 instance on your AWS infrastructure.',
     logo: logoAWS,
-    available: false,
+    available: true,
   },
   {
     href: '',
     name: 'DigitalOcean (Coming soon)',
     description: 'Deploy Phase Console on a droplet in DigitalOcean',
     logo: logoDO,
-    available: false,
+    available: true,
   },
-  {
-    href: '',
-    name: 'Render (Coming soon)',
-    description: 'Deploy Phase Console on render via a blueprint.',
-    logo: logoRender,
-    available: false,
-  },
+  // {
+  //   href: '',
+  //   name: 'Render (Coming soon)',
+  //   description: 'Deploy Phase Console on render via a blueprint.',
+  //   logo: logoRender,
+  //   available: false,
+  // },
 
   // {
   //   href: '',
