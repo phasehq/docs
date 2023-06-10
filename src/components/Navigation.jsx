@@ -201,7 +201,7 @@ export const navigation = [
     ],
   },
   {
-    title: 'Self-host Phase',
+    title: 'Self-Host Phase',
     links: [
       { title: 'Introduction', href: '/self-hosting' },
       { title: 'Docker Compose', href: '/self-hosting/docker-compose' },
