@@ -14,15 +14,21 @@ export const sections = [{ title: 'Resources', id: 'resources' }]
 
 # Introduction
 
-Phase is a platform for developers to add encryption to their applications and manage keys securely. {{ className: 'lead' }}
+Phase is an Open Source end-to-end encrypted key management platform for developers to encrypt data in their apps. {{ className: 'lead' }}
 
 ---
 
-# TL;DR
+## Our goals
 
-1. 🔒 Crypto - Encrypt / decrypt data in your web apps with just 2 lines of code.
-2. 🔑 Key management - Easily create, deploy and maintain control of your keys.
-3. 📋 Observability - Monitor key usage with logs.
+- To help **developers** secure data in their apps with **strong encryption**.
+- To create high leverage security tools for **developers** that don't require a security and operations team to run in production.
+- To provide an **open source end-to-end encrypted** key management platform that is secure, cryptographically sound, reliable and easy to integrate.
+- To create encryption keys **client-side** and deploy them out of band.
+- To remove ourselves out of the security equation by providing a simple, secure solution for **self custody of keys**.
+
+- No host server or third party should be trusted by any EnvKey client. Even if an EnvKey host server is compromised, it should be impossible for the attacker to read or modify an organization's secrets (except for deleting them).
+- Even if an attacker compromises the email or SSO account a user uses to authenticate with the Phase Console, it should be impossible for the attacker to read, modify or redeploy an organization's keys.
+- Implement reliable, standards-based cryptography with proven libraries.
 
 ---
 
@@ -46,6 +52,12 @@ Example: [See the list of US companies in the last 24 months that have suffered 
 4. Phase SDKs sit within your application, run on your own cloud and scale with it.
 5. Observe and manage key usage with the [Phase Console](/quickstart).
 6. No lock in. You own your keys.
+
+---
+
+# TL;DR :
+
+You **Encrypt🔒**, **Your data💾** with **Keys🔑**, only **You👩‍💻** have.
 
 ---
 
