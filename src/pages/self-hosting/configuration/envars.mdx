@@ -13,15 +13,17 @@ export const description =
 
 Configure your environment variables when self-hosting Phase. {{ className: 'lead' }}
 
-Depending on your self-hosted deployment method, you may need to configure various environment varialbles.
+Depending on your self-hosted deployment method, you may need to configure various environment variables.
 Certain environment variables are required, while others are optional based on your use case.
+
+All environment variables are defined in a `.env` file.
 
 ## Single sign-on (SS0)
 
-In order to authenticate with the Phase Console, you must enable at least one SSO provider.
+In order to authenticate with the Phase Console, you must enable **at least one** SSO provider.
 Enabling an SSO provider requires adding the provider to the list of `SSO_PROVIDERS` as well as providing valid credentials.
 
-### **Providers**
+### Providers
 
 <Properties>
   <Property name="SSO_PROVIDERS" type="string">
@@ -37,10 +39,22 @@ Enabling an SSO provider requires adding the provider to the list of `SSO_PROVID
         <code>gitlab</code>
       </li>
     </ul>
+    Defaults to `google,github,gitlab`
   </Property>
 </Properties>
 
-### **Google SSO**
+### Google SSO
+
+You can find instructions for settings up SSO with Google OAuth [here](https://support.google.com/cloud/answer/6158849?hl=en).
+
+Set the "redirect URI" for your Google OAuth application as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/google`.
+Using the default values, this would be
+
+```bash
+https://localhost/api/auth/callback/google
+```
+
+After setting up your credentials on the Google Cloud console, set the Client ID and Client secret values in your `.env` file:
 
 <Properties>
   <Property name="GOOGLE_CLIENT_ID" type="string">
@@ -51,7 +65,18 @@ Enabling an SSO provider requires adding the provider to the list of `SSO_PROVID
   </Property>
 </Properties>
 
-### **GitHub SSO**
+### GitHub SSO
+
+You can find instructions for settings up SSO with a GitHub OAuth App [here](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app).
+
+Set the "Authorization callback URL" for your GitHub OAuth App as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/github/`.
+Using the default values, this would be
+
+```
+https://localhost/api/auth/callback/github
+```
+
+After setting up your App on GitHub, set the Client ID and Client secret values in your `.env` file:
 
 <Properties>
   <Property name="GITHUB_CLIENT_ID" type="string">
@@ -62,7 +87,18 @@ Enabling an SSO provider requires adding the provider to the list of `SSO_PROVID
   </Property>
 </Properties>
 
-### **GitLab SSO**
+### GitLab SSO
+
+You can find instructions for settings up SSO with a GitLab OAuth Application [here](https://docs.gitlab.com/ee/integration/oauth_provider.html).
+
+Set the "callback URL" for your GitLab OAuth App as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/gitlab/`.
+Using the default values, this would be
+
+```
+https://localhost/api/auth/callback/gitlab
+```
+
+After setting up your Application on GitLab, set the Client ID and Client secret values in your `.env` file:
 
 <Properties>
   <Property name="GITLAB_CLIENT_ID" type="string">
@@ -72,6 +108,8 @@ Enabling an SSO provider requires adding the provider to the list of `SSO_PROVID
     GitLab OAuth Client secret
   </Property>
 </Properties>
+
+---
 
 ## Application secrets
 
@@ -84,6 +122,8 @@ Enabling an SSO provider requires adding the provider to the list of `SSO_PROVID
   </Property>
 </Properties>
 
+---
+
 ## Host configuration
 
 <Properties>
@@ -95,12 +135,17 @@ Enabling an SSO provider requires adding the provider to the list of `SSO_PROVID
   </Property>
 </Properties>
 
+---
+
 ## Database configuration
 
 <Properties>
   <Property name="DATABASE_HOST" type="string">
-    The database hostname. Defaults to `postgres`. Changing this value is not
-    recommended unless you are also modifying the webserver configuration.
+    The database hostname. Defaults to `postgres`.
+    <Note>
+      Changing this value is not recommended unless you are also modifying the
+      webserver configuration.
+    </Note>
   </Property>
   <Property name="DATABASE_NAME" type="string">
     Defaults to `postgres-db-name`
@@ -109,13 +154,15 @@ Enabling an SSO provider requires adding the provider to the list of `SSO_PROVID
     Defaults to `postgres-user`
   </Property>
   <Property name="DATABASE_PASSWORD" type="string">
-    A database password is provided by default, but is **highly** recommended to
-    change this value.
+    A database password is provided by default, but it is **highly** recommended
+    to change this value.
   </Property>
   <Property name="DATABASE_PORT" type="number">
     Defaults to `5432`
   </Property>
 </Properties>
+
+---
 
 ## Debugging
 
