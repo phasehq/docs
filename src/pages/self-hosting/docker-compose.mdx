@@ -24,16 +24,22 @@ sudo apt update && sudo apt upgrade -y && sudo apt install -y docker-compose
 wget -O .env https://raw.githubusercontent.com/phasehq/console/main/.env.example
 ```
 
-**Docker Compose** template:
+**Docker Compose template**:
 
 ```bash
 wget -O docker-compose.yml https://raw.githubusercontent.com/phasehq/console/main/docker-compose.yml
 ```
 
-**Nginx** Dockerfile & config
+**Nginx config**
 
 ```bash
-mkdir nginx && wget -O ./nginx/default.conf https://raw.githubusercontent.com/phasehq/console/main/nginx/default.dev.conf
+mkdir nginx && wget -O ./nginx/default.conf https://raw.githubusercontent.com/phasehq/console/main/nginx/default.conf
+```
+
+**Nginx Dockerfile**
+
+```bash
+wget -O ./nginx/Dockerfile  https://raw.githubusercontent.com/phasehq/console/main/nginx/Dockerfile
 ```
 
 ## 3. Update your configuration
