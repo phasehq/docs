@@ -7,112 +7,126 @@ export const description =
 
 <HeroPattern />
 
-<Tag variant="small">SELF-HOST PHASE</Tag>
+<Tag variant="small">SELF-HOSTING</Tag>
 
-# All environment variables
+# Environment variables
 
-Configure your environment variables when self-hosting Phase.
+Configure your environment variables when self-hosting Phase. {{ className: 'lead' }}
 
-Depending on your chosen self hosted deployment method, you may need to configured at least the required environment variable listed below. Other environment variables are listed below to increase the functionality of your self hosted instance based on your use case.
+Depending on your self-hosted deployment method, you may need to configure various environment varialbles.
+Certain environment variables are required, while others are optional based on your use case.
 
-**Required:**
+## Single sign-on (SS0)
 
-Single sign on (SS0): (At least **one** of the following SSO provider is **required** to authenticate with the Phase Console)
+In order to authenticate with the Phase Console, you must enable at least one SSO provider.
+Enabling an SSO provider requires adding the provider to the list of `SSO_PROVIDERS` as well as providing valid credentials.
 
-Google SSO:
+### **Providers**
+
+<Properties>
+  <Property name="SSO_PROVIDERS" type="string">
+    Comma separated list of SSO providers to enable. Options are:
+    <ul>
+      <li>
+        <code>google</code>
+      </li>
+      <li>
+        <code>github</code>
+      </li>
+      <li>
+        <code>gitlab</code>
+      </li>
+    </ul>
+  </Property>
+</Properties>
+
+### **Google SSO**
 
 <Properties>
   <Property name="GOOGLE_CLIENT_ID" type="string">
-    Unique identifier for the contact.
+    Google OAuth Client ID
   </Property>
   <Property name="GOOGLE_CLIENT_SECRET" type="string">
-    The username for the contact.
+    Google OAuth Client secret
   </Property>
 </Properties>
 
-GitHub SSO:
+### **GitHub SSO**
 
 <Properties>
   <Property name="GITHUB_CLIENT_ID" type="string">
-    The phone number for the contact.
+    GitHub OAuth Client ID
   </Property>
   <Property name="GITHUB_CLIENT_SECRET" type="string">
-    The avatar image URL for the contact.
+    GitHub OAuth Client secret
   </Property>
 </Properties>
 
-GitLab SSO:
+### **GitLab SSO**
 
 <Properties>
-  <Property name="GITHUB_CLIENT_ID" type="string">
-    The phone number for the contact.
+  <Property name="GITLAB_CLIENT_ID" type="string">
+    GitLab OAuth Client ID
   </Property>
-  <Property name="GITHUB_CLIENT_SECRET" type="string">
-    The avatar image URL for the contact.
+  <Property name="GITLAB_CLIENT_SECRET" type="string">
+    GitLab OAuth Client secret
   </Property>
 </Properties>
 
-Application secrets:
+## Application secrets
 
 <Properties>
-  <Property name="NEXTAUTH_SECRET" type="timestamp">
+  <Property name="NEXTAUTH_SECRET" type="string">
     A random 32 byte hex string. Can be generated with `openssl rand -hex 32`
   </Property>
-  <Property name="SECRET_KEY" type="timestamp">
+  <Property name="SECRET_KEY" type="string">
     A random 32 byte hex string. Can be generated with `openssl rand -hex 32`
   </Property>
 </Properties>
 
-URLs and API endpoints:
+## Host configuration
 
 <Properties>
-  <Property name="NEXT_PUBLIC_BACKEND_API_BASE" type="timestamp">
-    A random 32 byte hex string. Can be generated with `openssl rand -hex 32`
+  <Property name="HOST" type="string">
+    The hostname where you would like to run Phase. Defaults to `localhost`
   </Property>
-  <Property name="NEXTAUTH_URL" type="string">
-    The contact display name in the contact list. By default, this is just the
-    username.
-  </Property>
-  <Property name="ALLOWED_HOSTS" type="string">
-    Unique identifier for the conversation associated with the contact.
-  </Property>
-  <Property name="ALLOWED_ORIGINS" type="timestamp">
-    A random 32 byte hex string. Can be generated with `openssl rand -hex 32`
-  </Property>
-  <Property name="SESSION_COOKIE_DOMAIN" type="timestamp">
-    A random 32 byte hex string. Can be generated with `openssl rand -hex 32`
-  </Property>
-  <Property name="OAUTH_REDIRECT_URI" type="string">
-    The contact display name in the contact list. By default, this is just the
-    username.
+  <Property name="HTTP_PROTOTOCL" type="string">
+    The url scheme for your host. Defaults to `https://`
   </Property>
 </Properties>
 
-Database config:
+## Database configuration
 
 <Properties>
   <Property name="DATABASE_HOST" type="string">
-    Unique identifier for the conversation associated with the contact.
+    The database hostname. Defaults to `postgres`. Changing this value is not
+    recommended unless you are also modifying the webserver configuration.
   </Property>
-  <Property name="DATABASE_NAME" type="timestamp">
-    A random 32 byte hex string. Can be generated with `openssl rand -hex 32`
+  <Property name="DATABASE_NAME" type="string">
+    Defaults to `postgres-db-name`
   </Property>
-  <Property name="DATABASE_USER" type="timestamp">
-    A random 32 byte hex string. Can be generated with `openssl rand -hex 32`
+  <Property name="DATABASE_USER" type="string">
+    Defaults to `postgres-user`
   </Property>
   <Property name="DATABASE_PASSWORD" type="string">
-    The contact display name in the contact list. By default, this is just the
-    username.
+    A database password is provided by default, but is **highly** recommended to
+    change this value.
   </Property>
-  <Property name="DATABASE_PORT" type="string">
-    Unique identifier for the conversation associated with the contact.
+  <Property name="DATABASE_PORT" type="number">
+    Defaults to `5432`
   </Property>
 </Properties>
 
-**Optional**:
+## Debugging
 
 <Properties>
-  <Property name="DEBUG" type="timestamp">
-    A random 32 byte hex string. Can be generated with `openssl rand -hex 32`
+  <Property name="DEBUG" type="string (optional)">
+    Allows running the application with "Debug mode" enabled. Provide this
+    environment variable with the value `True` to enable this.
+
+    <Warning>
+    Never run the application with Debug mode enabled in production!
+    </Warning>
+
   </Property>
 </Properties>
