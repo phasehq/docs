@@ -36,22 +36,6 @@ const serverSdks = [
     logo: logoPython,
     available: true,
   },
-  // {
-  //   href: '',
-  //   name: 'PHP (Coming soon)',
-  //   description:
-  //   'Encrypt and decrypt data in your preferred PHP application server.',
-  //   logo: logoPhp,
-  //   available: false
-  // },
-  // {
-  //   href: '',
-  //   name: 'Ruby (Coming soon)',
-  //   description:
-  //   'Encrypt and decrypt data in your preferred Ruby application server.',
-  //   logo: logoRuby,
-  //   available: false
-  // },
   {
     href: '',
     name: 'Go (Coming soon)',
