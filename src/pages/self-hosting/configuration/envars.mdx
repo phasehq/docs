@@ -45,10 +45,10 @@ Enabling an SSO provider requires adding the provider to the list of `SSO_PROVID
 
 ### Google SSO
 
-You can find instructions for settings up SSO with Google OAuth [here](https://support.google.com/cloud/answer/6158849?hl=en).
+You can find instructions for setting up SSO with Google OAuth [here](https://support.google.com/cloud/answer/6158849?hl=en).
 
 Set the "redirect URI" for your Google OAuth application as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/google`.
-Using the default values, this would be
+Using the default values, this would be:
 
 ```bash
 https://localhost/api/auth/callback/google
@@ -67,10 +67,10 @@ After setting up your credentials on the Google Cloud console, set the Client ID
 
 ### GitHub SSO
 
-You can find instructions for settings up SSO with a GitHub OAuth App [here](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app).
+You can find instructions for setting up SSO with a GitHub OAuth App [here](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app).
 
 Set the "Authorization callback URL" for your GitHub OAuth App as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/github/`.
-Using the default values, this would be
+Using the default values, this would be:
 
 ```
 https://localhost/api/auth/callback/github
@@ -89,10 +89,10 @@ After setting up your App on GitHub, set the Client ID and Client secret values 
 
 ### GitLab SSO
 
-You can find instructions for settings up SSO with a GitLab OAuth Application [here](https://docs.gitlab.com/ee/integration/oauth_provider.html).
+You can find instructions for setting up SSO with a GitLab OAuth Application [here](https://docs.gitlab.com/ee/integration/oauth_provider.html).
 
 Set the "callback URL" for your GitLab OAuth App as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/gitlab/`.
-Using the default values, this would be
+Using the default values, this would be:
 
 ```
 https://localhost/api/auth/callback/gitlab
