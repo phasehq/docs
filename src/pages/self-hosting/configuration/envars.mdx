@@ -1,0 +1,179 @@
+import { Tag } from '@/components/Tag'
+import { HeroPattern } from '@/components/HeroPattern'
+import { Deployments } from '@/components/Deployments'
+
+export const description =
+  'Overview of Phase Console deployment environment variables'
+
+<HeroPattern />
+
+<Tag variant="small">SELF-HOSTING</Tag>
+
+# Environment variables
+
+Configure your environment variables when self-hosting Phase. {{ className: 'lead' }}
+
+Depending on your self-hosted deployment method, you may need to configure various environment variables.
+Certain environment variables are required, while others are optional based on your use case.
+
+All environment variables are defined in a `.env` file.
+
+## Single sign-on (SS0)
+
+In order to authenticate with the Phase Console, you must enable **at least one** SSO provider.
+Enabling an SSO provider requires adding the provider to the list of `SSO_PROVIDERS` as well as providing valid credentials.
+
+### Providers
+
+<Properties>
+  <Property name="SSO_PROVIDERS" type="string">
+    Comma separated list of SSO providers to enable. Options are:
+    <ul>
+      <li>
+        <code>google</code>
+      </li>
+      <li>
+        <code>github</code>
+      </li>
+      <li>
+        <code>gitlab</code>
+      </li>
+    </ul>
+    Defaults to `google,github,gitlab`
+  </Property>
+</Properties>
+
+### Google SSO
+
+You can find instructions for setting up SSO with Google OAuth [here](https://support.google.com/cloud/answer/6158849?hl=en).
+
+Set the "redirect URI" for your Google OAuth application as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/google`.
+Using the default values, this would be:
+
+```bash
+https://localhost/api/auth/callback/google
+```
+
+After setting up your credentials on the Google Cloud console, set the Client ID and Client secret values in your `.env` file:
+
+<Properties>
+  <Property name="GOOGLE_CLIENT_ID" type="string">
+    Google OAuth Client ID
+  </Property>
+  <Property name="GOOGLE_CLIENT_SECRET" type="string">
+    Google OAuth Client secret
+  </Property>
+</Properties>
+
+### GitHub SSO
+
+You can find instructions for setting up SSO with a GitHub OAuth App [here](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app).
+
+Set the "Authorization callback URL" for your GitHub OAuth App as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/github/`.
+Using the default values, this would be:
+
+```
+https://localhost/api/auth/callback/github
+```
+
+After setting up your App on GitHub, set the Client ID and Client secret values in your `.env` file:
+
+<Properties>
+  <Property name="GITHUB_CLIENT_ID" type="string">
+    GitHub OAuth Client ID
+  </Property>
+  <Property name="GITHUB_CLIENT_SECRET" type="string">
+    GitHub OAuth Client secret
+  </Property>
+</Properties>
+
+### GitLab SSO
+
+You can find instructions for setting up SSO with a GitLab OAuth Application [here](https://docs.gitlab.com/ee/integration/oauth_provider.html).
+
+Set the "callback URL" for your GitLab OAuth App as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/gitlab/`.
+Using the default values, this would be:
+
+```
+https://localhost/api/auth/callback/gitlab
+```
+
+After setting up your Application on GitLab, set the Client ID and Client secret values in your `.env` file:
+
+<Properties>
+  <Property name="GITLAB_CLIENT_ID" type="string">
+    GitLab OAuth Client ID
+  </Property>
+  <Property name="GITLAB_CLIENT_SECRET" type="string">
+    GitLab OAuth Client secret
+  </Property>
+</Properties>
+
+---
+
+## Application secrets
+
+<Properties>
+  <Property name="NEXTAUTH_SECRET" type="string">
+    A random 32 byte hex string. Can be generated with `openssl rand -hex 32`
+  </Property>
+  <Property name="SECRET_KEY" type="string">
+    A random 32 byte hex string. Can be generated with `openssl rand -hex 32`
+  </Property>
+</Properties>
+
+---
+
+## Host configuration
+
+<Properties>
+  <Property name="HOST" type="string">
+    The hostname where you would like to run Phase. Defaults to `localhost`
+  </Property>
+  <Property name="HTTP_PROTOTOCL" type="string">
+    The url scheme for your host. Defaults to `https://`
+  </Property>
+</Properties>
+
+---
+
+## Database configuration
+
+<Properties>
+  <Property name="DATABASE_HOST" type="string">
+    The database hostname. Defaults to `postgres`.
+    <Note>
+      Changing this value is not recommended unless you are also modifying the
+      webserver configuration.
+    </Note>
+  </Property>
+  <Property name="DATABASE_NAME" type="string">
+    Defaults to `postgres-db-name`
+  </Property>
+  <Property name="DATABASE_USER" type="string">
+    Defaults to `postgres-user`
+  </Property>
+  <Property name="DATABASE_PASSWORD" type="string">
+    A database password is provided by default, but it is **highly** recommended
+    to change this value.
+  </Property>
+  <Property name="DATABASE_PORT" type="number">
+    Defaults to `5432`
+  </Property>
+</Properties>
+
+---
+
+## Debugging
+
+<Properties>
+  <Property name="DEBUG" type="string (optional)">
+    Allows running the application with "Debug mode" enabled. Provide this
+    environment variable with the value `True` to enable this.
+
+    <Warning>
+    Never run the application with Debug mode enabled in production!
+    </Warning>
+
+  </Property>
+</Properties>
