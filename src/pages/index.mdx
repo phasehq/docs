@@ -1,4 +1,4 @@
-import { Libraries } from '@/components/Libraries'
+import { LibrariesIntro } from '@/components/LibrariesIntro'
 import { Deployments } from '@/components/Deployments'
 import { Guides } from '@/components/Guides'
 import { Resources } from '@/components/Resources'
@@ -7,8 +7,6 @@ import { Tag } from '@/components/Tag'
 
 export const description =
   'Phase is an Open Source end-to-end encrypted key management platform for developers to encrypt data in their apps.'
-
-export const sections = [{ title: 'Resources', id: 'resources' }]
 
 <HeroPattern />
 
@@ -22,27 +20,17 @@ Phase has been designed to give app developers access to some of the best crypto
 
 You **Encrypt🔒**, **Your data💾** with **Keys🔑**, only **You👩‍💻** have.
 
----
-
-## Integrate Phase via SDKs
-
-<Libraries />
-
----
-
-## Self-host Phase on your own infrastructure
+<LibrariesIntro />
 
 <Deployments />
-
----
 
 <Resources />
 
 ---
 
-## Ready to try?{{ anchor: false }}
+## Ready to try?{{ anchor: true }}
 
-To get started, create a new application in your [Phase console](https://console.phase.dev) and use our open source SDKs. {{ className: 'lead' }}
+To get started, create a new application in your [Phase Console](https://console.phase.dev) and use our open source SDKs. {{ className: 'lead' }}
 
 <div className="not-prose mb-16 mt-6 flex gap-3">
   <Button href="/quickstart" arrow="right" children="🚀 Quickstart" />
