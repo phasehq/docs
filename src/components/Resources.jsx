@@ -3,16 +3,16 @@ import { motion, useMotionTemplate, useMotionValue } from 'framer-motion'
 
 import { GridPattern } from '@/components/GridPattern'
 import { Heading } from '@/components/Heading'
-import { ChatBubbleIcon } from '@/components/icons/ChatBubbleIcon'
-import { PackageIcon } from '@/components/icons/PackageIcon'
+import { ChevronRightLeftIcon } from '@/components/icons/ChevronRightLeftIcon'
+import { BoltIcon } from '@/components/icons/BoltIcon'
 import { CheckIcon } from '@/components/icons/CheckIcon'
 
 const resources = [
   {
-    href: '/sdks/js',
-    name: 'JavaScript - Browser SDK',
-    description: 'Encrypt data straight from your users browsers.',
-    icon: PackageIcon,
+    href: '/security',
+    name: 'Security',
+    description: 'Phase security overview',
+    icon: CheckIcon,
     pattern: {
       y: 16,
       squares: [
@@ -22,10 +22,10 @@ const resources = [
     },
   },
   {
-    href: '/sdks/node',
-    name: 'Node.js SDK',
-    description: 'Secure data in your preferred JavaScript application server.',
-    icon: PackageIcon,
+    href: '/security/phase-encryption',
+    name: 'Phase Encryption',
+    description: 'Phase security architecture and implementation',
+    icon: ChevronRightLeftIcon,
     pattern: {
       y: -6,
       squares: [
@@ -35,10 +35,10 @@ const resources = [
     },
   },
   {
-    href: '/sdks/python',
-    name: 'Python SDK',
-    description: 'Secure data in your preferred Python application server.',
-    icon: PackageIcon,
+    href: '/security/cryptography',
+    name: 'Cryptography',
+    description: 'Details of cryptographic algorithms and implementation',
+    icon: BoltIcon,
     pattern: {
       y: -8,
       squares: [
@@ -155,7 +155,7 @@ export function Resources() {
   return (
     <div className="my-16 xl:max-w-none">
       <Heading level={2} id="resources">
-        Resources
+        Explore Phase security
       </Heading>
       <div className="not-prose mt-4 grid grid-cols-1 gap-8 border-t border-zinc-900/5 pt-10 dark:border-white/5 sm:grid-cols-2 xl:grid-cols-4">
         {resources.map((resource) => (

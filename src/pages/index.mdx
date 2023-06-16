@@ -1,10 +1,12 @@
+import { Libraries } from '@/components/Libraries'
+import { Deployments } from '@/components/Deployments'
 import { Guides } from '@/components/Guides'
 import { Resources } from '@/components/Resources'
 import { HeroPattern } from '@/components/HeroPattern'
 import { Tag } from '@/components/Tag'
 
 export const description =
-  'Phase is a platform for developers to add encryption to their applications and manage keys securely.'
+  'Phase is an Open Source end-to-end encrypted key management platform for developers to encrypt data in their apps.'
 
 export const sections = [{ title: 'Resources', id: 'resources' }]
 
@@ -18,40 +20,19 @@ Phase is an Open Source end-to-end encrypted key management platform for develop
 
 ---
 
-## Our goals
+## Integrate Phase via SDKs
 
-- To help **developers** secure data in their apps with **strong encryption**.
-- To create high leverage security tools for **developers** that don't require a security and operations team to run in production.
-- To provide an **open source end-to-end encrypted** key management platform that is secure, cryptographically sound, reliable and easy to integrate.
-- To create encryption keys **client-side** and deploy them out of band.
-- To remove ourselves out of the security equation by providing a simple, secure solution for **self custody of keys**.
-
-- No host server or third party should be trusted by any EnvKey client. Even if an EnvKey host server is compromised, it should be impossible for the attacker to read or modify an organization's secrets (except for deleting them).
-- Even if an attacker compromises the email or SSO account a user uses to authenticate with the Phase Console, it should be impossible for the attacker to read, modify or redeploy an organization's keys.
-- Implement reliable, standards-based cryptography with proven libraries.
+<Libraries />
 
 ---
 
-# The problem
+## Self-host Phase on your own infrastructure
 
-1. [Data braches](https://ocrportal.hhs.gov/ocr/breach/breach_report.jsf) are a 'when' not a 'if' problem. [Encryption](https://owasp.org/Top10/A02_2021-Cryptographic_Failures) is an effective solution
-2. However, adding encryption to your app; encrypting existing data is difficult, complex and time consuming.
-3. Relying on automatic database / bucket encrypting is useless since the data is automatically decrypted when retrieved. A breach is a single [SQL injection](https://owasp.org/Top10/A02_2021-Cryptographic_Failures/#example-attack-scenarios) or a [IAM misconfiguration](https://github.com/nagwww/s3-leaks) away.
-4. Rolling your own crypto and with hard coded keys is a securty minefield.
-5. Solving all of this is outside the scope of developers and a distraction from shipping features.
-
-Example: [See the list of US companies in the last 24 months that have suffered a data breach of unsecured ‘protected health information’ affecting 500 or more individuals.](https://ocrportal.hhs.gov/ocr/breach/breach_report.jsf)
+<Deployments />
 
 ---
 
-# The solution
-
-1. [Open Source SDKs](/sdks) that let you [encrypt](/encrypt) / [decrypt](/decrypt) data with 2 lines of code.
-2. Seamlessly generate and deploy keys securely to all your apps.
-3. Decrypt and process data in memory only when you need to.
-4. Phase SDKs sit within your application, run on your own cloud and scale with it.
-5. Observe and manage key usage with the [Phase Console](/quickstart).
-6. No lock in. You own your keys.
+<Resources />
 
 ---
 
@@ -69,5 +50,3 @@ To get started, create a new application in your [Phase console](https://console
   <Button href="/quickstart" arrow="right" children="🚀 Quickstart" />
   <Button href="/sdks" variant="outline" children="Explore SDKs" />
 </div>
-
-<Resources />
