@@ -201,6 +201,18 @@ export const navigation = [
     ],
   },
   {
+    title: 'Self-hosting',
+    links: [
+      { title: 'Introduction', href: '/self-hosting' },
+      { title: 'Docker Compose', href: '/self-hosting/docker-compose' },
+      {
+        title: 'Environment Variables',
+        href: '/self-hosting/configuration/envars',
+      },
+      // { title: 'Python', href: '/sdks/python' },
+    ],
+  },
+  {
     title: 'Security',
     links: [
       { title: 'Overview', href: '/security' },
