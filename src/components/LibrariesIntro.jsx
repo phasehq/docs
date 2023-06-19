@@ -67,6 +67,7 @@ export function LibrariesIntro() {
       <Heading level={2} id="client">
         Integrate Phase
       </Heading>
+      <p>Add Phase to your existing application via SDKs:</p>
       <div className="not-prose mt-4 grid grid-cols-1 gap-x-6 gap-y-10 border-t border-zinc-900/5 pt-10 dark:border-white/5 sm:grid-cols-2 xl:max-w-none xl:grid-cols-3">
         {SDKs.map((library) => (
           <Card key={library.name}>
