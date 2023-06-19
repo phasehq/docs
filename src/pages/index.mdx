@@ -1,12 +1,12 @@
+import { LibrariesIntro } from '@/components/LibrariesIntro'
+import { Deployments } from '@/components/Deployments'
 import { Guides } from '@/components/Guides'
-import { Resources } from '@/components/Resources'
+import { SecurityResources } from '@/components/SecurityResources'
 import { HeroPattern } from '@/components/HeroPattern'
 import { Tag } from '@/components/Tag'
 
 export const description =
-  'Phase is a platform for developers to add encryption to their applications and manage keys securely.'
-
-export const sections = [{ title: 'Resources', id: 'resources' }]
+  'Phase is an Open Source end-to-end encrypted key management platform for developers to encrypt data in their apps.'
 
 <HeroPattern />
 
@@ -14,48 +14,41 @@ export const sections = [{ title: 'Resources', id: 'resources' }]
 
 # Introduction
 
-Phase is a platform for developers to add encryption to their applications and manage keys securely. {{ className: 'lead' }}
+Open Source end-to-end encrypted key management platform for developers to encrypt data in their apps. {{ className: 'lead' }}
+
+Phase has been designed to give app developers access to some of the best cryptography available while being easy to integrate, manage and observe key usage; all while providing robust security. This involves various decisions around how and where encryption keys are generated, deployed and managed, how data is encrypted or decrypted, what algorithms are used for various cryptographic operations and how Phase interacts with your applications.
+
+**Encrypt data in your apps with secure self-custodial keys.**
+
+## Integrate Phase
+
+Add Phase to your existing application via SDKs:
+
+<LibrariesIntro />
 
 ---
 
-# TL;DR
+## Deployment options
 
-1. 🔒 Crypto - Encrypt / decrypt data in your web apps with just 2 lines of code.
-2. 🔑 Key management - Easily create, deploy and maintain control of your keys.
-3. 📋 Observability - Monitor key usage with logs.
+Choose from a variety of deployment options listed below to get started:
 
----
-
-# The problem
-
-1. [Data braches](https://ocrportal.hhs.gov/ocr/breach/breach_report.jsf) are a 'when' not a 'if' problem. [Encryption](https://owasp.org/Top10/A02_2021-Cryptographic_Failures) is an effective solution
-2. However, adding encryption to your app; encrypting existing data is difficult, complex and time consuming.
-3. Relying on automatic database / bucket encrypting is useless since the data is automatically decrypted when retrieved. A breach is a single [SQL injection](https://owasp.org/Top10/A02_2021-Cryptographic_Failures/#example-attack-scenarios) or a [IAM misconfiguration](https://github.com/nagwww/s3-leaks) away.
-4. Rolling your own crypto and with hard coded keys is a securty minefield.
-5. Solving all of this is outside the scope of developers and a distraction from shipping features.
-
-Example: [See the list of US companies in the last 24 months that have suffered a data breach of unsecured ‘protected health information’ affecting 500 or more individuals.](https://ocrportal.hhs.gov/ocr/breach/breach_report.jsf)
+<Deployments />
 
 ---
 
-# The solution
+## Explore Phase security
 
-1. [Open Source SDKs](/sdks) that let you [encrypt](/encrypt) / [decrypt](/decrypt) data with 2 lines of code.
-2. Seamlessly generate and deploy keys securely to all your apps.
-3. Decrypt and process data in memory only when you need to.
-4. Phase SDKs sit within your application, run on your own cloud and scale with it.
-5. Observe and manage key usage with the [Phase Console](/quickstart).
-6. No lock in. You own your keys.
+Phase is not a black box. Learn more about security and architecture:
+
+<SecurityResources />
 
 ---
 
-## Ready to try?{{ anchor: false }}
+## Ready to try?{{ anchor: true }}
 
-To get started, create a new application in your [Phase console](https://console.phase.dev) and use our open source SDKs. {{ className: 'lead' }}
+To get started, create a new application in your [Phase Console](https://console.phase.dev) and use our open source SDKs. {{ className: 'lead' }}
 
 <div className="not-prose mb-16 mt-6 flex gap-3">
   <Button href="/quickstart" arrow="right" children="🚀 Quickstart" />
   <Button href="/sdks" variant="outline" children="Explore SDKs" />
 </div>
-
-<Resources />
