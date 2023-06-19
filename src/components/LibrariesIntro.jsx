@@ -64,11 +64,7 @@ let arrowIcon = <ArrowIcon className={clsx('mt-0.5 -mr-1 h-5 w-5')} />
 export function LibrariesIntro() {
   return (
     <div className="my-16 xl:max-w-none">
-      <Heading level={2} id="client">
-        Integrate Phase
-      </Heading>
-      <p>Add Phase to your existing application via SDKs:</p>
-      <div className="not-prose mt-4 grid grid-cols-1 gap-x-6 gap-y-10 border-t border-zinc-900/5 pt-10 dark:border-white/5 sm:grid-cols-2 xl:max-w-none xl:grid-cols-3">
+      <div className="not-prose mt-4 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 xl:max-w-none xl:grid-cols-3">
         {SDKs.map((library) => (
           <Card key={library.name}>
             <Link href={library.href} className="flex flex-row-reverse gap-6">
@@ -95,7 +91,6 @@ export function LibrariesIntro() {
           </Card>
         ))}
       </div>
-      <hr />
     </div>
   )
 }

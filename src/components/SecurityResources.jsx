@@ -151,16 +151,10 @@ function Resource({ resource }) {
   )
 }
 
-export function Resources() {
+export function SecurityResources() {
   return (
     <div className="my-16 xl:max-w-none">
-      <Heading level={2} id="resources">
-        Explore Phase security
-      </Heading>
-      <p>
-        Phase is not a black box. Learn more about security and architecture:
-      </p>
-      <div className="not-prose mt-4 grid grid-cols-1 gap-8 border-t border-zinc-900/5 pt-10 dark:border-white/5 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="not-prose mt-4 grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-4">
         {resources.map((resource) => (
           <Resource key={resource.href} resource={resource} />
         ))}
