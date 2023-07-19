@@ -69,6 +69,17 @@ Initialize the SDK with your `APP_ID` and `APP_SECRET`.
 const phase = new Phase(APP_ID, APP_SECRET)
 ```
 
+<Note>
+If you are self-hosting Phase, you must also provide the protocol and host for your Phase instance:
+
+```js
+const PHASE_INSTANCE_HOST = 'https://localhost'
+
+const phase = new Phase(APP_ID, APP_SECRET, PHASE_INSTANCE_HOST)
+```
+
+</Note>
+
 ---
 
 ## Usage
