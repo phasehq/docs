@@ -61,6 +61,17 @@ Initialize the SDK with your `APP_ID` and `APP_SECRET`.
 phase = Phase(APP_ID, APP_SECRET)
 ```
 
+<Note>
+If you are self-hosting Phase, you must also provide the protocol and host for your Phase instance:
+
+```python
+PHASE_INSTANCE_HOST = 'https://localhost'
+
+phase = Phase(APP_ID, APP_SECRET, PHASE_INSTANCE_HOST)
+```
+
+</Note>
+
 ---
 
 ## Usage
