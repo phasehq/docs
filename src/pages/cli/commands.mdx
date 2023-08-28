@@ -1,0 +1,147 @@
+import { Tag } from '@/components/Tag'
+
+export const description =
+  'Mange your secrets and environment variables with the Phase CLI'
+
+<Tag variant="small">CLI</Tag>
+
+# CLI
+
+The Phase CLI works together with the [Phase Console](https://github.com/phasehq/console) to securely sync your secrets and environment variables with **End-to-End Encryption**. It is designed to pull secrets, decrypt them and inject secrets directly into your application or framework during runtime. You can use it to create, retrieve, update and delete your application secrets for different environments such as `development`, `staging`, `production` or something custom.
+
+```
+» phase
+
+         :@tX88%%:
+        ;X;%;@%8X@;
+      ;Xt%;S8:;;t%S
+      ;SXStS@.;t8@:;.
+    ;@:t;S8  ;@.%.;8:
+    :X:S%88    S.88t:.
+  :X:%%88     :S:t.t8t
+.@8X888@88888888X8.%8X8888888X8.S88:
+                ;t;X8;      ;XS:%X;
+                :@:8@X.     XXS%S8
+                 8XX:@8S  .X%88X;
+                  ..@:X88:8Xt8:
+                     ;%88@S8:
+
+options:
+  -h, --help            show this help message and exit
+  --version, -v         show program's version number and exit
+
+Commands:
+  {auth,init,run,secrets,logout,console,update,keyring}
+    auth                💻 Authenticate with Phase
+    init                🔗 Link your project to your Phase app
+    run                 🚀 Run and inject secrets to your app
+    secrets             🗝️ Manage your secrets
+    logout              🏃 Logout from phase-cli
+    console             🖥️ Open the Phase Console in your browser
+    update              🔄 Update the Phase CLI to the latest version
+    keyring             🔐 Display information about the Phase keyring
+```
+
+## Available commands {{ className: 'lead' }}
+
+## auth
+
+```
+» phase auth
+? Choose your Phase instance type: (Use arrow keys)
+ » ☁️ Phase Cloud
+   🛠️ Self Hosted
+```
+
+Authenticate with Phase
+
+Description:
+
+Usage:
+
+## init
+
+Link your project to your Phase app
+
+```json
+{
+  "version": "1",
+  "phaseApp": "MCL_P1",
+  "defaultEnv": "ec30d4eb-fd00-4bee-bcb9-faf3b33b3633",
+  "phaseEnvironments": [
+    {
+      "env": "Development",
+      "envType": "DEV",
+      "id": "ec30d4eb-fd00-4bee-bcb9-faf3b33b3633",
+      "publicKey": "e6fd261ad5f71b97da56095ef27319657c2cc0c0e3bdbf4fe1310bc115de472e",
+      "salt": "ph:v1:ca1dc0a58a21e2119da406235b0f4260c3d87cd17824d44fd12392e27227965f:51RG+hqbyh9Dbpxubfq+Xrt4WVQ8aTLyaPhjo14sz8WKVA2jrLNhZgIBzS6NiK0K59xcXKu3ga2Braga2znpYajOAr5jPz+4cXAPZJ+XzhNolbMZtqVDafAaFAcW8bnO2FEpEfzJEAI="
+    },
+    {
+      "env": "Staging",
+      "envType": "STAGING",
+      "id": "50e1d02d-9aea-45b6-aad7-2ad07a2fec8a",
+      "publicKey": "2edfd76103c4cdb958d257f6541a5821270b5f60c9b665ffa28730cba828cc5f",
+      "salt": "ph:v1:86c6172a5fd2521133586eaf4b0bdc9fd7edacd65f25461b7fd6e9fe74934611:n4EdHYEUvvpGwvysiwRBtKLKDVo+n7U6MwSGvWp9m7wWC+tzj8JFAw8+kgsie+YvDBr23QfHNTFM1SPlOfD5iKS6o6Em0f9ve29Xct4pGL9s0jqSWaO2FshKjO4RGRbxF7Ace4ygE8w="
+    },
+    {
+      "env": "Production",
+      "envType": "PROD",
+      "id": "e6def123-d2d2-42b3-a9e1-cc938a87e2cd",
+      "publicKey": "911b412a4a0bed11b52c98f86f9b99418e77d2e5c1522e4807b9facbd9c4160f",
+      "salt": "ph:v1:2a98c86cc0b77c017bef630bf840c3707fd75ed6b52b0cdaf596335298a5f968:5WRk3wl39Y0Xm2L9pKriWDdExVv9Idrrpj7vqryPkaDcaxFgE51C2H05AfgO7zGyVITEheCJZV2EZWoXgAo7nlPTKGB+W9pjdNJVLYsWaCBOU5auaOEBdD/nGSI9bVstyXqM5i8GCAk="
+    }
+  ]
+}
+```
+
+Description:
+
+Usage:
+
+## run
+
+Run and inject secrets to your app
+
+Description:
+
+Usage:
+
+## secrets
+
+Manage your secrets
+
+Description:
+
+Usage:
+
+## logout
+
+Logout from phase-cli
+
+Description:
+
+Usage:
+
+## console
+
+Open the Phase Console in your browser
+
+Description:
+
+Usage:
+
+## update
+
+Update the Phase CLI to the latest version
+
+Description:
+
+Usage:
+
+## keyring
+
+Display information about the Phase keyring
+
+Description:
+
+Usage:

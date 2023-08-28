@@ -1,0 +1,110 @@
+import { Tag } from '@/components/Tag'
+
+export const description =
+  'Mange your secrets and environment variables with the Phase CLI'
+
+<Tag variant="small">CLI</Tag>
+
+# Install
+
+The Phase CLI works together with the [Phase Console](https://github.com/phasehq/console) to securely sync your secrets and environment variables with **End-to-End Encryption**. It is designed to pull secrets, decrypt them and inject secrets directly into your application or framework during runtime. You can use it to create, retrieve, update and delete your application secrets for different environments such as `development`, `staging`, `production` or something custom.
+
+# Prerequisites
+
+<CodeGroup>
+
+```fish {{ title: 'MacOS' }}
+# Install brew - https://brew.sh/
+
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+```powershell {{ title: 'Windows' }}
+# Install scoop - https://scoop.sh
+
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser # Optional: Needed to run a remote script the first time
+irm get.scoop.sh | iex
+
+# Install git - Optional: if you don't have it already
+
+scoop install git
+```
+
+```fish {{ title: 'Alpine Linux' }}
+curl -fsSL https://pkg.phase.dev/install.sh | bash
+```
+
+```fish {{ title: 'RedHat/CentOS/Amazon Linux' }}
+curl -fsSL https://pkg.phase.dev/install.sh | bash
+```
+
+```fish {{ title: 'Ubuntu/Debian' }}
+curl -fsSL https://pkg.phase.dev/install.sh | bash
+```
+
+```fish {{ title: 'Arch Linux' }}
+curl -fsSL https://pkg.phase.dev/install.sh | bash
+```
+
+</CodeGroup>
+
+## Installation {{ className: 'lead' }}
+
+<CodeGroup>
+
+```zsh {{ title: 'MacOS' }}
+brew install phasehq/cli/phase
+```
+
+```fish {{ title: 'Windows' }}
+scoop bucket add phasehq https://github.com/phasehq/scoop-cli.git
+scoop install phase
+```
+
+```fish {{ title: 'Alpine Linux' }}
+curl -fsSL https://pkg.phase.dev/install.sh | bash
+```
+
+```fish {{ title: 'RedHat/CentOS/Amazon Linux' }}
+curl -fsSL https://pkg.phase.dev/install.sh | bash
+```
+
+```fish {{ title: 'Ubuntu/Debian' }}
+curl -fsSL https://pkg.phase.dev/install.sh | bash
+```
+
+```fish {{ title: 'Arch Linux' }}
+curl -fsSL https://pkg.phase.dev/install.sh | bash
+```
+
+</CodeGroup>
+
+## Updates {{ className: 'lead' }}
+
+<CodeGroup>
+
+```fish {{ title: 'MacOS' }}
+brew update && brew upgrade phase
+```
+
+```fish {{ title: 'Windows' }}
+scoop update phase
+```
+
+```fish {{ title: 'Alpine Linux' }}
+phase update
+```
+
+```fish {{ title: 'RedHat/CentOS/Amazon Linux' }}
+phase update
+```
+
+```fish {{ title: 'Ubuntu/Debian' }}
+phase update
+```
+
+```fish {{ title: 'Arch Linux' }}
+phase update
+```
+
+</CodeGroup>
