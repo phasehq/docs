@@ -1,0 +1,63 @@
+import { Tag } from '@/components/Tag'
+
+export const description =
+  'Mange your secrets and environment variables in your application with the Phase CLI'
+
+<Tag variant="small">INTEGRATE</Tag>
+
+# NestJS
+
+You can use phase run to inject secrets to your application process during runtime. There is no need for you to change any code or add a dependency.
+
+## Prerequisites:
+
+- Create an account on the Phase Console
+- [Install the CLI](/cli)
+
+## Initialize Phase for your [NestJS](https://nestjs.com) app
+
+In the root of your application's codebase run:
+
+```fish
+phase init
+```
+
+## Start your app with Phase
+
+Example
+
+```fish
+phase run npm run start:dev
+```
+
+Alternatively, you can use `phase run` in your package.json file, so secrets will automatically be injected when you `npm run dev`.
+
+**package.json**:
+
+```json
+
+{
+  "name": "McLaren",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start:dev": "phase run nest start --watch",
+    "start": "nest start",
+    "start:prod": "node dist/main",
+  },
+  "browserslist": "...",
+  "dependencies": {...
+  },
+  "devDependencies": {...
+  }
+}
+```
+
+<div className="not-prose">
+  <Button
+    href="https://docs.nestjs.com/techniques/configuration#cache-environment-variables"
+    variant="text"
+    arrow="right"
+    children="NestJS Docs"
+  />
+</div>
