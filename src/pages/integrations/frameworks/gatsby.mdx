@@ -5,16 +5,16 @@ export const description =
 
 <Tag variant="small">INTEGRATE</Tag>
 
-# Svelte
+# Gatsby
 
 You can use phase run to inject secrets to your application process during runtime. There is no need for you to change any code or add a dependency.
 
-## Prerequisites:
+## Prerequisites
 
 - Create an account on the Phase Console
 - [Install the CLI](/cli)
 
-## Initialize Phase for your [Svelte](https://svelte.dev) app
+## Initialize Phase for your [Gatsby](https://www.gatsbyjs.com) app
 
 In the root of your application's codebase run:
 
@@ -40,8 +40,8 @@ Alternatively, you can use `phase run` in your package.json file, so secrets wil
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "phase run \"run-s build:env:prod build:sveltekit build:env:local\"",
-    "dev": "phase run \"npm run check-env && npm run dev:sveltekit\""
+    "build": "phase run \"gatsby build\"",
+    "dev": "phase run \"gatsby develop\""
   },
   "browserslist": "...",
   "dependencies": {
@@ -53,13 +53,15 @@ Alternatively, you can use `phase run` in your package.json file, so secrets wil
 }
 ```
 
-<Note> Svelte environment variables must be prefixed with `PUBLIC_` </Note>
+<Note>
+  Gatsby client side environment variables must be prefixed with `GATSBY_`
+</Note>
 
 <div className="not-prose">
   <Button
-    href="https://kit.svelte.dev/docs/modules#$env-static-public"
+    href="https://www.gatsbyjs.com/docs/how-to/local-development/environment-variables/#accessing-environment-variables-in-the-browser"
     variant="text"
     arrow="right"
-    children="Svelte Docs"
+    children="Gatsby Docs"
   />
 </div>

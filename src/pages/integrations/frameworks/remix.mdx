@@ -5,7 +5,7 @@ export const description =
 
 <Tag variant="small">INTEGRATE</Tag>
 
-# Flask
+# Remix
 
 You can use phase run to inject secrets to your application process during runtime. There is no need for you to change any code or add a dependency.
 
@@ -14,7 +14,7 @@ You can use phase run to inject secrets to your application process during runti
 - Create an account on the Phase Console
 - [Install the CLI](/cli)
 
-## Initialize Phase for your [Flask](https://flask.palletsprojects.com) app
+## Initialize Phase for your [Remix](https://remix.run) app
 
 In the root of your application's codebase run:
 
@@ -27,14 +27,37 @@ phase init
 Example
 
 ```fish
-phase run flask run
+phase run npm run dev
+```
+
+Alternatively, you can use `phase run` in your package.json file, so secrets will automatically be injected when you `npm run dev`.
+
+**package.json**:
+
+```json
+{
+  "name": "McLaren",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "phase run \"remix build\"",
+    "dev": "phase run \"remix dev\""
+  },
+  "browserslist": "...",
+  "dependencies": {
+    ...
+  },
+  "devDependencies": {
+    ...
+  }
+}
 ```
 
 <div className="not-prose">
   <Button
-    href="https://flask.palletsprojects.com/en/2.1.x/config"
+    href="https://remix.run/docs/en/main/guides/envvars"
     variant="text"
     arrow="right"
-    children="Flask Docs"
+    children="Remix Docs"
   />
 </div>
