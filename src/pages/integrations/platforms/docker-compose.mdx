@@ -1,0 +1,159 @@
+import { Tag } from '@/components/Tag'
+
+export const description =
+  'Manage your secrets and environment variables in your application with the Phase CLI'
+
+<Tag variant="small">INTEGRATE</Tag>
+
+# Docker Compose
+
+You can use phase run to inject secrets to your application process during runtime. There's no need for you to change any code or add a dependency.
+
+## Prerequisites
+
+- Have signed up for the [Phase Console](https://console.phase.dev) and created an application.
+- `PHASE_SERVICE_TOKEN` (Ideally for each of your services).
+
+<Note>
+  If you are using a Self-Hosted instance of the Phase Console, you may supply
+  `PHASE_HOST` environment variable with your URL (`https://<HOST>`).
+</Note>
+
+## Using Docker `Entrypoint`
+
+1. Set `PHASE_SERVICE_TOKEN` as an environment variable.
+
+```fish
+export PHASE_SERVICE_TOKEN=<YOUR_PHASE_SERVICE_TOKEN>
+```
+
+2. Create or edit your `docker-compose.yml`:
+
+```yaml
+version: '3'
+services:
+  web:
+    build: .
+    image: example-service-1
+    environment:
+      - PHASE_SERVICE_TOKEN=${PHASE_SERVICE_TOKEN_FOR_WEB}
+
+  api:
+    build: .
+    image: example-service-2
+    environment:
+      - PHASE_SERVICE_TOKEN=${PHASE_SERVICE_TOKEN_FOR_API}
+```
+
+## Using `mkfifo`
+
+1. Set `PHASE_SERVICE_TOKEN` as a environment variable.
+
+```fish
+export PHASE_SERVICE_TOKEN=<YOUR_PHASE_SERVICE_TOKEN>
+```
+
+2. In your shell, create a named pipe:
+
+```bash
+mkfifo /path/to/your/fifo
+phase secrets export > /path/to/your/fifo &
+```
+
+3. In your `docker-compose.yml`, use the FIFO as an environment file:
+
+```yaml
+version: '3'
+services:
+  web:
+    build: .
+    image: example-service-1
+    environment:
+      - /path/to/your/fifo
+```
+
+<Note>Make sure to clean up (remove) the FIFO once it's no longer in use.</Note>
+
+<div className="not-prose">
+  <Button
+    href="https://man7.org/linux/man-pages/man3/mkfifo.3.html"
+    variant="text"
+    arrow="right"
+    children="Mkfifo Linux manual page"
+  />
+</div>
+
+### Security Considerations
+
+Using `mkfifo` avoids writing secrets to disk, but as with other methods, ensure that the FIFO is only accessible by the intended processes. Also, be aware that while data in the FIFO isn't saved to a regular file, it can still be read by any process with the right permissions.
+
+## Using `eval`
+
+1. Export secrets as environment variables in your shell.
+
+```bash
+eval $(phase secrets export)
+```
+
+2. Reference these environment variables directly in your `docker-compose.yml`:
+
+```yaml
+version: '3'
+
+services:
+  web:
+    build: .
+    image: example-service-1
+    environment:
+      - SECRET_VAR=${SECRET_VAR}
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    depends_on:
+      - redis
+
+  api:
+    build: .
+    image: example-service-2
+    environment:
+      - ANOTHER_SECRET=${ANOTHER_SECRET}
+      - PG_HOST=pgql
+      - PG_USER=${PG_USER}
+      - PG_PASSWORD=${PG_PASSWORD}
+      - PG_DB_NAME=${PG_DB_NAME}
+    depends_on:
+      - pgql
+
+  pgql:
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=${PG_USER}
+      - POSTGRES_PASSWORD=${PG_PASSWORD}
+      - POSTGRES_DB=${PG_DB_NAME}
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:latest
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    ports:
+      - '6379:6379'
+
+volumes:
+  pgdata:
+```
+
+### Security Considerations
+
+When using `eval`, secrets are loaded directly into your shell environment. While they aren't written to disk, they are accessible in the shell session. Care should be taken not to accidentally expose or log these variables.
+
+<div className="not-prose">
+  <Button
+    href="https://docs.docker.com/engine/reference/run/#env-environment-variables"
+    variant="text"
+    arrow="right"
+    children="Docker Run - Docs"
+  />
+</div>

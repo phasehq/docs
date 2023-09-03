@@ -194,24 +194,27 @@ export const navigation = [
   {
     title: 'Phase CLI',
     links: [
-      { title: 'Install', href: '/cli' },
-      { title: 'Usage', href: '/cli/usage' },
+      { title: 'Install', href: '/cli/install' },
+      { title: 'Quickstart', href: '/cli/usage' },
       { title: 'Commands', href: '/cli/commands' },
       { title: 'Config', href: '/dfgas' },
       //{ title: 'FAQ', href: '/quickstart' },
     ],
   },
   {
-    title: 'Infrastructure Integration',
+    title: 'Platform Integration',
     links: [
-      { title: 'Overview', href: '/das' },
-      { title: 'Docker', href: '/df' },
-      { title: 'Docker-compose', href: '/gg' },
-      { title: 'Restic', href: '/gg' },
+      //{ title: 'Overview', href: '/das' },
+      { title: 'Docker', href: '/integrations/platforms/docker' },
+      {
+        title: 'Docker-compose',
+        href: '/integrations/platforms/docker-compose',
+      },
+      { title: 'Kubernetes', href: '/integrations/platforms/kubernetes' },
     ],
   },
   {
-    title: 'Framework Integration',
+    title: 'Frameworks Integration',
     links: [
       { title: 'Overview', href: '/integrations' },
       { title: 'Next.js', href: '/integrations/frameworks/next-js' },

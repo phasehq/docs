@@ -13,7 +13,7 @@ The Phase CLI works together with the [Phase Console](https://github.com/phasehq
 
 ### Login
 
-Create an app in the [Phase Console](https://console.phase.dev) and copy appID and pss
+Create an app in the [Phase Console](https://console.phase.dev)
 
 ```bash
 phase auth
@@ -27,7 +27,11 @@ Link the phase cli to your project
 phase init
 ```
 
-This will create a `.phase.json` file in the root of your project
+This command will give you a drop down selection of all the apps created by you on the [Phase Console](https://console.phase.dev). Simply use up / down arrow `↑` and `↓` keys and hit `enter` to select.
+
+This will create a `.phase.json` file in the root of your application's repository. This file contains important context and non sensitive cryptographic values such as `X25519` public key and encrypted 32 byte salt.
+
+**We recommend that you check this config file in your git repository**.
 
 ## Import your existing secrets
 
@@ -92,78 +96,3 @@ phase run "printenv | grep AWS_ACCESS_KEY_ID"
 
 AWS_ACCESS_KEY_ID=AKIA2OGYBAH6QLWOYDVN
 ```
-
-## Export secrets back to .env file
-
-```
-phase secrets export
-```
-
-This will create an `.env` file and export all secrets as key value pairs in the given environment
-
-## Switching between environments via the `--env` flag
-
-Phase Console by default creates three environment for each application. ie. `development`, `staging` and `production`. You can switch in between them via the `--env` followed by the environment name or prefix. Keep in mind, **by default the Phase CLI will use the `development` environment** even if the `--env` flag is not passed.
-
-Example 1:
-
-```bash
-phase secrets create HOST --env staging
-```
-
-Example 2:
-It's also possible to provide an environment prefix for brevity
-
-```bash
-phase secrets list --env stag # Even though environment name is staging
-```
-
-Example 3:
-
-```bash
-phase run --env prod "python manage.py migrate && python manage.py runserver backend:8000"
-```
-
-## Secret referencing
-
-Phase Console and CLI also support dotenv styled secret referencing.
-
-You can refer a value of a secret residing in your current environment (eg. development) or across environments. Values prefixed with a `🔗` indicate local secrets value being referenced and values prefixed with `⛓️` indicate cross environment secret value being referenced.
-
-The syntax is as follows:
-
-Local: `${<key>}`
-
-Cross environment: `${<environment>.<key>}`
-
-**Examples**:
-
-Local environment secret referencing:
-
-```bash
-phase secrets list --env prod --show
-KEY 🗝️                   | VALUE ✨
--------------------------------------------------------------------------------------------------
-DJANGO_SECRET_KEY        | 7842cc89c5a703acdf4797e0f063e1851734cea0677ad9382158cfcee26195df
-DJANGO_DEBUG             | True
-DB_NAME                  | XP1_LM
-DB_USER                  | j_mclaren
-DB_PASSWORD              | 6c37810ec6e74ec3228416d2844564fceb99ebd94b29f4334c244db011630b0e
-DB_HOST                  | mc-laren-prod-db.c9ufzjtplsaq.us-west-1.rds.amazonaws.com
-DB_PORT                  | 5432
-DATABASE_URL             | 🔗 postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
-```
-
-The database connection string `postgresql://` is referencing `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT` and `DB_NAME` from the same environment (dev/development)
-
-Cross environment secret referencing:
-
-```bash
-phase secrets list --env prod --show
-KEY 🗝️                   | VALUE ✨
--------------------------------------------------------------------------------------------------
-AWS_ACCESS_KEY_ID        | ⛓️ ${dev.AWS_ACCESS_KEY_ID}
-AWS_SECRET_ACCESS_KEY    | ⛓️ ${dev.AWS_SECRET_ACCESS_KEY}
-```
-
-Note: This is assuming an environment (dev/development) has a secret with the key `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.

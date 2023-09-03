@@ -5,106 +5,173 @@ export const description =
 
 <Tag variant="small">CLI</Tag>
 
-# Install
+# Integration {{ className: 'lead' }}
 
-The Phase CLI works together with the [Phase Console](https://github.com/phasehq/console) to securely sync your secrets and environment variables with **End-to-End Encryption**. It is designed to pull secrets, decrypt them and inject secrets directly into your application or framework during runtime. You can use it to create, retrieve, update and delete your application secrets for different environments such as `development`, `staging`, `production` or something custom.
+You can use phase run to inject secrets to your application process during runtime. There is no need for you to change any code or add a dependency.
 
-# Prerequisites
+Examples:
 
-<CodeGroup>
-
-```fish {{ title: 'MacOS' }}
-# Install brew - https://brew.sh/
-
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```bash
+phase secrets list --show
+KEY 🗝️                   | VALUE ✨
+--------------------------------------------------------------------------------------
+AWS_ACCESS_KEY_ID        | AKIA2OGYBAH6QLWOYDVN
+AWS_SECRET_ACCESS_KEY    | 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
 ```
 
-```powershell {{ title: 'Windows' }}
-# Install scoop - https://scoop.sh
+## Python
 
-Set-ExecutionPolicy RemoteSigned -Scope CurrentUser # Optional: Needed to run a remote script the first time
-irm get.scoop.sh | iex
+```python
+import os
 
-# Install git - Optional: if you don't have it already
-
-scoop install git
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
 ```
 
-```fish {{ title: 'Alpine Linux' }}
-curl -fsSL https://pkg.phase.dev/install.sh | bash
+## JavsScript
+
+```js
+const AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID
+const AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY
 ```
 
-```fish {{ title: 'RedHat/CentOS/Amazon Linux' }}
-curl -fsSL https://pkg.phase.dev/install.sh | bash
+## Typescript
+
+```typescript
+const awsAccessKey: string = process.env.AWS_ACCESS_KEY_ID || ''
+const awsSecretKey: string = process.env.AWS_SECRET_ACCESS_KEY || ''
 ```
 
-```fish {{ title: 'Ubuntu/Debian' }}
-curl -fsSL https://pkg.phase.dev/install.sh | bash
+## Golang
+
+```go
+package main
+
+import "os"
+
+func main() {
+    awsAccessKey := os.Getenv("AWS_ACCESS_KEY_ID")
+    awsSecretKey := os.Getenv("AWS_SECRET_ACCESS_KEY")
+}
 ```
 
-```fish {{ title: 'Arch Linux' }}
-curl -fsSL https://pkg.phase.dev/install.sh | bash
+## Rust
+
+```rust
+use std::env;
+
+fn main() {
+    let aws_access_key = env::var("AWS_ACCESS_KEY_ID").unwrap_or_default();
+    let aws_secret_key = env::var("AWS_SECRET_ACCESS_KEY").unwrap_or_default();
+}
+
 ```
 
-</CodeGroup>
+## Julia
 
-## Installation {{ className: 'lead' }}
+```julia
 
-<CodeGroup>
+aws_access_key = ENV["AWS_ACCESS_KEY_ID"]
+aws_secret_key = ENV["AWS_SECRET_ACCESS_KEY"]
 
-```zsh {{ title: 'MacOS' }}
-brew install phasehq/cli/phase
 ```
 
-```fish {{ title: 'Windows' }}
-scoop bucket add phasehq https://github.com/phasehq/scoop-cli.git
-scoop install phase
+## Java
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        String awsAccessKey = System.getenv("AWS_ACCESS_KEY_ID");
+        String awsSecretKey = System.getenv("AWS_SECRET_ACCESS_KEY");
+    }
+}
+
 ```
 
-```fish {{ title: 'Alpine Linux' }}
-curl -fsSL https://pkg.phase.dev/install.sh | bash
+## Kotlin
+
+```kotlin
+fun main() {
+    val awsAccessKey = System.getenv("AWS_ACCESS_KEY_ID")
+    val awsSecretKey = System.getenv("AWS_SECRET_ACCESS_KEY")
+}
+
 ```
 
-```fish {{ title: 'RedHat/CentOS/Amazon Linux' }}
-curl -fsSL https://pkg.phase.dev/install.sh | bash
+## PHP
+
+```php
+$awsAccessKey = getenv('AWS_ACCESS_KEY_ID');
+$awsSecretKey = getenv('AWS_SECRET_ACCESS_KEY');
+
 ```
 
-```fish {{ title: 'Ubuntu/Debian' }}
-curl -fsSL https://pkg.phase.dev/install.sh | bash
+# C
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    char *awsAccessKey;
+    char *awsSecretKey;
+
+    awsAccessKey = getenv("AWS_ACCESS_KEY_ID");
+    awsSecretKey = getenv("AWS_SECRET_ACCESS_KEY");
+
+    printf("AWS_ACCESS_KEY_ID: %s\n", awsAccessKey);
+    printf("AWS_SECRET_ACCESS_KEY: %s\n", awsSecretKey);
+
+    return 0;
+}
+
 ```
 
-```fish {{ title: 'Arch Linux' }}
-curl -fsSL https://pkg.phase.dev/install.sh | bash
+C++
+
+```cpp
+#include <iostream>
+#include <cstdlib>
+
+int main() {
+    const char* awsAccessKey = std::getenv("AWS_ACCESS_KEY_ID");
+    const char* awsSecretKey = std::getenv("AWS_SECRET_ACCESS_KEY");
+
+    std::cout << "AWS_ACCESS_KEY_ID: " << awsAccessKey << std::endl;
+    std::cout << "AWS_SECRET_ACCESS_KEY: " << awsSecretKey << std::endl;
+
+    return 0;
+}
 ```
 
-</CodeGroup>
+## C#
 
-## Updates {{ className: 'lead' }}
+```c#
+using System;
 
-<CodeGroup>
+namespace EnvironmentVariablesExample {
+    class Program {
+        static void Main() {
+            string awsAccessKey = Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID");
+            string awsSecretKey = Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY");
 
-```fish {{ title: 'MacOS' }}
-brew update && brew upgrade phase
+            Console.WriteLine($"AWS_ACCESS_KEY_ID: {awsAccessKey}");
+            Console.WriteLine($"AWS_SECRET_ACCESS_KEY: {awsSecretKey}");
+        }
+    }
+}
 ```
 
-```fish {{ title: 'Windows' }}
-scoop update phase
+## Ruby
+
+```rb
+aws_access_key = ENV['AWS_ACCESS_KEY_ID']
+aws_secret_key = ENV['AWS_SECRET_ACCESS_KEY']
 ```
 
-```fish {{ title: 'Alpine Linux' }}
-phase update
-```
+## R
 
-```fish {{ title: 'RedHat/CentOS/Amazon Linux' }}
-phase update
+```r
+aws_access_key <- Sys.getenv("AWS_ACCESS_KEY_ID")
+aws_secret_key <- Sys.getenv("AWS_SECRET_ACCESS_KEY")
 ```
-
-```fish {{ title: 'Ubuntu/Debian' }}
-phase update
-```
-
-```fish {{ title: 'Arch Linux' }}
-phase update
-```
-
-</CodeGroup>
