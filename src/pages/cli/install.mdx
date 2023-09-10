@@ -19,6 +19,19 @@ The Phase CLI works together with the [Phase Console](https://github.com/phasehq
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
+```fish {{ title: 'pip' }}
+# Install python pip: https://pip.pypa.io/en/stable/installation/
+
+# Linux:
+python -m ensurepip --upgrade
+
+# MacOS:
+python -m ensurepip --upgrade
+
+# Windows:
+C:> py -m ensurepip --upgrade
+```
+
 ```powershell {{ title: 'Windows' }}
 # Install scoop - https://scoop.sh
 
@@ -46,6 +59,15 @@ curl -fsSL https://pkg.phase.dev/install.sh | bash
 curl -fsSL https://pkg.phase.dev/install.sh | bash
 ```
 
+```fish {{ title: 'Docker' }}
+# Install Docker on your system
+
+# Linux:
+curl -fsSL https://get.docker.com | bash
+
+# Others: https://docs.docker.com/engine/install
+```
+
 </CodeGroup>
 
 ## Installation {{ className: 'lead' }}
@@ -54,6 +76,10 @@ curl -fsSL https://pkg.phase.dev/install.sh | bash
 
 ```zsh {{ title: 'MacOS' }}
 brew install phasehq/cli/phase
+```
+
+```fish {{ title: 'pip' }}
+pip install phase-cli
 ```
 
 ```fish {{ title: 'Windows' }}
@@ -77,6 +103,13 @@ curl -fsSL https://pkg.phase.dev/install.sh | bash
 curl -fsSL https://pkg.phase.dev/install.sh | bash
 ```
 
+```fish {{ title: 'Docker' }}
+# Run the latest version
+docker run phasehq/cli
+
+# Optional: run a specific version - docker run phasehq/cli:<version>
+```
+
 </CodeGroup>
 
 ## Updates {{ className: 'lead' }}
@@ -85,6 +118,10 @@ curl -fsSL https://pkg.phase.dev/install.sh | bash
 
 ```fish {{ title: 'MacOS' }}
 brew update && brew upgrade phase
+```
+
+```fish {{ title: 'pip' }}
+pip install --upgrade phase-cli
 ```
 
 ```fish {{ title: 'Windows' }}
@@ -105,6 +142,13 @@ phase update
 
 ```fish {{ title: 'Arch Linux' }}
 phase update
+```
+
+```fish {{ title: 'Docker' }}
+# Pull the latest version
+docker pull phasehq/cli
+
+# Optional: pull a specific version - docker pull phasehq/cli:<version>
 ```
 
 </CodeGroup>

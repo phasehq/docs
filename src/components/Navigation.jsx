@@ -211,6 +211,38 @@ export const navigation = [
         href: '/integrations/platforms/docker-compose',
       },
       { title: 'Kubernetes', href: '/integrations/platforms/kubernetes' },
+      {
+        title: 'GitHub Actions',
+        href: '/integrations/platforms/github-actions',
+      },
+      { title: 'GitLab CI', href: '/integrations/platforms/gitlab-ci' },
+      { title: 'Jenkins', href: '/integrations/platforms/jenkins' },
+      { title: 'CircleCI', href: '/integrations/platforms/circleci' },
+      { title: 'AWS CodeBuild', href: '/integrations/platforms/aws-codebuild' },
+      {
+        title: 'Azure Pipelines',
+        href: '/integrations/platforms/azure-pipelines',
+      },
+      {
+        title: 'Travis CI',
+        href: '/integrations/platforms/travis-ci',
+      },
+      {
+        title: 'Bitbucket Pipelines',
+        href: '/integrations/platforms/bitbucket-pipelines',
+      },
+      {
+        title: 'TeamCity',
+        href: '/integrations/platforms/teamcity',
+      },
+      {
+        title: 'Drone CI',
+        href: '/integrations/platforms/drone-ci',
+      },
+      {
+        title: 'Buildkite',
+        href: '/integrations/platforms/buildkite',
+      },
     ],
   },
   {

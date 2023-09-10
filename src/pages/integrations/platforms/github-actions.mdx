@@ -1,0 +1,96 @@
+import { Tag } from '@/components/Tag'
+
+export const description = 'Integrate Phase with GitHub Actions'
+
+<Tag variant="small">INTEGRATE</Tag>
+
+# GitHub Actions
+
+You can use the Phase CLI to effortlessly inject or expose secret inside your CI pipelines or jobs.
+
+## Prerequisites
+
+- Have signed up for the [Phase Console](https://console.phase.dev) and created an application.
+- `PHASE_SERVICE_TOKEN`.
+
+<Note>
+  If you are using a Self-Hosted instance of the Phase Console, you may supply
+  `PHASE_HOST` environment variable with your URL (`https://<HOST>`).
+</Note>
+
+For detailed cli install options, please see: [Installation](/cli/install)
+
+### Setting `PHASE_SERVICE_TOKEN`:
+
+1. Go to your GitHub Repository.
+2. Click on the `Settings` tab.
+3. Select `Secrets` from the left sidebar.
+4. Click on `New repository secret`.
+5. Name it `PHASE_SERVICE_TOKEN` and provide its value.
+
+## Single staged:
+
+```yaml
+name: CI
+
+on: [push]
+
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install phase-cli
+        run: curl -fsSL https://pkg.phase.dev/install.sh | bash
+
+      - name: Export and set environment variables
+        run: |
+          phase secrets export --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN
+          export $(phase secrets export --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN | xargs)
+
+      - name: Build and Push Docker image
+        run: |
+          docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_TOKEN
+          docker build -t my-image .
+          docker push my-image:latest
+```
+
+## Multi staged using `phasehq/cli` Docker image:
+
+```yaml
+name: CI
+
+on: [push]
+
+jobs:
+  export_secrets:
+    runs-on: ubuntu-latest
+
+    container:
+      image: phasehq/cli
+
+    steps:
+      - name: Export environment variables
+        run: phase secrets export --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN
+
+    outputs:
+      username: ${{ env.DOCKERHUB_USERNAME }}
+      token: ${{ env.DOCKERHUB_TOKEN }}
+
+  build_and_push:
+    needs: export_secrets
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build and Push Docker image
+        run: |
+          docker login -u ${{ needs.export_secrets.outputs.username }} -p ${{ needs.export_secrets.outputs.token }}
+          docker build -t my-image .
+          docker push my-image:latest
+```
