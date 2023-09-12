@@ -9,17 +9,11 @@ export const description =
 
 The Phase CLI works together with the [Phase Console](https://github.com/phasehq/console) to securely sync your secrets and environment variables with **End-to-End Encryption**. It is designed to pull secrets, decrypt them and inject secrets directly into your application or framework during runtime. You can use it to create, retrieve, update and delete your application secrets for different environments such as `development`, `staging`, `production` or something custom.
 
-# Prerequisites
+## Prerequisites
 
 <CodeGroup>
 
-```fish {{ title: 'MacOS' }}
-# Install brew - https://brew.sh/
-
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-```
-
-```fish {{ title: 'pip' }}
+```fish {{ title: 'Pip' }}
 # Install python pip: https://pip.pypa.io/en/stable/installation/
 
 # Linux:
@@ -30,6 +24,12 @@ python -m ensurepip --upgrade
 
 # Windows:
 C:> py -m ensurepip --upgrade
+```
+
+```fish {{ title: 'MacOS' }}
+# Install brew - https://brew.sh/
+
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
 ```powershell {{ title: 'Windows' }}
@@ -74,12 +74,12 @@ curl -fsSL https://get.docker.com | bash
 
 <CodeGroup>
 
-```zsh {{ title: 'MacOS' }}
-brew install phasehq/cli/phase
+```fish {{ title: 'Pip' }}
+pip install phase-cli
 ```
 
-```fish {{ title: 'pip' }}
-pip install phase-cli
+```zsh {{ title: 'MacOS' }}
+brew install phasehq/cli/phase
 ```
 
 ```fish {{ title: 'Windows' }}
@@ -116,12 +116,12 @@ docker run phasehq/cli
 
 <CodeGroup>
 
-```fish {{ title: 'MacOS' }}
-brew update && brew upgrade phase
+```fish {{ title: 'Pip' }}
+pip install --upgrade phase-cli
 ```
 
-```fish {{ title: 'pip' }}
-pip install --upgrade phase-cli
+```fish {{ title: 'MacOS' }}
+brew update && brew upgrade phase
 ```
 
 ```fish {{ title: 'Windows' }}
@@ -152,3 +152,36 @@ docker pull phasehq/cli
 ```
 
 </CodeGroup>
+
+## Troubleshooting
+
+Phase not found on Windows:
+
+Installed via `pip install phase-cli` but the `phase` command is not found:
+
+![phase-not-found-windows](/assets/phase-pip-install-no-found-windows.png)
+
+1. **Check where `phase-cli` is installed**:
+
+```
+pip show phase-cli
+```
+
+![phase-not-found-windows](/assets/phase-pip-show-install-windows.png)
+
+Here is it indicated that python packages are installed in `C:\Users\<your-username>\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_<id>\LocalCache\local-packages\Python311\site-packages` which means your cli is available one directory up in the `\Scripts` folder.
+
+**i.e.** `C:\Users\<your-username>\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_<id>\LocalCache\local-packages\Python311\Scripes`
+
+2. **Add the `Scripts` directory to the `PATH`**:
+
+   - Search for "Environment Variables" on your computer (you can use the start menu search).
+   - Click on "Edit the system environment variables."
+   - In the System Properties window, go the Advanced tab and click the “Environment Variables” button.
+   - Under "System variables" table, scroll and find the `PATH` or `Path` variable, then click "Edit."
+   - In the Edit window, click "New" and then paste the path to your `Scripts` directory. **Example**: `C:\Users\<your-username>\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_<id>\LocalCache\local-packages\Python311\Scripes`
+   - Click OK to close each of the windows.
+
+3. **Open a new Command Prompt or PowerShell window**:
+   - After updating the `PATH`, you need to open a new command prompt or PowerShell window to reflect the changes.
+   - Now, try running your CLI command again.

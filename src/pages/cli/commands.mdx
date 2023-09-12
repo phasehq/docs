@@ -66,31 +66,9 @@ Link your project to your Phase app
 ```json
 {
   "version": "1",
-  "phaseApp": "MCL_P1",
-  "defaultEnv": "ec30d4eb-fd00-4bee-bcb9-faf3b33b3633",
-  "phaseEnvironments": [
-    {
-      "env": "Development",
-      "envType": "DEV",
-      "id": "ec30d4eb-fd00-4bee-bcb9-faf3b33b3633",
-      "publicKey": "e6fd261ad5f71b97da56095ef27319657c2cc0c0e3bdbf4fe1310bc115de472e",
-      "salt": "ph:v1:ca1dc0a58a21e2119da406235b0f4260c3d87cd17824d44fd12392e27227965f:51RG+hqbyh9Dbpxubfq+Xrt4WVQ8aTLyaPhjo14sz8WKVA2jrLNhZgIBzS6NiK0K59xcXKu3ga2Braga2znpYajOAr5jPz+4cXAPZJ+XzhNolbMZtqVDafAaFAcW8bnO2FEpEfzJEAI="
-    },
-    {
-      "env": "Staging",
-      "envType": "STAGING",
-      "id": "50e1d02d-9aea-45b6-aad7-2ad07a2fec8a",
-      "publicKey": "2edfd76103c4cdb958d257f6541a5821270b5f60c9b665ffa28730cba828cc5f",
-      "salt": "ph:v1:86c6172a5fd2521133586eaf4b0bdc9fd7edacd65f25461b7fd6e9fe74934611:n4EdHYEUvvpGwvysiwRBtKLKDVo+n7U6MwSGvWp9m7wWC+tzj8JFAw8+kgsie+YvDBr23QfHNTFM1SPlOfD5iKS6o6Em0f9ve29Xct4pGL9s0jqSWaO2FshKjO4RGRbxF7Ace4ygE8w="
-    },
-    {
-      "env": "Production",
-      "envType": "PROD",
-      "id": "e6def123-d2d2-42b3-a9e1-cc938a87e2cd",
-      "publicKey": "911b412a4a0bed11b52c98f86f9b99418e77d2e5c1522e4807b9facbd9c4160f",
-      "salt": "ph:v1:2a98c86cc0b77c017bef630bf840c3707fd75ed6b52b0cdaf596335298a5f968:5WRk3wl39Y0Xm2L9pKriWDdExVv9Idrrpj7vqryPkaDcaxFgE51C2H05AfgO7zGyVITEheCJZV2EZWoXgAo7nlPTKGB+W9pjdNJVLYsWaCBOU5auaOEBdD/nGSI9bVstyXqM5i8GCAk="
-    }
-  ]
+  "phaseApp": "ferrari",
+  "appId": "df7086eb-9080-4329-9991-25c386a6d59b",
+  "defaultEnv": "Development"
 }
 ```
 
@@ -220,3 +198,195 @@ AWS_SECRET_ACCESS_KEY    | ⛓️ ${dev.AWS_SECRET_ACCESS_KEY}
 ```
 
 Note: This is assuming an environment (dev/development) has a secret with the key `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
+
+## General Usage
+
+To use Phase CLI, simply run:
+
+```
+phase-cli [command] [sub-command] [options]
+```
+
+To view all available commands and their descriptions, run:
+
+```
+phase-cli --help
+```
+
+## Available Commands
+
+### 1. `auth`
+
+Authenticate with Phase.
+
+Usage:
+
+```
+phase-cli auth
+```
+
+### 2. `init`
+
+Link your project to your Phase app.
+
+Usage:
+
+```
+phase-cli init
+```
+
+### 3. `run`
+
+Run and inject secrets into your app.
+
+Usage:
+
+```
+phase-cli run [command_to_run] [--env ENVIRONMENT]
+```
+
+- `command_to_run`: The command you wish to run. For example: `yarn dev`.
+- `--env`: (Optional) Specify the environment (e.g., `dev`, `staging`, `production`).
+
+### 4. `secrets`
+
+Manage your secrets. This command has several sub-commands.
+
+#### a. `list`
+
+List all the secrets.
+
+Usage:
+
+```
+phase-cli secrets list [--show] [--env ENVIRONMENT]
+```
+
+- `--show`: Display secrets uncensored.
+- `--env`: (Optional) Specify the environment.
+
+#### b. `get`
+
+Retrieve a specific secret by key.
+
+Usage:
+
+```
+phase-cli secrets get KEY [--env ENVIRONMENT]
+```
+
+- `KEY`: The key associated with the secret to fetch.
+- `--env`: (Optional) Specify the environment.
+
+#### c. `create`
+
+Create a new secret.
+
+Usage:
+
+```
+phase-cli secrets create [KEY] [--env ENVIRONMENT]
+```
+
+- `KEY`: (Optional) The key for the secret to be created.
+- `--env`: (Optional) Specify the environment.
+
+#### d. `update`
+
+Update an existing secret.
+
+Usage:
+
+```
+phase-cli secrets update KEY [--env ENVIRONMENT]
+```
+
+- `KEY`: The key associated with the secret to update.
+- `--env`: (Optional) Specify the environment.
+
+#### e. `delete`
+
+Delete a secret.
+
+Usage:
+
+```
+phase-cli secrets delete KEYS... [--env ENVIRONMENT]
+```
+
+- `KEYS`: One or more keys to be deleted.
+- `--env`: (Optional) Specify the environment.
+
+#### f. `import`
+
+Import secrets from a .env file.
+
+Usage:
+
+```
+phase-cli secrets import ENV_FILE [--env ENVIRONMENT]
+```
+
+- `ENV_FILE`: The `.env` file to import from.
+- `--env`: (Optional) Specify the environment.
+
+#### g. `export`
+
+Export secrets in a dotenv format.
+
+Usage:
+
+```
+phase-cli secrets export [KEYS...] [--env ENVIRONMENT]
+```
+
+- `KEYS`: (Optional) List of keys separated by space.
+- `--env`: (Optional) Specify the environment.
+
+### 5. `logout`
+
+Logout from the Phase CLI.
+
+Usage:
+
+```
+phase-cli logout [--purge]
+```
+
+- `--purge`: Purge all local data.
+
+### 6. `console`
+
+Open the Phase Console in your web browser.
+
+Usage:
+
+```
+phase-cli console
+```
+
+### 7. `update` (Linux Only)
+
+Update the Phase CLI to the latest version.
+
+Usage:
+
+```
+phase-cli update
+```
+
+### 8. `keyring`
+
+Display information about the Phase keyring.
+
+Usage:
+
+```
+phase-cli keyring
+```
+
+---
+
+This provides an overview of the commands and their associated options. To get more detailed explanations, always use the `--help` option with any command or sub-command.
+
+Note: You might want to add any prerequisites, installation steps, or additional details to make this documentation more comprehensive for the end users.
