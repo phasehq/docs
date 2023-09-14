@@ -1,12 +1,13 @@
-import { LibrariesIntro } from '@/components/LibrariesIntro'
+import { FramewroksIntegration } from '@/components/FramewroksIntegration'
 import { Deployments } from '@/components/Deployments'
 import { Guides } from '@/components/Guides'
 import { SecurityResources } from '@/components/SecurityResources'
 import { HeroPattern } from '@/components/HeroPattern'
+import AsciinemaEmbed from '@/components/AsciinemaEmbed'
 import { Tag } from '@/components/Tag'
 
 export const description =
-  'Phase is an Open Source end-to-end encrypted key management platform for developers to encrypt data in their apps.'
+  'Phase is an open source (open core) end-to-end encrypted platform for creating, managing, syncing and deploying secrets and environment variables across your infrastructure.'
 
 <HeroPattern />
 
@@ -14,19 +15,76 @@ export const description =
 
 # Introduction
 
-Open Source end-to-end encrypted key management platform for developers to encrypt data in their apps. {{ className: 'lead' }}
+Phase is an open source (open core) end-to-end encrypted platform for creating, managing, deploying secrets and environment variables across your infrastructure. {{ className: 'lead' }}
 
 Phase has been designed to give app developers access to some of the best cryptography available while being easy to integrate, manage and observe key usage; all while providing robust security. This involves various decisions around how and where encryption keys are generated, deployed and managed, how data is encrypted or decrypted, what algorithms are used for various cryptographic operations and how Phase interacts with your applications.
 
-**Encrypt data in your apps with secure self-custodial keys.**
+Phase is designed to solve the problem for securely
 
-## Integrate Phase
+## Phase CLI
 
-Add Phase to your existing application via SDKs:
+Import, encrypt and inject secrets in your application within seconds. Zero code change required.
 
-<LibrariesIntro />
+<div
+  dangerouslySetInnerHTML={{
+    __html: `
+    <script async id="asciicast-607829" src="https://asciinema.org/a/607829.js"></script>
+  `,
+  }}
+></div>
 
----
+<CodeGroup>
+
+```fish {{ title: 'Pip' }}
+pip install phase-cli
+```
+
+```zsh {{ title: 'MacOS' }}
+brew install phasehq/cli/phase
+```
+
+```fish {{ title: 'Windows' }}
+scoop bucket add phasehq https://github.com/phasehq/scoop-cli.git
+scoop install phase
+```
+
+```fish {{ title: 'Alpine Linux' }}
+curl -fsSL https://pkg.phase.dev/install.sh | bash
+```
+
+```fish {{ title: 'RedHat/CentOS/Amazon Linux' }}
+curl -fsSL https://pkg.phase.dev/install.sh | bash
+```
+
+```fish {{ title: 'Ubuntu/Debian' }}
+curl -fsSL https://pkg.phase.dev/install.sh | bash
+```
+
+```fish {{ title: 'Arch Linux' }}
+curl -fsSL https://pkg.phase.dev/install.sh | bash
+```
+
+```fish {{ title: 'Docker' }}
+# Run the latest version
+docker run phasehq/cli
+
+# Optional: run a specific version - docker run phasehq/cli:<version>
+```
+
+</CodeGroup>
+
+<div className="not-prose">
+  <Button
+    href="/cli/install"
+    variant="text"
+    arrow="right"
+    children="CLI Installation"
+  />
+</div>
+
+## Integration examples
+
+<FramewroksIntegration />
 
 ## Deployment options
 

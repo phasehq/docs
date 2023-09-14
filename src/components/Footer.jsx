@@ -225,10 +225,7 @@ function SmallPrint() {
         <SocialLink href="https://github.com/phasehq/console" icon={GitHubIcon}>
           Follow us on GitHub
         </SocialLink>
-        <SocialLink
-          href="https://join.slack.com/t/phase-community/shared_invite/zt-1tkwzl31z-a6yCB5Uqlj~V2x43ep2Evg"
-          icon={SlackIcon}
-        >
+        <SocialLink href="https://slack.phase.dev" icon={SlackIcon}>
           Join our Slack
         </SocialLink>
         <SocialLink
