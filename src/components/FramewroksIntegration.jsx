@@ -19,15 +19,14 @@ const SDKs = [
   {
     href: '/integrations/frameworks/react',
     name: 'React',
-    description:
-      'Inject secrets and environment variables to your React app with Phase.',
+    description: 'Inject secrets and environment variables to your React app.',
     logo: logoReact,
   },
   {
     href: '/integrations/frameworks/node',
     name: 'Node.js',
     description:
-      'Inject secrets and environment variables to your Node.js app with Phase.',
+      'Inject secrets and environment variables to your Node.js app.',
     logo: logoNode,
     available: true,
   },
@@ -35,23 +34,21 @@ const SDKs = [
     href: '/integrations/frameworks/next-js',
     name: 'Next.js',
     description:
-      'Inject secrets and environment variables to your Next.js app with Phase.',
+      'Inject secrets and environment variables to your Next.js app.',
     logo: logoNext,
     available: true,
   },
   {
     href: '/integrations/frameworks/django',
     name: 'Django',
-    description:
-      'Inject secrets and environment variables to your Django app with Phase.',
+    description: 'Inject secrets and environment variables to your Django app.',
     logo: logoDjango,
     available: true,
   },
   {
     href: '/integrations/frameworks/fiber',
     name: 'Golang',
-    description:
-      'Inject secrets and environment variables to your Go app with Phase.',
+    description: 'Inject secrets and environment variables to your Go app.',
     logo: logoGo,
     available: true,
   },
@@ -59,15 +56,14 @@ const SDKs = [
     href: '/integrations/frameworks/ruby-on-rails',
     name: 'Ruby on Rails',
     description:
-      'Inject secrets and environment variables to your Ruby on Rails app with Phase.',
+      'Inject secrets and environment variables to your Ruby on Rails app.',
     logo: logoRubyOnRails,
     available: true,
   },
   {
     href: '/integrations/frameworks/dotnet',
     name: '.NET',
-    description:
-      'Inject secrets and environment variables to your .NET app with Phase.',
+    description: 'Inject secrets and environment variables to your .NET app.',
     logo: logoDotnet,
     available: true,
   },
@@ -75,7 +71,7 @@ const SDKs = [
     href: '/integrations/frameworks/laravel',
     name: 'Laravel',
     description:
-      'Inject secrets and environment variables to your Laravel app with Phase.',
+      'Inject secrets and environment variables to your Laravel app.',
     logo: logoLaravel,
     available: true,
   },

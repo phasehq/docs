@@ -2,31 +2,42 @@ import { Card } from '@/components/Card'
 import Link from 'next/link'
 import Image from 'next/image'
 import clsx from 'clsx'
-import { ubuntu, digitalocean, amazonaws } from 'simple-icons'
+
+import logoDcoker from '@/images/logos/docker.svg'
+import logoAmazonaws from '@/images/logos/aws.svg'
+import logoDigitalOcean from '@/images/logos/digitalocean.svg'
+import logoGCP from '@/images/logos/gcp.svg'
 
 const deployment_methods = [
   {
     href: '/self-hosting/docker-compose',
-    name: 'Ubuntu server',
+    name: 'Docker Compose',
     description: 'Deploy Phase Console via Docker Compose on any machine.',
-    logo: ubuntu,
+    logo: logoDcoker,
     available: true,
   },
   {
     href: '',
-    name: 'AWS (Coming soon)',
+    name: 'AWS',
     description:
       'Deploy Phase Console on a EC2 instance on your AWS infrastructure.',
-    logo: amazonaws,
+    logo: logoAmazonaws,
     available: true,
   },
   {
     href: '',
-    name: 'DigitalOcean (Coming soon)',
+    name: 'DigitalOcean',
     description: 'Deploy Phase Console on a droplet in DigitalOcean',
-    logo: digitalocean,
+    logo: logoDigitalOcean,
     available: true,
   },
+  // {
+  //   href: '',
+  //   name: 'Google Cloud Platform',
+  //   description: 'Deploy Phase Console on a droplet in DigitalOcean',
+  //   logo: logoGCP,
+  //   available: true,
+  // },
 ]
 
 function ArrowIcon(props) {
@@ -42,57 +53,34 @@ function ArrowIcon(props) {
   )
 }
 
-function SimpleIcon({ path, color, size = 48, className }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      className={className}
-    >
-      <path d={path} fill={color} />
-    </svg>
-  )
-}
+let arrowIcon = <ArrowIcon className={clsx('mt-0.5 -mr-1 h-5 w-5')} />
 
 export function Deployments() {
-  const arrowIcon = <ArrowIcon className={clsx('mt-0.5 -mr-1 h-5 w-5')} />
-
   return (
     <div className="my-16 xl:max-w-none">
       <div className="not-prose mt-4 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 xl:max-w-none xl:grid-cols-3">
         {deployment_methods.map((library) => (
           <Card key={library.name}>
-            <Link href={library.href}>
-              <div
-                className={clsx(
-                  'flex cursor-pointer flex-row-reverse gap-6',
-                  !library.available && 'cursor-not-allowed opacity-40'
-                )}
-              >
-                <div className="flex-auto">
-                  <h3 className="font-semibold text-zinc-900 dark:text-white">
-                    {library.name}
-                  </h3>
-                  <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-                    {library.description}
-                  </p>
-                  <div className="mt-4">
-                    <div className="flex items-center text-emerald-500">
-                      Explore {arrowIcon}
-                    </div>
+            <Link href={library.href} className="flex flex-row-reverse gap-6">
+              <div className="flex-auto">
+                <h3 className=" font-semibold text-zinc-900 dark:text-white">
+                  {library.name}
+                </h3>
+                <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+                  {library.description}
+                </p>
+                <div className="mt-4">
+                  <div className="flex items-center text-emerald-500">
+                    Expore {arrowIcon}
                   </div>
                 </div>
-                {library.logo && library.logo.path && library.logo.hex && (
-                  <SimpleIcon
-                    path={library.logo.path}
-                    color={`#${library.logo.hex}`}
-                    size={48}
-                    className="h-12 w-12"
-                  />
-                )}
               </div>
+              <Image
+                src={library.logo}
+                alt=""
+                className="h-12 w-12"
+                unoptimized
+              />
             </Link>
           </Card>
         ))}

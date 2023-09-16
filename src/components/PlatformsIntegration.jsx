@@ -18,33 +18,33 @@ import clsx from 'clsx'
 
 const SDKs = [
   {
-    href: '/integrations/frameworks/react',
+    href: '/integrations/platforms/docker',
     name: 'Docker',
     description:
-      'Inject secrets and environment variables to your React app with Phase.',
+      'Inject secrets and environment variables inside your Docker container.',
     logo: logoDocker,
   },
   {
-    href: '/integrations/frameworks/node',
+    href: '/integrations/platforms/kubernetes',
     name: 'Kubernetes',
     description:
-      'Inject secrets and environment variables to your Node.js app with Phase.',
+      'Inject secrets and environment variables inside your Kubernetes pods.',
     logo: logoKubernetes,
     available: true,
   },
   {
-    href: '/integrations/frameworks/next-js',
-    name: 'GitHub',
+    href: '/integrations/platforms/github-actions',
+    name: 'GitHub Actions',
     description:
-      'Inject secrets and environment variables to your Next.js app with Phase.',
+      'Inject secrets and environment variables inside your GitHub Actions CI.',
     logo: logoGitHub,
     available: true,
   },
   {
-    href: '/integrations/frameworks/django',
-    name: 'GitLab',
+    href: '/integrations/platforms/gitlab-ci',
+    name: 'GitLab CI',
     description:
-      'Inject secrets and environment variables to your Django app with Phase.',
+      'Inject secrets and environment variables inside your GitLab CI.',
     logo: logoGitLab,
     available: true,
   },

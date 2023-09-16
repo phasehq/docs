@@ -271,24 +271,24 @@ export const navigation = [
     ],
   },
   {
-    title: 'SDKs',
-    links: [
-      { title: 'Overview', href: '/sdks' },
-      { title: 'JavaScript', href: '/sdks/js' },
-      { title: 'Node.js', href: '/sdks/node' },
-      { title: 'Python', href: '/sdks/python' },
-    ],
-  },
-  {
     title: 'Self-hosting',
     links: [
-      { title: 'Introduction', href: '/self-hosting' },
+      { title: 'Overview', href: '/self-hosting' },
       { title: 'Docker Compose', href: '/self-hosting/docker-compose' },
       {
         title: 'Environment Variables',
         href: '/self-hosting/configuration/envars',
       },
       // { title: 'Python', href: '/sdks/python' },
+    ],
+  },
+  {
+    title: 'SDKs',
+    links: [
+      { title: 'Overview', href: '/sdks' },
+      { title: 'JavaScript', href: '/sdks/js' },
+      { title: 'Node.js', href: '/sdks/node' },
+      { title: 'Python', href: '/sdks/python' },
     ],
   },
   {
