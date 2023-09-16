@@ -1,4 +1,6 @@
 import { FramewroksIntegration } from '@/components/FramewroksIntegration'
+import { PlatformsIntegration } from '@/components/PlatformsIntegration'
+
 import { Deployments } from '@/components/Deployments'
 import { Guides } from '@/components/Guides'
 import { SecurityResources } from '@/components/SecurityResources'
@@ -17,10 +19,6 @@ export const description =
 
 Phase is an open source (open core) end-to-end encrypted platform for creating, managing, deploying secrets and environment variables across your infrastructure. {{ className: 'lead' }}
 
-Phase has been designed to give app developers access to some of the best cryptography available while being easy to integrate, manage and observe key usage; all while providing robust security. This involves various decisions around how and where encryption keys are generated, deployed and managed, how data is encrypted or decrypted, what algorithms are used for various cryptographic operations and how Phase interacts with your applications.
-
-Phase is designed to solve the problem for securely
-
 ## Phase CLI
 
 Import, encrypt and inject secrets in your application within seconds. Zero code change required.
@@ -32,6 +30,8 @@ Import, encrypt and inject secrets in your application within seconds. Zero code
   `,
   }}
 ></div>
+
+Get the CLI
 
 <CodeGroup>
 
@@ -78,13 +78,37 @@ docker run phasehq/cli
     href="/cli/install"
     variant="text"
     arrow="right"
-    children="CLI Installation"
+    children="Explore CLI"
   />
 </div>
 
-## Integration examples
+## Integrate Phase
+
+Seamlessly work with your favorite framework.
 
 <FramewroksIntegration />
+
+<div className="not-prose">
+  <Button
+    href="/cli/install"
+    variant="text"
+    arrow="right"
+    children="Explore Framework Integrations"
+  />
+</div>
+
+Seamlessly work with your preferred platform.
+
+<PlatformsIntegration />
+
+<div className="not-prose">
+  <Button
+    href="/cli/install"
+    variant="text"
+    arrow="right"
+    children="Explore Platforms Integrations"
+  />
+</div>
 
 ## Deployment options
 
@@ -104,9 +128,13 @@ Phase is not a black box. Learn more about security and architecture:
 
 ## Ready to try?{{ anchor: true }}
 
-To get started, create a new application in your [Phase Console](https://console.phase.dev) and use our open source SDKs. {{ className: 'lead' }}
+To get started, create a new application in your [Phase Console](https://console.phase.dev) and set up the [Phase CLI](/cli/usage). {{ className: 'lead' }}
 
 <div className="not-prose mb-16 mt-6 flex gap-3">
   <Button href="/quickstart" arrow="right" children="🚀 Quickstart" />
-  <Button href="/sdks" variant="outline" children="Explore SDKs" />
+  <Button
+    href="/integrations"
+    variant="outline"
+    children="Explore Integrations"
+  />
 </div>

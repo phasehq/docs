@@ -8,75 +8,44 @@ import logoJavaScript from '@/images/logos/javascript.svg'
 import logoDjango from '@/images/logos/django.svg'
 import logoReact from '@/images/logos/react.svg'
 import logoNext from '@/images/logos/nextjs.svg'
-import logoLaravel from '@/images/logos/laravel.svg'
-import logoDotnet from '@/images/logos/dotnet.svg'
-import logoPhp from '@/images/logos/php.svg'
-import logoPython from '@/images/logos/python.svg'
-import logoRubyOnRails from '@/images/logos/rubyonrails.svg'
+
+import logoDocker from '@/images/logos/docker.svg'
+import logoKubernetes from '@/images/logos/kubernetes.svg'
+import logoGitHub from '@/images/logos/github.svg'
+import logoGitLab from '@/images/logos/gitlab.svg'
+
 import clsx from 'clsx'
 
 const SDKs = [
   {
     href: '/integrations/frameworks/react',
-    name: 'React',
+    name: 'Docker',
     description:
       'Inject secrets and environment variables to your React app with Phase.',
-    logo: logoReact,
+    logo: logoDocker,
   },
   {
     href: '/integrations/frameworks/node',
-    name: 'Node.js',
+    name: 'Kubernetes',
     description:
       'Inject secrets and environment variables to your Node.js app with Phase.',
-    logo: logoNode,
+    logo: logoKubernetes,
     available: true,
   },
   {
     href: '/integrations/frameworks/next-js',
-    name: 'Next.js',
+    name: 'GitHub',
     description:
       'Inject secrets and environment variables to your Next.js app with Phase.',
-    logo: logoNext,
+    logo: logoGitHub,
     available: true,
   },
   {
     href: '/integrations/frameworks/django',
-    name: 'Django',
+    name: 'GitLab',
     description:
       'Inject secrets and environment variables to your Django app with Phase.',
-    logo: logoDjango,
-    available: true,
-  },
-  {
-    href: '/integrations/frameworks/fiber',
-    name: 'Golang',
-    description:
-      'Inject secrets and environment variables to your Go app with Phase.',
-    logo: logoGo,
-    available: true,
-  },
-  {
-    href: '/integrations/frameworks/ruby-on-rails',
-    name: 'Ruby on Rails',
-    description:
-      'Inject secrets and environment variables to your Ruby on Rails app with Phase.',
-    logo: logoRubyOnRails,
-    available: true,
-  },
-  {
-    href: '/integrations/frameworks/dotnet',
-    name: '.NET',
-    description:
-      'Inject secrets and environment variables to your .NET app with Phase.',
-    logo: logoDotnet,
-    available: true,
-  },
-  {
-    href: '/integrations/frameworks/laravel',
-    name: 'Laravel',
-    description:
-      'Inject secrets and environment variables to your Laravel app with Phase.',
-    logo: logoLaravel,
+    logo: logoGitLab,
     available: true,
   },
 ]
@@ -107,7 +76,7 @@ function ArrowIcon(props) {
 
 let arrowIcon = <ArrowIcon className={clsx('mt-0.5 -mr-1 h-5 w-5')} />
 
-export function FramewroksIntegration() {
+export function PlatformsIntegration() {
   return (
     <div className="my-16 xl:max-w-none">
       <div className="not-prose mt-4 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 xl:max-w-none xl:grid-cols-3">

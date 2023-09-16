@@ -72,7 +72,7 @@ export const Header = forwardRef(function Header({ className }, ref) {
               Home
             </TopLevelNavItem>
             <TopLevelNavItem href="https://slack.phase.dev" target="_blank">
-              Slack Community
+              Slack
             </TopLevelNavItem>
             <TopLevelNavItem href="https://phase.statuspage.io" target="_blank">
               System Status

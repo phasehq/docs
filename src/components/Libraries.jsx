@@ -36,14 +36,14 @@ const serverSdks = [
     logo: logoPython,
     available: true,
   },
-  {
-    href: '',
-    name: 'Go (Coming soon)',
-    description:
-      'Encrypt and decrypt data in your preferred Go application server.',
-    logo: logoGo,
-    available: false,
-  },
+  // {
+  //   href: '',
+  //   name: 'Go (Coming soon)',
+  //   description:
+  //     'Encrypt and decrypt data in your preferred Go application server.',
+  //   logo: logoGo,
+  //   available: false,
+  // },
 ]
 
 function ArrowIcon(props) {
