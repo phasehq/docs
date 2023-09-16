@@ -12,22 +12,24 @@ const deployment_methods = [
   {
     href: '/self-hosting/docker-compose',
     name: 'Docker Compose',
-    description: 'Deploy Phase Console via Docker Compose on any machine.',
+    description:
+      'Seamlessly deploy the Phase Console via Docker Compose on any machine.',
     logo: logoDcoker,
     available: true,
   },
   {
-    href: '',
+    href: '/self-hosting/aws',
     name: 'AWS',
     description:
-      'Deploy Phase Console on a EC2 instance on your AWS infrastructure.',
+      'Deploy the Phase Console on EC2 and RDS instances inside your AWS infrastructure.',
     logo: logoAmazonaws,
     available: true,
   },
   {
-    href: '',
+    href: '/self-hosting/digitalocean',
     name: 'DigitalOcean',
-    description: 'Deploy Phase Console on a droplet in DigitalOcean',
+    description:
+      'Deploy the Phase Console on a droplet and a managed SQL db in DigitalOcean',
     logo: logoDigitalOcean,
     available: true,
   },

@@ -275,8 +275,10 @@ export const navigation = [
     links: [
       { title: 'Overview', href: '/self-hosting' },
       { title: 'Docker Compose', href: '/self-hosting/docker-compose' },
+      { title: 'AWS', href: '/self-hosting/aws' },
+      { title: 'DigitalOcean', href: '/self-hosting/digitalocean' },
       {
-        title: 'Environment Variables',
+        title: 'Config - Environment Variables',
         href: '/self-hosting/configuration/envars',
       },
       // { title: 'Python', href: '/sdks/python' },

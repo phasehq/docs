@@ -1,0 +1,54 @@
+import { Tag } from '@/components/Tag'
+
+export const description = 'Run Phase on your own digitalocean infrastructure.'
+
+<Tag variant="small">SELF-HOSTING</Tag>
+
+# Docker Compose
+
+Learn how to set up the Phase Console using the Docker Compose template. {{ className: 'lead' }}
+
+## 1. Install docker on your machine
+
+```bash
+# Ubuntu
+sudo apt update && sudo apt upgrade -y && sudo apt install -y docker-compose
+```
+
+## 2. Download the configurations
+
+**.env** template:
+
+```bash
+wget -O .env https://raw.githubusercontent.com/phasehq/console/main/.env.example
+```
+
+**Docker Compose template**:
+
+```bash
+wget -O docker-compose.yml https://raw.githubusercontent.com/phasehq/console/main/docker-compose.yml
+```
+
+**Nginx config**
+
+```bash
+mkdir nginx && wget -O ./nginx/default.conf https://raw.githubusercontent.com/phasehq/console/main/nginx/default.conf
+```
+
+**Nginx Dockerfile**
+
+```bash
+wget -O ./nginx/Dockerfile  https://raw.githubusercontent.com/phasehq/console/main/nginx/Dockerfile
+```
+
+## 3. Update your configuration
+
+Please make changes to the `.env` file to suite your environment. Refer to the available [environment variables](/self-hosting/configuration/envars)
+
+## 4. Start services
+
+```bash
+docker-compose -f docker-compose.yml up -d
+```
+
+Your Phase console deployment will be available at `https://localhost`. By default Phase will provision a self-signed TLS certificate using nginx. Please use a valid TLS certificate for your own domain in production.
