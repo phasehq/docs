@@ -81,7 +81,7 @@ export function Libraries() {
                 </p>
                 <div className="mt-4">
                   <div className="flex items-center text-emerald-500">
-                    Expore {arrowIcon}
+                    Explore {arrowIcon}
                   </div>
                 </div>
               </div>
@@ -123,7 +123,7 @@ export function Libraries() {
                 </p>
                 <div className="mt-4">
                   <div className="flex items-center text-emerald-500">
-                    Expore {arrowIcon}
+                    Explore {arrowIcon}
                   </div>
                 </div>
               </div>
