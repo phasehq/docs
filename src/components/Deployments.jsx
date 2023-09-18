@@ -20,8 +20,7 @@ const deployment_methods = [
   {
     href: '/self-hosting/aws',
     name: 'AWS',
-    description:
-      'Deploy the Phase Console on EC2 and RDS instances inside your AWS infrastructure.',
+    description: 'Deploy the Phase Console on AWS EC2 and RDS PostgreSQL.',
     logo: logoAmazonaws,
     available: true,
   },
@@ -29,7 +28,7 @@ const deployment_methods = [
     href: '/self-hosting/digitalocean',
     name: 'DigitalOcean',
     description:
-      'Deploy the Phase Console on a droplet and a managed SQL db in DigitalOcean',
+      'Deploy the Phase Console on a DigitalOcean droplet and a managed PostgreSQL.',
     logo: logoDigitalOcean,
     available: true,
   },

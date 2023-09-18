@@ -4,51 +4,125 @@ export const description = 'Run Phase on your own digitalocean infrastructure.'
 
 <Tag variant="small">SELF-HOSTING</Tag>
 
-# Docker Compose
+# DigitalOcean
 
-Learn how to set up the Phase Console using the Docker Compose template. {{ className: 'lead' }}
+Learn how to set up the Phase Console using DigitalOcean droplet and managed PostgreSQL via the Docker Compose template. {{ className: 'lead' }}
 
-## 1. Install docker on your machine
+### I. Set Up a DigitalOcean Droplet
 
-```bash
-# Ubuntu
-sudo apt update && sudo apt upgrade -y && sudo apt install -y docker-compose
-```
+1. **Log in to your DigitalOcean Dashboard**.
 
-## 2. Download the configurations
+2. **Create a new Droplet**:
 
-**.env** template:
+   - Choose an appropriate datacenter region.
+   - Choose the **Ubuntu 22.04 LTS** image.
+   - Select **Droplet Type** as **General Purpose** and pick a size similar to $63/month **8 GB / 2 CPUs**.
+   - For **Additional Options**, ensure you have selected **Monitoring**.
+   - Under **Authentication**, select **SSH keys**. Add your existing SSH key or [create a new SSH key](https://www.digitalocean.com/docs/ssh/create-ssh-keys/).
 
-```bash
-wget -O .env https://raw.githubusercontent.com/phasehq/console/main/.env.example
-```
+3. **Click Create Droplet**.
 
-**Docker Compose template**:
+### II. Set Up Managed PostgreSQL Database
 
-```bash
-wget -O docker-compose.yml https://raw.githubusercontent.com/phasehq/console/main/docker-compose.yml
-```
+1. Navigate to **Databases** in the left sidebar of your DigitalOcean Dashboard.
 
-**Nginx config**
+2. **Click on 'Create Database'**:
 
-```bash
-mkdir nginx && wget -O ./nginx/default.conf https://raw.githubusercontent.com/phasehq/console/main/nginx/default.conf
-```
+   - Choose **PostgreSQL** as your database engine.
+   - Pick a version, e.g., **15**.
+   - Select the **Standard** plan and choose a size similar to $60/month **Basic / 2 vCPU / 4 GB RAM / 60 GB SSD / Connection limit: 97**.
+   - Choose your datacenter region (preferably the same as your Droplet for better latency).
 
-**Nginx Dockerfile**
+3. **Database Configuration**:
 
-```bash
-wget -O ./nginx/Dockerfile  https://raw.githubusercontent.com/phasehq/console/main/nginx/Dockerfile
-```
+   - Once the database is created, block public incoming connections to your database by clicking on **Secure this database cluster by restricting access.** in **TRUSTED SOURCES**.
+   - Navigate to the **Users & Databases** tab.
+   - Create a new database named **phase_db**.
+   - Create a new user named **phase_api** and set a password.
+   - Grant the **phase_api** user necessary privileges on the **phase_db**.
 
-## 3. Update your configuration
+4. **Database Connection Settings**:
+   - Note down the connection details for later. You'll specifically need the host (private network vpc host), user, database, and password.
 
-Please make changes to the `.env` file to suite your environment. Refer to the available [environment variables](/self-hosting/configuration/envars)
+### III. SSH into Droplet & Setup Database
 
-## 4. Start services
+1. Open your terminal and navigate to the directory containing your SSH key.
 
-```bash
-docker-compose -f docker-compose.yml up -d
-```
+2. **SSH into your Droplet**:
 
-Your Phase console deployment will be available at `https://localhost`. By default Phase will provision a self-signed TLS certificate using nginx. Please use a valid TLS certificate for your own domain in production.
+   ```bash
+   ssh -i "your-ssh-key-name" root@your-droplet-ip-address
+   ```
+
+3. **Install PostgreSQL client**:
+
+   ```bash
+   sudo apt update
+   sudo apt install postgresql-client
+   ```
+
+4. **Connect to the Managed PostgreSQL instance**:
+
+   ```bash
+   psql -h your-postgresql-host -U phase_api -d phase_db
+   ```
+
+5. **Exit** the PostgreSQL session:
+   ```sql
+   \q
+   ```
+
+### IV. Prepare for Docker Deployment
+
+1. **Generate a strong database password**:
+
+   ```bash
+   openssl rand -hex 32
+   ```
+
+2. **Install Docker & Docker Compose**:
+
+   ```bash
+   sudo apt update && sudo apt upgrade -y && sudo apt install -y docker-compose
+   ```
+
+3. **Download required configurations**:
+
+   - **.env** template:
+
+     ```bash
+     wget -O .env https://raw.githubusercontent.com/phasehq/console/main/.env.example
+     ```
+
+   - **Docker Compose** template:
+
+     ```bash
+     wget -O docker-compose.yml https://raw.githubusercontent.com/phasehq/console/main/docker-compose.yml
+     ```
+
+   - **Nginx** config & Dockerfile:
+     ```bash
+     mkdir nginx && wget -O ./nginx/default.conf https://raw.githubusercontent.com/phasehq/console/main/nginx/default.conf
+     wget -O ./nginx/Dockerfile  https://raw.githubusercontent.com/phasehq/console/main/nginx/Dockerfile
+     ```
+
+4. **Edit `.env` file**:
+
+   - Replace **DATABASE_HOST** with your Managed PostgreSQL host.
+   - Update **DATABASE_NAME**, **DATABASE_USER**, and **DATABASE_PASSWORD** with your credentials.
+
+5. **Edit `docker-compose.yml`**:
+
+   - Comment out the PostgreSQL service.
+
+6. **Start services**:
+
+   ```bash
+   docker-compose -f docker-compose.yml up -d
+   ```
+
+7. You should now be able to access the Phase console at `https://your-droplet-ip-address`.
+
+---
+
+Remember to secure your environment and not expose sensitive data or configurations in production. By default Phase will provision a self-signed TLS certificate using nginx. Please use a valid TLS certificate for your own domain in production.
