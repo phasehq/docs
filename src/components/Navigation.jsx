@@ -197,7 +197,7 @@ export const navigation = [
       { title: 'Install', href: '/cli/install' },
       { title: 'Quickstart', href: '/cli/usage' },
       { title: 'Commands', href: '/cli/commands' },
-      { title: 'Config', href: '/dfgas' },
+      // { title: 'Config', href: '/dfgas' },
       //{ title: 'FAQ', href: '/quickstart' },
     ],
   },

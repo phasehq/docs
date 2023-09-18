@@ -10,21 +10,25 @@ export const description =
 The Phase CLI works together with the [Phase Console](https://github.com/phasehq/console) to securely sync your secrets and environment variables with **End-to-End Encryption**. It is designed to pull secrets, decrypt them and inject secrets directly into your application or framework during runtime. You can use it to create, retrieve, update and delete your application secrets for different environments such as `development`, `staging`, `production` or something custom.
 
 ```
-» phase
+> phase
 
-         :@tX88%%:
-        ;X;%;@%8X@;
-      ;Xt%;S8:;;t%S
-      ;SXStS@.;t8@:;.
-    ;@:t;S8  ;@.%.;8:
-    :X:S%88    S.88t:.
-  :X:%%88     :S:t.t8t
-.@8X888@88888888X8.%8X8888888X8.S88:
-                ;t;X8;      ;XS:%X;
-                :@:8@X.     XXS%S8
-                 8XX:@8S  .X%88X;
-                  ..@:X88:8Xt8:
-                     ;%88@S8:
+Securely manage and sync environment variables with Phase.
+
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⠔⠋⣳⣖⠚⣲⢖⠙⠳⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⡴⠉⢀⡼⠃⢘⣞⠁⠙⡆⠀⠘⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⢀⡜⠁⢠⠞⠀⢠⠞⠸⡆⠀⠹⡄⠀⠹⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⢀⠞⠀⢠⠏⠀⣠⠏⠀⠀⢳⠀⠀⢳⠀⠀⢧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⢠⠎⠀⣠⠏⠀⣰⠃⠀⠀⠀⠈⣇⠀⠘⡇⠀⠘⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⢠⠏⠀⣰⠇⠀⣰⠃⠀⠀⠀⠀⠀⢺⡀⠀⢹⠀⠀⢽⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⢠⠏⠀⣰⠃⠀⣰⠃⠀⠀⠀⠀⠀⠀⠀⣇⠀⠈⣇⠀⠘⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⢠⠏⠀⢰⠃⠀⣰⠃⠀⠀⠀⠀⠀⠀⠀⠀⢸⡀⠀⢹⡀⠀⢹⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⢠⠏⠀⢰⠃⠀⣰⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣇⠀⠈⣇⠀⠈⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠛⠒⠚⠛⠒⠓⠚⠒⠒⠓⠒⠓⠚⠒⠓⠚⠒⠓⢻⡒⠒⢻⡒⠒⢻⡒⠒⠒⠒⠒⠒⠒⠒⠒⠒⣲⠒⠒⣲⠒⠒⡲⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢧⠀⠀⢧⠀⠈⣇⠀⠀⠀⠀⠀⠀⠀⠀⢠⠇⠀⣰⠃⠀⣰⠃⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⡆⠀⠘⡆⠀⠸⡄⠀⠀⠀⠀⠀⠀⣠⠇⠀⣰⠃⠀⣴⠃⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠹⡄⠀⠹⡄⠀⠹⡄⠀⠀⠀⠀⡴⠃⢀⡼⠁⢀⡼⠁⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⣆⠀⠙⣆⠀⠹⣄⠀⣠⠎⠁⣠⠞⠀⡤⠏⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠳⢤⣈⣳⣤⣼⣹⢥⣰⣋⡥⡴⠊⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀
 
 options:
   -h, --help            show this help message and exit
@@ -44,7 +48,19 @@ Commands:
 
 ## Available commands {{ className: 'lead' }}
 
-## 1. `auth`
+To use Phase CLI, simply run:
+
+```fish
+> phase [command] [sub-command] [options]
+```
+
+To view all available commands and their descriptions, run:
+
+```fish
+> phase --help
+```
+
+## `auth`
 
 Authenticate with Phase.
 
@@ -55,132 +71,207 @@ Authenticate with Phase.
    🛠️ Self Hosted
 ```
 
-Usage:
+---
 
-```
-phase-cli auth
-```
+## `init`
 
-Authenticate with Phase
-
-Description:
+Link your local project to your Phase app.
 
 Usage:
 
-## init
+```fish
+phase init
+```
 
-Link your project to your Phase app
+Example:
 
-```json
+```fish
+> phase init
+? Select an App: [use arrow keys]
+
+   ferrari
+ » keyspace
+   inception
+   Exit
+
+> phase init
+? Select an App: keyspace
+✅ Initialization completed successfully.
+```
+
+This would create a Phase application config in your projects working directly:
+
+```fish
+> cat .phase.json
 {
   "version": "1",
-  "phaseApp": "ferrari",
-  "appId": "df7086eb-9080-4329-9991-25c386a6d59b",
+  "phaseApp": "keyspace",
+  "appId": "511f26b7-5b56-47f3-920e-a4edb9cdbf3c",
   "defaultEnv": "Development"
 }
 ```
 
-Description:
+**Tip**: You can manually set the default environment context for the Phase CLI by modifying the `defaultEnv`. Eg. `"defaultEnv": "Production"`
+
+---
+
+## `run`
+
+Run and inject secrets into your app.
 
 Usage:
 
-## run
-
-Run and inject secrets to your app
-
-Description:
-
-Usage:
-
-## secrets
-
-Manage your secrets
-
-Description:
-
-Usage:
-
-## logout
-
-Logout from phase-cli
-
-Description:
-
-Usage:
-
-## console
-
-Open the Phase Console in your browser
-
-Description:
-
-Usage:
-
-## update
-
-Update the Phase CLI to the latest version
-
-Description:
-
-Usage:
-
-## keyring
-
-Display information about the Phase keyring
-
-Description:
-
-Usage:
-
-## Export secrets back to .env file
-
-```
-phase secrets export
+```fish
+> phase run [command_to_run] [--env ENVIRONMENT]
 ```
 
-This will create an `.env` file and export all secrets as key value pairs in the given environment
+- `command_to_run`: The command you wish to run. For example: `yarn dev`.
+- `--env`: (Optional) Specify the environment (e.g., `dev`, `staging`, `production`).
 
-## Switching between environments via the `--env` flag
+Examples:
 
-Phase Console by default creates three environment for each application. ie. `development`, `staging` and `production`. You can switch in between them via the `--env` followed by the environment name or prefix. Keep in mind, **by default the Phase CLI will use the `development` environment** even if the `--env` flag is not passed.
-
-Example 1:
-
-```bash
-phase secrets create HOST --env staging
+```fish
+> phase run yarn dev
 ```
 
-Example 2:
-It's also possible to provide an environment prefix for brevity
-
-```bash
-phase secrets list --env stag # Even though environment name is staging
+```fish
+> phase run --env dev "printenv | grep DJANGO_SECRET_KEY"
+DJANGO_SECRET_KEY=7842cc89c5a703acdf4797e0f063e1851734cea0677ad9382158cfcee26195df
 ```
 
-Example 3:
-
-```bash
-phase run --env prod "python manage.py migrate && python manage.py runserver backend:8000"
+```fish
+> phase run --env prod "python manage.py migrate && python manage.py runserver backend:8000"
 ```
 
-## Secret referencing
+---
+
+## `secrets`
+
+Manage your secrets. This command has several sub-commands.
+
+#### a. `list`
+
+List all the secrets.
+
+Usage:
+
+```fish
+> phase secrets list [--show] [--env ENVIRONMENT]
+```
+
+- `--show`: Display secrets uncensored.
+- `--env`: (Optional) Specify the environment.
+
+Example:
+
+```fish
+phase secrets list --env prod --show
+KEY 🗝️                   | VALUE ✨
+-------------------------------------------------------------------------------------------------
+DJANGO_SECRET_KEY        | 7842cc89c5a703acdf4797e0f063e1851734cea0677ad9382158cfcee26195df
+DJANGO_DEBUG             | True
+DB_NAME                  | XP1_LM
+DB_USER                  | j_mclaren
+DB_PASSWORD              | 6c37810ec6e74ec3228416d2844564fceb99ebd94b29f4334c244db011630b0e
+DB_HOST                  | mc-laren-prod-db.c9ufzjtplsaq.us-west-1.rds.amazonaws.com
+DB_PORT                  | 5432
+```
+
+#### b. `get`
+
+Retrieve a specific secret by key.
+
+Usage:
+
+```fish
+> phase secrets get KEY [--env ENVIRONMENT]
+```
+
+- `KEY`: The key associated with the secret to fetch.
+- `--env`: (Optional) Specify the environment.
+
+#### c. `create`
+
+Create a new secret.
+
+Usage:
+
+```fish
+> phase secrets create [KEY] [--env ENVIRONMENT]
+```
+
+- `KEY`: (Optional) The key for the secret to be created.
+- `--env`: (Optional) Specify the environment.
+
+#### d. `update`
+
+Update an existing secret.
+
+Usage:
+
+```fish
+> phase secrets update KEY [--env ENVIRONMENT]
+```
+
+- `KEY`: The key associated with the secret to update.
+- `--env`: (Optional) Specify the environment.
+
+#### e. `delete`
+
+Delete a secret.
+
+Usage:
+
+```fish
+> phase secrets delete KEYS... [--env ENVIRONMENT]
+```
+
+- `KEYS`: One or more keys to be deleted.
+- `--env`: (Optional) Specify the environment.
+
+#### f. `import`
+
+Import secrets from a .env file.
+
+Usage:
+
+```fish
+> phase secrets import ENV_FILE [--env ENVIRONMENT]
+```
+
+- `ENV_FILE`: The `.env` file to import from.
+- `--env`: (Optional) Specify the environment.
+
+#### g. `export`
+
+Export secrets in a dotenv format.
+
+Usage:
+
+```fish
+> phase secrets export [KEYS...] [--env ENVIRONMENT]
+```
+
+- `KEYS`: (Optional) List of keys separated by space.
+- `--env`: (Optional) Specify the environment.
+
+### Secret referencing
 
 Phase Console and CLI also support dotenv styled secret referencing.
 
 You can refer a value of a secret residing in your current environment (eg. development) or across environments. Values prefixed with a `🔗` indicate local secrets value being referenced and values prefixed with `⛓️` indicate cross environment secret value being referenced.
 
-The syntax is as follows:
-
-Local: `${<key>}`
-
-Cross environment: `${<environment>.<key>}`
+| Environment  | Syntax                   |
+| ------------ | ------------------------ |
+| **🔗 Local** | `${<key>}`               |
+| **⛓️ Cross** | `${<environment>.<key>}` |
 
 **Examples**:
 
 Local environment secret referencing:
 
-```bash
-phase secrets list --env prod --show
+```fish
+> phase secrets list --env prod --show
 KEY 🗝️                   | VALUE ✨
 -------------------------------------------------------------------------------------------------
 DJANGO_SECRET_KEY        | 7842cc89c5a703acdf4797e0f063e1851734cea0677ad9382158cfcee26195df
@@ -197,190 +288,64 @@ The database connection string `postgresql://` is referencing `DB_USER`, `DB_PAS
 
 Cross environment secret referencing:
 
-```bash
-phase secrets list --env prod --show
+```fish
+> phase secrets list --env prod --show
 KEY 🗝️                   | VALUE ✨
 -------------------------------------------------------------------------------------------------
 AWS_ACCESS_KEY_ID        | ⛓️ ${dev.AWS_ACCESS_KEY_ID}
 AWS_SECRET_ACCESS_KEY    | ⛓️ ${dev.AWS_SECRET_ACCESS_KEY}
 ```
 
-Note: This is assuming an environment (dev/development) has a secret with the key `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
+**Note**: This is assuming an environment named dev/development exists and has a secrets with the keys `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
 
-## General Usage
+---
 
-To use Phase CLI, simply run:
-
-```
-phase-cli [command] [sub-command] [options]
-```
-
-To view all available commands and their descriptions, run:
-
-```
-phase-cli --help
-```
-
-# Available Commands
-
-### 2. `init`
-
-Link your project to your Phase app.
-
-Usage:
-
-```
-phase-cli init
-```
-
-### 3. `run`
-
-Run and inject secrets into your app.
-
-Usage:
-
-```
-phase-cli run [command_to_run] [--env ENVIRONMENT]
-```
-
-- `command_to_run`: The command you wish to run. For example: `yarn dev`.
-- `--env`: (Optional) Specify the environment (e.g., `dev`, `staging`, `production`).
-
-### 4. `secrets`
-
-Manage your secrets. This command has several sub-commands.
-
-#### a. `list`
-
-List all the secrets.
-
-Usage:
-
-```
-phase-cli secrets list [--show] [--env ENVIRONMENT]
-```
-
-- `--show`: Display secrets uncensored.
-- `--env`: (Optional) Specify the environment.
-
-#### b. `get`
-
-Retrieve a specific secret by key.
-
-Usage:
-
-```
-phase-cli secrets get KEY [--env ENVIRONMENT]
-```
-
-- `KEY`: The key associated with the secret to fetch.
-- `--env`: (Optional) Specify the environment.
-
-#### c. `create`
-
-Create a new secret.
-
-Usage:
-
-```
-phase-cli secrets create [KEY] [--env ENVIRONMENT]
-```
-
-- `KEY`: (Optional) The key for the secret to be created.
-- `--env`: (Optional) Specify the environment.
-
-#### d. `update`
-
-Update an existing secret.
-
-Usage:
-
-```
-phase-cli secrets update KEY [--env ENVIRONMENT]
-```
-
-- `KEY`: The key associated with the secret to update.
-- `--env`: (Optional) Specify the environment.
-
-#### e. `delete`
-
-Delete a secret.
-
-Usage:
-
-```
-phase-cli secrets delete KEYS... [--env ENVIRONMENT]
-```
-
-- `KEYS`: One or more keys to be deleted.
-- `--env`: (Optional) Specify the environment.
-
-#### f. `import`
-
-Import secrets from a .env file.
-
-Usage:
-
-```
-phase-cli secrets import ENV_FILE [--env ENVIRONMENT]
-```
-
-- `ENV_FILE`: The `.env` file to import from.
-- `--env`: (Optional) Specify the environment.
-
-#### g. `export`
-
-Export secrets in a dotenv format.
-
-Usage:
-
-```
-phase-cli secrets export [KEYS...] [--env ENVIRONMENT]
-```
-
-- `KEYS`: (Optional) List of keys separated by space.
-- `--env`: (Optional) Specify the environment.
-
-### 5. `logout`
+## `logout`
 
 Logout from the Phase CLI.
 
 Usage:
 
-```
-phase-cli logout [--purge]
+```fish
+> phase logout [--purge]
 ```
 
 - `--purge`: Purge all local data.
 
-### 6. `console`
+---
+
+## `console`
 
 Open the Phase Console in your web browser.
 
 Usage:
 
-```
-phase-cli console
+```fish
+> phase console
 ```
 
-### 7. `update` (Linux Only)
+---
 
-Update the Phase CLI to the latest version.
+## `update`
+
+Update the Phase CLI to the latest version. This subcommand will be only shown on linux systems when the cli is installed via the installation script.
 
 Usage:
 
-```
-phase-cli update
+```fish
+> phase update
 ```
 
-### 8. `keyring`
+---
 
-Display information about the Phase keyring.
+## `keyring`
+
+Display information about the Phase keyring. Phase keyring holds sensitive credentials such as user tokens.
 
 Usage:
 
-```
-phase-cli keyring
+```fish
+> phase keyring
 ```
 
 ---
@@ -388,3 +353,21 @@ phase-cli keyring
 This provides an overview of the commands and their associated options. To get more detailed explanations, always use the `--help` option with any command or sub-command.
 
 Note: You might want to add any prerequisites, installation steps, or additional details to make this documentation more comprehensive for the end users.
+
+---
+
+## Environment variables
+
+`PHASE_HOST`
+
+### Check if debug mode is enabled
+
+`PHASE_DEBUG`
+
+`PHASE_SERVICE_ENDPOINT`
+
+`PHASE_SERVICE_TOKEN`
+
+### Check if SSL verification should be skipped
+
+`PHASE_VERIFY_SSL`
