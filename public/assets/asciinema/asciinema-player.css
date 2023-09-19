@@ -303,11 +303,16 @@ span.ap-marker-container:hover span.ap-marker-tooltip {
   right: 0;
   bottom: 0;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: center;  /* Center children horizontally */
+  align-items: center;      /* Center children vertically */
 }
 .ap-player .ap-overlay-start {
   cursor: pointer;
+  width: 100%;              /* Ensure the overlay spans the entire player width */
+  height: 100%;             /* Ensure the overlay spans the entire player height */
+  display: flex;            /* Make this a flex container too */
+  justify-content: center;  /* Center the play button horizontally */
+  align-items: center;      /* Center the play button vertically */
 }
 .ap-player .ap-overlay-start .ap-play-button {
   font-size: 0px;
@@ -316,6 +321,10 @@ span.ap-marker-container:hover span.ap-marker-tooltip {
   top: 0;
   right: 0;
   bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-align: center;
   color: white;
   height: 80px;
@@ -330,6 +339,8 @@ span.ap-marker-container:hover span.ap-marker-tooltip {
   display: block;
 }
 .ap-player .ap-overlay-start .ap-play-button div span svg {
+  display: block;
+  margin: auto;
   height: 100%;
 }
 .ap-player .ap-overlay-loading .ap-loader {
