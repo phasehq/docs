@@ -60,9 +60,15 @@ To view all available commands and their descriptions, run:
 > phase --help
 ```
 
+```fish
+> phase secrets -h
+```
+
 ## `auth`
 
-Authenticate with Phase.
+Authenticate with Phase. If you using the cli on your own machines you can use `phase auth` to login to Phase Cloud or your own Self-hosted instance.
+
+You can get a Phase User token in [Phase Console](https://console.phase.dev) -> Apps -> Tokens -> User tokens
 
 ```
 » phase auth
@@ -70,6 +76,14 @@ Authenticate with Phase.
  » ☁️ Phase Cloud
    🛠️ Self Hosted
 ```
+
+You will have to provide the credentials:
+
+- Host URL - *Only for Self-hosted instances*
+- Email
+- Phase User token
+
+Note: If you are running the CLI in an headless environment (eg. CI/CD, Docker container, bash script) you can use pass the `PHASE_HOST` and `PHASE_SERVICE_TOKEN` environment variable. See [Environment Variable](commands#environment-variables) for more details.
 
 ---
 
@@ -80,7 +94,7 @@ Link your local project to your Phase app.
 Usage:
 
 ```fish
-phase init
+> phase init
 ```
 
 Example:
@@ -190,6 +204,14 @@ Usage:
 - `KEY`: The key associated with the secret to fetch.
 - `--env`: (Optional) Specify the environment.
 
+Example:
+```fish
+> phase secrets get DJANGO_SECRET_KEY
+KEY 🗝️                | VALUE ✨                                                                     
+---------------------------------------------------------------------------------------------------
+DJANGO_SECRET_KEY    | 38d325eec2020f01556d50dfa12a6d9a31a27e90fa9e3adc22c539ec7d361d73
+```
+
 #### c. `create`
 
 Create a new secret.
@@ -202,6 +224,16 @@ Usage:
 
 - `KEY`: (Optional) The key for the secret to be created.
 - `--env`: (Optional) Specify the environment.
+
+```fish
+> phase secrets create DEBUG 
+Please enter the value (hidden):  # Set to True
+KEY 🗝️                    | VALUE ✨                                                                 
+---------------------------------------------------------------------------------------------------                                                          
+DEBUG                    | ****                                                                    
+
+🥽 To uncover the secrets, use: phase secrets list --show
+```
 
 #### d. `update`
 
@@ -216,6 +248,19 @@ Usage:
 - `KEY`: The key associated with the secret to update.
 - `--env`: (Optional) Specify the environment.
 
+Example:
+
+```fish
+> phase secrets update DEBUG 
+Please enter the new value for DEBUG (hidden): # Set to False
+Successfully updated the secret. 
+KEY 🗝️                    | VALUE ✨                                             
+-------------------------------------------------------------------------------
+DEBUG                     | *****                                               
+
+🥽 To uncover the secrets, use: phase secrets list --show
+```
+
 #### e. `delete`
 
 Delete a secret.
@@ -228,6 +273,16 @@ Usage:
 
 - `KEYS`: One or more keys to be deleted.
 - `--env`: (Optional) Specify the environment.
+
+Example:
+```fish
+> phase secrets delete DEBUG
+Successfully deleted the secrets.
+KEY 🗝️                    | VALUE ✨                                             
+-------------------------------------------------------------------------------
+
+🥽 To uncover the secrets, use: phase secrets list --show
+```
 
 #### f. `import`
 
@@ -242,6 +297,27 @@ Usage:
 - `ENV_FILE`: The `.env` file to import from.
 - `--env`: (Optional) Specify the environment.
 
+Example:
+```fish
+> cat .env
+AWS_ACCESS_KEY_ID="AKIA2OGYBAH63UA3VNFG"
+AWS_SECRET_ACCESS_KEY="V5yWXDe82Gohf9DYBhpatYZ74a5fiKfJVx8rx6W1"
+
+> phase secrets import .env --env prod
+Successfully imported and encrypted 2 secrets.
+To view them please run: phase secrets list --env prod
+
+> phase secrets list --env prod
+KEY 🗝️                    | VALUE ✨                                                                  
+----------------------------------------------------------------------------------------------------     
+AWS_ACCESS_KEY_ID        | AKI**************NFG                                                     
+AWS_SECRET_ACCESS_KEY    | V5y**********************************6W1                                 
+
+🥽 To uncover the secrets, use: phase secrets list --show
+
+> rm .env
+```
+
 #### g. `export`
 
 Export secrets in a dotenv format.
@@ -255,16 +331,43 @@ Usage:
 - `KEYS`: (Optional) List of keys separated by space.
 - `--env`: (Optional) Specify the environment.
 
+```fish
+# Export all the secrets in the production environment
+> phase secrets export --env prod
+AWS_ACCESS_KEY_ID="AKIA2OGYBAH63UA3VNFG"
+AWS_SECRET_ACCESS_KEY="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"
+
+# Export only the AWS_SECRET_ACCESS_KEY in the production environment
+> phase secrets export AWS_SECRET_ACCESS_KEY --env prod
+AWS_SECRET_ACCESS_KEY="V5yWXDe82Gohf9DYBhpatYZ74a5fiKfJVx8rx6W1"
+
+# Export all secrets in the dev (default) environment and pipe them to a .env file
+> phase secrets export > .env.example
+> head .env.example 
+AWS_SECRET_ACCESS_KEY="V5yWXDe82Gohf9DYBhpatYZ74a5fiKfJVx8rx6W1"
+DB_NAME="XP1_LM"
+DB_UER="j_mclaren"
+DJANGO_SECRET_KEY="38d325eec2020f01556d50dfa12a6d9a31a27e90fa9e3adc22c539ec7d361d73"
+DJANGO_DEBUG="True"
+DB_PASSWORD="601602017dde26ce94f46748e0fc342b046d4e36f623957b9be94ca4d616076c"
+DB_HOST="mc-laren-prod-db.c9ufzjtplsaq.us-west-1.rds.amazonaws.com"
+DB_PORT="5432"
+DATABASE_URL="postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}"
+HTTP_PROTOTOCL="https://"
+```
+
 ### Secret referencing
 
 Phase Console and CLI also support dotenv styled secret referencing.
 
-You can refer a value of a secret residing in your current environment (eg. development) or across environments. Values prefixed with a `🔗` indicate local secrets value being referenced and values prefixed with `⛓️` indicate cross environment secret value being referenced.
+You can set a value of a secret to a value of another by simply pointing to it via the following syntax.
 
 | Environment  | Syntax                   |
 | ------------ | ------------------------ |
 | **🔗 Local** | `${<key>}`               |
 | **⛓️ Cross** | `${<environment>.<key>}` |
+
+Values prefixed with a `🔗` indicate a local secret being referenced, whereas values prefixed with `⛓️` indicate cross environment secret value being referenced ie. development, staging, prod.
 
 **Examples**:
 
@@ -282,6 +385,9 @@ DB_PASSWORD              | 6c37810ec6e74ec3228416d2844564fceb99ebd94b29f4334c244
 DB_HOST                  | mc-laren-prod-db.c9ufzjtplsaq.us-west-1.rds.amazonaws.com
 DB_PORT                  | 5432
 DATABASE_URL             | 🔗 postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
+
+> phase run "printenv | grep DATABASE_URL"
+DATABASE_URL=postgresql://j_mclaren:6c37810ec6e74ec3228416d2844564fceb99ebd94b29f4334c244db011630b0e@mc-laren-prod-db.c9ufzjtplsaq.us-west-1.rds.amazonaws.com:5432/XP1_LM
 ```
 
 The database connection string `postgresql://` is referencing `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT` and `DB_NAME` from the same environment (dev/development)
@@ -290,10 +396,12 @@ Cross environment secret referencing:
 
 ```fish
 > phase secrets list --env prod --show
-KEY 🗝️                   | VALUE ✨
--------------------------------------------------------------------------------------------------
-AWS_ACCESS_KEY_ID        | ⛓️ ${dev.AWS_ACCESS_KEY_ID}
-AWS_SECRET_ACCESS_KEY    | ⛓️ ${dev.AWS_SECRET_ACCESS_KEY}
+KEY 🗝️                    | VALUE ✨                                          
+----------------------------------------------------------------------------
+DATABASE_URL              | ⛓️ postgresql://${dev.DB_USER}:${dev.DB_PASSWORD}@${dev.DB_HOST}:${dev.DB_PORT}/${dev.DB_NAME}
+
+> phase run --env prod "printenv | grep DATABASE_URL"
+DATABASE_URL=postgresql://j_mclaren:6c37810ec6e74ec3228416d2844564fceb99ebd94b29f4334c244db011630b0e@mc-laren-prod-db.c9ufzjtplsaq.us-west-1.rds.amazonaws.com:5432/XP1_LM
 ```
 
 **Note**: This is assuming an environment named dev/development exists and has a secrets with the keys `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
