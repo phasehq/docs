@@ -5,32 +5,74 @@ import { Heading } from '@/components/Heading'
 import logoGo from '@/images/logos/go.svg'
 import logoNode from '@/images/logos/node.svg'
 import logoJavaScript from '@/images/logos/javascript.svg'
+import logoDjango from '@/images/logos/django.svg'
+import logoReact from '@/images/logos/react.svg'
+import logoNext from '@/images/logos/nextjs.svg'
+import logoLaravel from '@/images/logos/laravel.svg'
+import logoDotnet from '@/images/logos/dotnet.svg'
 import logoPhp from '@/images/logos/php.svg'
 import logoPython from '@/images/logos/python.svg'
-import logoRuby from '@/images/logos/ruby.svg'
+import logoRubyOnRails from '@/images/logos/rubyonrails.svg'
 import clsx from 'clsx'
 
 const SDKs = [
   {
-    href: '/sdks/js',
-    name: 'JavaScript',
-    description: "Encrypt data directly in your users' browsers.",
-    logo: logoJavaScript,
+    href: '/integrations/frameworks/react',
+    name: 'React',
+    description: 'Inject secrets and environment variables to your React app.',
+    logo: logoReact,
   },
   {
-    href: '/sdks/node',
+    href: '/integrations/frameworks/node',
     name: 'Node.js',
     description:
-      'Encrypt and decrypt data in your preferred Node.js application server.',
+      'Inject secrets and environment variables to your Node.js app.',
     logo: logoNode,
     available: true,
   },
   {
-    href: '/sdks/python',
-    name: 'Python',
+    href: '/integrations/frameworks/next-js',
+    name: 'Next.js',
     description:
-      'Encrypt and decrypt data in your preferred Python application server.',
-    logo: logoPython,
+      'Inject secrets and environment variables to your Next.js app.',
+    logo: logoNext,
+    available: true,
+  },
+  {
+    href: '/integrations/frameworks/django',
+    name: 'Django',
+    description: 'Inject secrets and environment variables to your Django app.',
+    logo: logoDjango,
+    available: true,
+  },
+  {
+    href: '/integrations/frameworks/fiber',
+    name: 'Golang',
+    description: 'Inject secrets and environment variables to your Go app.',
+    logo: logoGo,
+    available: true,
+  },
+  {
+    href: '/integrations/frameworks/ruby-on-rails',
+    name: 'Ruby on Rails',
+    description:
+      'Inject secrets and environment variables to your Ruby on Rails app.',
+    logo: logoRubyOnRails,
+    available: true,
+  },
+  {
+    href: '/integrations/frameworks/dotnet',
+    name: '.NET',
+    description: 'Inject secrets and environment variables to your .NET app.',
+    logo: logoDotnet,
+    available: true,
+  },
+  {
+    href: '/integrations/frameworks/laravel',
+    name: 'Laravel',
+    description:
+      'Inject secrets and environment variables to your Laravel app.',
+    logo: logoLaravel,
     available: true,
   },
 ]
@@ -61,7 +103,7 @@ function ArrowIcon(props) {
 
 let arrowIcon = <ArrowIcon className={clsx('mt-0.5 -mr-1 h-5 w-5')} />
 
-export function LibrariesIntro() {
+export function FramewroksIntegration() {
   return (
     <div className="my-16 xl:max-w-none">
       <div className="not-prose mt-4 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 xl:max-w-none xl:grid-cols-3">

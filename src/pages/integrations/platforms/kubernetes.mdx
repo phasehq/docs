@@ -1,0 +1,94 @@
+import { Tag } from '@/components/Tag'
+
+export const description = 'Integrate Phase with Kubernetes'
+
+<Tag variant="small">INTEGRATE</Tag>
+
+# Kubernetes
+
+You can use phase run to inject secrets to your application process during runtime. There's no need for you to change any code or add a dependency.
+
+## Prerequisites
+
+- Have signed up for the [Phase Console](https://console.phase.dev) and created an application.
+- `PHASE_SERVICE_TOKEN` (Ideally for each of your services).
+
+<Note>
+  If you are using a Self-Hosted instance of the Phase Console, you may supply
+  `PHASE_HOST` environment variable with your URL (`https://<HOST>`).
+</Note>
+
+## Using Init Container
+
+You can easily integrate with your kubernetes workload and inject secrets securely using in memory init containers.
+
+1. Create `PHASE_SERVICE_TOKEN` secret.
+
+```fish
+kubectl create secret generic phase-token --from-literal=PHASE_SERVICE_TOKEN=<YOUR_PHASE_SERVICE_TOKEN>
+```
+
+2. Create or edit your `docker-compose.yml`:
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: alpine-pod
+spec:
+  volumes:
+    - name: secrets-volume
+      emptyDir:
+        medium: Memory
+  initContainers:
+    - name: fetch-secrets
+      image: phasehq/cli:latest
+      volumeMounts:
+        - name: secrets-volume
+          mountPath: /secrets
+      env:
+        - name: PHASE_SERVICE_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: phase-token
+              key: PHASE_SERVICE_TOKEN
+      command:
+        - /bin/sh
+        - -c
+        - phase secrets export > /secrets/secrets.env
+  containers:
+    - name: alpine-main
+      image: alpine:latest
+      volumeMounts:
+        - name: secrets-volume
+          mountPath: /secrets
+      command:
+        - /bin/sh
+        - -c
+        - source /secrets/secrets.env && printenv
+```
+
+## Security Benefits
+
+1. **Isolation of Responsibilities**: Init containers allow you to separate the responsibility of setting up the environment from the primary purpose of the main container. By using init containers solely to fetch secrets and populate in-memory volumes, you reduce the surface area for potential attacks targeted at the main application.
+
+2. **Transient Nature**: By using in-memory volumes, the data doesn't persist beyond the lifecycle of the pod. When the pod is terminated, the data is lost. This reduces the risk of secret data being left behind.
+
+3. **No Persistent Storage**: Since secrets fetched and placed in an in-memory volume aren't written to any persistent storage, there's no risk of them being exposed if the underlying storage is compromised or improperly decommissioned.
+
+## Security Considerations
+
+1. **In-Memory Exposure**: While the secrets are not persisted to disk, they are still available in the node's RAM. A process or user with sufficient privileges on the node could potentially access data directly from memory.
+
+2. **Swap Space**: If the Kubernetes node is configured with swap, and the node starts swapping memory contents to disk, in-memory data (including secrets) might end up being written to swap space. It's recommended to disable swap on Kubernetes nodes for this (and other) reasons.
+
+3. **Secret Versioning**: If you update a secret, the change won't be automatically propagated to running pods. The pods need to be restarted to pick up the new version of the secret.
+
+<div className="not-prose">
+  <Button
+    href="https://kubernetes.io/docs/concepts/workloads/pods/init-containers/"
+    variant="text"
+    arrow="right"
+    children="Kubernetes - Init Containers"
+  />
+</div>

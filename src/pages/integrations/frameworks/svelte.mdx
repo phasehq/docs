@@ -1,0 +1,67 @@
+import { Tag } from '@/components/Tag'
+
+export const description =
+  'Mange your secrets and environment variables in your application with the Phase CLI'
+
+<Tag variant="small">INTEGRATE</Tag>
+
+# Svelte
+
+You can use phase run to inject secrets to your application process during runtime. There is no need for you to change any code or add a dependency.
+
+## Prerequisites
+
+- Create an account on the Phase Console
+- [Install the CLI](/cli)
+
+## Initialize Phase for your [Svelte](https://svelte.dev) app
+
+In the root of your application's codebase run:
+
+```fish
+phase init
+```
+
+## Start your app with Phase
+
+Example
+
+```fish
+phase run npm run dev
+```
+
+Alternatively, you can use `phase run` in your package.json file, so secrets will automatically be injected when you `npm run dev`.
+
+**package.json**:
+
+```json
+{
+  "name": "McLaren",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "phase run \"run-s build:env:prod build:sveltekit build:env:local\"",
+    "dev": "phase run \"npm run check-env && npm run dev:sveltekit\""
+  },
+  "browserslist": "...",
+  "dependencies": {
+    ...
+  },
+  "devDependencies": {
+    ...
+  }
+}
+```
+
+<Note>
+  Svelte client side environment variables must be prefixed with `PUBLIC_`
+</Note>
+
+<div className="not-prose">
+  <Button
+    href="https://kit.svelte.dev/docs/modules#$env-static-public"
+    variant="text"
+    arrow="right"
+    children="Svelte Docs"
+  />
+</div>

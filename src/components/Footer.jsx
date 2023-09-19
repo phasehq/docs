@@ -219,17 +219,13 @@ function SmallPrint() {
   return (
     <div className="flex flex-col items-center justify-between gap-5 border-t border-zinc-900/5 pt-8 dark:border-white/5 sm:flex-row">
       <p className="text-xs text-zinc-600 dark:text-zinc-400">
-        &copy; Copyright {new Date().getFullYear()} Phase Security Inc. All
-        rights reserved.
+        &copy; {new Date().getFullYear()} Phase Security Inc.
       </p>
       <div className="flex gap-4">
         <SocialLink href="https://github.com/phasehq/console" icon={GitHubIcon}>
           Follow us on GitHub
         </SocialLink>
-        <SocialLink
-          href="https://join.slack.com/t/phase-community/shared_invite/zt-1tkwzl31z-a6yCB5Uqlj~V2x43ep2Evg"
-          icon={SlackIcon}
-        >
+        <SocialLink href="https://slack.phase.dev" icon={SlackIcon}>
           Join our Slack
         </SocialLink>
         <SocialLink

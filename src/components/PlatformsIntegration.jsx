@@ -5,32 +5,47 @@ import { Heading } from '@/components/Heading'
 import logoGo from '@/images/logos/go.svg'
 import logoNode from '@/images/logos/node.svg'
 import logoJavaScript from '@/images/logos/javascript.svg'
-import logoPhp from '@/images/logos/php.svg'
-import logoPython from '@/images/logos/python.svg'
-import logoRuby from '@/images/logos/ruby.svg'
+import logoDjango from '@/images/logos/django.svg'
+import logoReact from '@/images/logos/react.svg'
+import logoNext from '@/images/logos/nextjs.svg'
+
+import logoDocker from '@/images/logos/docker.svg'
+import logoKubernetes from '@/images/logos/kubernetes.svg'
+import logoGitHub from '@/images/logos/github.svg'
+import logoGitLab from '@/images/logos/gitlab.svg'
+
 import clsx from 'clsx'
 
 const SDKs = [
   {
-    href: '/sdks/js',
-    name: 'JavaScript',
-    description: "Encrypt data directly in your users' browsers.",
-    logo: logoJavaScript,
+    href: '/integrations/platforms/docker',
+    name: 'Docker',
+    description:
+      'Inject secrets and environment variables inside your Docker container.',
+    logo: logoDocker,
   },
   {
-    href: '/sdks/node',
-    name: 'Node.js',
+    href: '/integrations/platforms/kubernetes',
+    name: 'Kubernetes',
     description:
-      'Encrypt and decrypt data in your preferred Node.js application server.',
-    logo: logoNode,
+      'Inject secrets and environment variables inside your Kubernetes pods.',
+    logo: logoKubernetes,
     available: true,
   },
   {
-    href: '/sdks/python',
-    name: 'Python',
+    href: '/integrations/platforms/github-actions',
+    name: 'GitHub Actions',
     description:
-      'Encrypt and decrypt data in your preferred Python application server.',
-    logo: logoPython,
+      'Inject secrets and environment variables inside your GitHub Actions CI.',
+    logo: logoGitHub,
+    available: true,
+  },
+  {
+    href: '/integrations/platforms/gitlab-ci',
+    name: 'GitLab CI',
+    description:
+      'Inject secrets and environment variables inside your GitLab CI.',
+    logo: logoGitLab,
     available: true,
   },
 ]
@@ -61,7 +76,7 @@ function ArrowIcon(props) {
 
 let arrowIcon = <ArrowIcon className={clsx('mt-0.5 -mr-1 h-5 w-5')} />
 
-export function LibrariesIntro() {
+export function PlatformsIntegration() {
   return (
     <div className="my-16 xl:max-w-none">
       <div className="not-prose mt-4 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 xl:max-w-none xl:grid-cols-3">

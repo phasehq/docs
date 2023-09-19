@@ -36,14 +36,14 @@ const serverSdks = [
     logo: logoPython,
     available: true,
   },
-  {
-    href: '',
-    name: 'Go (Coming soon)',
-    description:
-      'Encrypt and decrypt data in your preferred Go application server.',
-    logo: logoGo,
-    available: false,
-  },
+  // {
+  //   href: '',
+  //   name: 'Go (Coming soon)',
+  //   description:
+  //     'Encrypt and decrypt data in your preferred Go application server.',
+  //   logo: logoGo,
+  //   available: false,
+  // },
 ]
 
 function ArrowIcon(props) {
@@ -81,7 +81,7 @@ export function Libraries() {
                 </p>
                 <div className="mt-4">
                   <div className="flex items-center text-emerald-500">
-                    Expore {arrowIcon}
+                    Explore {arrowIcon}
                   </div>
                 </div>
               </div>
@@ -123,7 +123,7 @@ export function Libraries() {
                 </p>
                 <div className="mt-4">
                   <div className="flex items-center text-emerald-500">
-                    Expore {arrowIcon}
+                    Explore {arrowIcon}
                   </div>
                 </div>
               </div>

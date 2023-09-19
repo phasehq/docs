@@ -1,0 +1,137 @@
+import { Tag } from '@/components/Tag'
+
+export const description = 'Integrate Phase with Docker'
+
+<Tag variant="small">INTEGRATE</Tag>
+
+# Docker
+
+You can use phase run to inject secrets to your application process during runtime. There is no need for you to change any code or add a dependency.
+
+## Prerequisites
+
+- Have signed up for the [Phase Console](https://console.phase.dev) created an application
+- `PHASE_SERVICE_TOKEN`
+
+<Note>
+  If you are using a Self-Hosted instance of the Phase Console, you may supply
+  `PHASE_HOST` environment variable with your URL (`https://<HOST>`).
+</Note>
+
+## Docker Run
+
+1. Set `PHASE_SERVICE_TOKEN` as a environment variable
+
+```fish
+export PHASE_SERVICE_TOKEN=<>
+```
+
+2. Run
+
+```fish
+docker run --rm --env-file <(phase secrets export) alpine:latest printenv
+```
+
+<Note>
+This technique uses a feature that's available in Bash and some other shells, but might not be available in all environments. If you face any issues, ensure your shell supports process substitution (`<()` syntax).
+</Note>
+
+<div className="not-prose">
+  <Button
+    href="https://docs.docker.com/engine/reference/run/#env-environment-variables"
+    variant="text"
+    arrow="right"
+    children="Docker Run - Docs"
+  />
+</div>
+
+### Security Considerations
+
+When you use the process substitution syntax `<(...)`, you are not writing the content to a regular file on disk in the traditional sense. Instead, Bash (and some other shells that support this syntax) creates a named pipe, commonly known as a FIFO (First In, First Out), for the output of the command.
+
+This named pipe acts like a temporary, in-memory file that other commands can read from. The data flows through this pipe directly from the output of the source command to the input of the target command without being written to a persistent file on the disk.
+
+However, there are a few nuances to consider:
+
+1. **Swapping**: Although the data in named pipes isn't saved in a regular file, it could theoretically end up on disk if the system starts swapping memory content to a swap partition or swap file.
+
+2. **TempFS**: On many systems, the `/dev/fd/` directory, which is used for these file descriptors, is mounted on a `tmpfs` (temporary filesystem), which resides in RAM and is not persisted to disk. So, while the named pipe appears as a file under `/dev/fd/`, it doesn't represent data written to persistent storage.
+
+3. **Security concern**: Even if the data isn't written to disk, it's still visible to anyone who can list the process arguments on the system (e.g., using `ps`). This is a common concern with passing secrets as command-line arguments, though in your specific case with `<(...)`, the actual content of the secret isn't exposed as a command-line argument.
+
+In conclusion, while the process substitution method avoids writing secrets to a persistent file on disk, you should always be aware of potential risks and exposures when working with sensitive data.
+
+## Docker `Entrypoint`
+
+1. Install the Phase CLI in your docker container
+
+<CodeGroup>
+
+```bash {{ title: 'Alpine Linux' }}
+RUN apk add --no-cache bash sudo curl wget && curl -fsSL https://pkg.phase.dev/install.sh | bash
+```
+
+```bash {{ title: 'RedHat/CentOS/Amazon Linux' }}
+RUN yum -y install bash sudo curl wget && curl -fsSL https://pkg.phase.dev/install.sh | bash
+```
+
+```bash {{ title: 'Ubuntu/Debian' }}
+RUN apt-get update && apt-get install -y bash sudo curl wget && curl -fsSL https://pkg.phase.dev/install.sh | bash
+```
+
+</CodeGroup>
+
+2. Set your start command
+
+**Single command**:
+
+```bash
+FROM your-base-image
+
+# ... (other Docker commands, e.g., installation of dependencies, copying source code, etc.)
+
+ENTRYPOINT ["sh", "-c", "phase run yarn start"]
+```
+
+**Multiple commands**:
+
+```bash
+FROM your-base-image
+
+# ... (other Docker commands, e.g., installation of dependencies, etc.)
+
+ENTRYPOINT ["sh", "-c", "phase run \"python manage.py migrate && python manage.py runserver payments-api:8000\""]
+```
+
+<Note>
+  Using `ENTRYPOINT` like this ensures that any arguments passed to docker run
+  will be appended to the entrypoint command, which might not be desirable in
+  every scenario. If you don't want this behavior, consider using `CMD` instead.
+</Note>
+
+3. Supply the `PHASE_SERVICE_TOKEN` to your container as an environment variable
+
+```fish
+docker run --env PHASE_SERVICE_TOKEN=[pss_env:...] [IMAGE]...
+```
+
+<div className="not-prose">
+  <Button
+    href="https://docs.docker.com/engine/reference/builder/#entrypoint"
+    variant="text"
+    arrow="right"
+    children="Docker Entrypoint - Docs"
+  />
+</div>
+
+Certainly! Using the `ENTRYPOINT` in a Dockerfile to inject secrets via a tool like "phase" can have some benefits, but it also comes with its own set of security considerations. Let's discuss them:
+
+### Security Considerations
+
+1. **Exposure in process list**: Commands run in containers can sometimes be viewed from the host system's process list (e.g., `ps aux`). This could potentially expose sensitive information if secrets are passed as command-line arguments. In the example provided, the actual secret content wouldn't be visible because it's fetched by the tool at runtime, but the command itself is.
+
+2. **Entrypoint overriding**: Docker allows the overriding of the `ENTRYPOINT` at runtime. An unintended change or malicious override could bypass the secret management mechanism.
+
+3. **In-memory exposure**: Even though secrets are not written to the container's filesystem, they are present in the container's memory during runtime. A process with sufficient privileges or a successful attacker who gains access could potentially read memory contents.
+
+4. **Logging and error messages**: Ensure that the tool or any other processes in the container don't inadvertently log the secrets or expose them in error messages.

@@ -68,8 +68,15 @@ export const Header = forwardRef(function Header({ className }, ref) {
       <div className="flex items-center gap-5">
         <nav className="hidden md:block">
           <ul role="list" className="flex items-center gap-8">
-            <TopLevelNavItem href="https://phase.dev" target="_blank">Home</TopLevelNavItem>
-            <TopLevelNavItem href="https://phase.statuspage.io" target="_blank">System Status</TopLevelNavItem>
+            <TopLevelNavItem href="https://phase.dev" target="_blank">
+              Home
+            </TopLevelNavItem>
+            <TopLevelNavItem href="https://slack.phase.dev" target="_blank">
+              Slack
+            </TopLevelNavItem>
+            <TopLevelNavItem href="https://phase.statuspage.io" target="_blank">
+              System Status
+            </TopLevelNavItem>
           </ul>
         </nav>
         <div className="hidden md:block md:h-5 md:w-px md:bg-zinc-900/10 md:dark:bg-white/15" />
