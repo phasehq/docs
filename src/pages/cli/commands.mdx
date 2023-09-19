@@ -5,9 +5,7 @@ export const description =
 
 <Tag variant="small">CLI</Tag>
 
-# CLI
-
-The Phase CLI works together with the [Phase Console](https://github.com/phasehq/console) to securely sync your secrets and environment variables with **End-to-End Encryption**. It is designed to pull secrets, decrypt them and inject secrets directly into your application or framework during runtime. You can use it to create, retrieve, update and delete your application secrets for different environments such as `development`, `staging`, `production` or something custom.
+# Commands and usage
 
 ```
 > phase
@@ -63,6 +61,8 @@ To view all available commands and their descriptions, run:
 ```fish
 > phase secrets -h
 ```
+
+---
 
 ## `auth`
 
@@ -458,24 +458,14 @@ Usage:
 
 ---
 
-This provides an overview of the commands and their associated options. To get more detailed explanations, always use the `--help` option with any command or sub-command.
-
-Note: You might want to add any prerequisites, installation steps, or additional details to make this documentation more comprehensive for the end users.
-
----
-
 ## Environment variables
 
-`PHASE_HOST`
+### `PHASE_DEBUG`
 
-### Check if debug mode is enabled
+### `PHASE_HOST`
 
-`PHASE_DEBUG`
+### `PHASE_SERVICE_ENDPOINT`
 
-`PHASE_SERVICE_ENDPOINT`
+### `PHASE_SERVICE_TOKEN`
 
-`PHASE_SERVICE_TOKEN`
-
-### Check if SSL verification should be skipped
-
-`PHASE_VERIFY_SSL`
+### `PHASE_VERIFY_SSL`

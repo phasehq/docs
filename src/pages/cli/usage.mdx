@@ -5,94 +5,125 @@ export const description =
 
 <Tag variant="small">CLI</Tag>
 
-# Usage
+# Quickstart {{ className: 'lead' }}
 
-The Phase CLI works together with the [Phase Console](https://github.com/phasehq/console) to securely sync your secrets and environment variables with **End-to-End Encryption**. It is designed to pull secrets, decrypt them and inject secrets directly into your application or framework during runtime. You can use it to create, retrieve, update and delete your application secrets for different environments such as `development`, `staging`, `production` or something custom.
+The Phase CLI syncs with the [Phase Console](https://github.com/phasehq/console) to provide **End-to-End** encrypted secret management. It pulls, decrypts, and injects secrets into your applications during runtime. Manage secrets for various environments, like development, staging, production, or custom ones, with ease.
 
-## Get started {{ className: 'lead' }}
+### Prerequisites:
+- Sign up for the Phase Console and created an application: [Quickstart](/quickstart)
+- Phase User token - Go to **Phase Console** -> **Apps** -> **Tokens** -> **User tokens** -> **Create User Token**
+- [Install the CLI](/cli/install)
 
-### Login
+---
 
-Create an app in the [Phase Console](https://console.phase.dev)
+## 1. Login
 
-```bash
+Authenticate with Phase 
+
+```fish
 phase auth
 ```
 
-### Initialize
+<div className="not-prose">
+  <Button
+    href="/cli/commands#auth"
+    variant="text"
+    arrow="right"
+    children="Command details"
+  />
+</div>
+
+---
+
+## 2. Initialize
 
 Link the phase cli to your project
 
-```bash
+```fish
+# cd /home/git/to_your_project
 phase init
 ```
 
+<div className="not-prose">
+  <Button
+    href="/cli/commands#init"
+    variant="text"
+    arrow="right"
+    children="Command details"
+  />
+</div>
+
 This command will give you a drop down selection of all the apps created by you on the [Phase Console](https://console.phase.dev). Simply use up / down arrow `↑` and `↓` keys and hit `enter` to select.
 
-This will create a `.phase.json` file in the root of your application's repository. This file contains important context and non sensitive cryptographic values such as `X25519` public key and encrypted 32 byte salt.
+This will create a `.phase.json` file in the root of your application's repository.
 
-**We recommend that you check this config file in your git repository**.
+---
 
-## Import your existing secrets
+## 3. Import your existing secrets
 
 Let's say you already have a `.env` file containing your secrets and environment variables for your app.
 
 Example:
 
-```py
-DEBUG=True
-ALLOWED_HOST = localhost
-AWS_ACCESS_KEY_ID = AKIA2OGYBAH6QLWOYDVN
-AWS_SECRET_ACCESS_KEY = 6ACbdYki5FISnaiWYZwwyQcAEcnKmNrULTCXw+RQ
-REGION = us-east-2
+```fish
+> cat .env
+AWS_ACCESS_KEY_ID="AKIA2OGYBAH63UA3VNFG"
+AWS_SECRET_ACCESS_KEY="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"
+
+> phase secrets import .env
+Successfully imported and encrypted 2 secrets.
+To view them please run: phase secrets list
+
+> phase secrets list
+KEY 🗝️                    | VALUE ✨                                                                  
+----------------------------------------------------------------------------------------------------     
+AWS_ACCESS_KEY_ID        | AKI**************NFG                                                     
+AWS_SECRET_ACCESS_KEY    | V5y**********************************6W1                                 
+
+🥽 To uncover the secrets, use: phase secrets list --show
+
+> rm .env
 ```
 
-You can simply import it via:
+<div className="not-prose">
+  <Button
+    href="/cli/commands#secrets"
+    variant="text"
+    arrow="right"
+    children="Command details"
+  />
+</div>
 
-```bash
-phase secrets import .env
-```
+---
 
-## List / view secrets
+## 4. Run and inject secrets
 
-```bash
-phase secrets list --show
-```
-
-Example:
-
-```bash
-phase secrets list --show
-KEY 🗝️                    | VALUE ✨
---------------------------------------------------------------------------------------
-ALLOWED_HOST             | localhost
-DEBUG                    | True
-AWS_ACCESS_KEY_ID        | AKIA2OGYBAH6QLWOYDVN
-AWS_SECRET_ACCESS_KEY    | 6ACbdYki5FISnaiWYZwwyQcAEcnKmNrULTCXw+RQ
-REGION                   | us-east-2
-```
-
-## Run and inject secrets
-
-```bash
+```fish
 phase run <your_run_command>
 ```
 
 Example 1:
 
-```bash
+```fish
 # Node.js project manged by yarn package manager
-phase run yarn dev
-
+> phase run yarn dev
 $ next dev
 ready - started server on 0.0.0.0:3000, url: http://localhost:3000
 ```
 
 Example 2:
 
-```bash
+```fish
 # Chaining multiple commands together with linux pipes
 phase run "printenv | grep AWS_ACCESS_KEY_ID"
-
-AWS_ACCESS_KEY_ID=AKIA2OGYBAH6QLWOYDVN
+AWS_ACCESS_KEY_ID=AKIA2OGYBAH63UA3VNFG
 ```
+
+<div className="not-prose">
+  <Button
+    href="/cli/commands#run"
+    variant="text"
+    arrow="right"
+    children="Command details"
+  />
+</div>
