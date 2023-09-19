@@ -462,10 +462,56 @@ Usage:
 
 ### `PHASE_DEBUG`
 
+Type: Boolean
+
+Description: Set to true to get full tracebacks for error messages
+
+Example:
+```fish
+> PHASE_DEBUG=True phase secrets list
+Exception: 🗿 Network error: Please check your internet connection. Detail: HTTPConnectionPool(host='localhost', port=443): Max retries exceeded with url: /secrets/tokens/ (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f7c2041d7d0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+```
+
 ### `PHASE_HOST`
 
-### `PHASE_SERVICE_ENDPOINT`
+Type: String
+
+Description: A full URL to the REST API of the Phase Service
+
+Example:
+```fish
+> export PHASE_HOST=https://phase.internal.company.domain.com
+
+> phase secrets export
+...
+```
 
 ### `PHASE_SERVICE_TOKEN`
 
+Type: String
+
+Description: A way to authenticate with the Phase Service via tokens, useful for running the cli in an headless environment like CI/CD, Docker containers etc.
+
+Example:
+```fish
+> export PHASE_SERVICE_TOKEN=pss_service...
+
+> phase secrets export
+...
+```
+
 ### `PHASE_VERIFY_SSL`
+
+Type: Boolean
+
+Description: A way to temporarily disable TLS certificate verification checks
+
+Note: Disable TLS certificate verification is dangerous and can expose you to risks of [MITM](https://en.wikipedia.org/wiki/Man-in-the-middle_attack) attacks.
+
+Example:
+```fish
+> export PHASE_VERIFY_SSL=True
+
+> phase secrets export
+...
+```
