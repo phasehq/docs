@@ -26,7 +26,23 @@ Import, encrypt and inject secrets in your application within seconds. Zero code
 <div
   dangerouslySetInnerHTML={{
     __html: `
-    <script async id="asciicast-607829" src="https://asciinema.org/a/607829.js"></script>
+    <!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="/assets/asciinema/asciinema-player.css" />
+</head>
+<body>
+  <div id="player"></div>
+  <script src="/assets/asciinema/asciinema-player.min.js"></script>
+  <script>
+    AsciinemaPlayer.create(
+      '/assets/asciinema/607829.cast',
+      document.getElementById('player'),
+      { cols: 91, rows: 30 }
+    );
+  </script>
+</body>
+</html>
   `,
   }}
 ></div>
