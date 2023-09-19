@@ -7,6 +7,7 @@ import logoDcoker from '@/images/logos/docker.svg'
 import logoAmazonaws from '@/images/logos/aws.svg'
 import logoDigitalOcean from '@/images/logos/digitalocean.svg'
 import logoGCP from '@/images/logos/gcp.svg'
+import logoAzure from '@/images/logos/azure.svg'
 
 const deployment_methods = [
   {
@@ -20,7 +21,7 @@ const deployment_methods = [
   {
     href: '/self-hosting/aws',
     name: 'AWS',
-    description: 'Deploy the Phase Console on AWS EC2 and RDS PostgreSQL.',
+    description: 'Deploy the Phase Console on AWS EC2 and RDS PostgreSQL instance.',
     logo: logoAmazonaws,
     available: true,
   },
@@ -28,17 +29,24 @@ const deployment_methods = [
     href: '/self-hosting/digitalocean',
     name: 'DigitalOcean',
     description:
-      'Deploy the Phase Console on a DigitalOcean droplet and a managed PostgreSQL.',
+      'Deploy the Phase Console on a DigitalOcean droplet and a managed PostgreSQL instance.',
     logo: logoDigitalOcean,
     available: true,
   },
-  // {
-  //   href: '',
-  //   name: 'Google Cloud Platform',
-  //   description: 'Deploy Phase Console on a droplet in DigitalOcean',
-  //   logo: logoGCP,
-  //   available: true,
-  // },
+  {
+    href: '/self-hosting/gcp',
+    name: 'Google Cloud Platform',
+    description: 'Deploy the Phase Console on Google Compute Engine and a CloudSQL instance.',
+    logo: logoGCP,
+    available: true,
+  },
+  {
+    href: '/self-hosting/azure',
+    name: 'Microsoft Azure',
+    description: 'Deploy the Phase Console on an Azure Virtual Machine and Azure Database for PostgreSQL.',
+    logo: logoAzure,
+    available: true,
+  },
 ]
 
 function ArrowIcon(props) {

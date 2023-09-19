@@ -276,6 +276,8 @@ export const navigation = [
       { title: 'Overview', href: '/self-hosting' },
       { title: 'Docker Compose', href: '/self-hosting/docker-compose' },
       { title: 'AWS', href: '/self-hosting/aws' },
+      { title: 'Google Cloud Platform', href: '/self-hosting/gcp' },
+      { title: 'Azure', href: '/self-hosting/azure' },
       { title: 'DigitalOcean', href: '/self-hosting/digitalocean' },
       {
         title: 'Config - Environment Variables',
