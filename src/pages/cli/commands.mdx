@@ -142,6 +142,7 @@ Usage:
 - `command_to_run`: The command you wish to run. For example: `yarn dev`.
 - `--env`: (Optional) Specify the environment (e.g., `dev`, `staging`, `production`).
 
+
 Examples:
 
 ```fish
@@ -153,9 +154,30 @@ Examples:
 DJANGO_SECRET_KEY=7842cc89c5a703acdf4797e0f063e1851734cea0677ad9382158cfcee26195df
 ```
 
+Injecting [Referenced secrets](/cli/commands#secret-referencing):
+
+
+```fish
+> phase secrets get PROD_AWS_KEY --env dev
+KEY 🗝️                | VALUE ✨                                                          
+----------------------------------------------------------------------------------------
+PROD_AWS_KEY         | ⛓️` ${prod.AWS_ACCESS_KEY_ID}                                    
+
+> phase run --env dev "printenv | grep PROD_AWS_KEY"
+PROD_AWS_KEY=AKIA2OGYBAH63UA3VNFG
+
+# In the event a user doesn't have access to prod / production environment
+> phase run --env dev "printenv | grep PROD_AWS_KEY"
+⚠️ Warning: The environment 'prod' for key 'PROD_AWS_KEY' either does not exist or you do not have access to it. Reference AWS_ACCESS_KEY_ID not found. Ignoring...
+PROD_AWS_KEY=
+```
+
+Chaining multiple commands:
+
 ```fish
 > phase run --env prod "python manage.py migrate && python manage.py runserver backend:8000"
 ```
+
 
 ---
 
@@ -352,11 +374,17 @@ DJANGO_DEBUG="True"
 DB_PASSWORD="601602017dde26ce94f46748e0fc342b046d4e36f623957b9be94ca4d616076c"
 DB_HOST="mc-laren-prod-db.c9ufzjtplsaq.us-west-1.rds.amazonaws.com"
 DB_PORT="5432"
-DATABASE_URL="postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}"
-HTTP_PROTOTOCL="https://"
+DATABASE_URL="postgresql://j_mclaren:601602017dde26ce94f46748e0fc342b046d4e36f623957b9be94ca4d616076c@mc-laren-prod-db.c9ufzjtplsaq.us-west-1.rds.amazonaws.com:5432/XP1_LM"
+
+# In the event a user doesn't have access to prod / production environment
+> phase secrets export PROD_AWS_KEY PROD_AWS_SECRET_ACCESS_KEY --env prod
+AWS_ACCESS_KEY_ID="AKIA2OGYBAH63UA3VNFGds"
+# Warning: The environment 'prod' for key 'PROD_AWS_SECRET_ACCESS_KEY' either does not exist or you do not have access to it.
+PROD_AWS_SECRET_ACCESS_KEY=""
+
 ```
 
-### Secret referencing
+## Secret referencing
 
 Phase Console and CLI also support dotenv styled secret referencing.
 
