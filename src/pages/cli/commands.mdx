@@ -252,7 +252,15 @@ Usage:
 Please enter the value (hidden):  # Set to True
 KEY 🗝️                    | VALUE ✨                                                                 
 ---------------------------------------------------------------------------------------------------                                                          
-DEBUG                    | ****                                                                    
+DEBUG                     | ****                                                                    
+
+🥽 To uncover the secrets, use: phase secrets list --show
+
+# Pipe a value via stdin:
+> cat ~/.ssh/id_rsa | phase secrets create SSH_PRIVATE_KEY
+KEY 🗝️                           | VALUE ✨                                       
+--------------------------------------------------------------------------------
+SSH_PRIVATE_KEY                  | ---**************************************** 
 
 🥽 To uncover the secrets, use: phase secrets list --show
 ```
@@ -279,6 +287,14 @@ Successfully updated the secret.
 KEY 🗝️                    | VALUE ✨                                             
 -------------------------------------------------------------------------------
 DEBUG                     | *****                                               
+
+🥽 To uncover the secrets, use: phase secrets list --show
+
+# Pipe a value via stdin:
+> cat ~/.ssh/id_ed25519 | phase secrets update SSH_PRIVATE_KEY
+KEY 🗝️                           | VALUE ✨                                       
+--------------------------------------------------------------------------------
+SSH_PRIVATE_KEY                  | ---**************************************** 
 
 🥽 To uncover the secrets, use: phase secrets list --show
 ```
