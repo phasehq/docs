@@ -285,7 +285,7 @@ Example:
 Please enter the new value for DEBUG (hidden): # Set to False
 Successfully updated the secret. 
 KEY 🗝️                    | VALUE ✨                                             
--------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
 DEBUG                     | *****                                               
 
 🥽 To uncover the secrets, use: phase secrets list --show
@@ -293,7 +293,7 @@ DEBUG                     | *****
 # Pipe a value via stdin:
 > cat ~/.ssh/id_ed25519 | phase secrets update SSH_PRIVATE_KEY
 KEY 🗝️                           | VALUE ✨                                       
---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
 SSH_PRIVATE_KEY                  | ---**************************************** 
 
 🥽 To uncover the secrets, use: phase secrets list --show
@@ -317,7 +317,7 @@ Example:
 > phase secrets delete DEBUG
 Successfully deleted the secrets.
 KEY 🗝️                    | VALUE ✨                                             
--------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
 
 🥽 To uncover the secrets, use: phase secrets list --show
 ```
@@ -347,7 +347,7 @@ To view them please run: phase secrets list --env prod
 
 > phase secrets list --env prod
 KEY 🗝️                    | VALUE ✨                                                                  
-----------------------------------------------------------------------------------------------------     
+---------------------------------------------------------------------------------------------------
 AWS_ACCESS_KEY_ID        | AKI**************NFG                                                     
 AWS_SECRET_ACCESS_KEY    | V5y**********************************6W1                                 
 
