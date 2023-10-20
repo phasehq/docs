@@ -5,9 +5,19 @@ import { NextSeo } from 'next-seo';
 import { Layout } from '@/components/Layout'
 import * as mdxComponents from '@/components/mdx'
 import { useMobileNavigationStore } from '@/components/MobileNavigation'
-
+import dynamic from 'next/dynamic';
 import '@/styles/tailwind.css'
 import 'focus-visible'
+
+// Dynamically import PostHogProvider with SSR turned off
+const PostHogProvider = dynamic(
+  () => import('posthog-js/react').then(mod => mod.PostHogProvider),
+  { ssr: false }
+);
+
+const options = {
+  api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
+}
 
 function onRouteChange() {
   useMobileNavigationStore.getState().close()
@@ -49,11 +59,16 @@ export default function App({ Component, pageProps }) {
           ],
         }}
       />
+      <PostHogProvider 
+      apiKey={process.env.NEXT_PUBLIC_POSTHOG_KEY}
+      options={options}
+      >
       <MDXProvider components={mdxComponents}>
         <Layout {...pageProps}>
           <Component {...pageProps} />
         </Layout>
       </MDXProvider>
+      </PostHogProvider>
     </>
   )
 }
