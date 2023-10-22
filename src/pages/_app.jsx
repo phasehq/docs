@@ -7,6 +7,7 @@ import * as mdxComponents from '@/components/mdx'
 import { useMobileNavigationStore } from '@/components/MobileNavigation'
 import dynamic from 'next/dynamic';
 import '@/styles/tailwind.css'
+import '@/styles/asciinema-player.css'
 import 'focus-visible'
 
 // Dynamically import PostHogProvider with SSR turned off

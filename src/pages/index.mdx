@@ -5,7 +5,7 @@ import { Deployments } from '@/components/Deployments'
 import { Guides } from '@/components/Guides'
 import { SecurityResources } from '@/components/SecurityResources'
 import { HeroPattern } from '@/components/HeroPattern'
-import AsciinemaEmbed from '@/components/AsciinemaEmbed'
+import CliDemo from '@/components/CliDemo'
 import { Tag } from '@/components/Tag'
 
 export const description =
@@ -23,29 +23,7 @@ Phase is an open source (open core) end-to-end encrypted platform for creating, 
 
 Import, encrypt and inject secrets in your application within seconds. Zero code change required.
 
-<div
-  dangerouslySetInnerHTML={{
-    __html: `
-    <!DOCTYPE html>
-<html>
-<head>
-  <link rel="stylesheet" type="text/css" href="/assets/asciinema/asciinema-player.css" />
-</head>
-<body>
-  <div id="player"></div>
-  <script src="/assets/asciinema/asciinema-player.min.js"></script>
-  <script>
-    AsciinemaPlayer.create(
-      '/assets/asciinema/phase-cli-demo.cast',
-      document.getElementById('player'),
-      { cols: 96, rows: 35 }
-    );
-  </script>
-</body>
-</html>
-  `,
-  }}
-></div>
+<CliDemo />
 
 Get the CLI
 
