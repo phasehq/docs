@@ -1,4 +1,5 @@
 import { Head, Html, Main, NextScript } from 'next/document'
+import Script from 'next/script';
 
 const modeScript = `
   let darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
@@ -44,6 +45,10 @@ export default function Document() {
       <body className="bg-white antialiased dark:bg-zinc-900">
         <Main />
         <NextScript />
+        <Script
+            src="/assets/asciinema/asciinema-player.min.js"
+            strategy="beforeInteractive"
+          />
       </body>
     </Html>
   )
