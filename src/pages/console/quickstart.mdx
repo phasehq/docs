@@ -1,0 +1,111 @@
+import { Tag } from '@/components/Tag'
+
+export const description =
+  'This guide will get you all set up and ready to use the Phase console.'
+
+<Tag variant="small">GETTING STARTED</Tag>
+
+# Quickstart
+
+Setup your account and start using Phase to manage your application secrets in just a few minutes.
+
+This guide will walk you through creating an account and securing it with a recovery phrase and `sudo` password. Then we'll create an [App](/console/apps), connect it to our local project and import our [Secrets](/console/secrets).
+This guide assumes you have a project running locally with environment variables in a `.env` file.
+The example `.env` file we are using in this guide is:
+
+```
+FOO=bar
+DEBUG=yes
+BACKEND_API_URL=https://api.myapp.com
+```
+
+## Login and create an Organisation
+
+You can login to the Phase <a href="https://console.phase.dev" target="_blank">console</a> with Google, GitHub or GitLab.
+
+[Setup your account](/console/users#account-keys-and-setup) and [create an Organisation](/console/organisation#create-an-organisation).
+
+## Create an App
+
+In order to use Phase with your application, you'll need to [create an App](/console/apps#create-an-app).
+
+Enter a name for your like 'TestApp' and turn off the 'Create example secrets' switch. Click "Create"
+
+## Install the CLI
+
+Next, we need to [install the Phase CLI](/cli/install) on our machine. Use the option relevant to your platform and go through the installation process.
+
+## Authenticate the CLI
+
+Once the CLI is installed, we need to conenct it with our Phase account and App.
+
+Run `phase auth` and choose the "Phase Cloud" option:
+
+```
+» phase auth
+? Choose your Phase instance type: (Use arrow keys)
+ » ☁️ Phase Cloud
+   🛠️ Self Hosted
+```
+
+This will open the Phase Console in a new tab. Enter your sudo password when prompted.
+
+![webauth password](/assets/images/console/quickstart/webauth-password.png)
+
+Once complete, you should see the success screen:
+
+![webauth success](/assets/images/console/quickstart/webauth-success.png)
+
+Go back to your terminal. You should see the following:
+
+```
+✅ Authentication successful. Credentials saved in the Phase keyring.
+🎉 Welcome to Phase CLI!
+
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+🙋 Need help?: https://slack.phase.dev
+💻 Bug reports / feature requests: https://github.com/phasehq/cli
+```
+
+Lastly, run `phase init` and select 'TestApp' or the name of the App you created.
+
+```
+»  phase init
+? Select an App: (Use arrow keys)
+ » TestApp
+   Landing page
+   Exit
+```
+
+## Import your secrets into Phase
+
+Next, lets import our secrets from our .env file.
+
+Run `phase secrets import .env`
+
+```
+»  phase secrets import .env
+Successfully imported and encrypted 3 secrets.
+To view them please run: phase secrets list
+
+```
+
+Lets get rid of our `.env` file now:
+
+```
+rm .env
+```
+
+The environment variables in our `.env` file have now been encrypted and imported into your Phase app. Go back to your App in the Phase Console to view them:
+
+![console secrets](/assets/images/console/quickstart/quickstart-console-secrets.png)
+
+Our environment variables have been imported into the Development Environment by default. Now we can edit, manage and deploy these secrets from Phase.
+
+## Next steps
+
+Now that you have setup your account and connected it to your local project, you can explore all that Phase has to offer.
+
+Explore the [Phase Console](/console).
+
+Learn about the [Phase CLI](/cli/commands).

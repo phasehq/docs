@@ -1,0 +1,72 @@
+import { Tag } from '@/components/Tag'
+
+export const description = 'This guide will explain how Apps work in Phase'
+
+<Tag variant="small">CONSOLE</Tag>
+
+# Apps
+
+A Phase App is used to manage [Secrets](/console/secrets) for a single project, repo or application. An App can contain multiple [Environments](/console/environments). Users can be added or removed from an App to manage access.
+
+## Create an App
+
+Create an App by clicking on the "+" button on the Apps screen. Enter a name for your app, and your `sudo` password if prompted.
+
+You can also optionally choose to initialize your app with some example secrets. This is automatically selected for your first App.
+
+![create app](/assets/images/console/apps/app-create.png)
+
+## Secrets
+
+This screen shows an overview of all Secrets in this App, accross all Environments. You can explore a specific Environment by clicking the Environment name in the column headers.
+
+You can expand a secret to view its status in each environment. Clicking on an Environment name will take you to this secret in the respective Environment management screen.
+
+![app secrets](/assets/images/console/apps/app-secrets.png)
+
+## Service Tokens
+
+This screen lets you create and manage [Service Tokens](/console/tokens#service-tokens) for this App.
+
+![app tokens](/assets/images/console/apps/app-tokens.png)
+
+## Logs
+
+This screen shows you audit logs for all CRUD events for all Secrets and Environments in this app. You can expand a specific log event to view more information.
+
+![app logs](/assets/images/console/apps/app-logs.png)
+
+## Members
+
+This screen lets you view and manage member access to this App.
+
+![app members](/assets/images/console/apps/app-members.png)
+
+### Add a member to an App
+
+To add a member to an App, click on the "Add a member" button. Select an Organistion member from the dropdow list, select which Environments to grant them access to, and click "Add"
+
+![app member add](/assets/images/console/apps/app-member-add.png)
+
+### Update Environment access for a member
+
+To update the Environments that a specific user can access, click the "Manage user access" button. Update the Environment selection and click "Save"
+
+![app member manage access](/assets/images/console/apps/app-member-manage.png)
+
+### Remove a member from an App
+
+To remove a member from an App, click the "Remove member" button.
+
+## Settings
+
+This screen shows you when this App was created, and allows you to delete an App.
+
+### Delete an App
+
+To delete an app, click on the "Delete" button.
+
+<Warning>
+  Deleting an app will permanently delete all Environments, Secrets and Tokens
+  associated with it.
+</Warning>

@@ -188,7 +188,20 @@ export const navigation = [
     title: 'Getting Started',
     links: [
       { title: 'Introduction', href: '/' },
-      { title: 'Quickstart', href: '/quickstart' },
+      { title: 'Quickstart', href: '/console/quickstart' },
+    ],
+  },
+  {
+    title: 'Phase Console',
+    links: [
+      { title: 'Overview', href: '/console' },
+      { title: 'Organisations', href: '/console/organisation' },
+      { title: 'Users', href: '/console/users' },
+      { title: 'Apps', href: '/console/apps' },
+      { title: 'Environments', href: '/console/environments' },
+      { title: 'Secrets', href: '/console/secrets' },
+      { title: 'Tokens', href: '/console/tokens' },
+
     ],
   },
   {

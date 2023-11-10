@@ -1,0 +1,31 @@
+import { Tag } from '@/components/Tag'
+
+export const description =
+  'This guide will explain how Environments work in Phase'
+
+<Tag variant="small">CONSOLE</Tag>
+
+# Environments
+
+An Environment is a set of [Secrets](/console/secrets). Environments allow you manage your application secrets through various stages of your application development.
+
+There are currently 3 types of Environments:
+
+- Development
+- Staging
+- Production
+
+## Environment keys
+
+Each Environment has a unique set of encryption keys that are used to encrypt and decrypt Secrets. Only users with access to these keys can create, view and manage Secrets in an Environment.
+
+Environment keys are derived from an 32-byte cryptographically random seed.
+
+Each Environment also has a 32-byte random salt. This is used as an input when computing Secret Key digests.
+
+## Manage User access
+
+When an [Organisation](/console/organisation) member is given access to an Environment, the Environment seed and salt are asymmetrically encrypted for this user and stored on the backend as an `EnvironmentKey` object.
+When access for this user is revoked, this object is deleted.
+
+Organisation Owners and Admins have access to all Environments. You can control which Environments are accessible by a Developer from the [App Members](/console/apps#members) screen.

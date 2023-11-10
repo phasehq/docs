@@ -1,0 +1,87 @@
+import { Tag } from '@/components/Tag'
+
+export const description =
+  'This guide will explain how user accounts work in Phase'
+
+<Tag variant="small">CONSOLE</Tag>
+
+# Users
+
+Learn how User accounts work in Phase.
+
+## Account keys & setup
+
+Phase is end-to-end encrypted, which means that each member of an [Organisation](/console/organisation) has a unique set of encryption keys.
+These keys are used to cryptographically assign or revoke access to specific [Environments](/console/environments) and [Secrets](/console/secrets).
+
+When you signup or accept an Organisation invite for Phase, you will need to go through a 2-step process to create and secure your account keys.
+
+1. When your account is being setup, a cryptographically secure random seed is generated based on the bip-39 spec.
+2. This seed is used to derive your account keys — an X25519 signing keypair.
+3. You will be asked to setup a `sudo` password. This password is used to encrypt your account keys so they can be stored safely.
+4. You will be provided with a recovery kit. This kit contains a recovery phrase that can be used to derive your account keys if you forget your `sudo` password.
+
+<Warning>
+  Make sure to save your recovery kit in a safe place! If you forget your `sudo`
+  passsword, it is the **only** way to regain access to your account.
+</Warning>
+
+## `sudo` password
+
+Your `sudo` password is used to encrypt your account keys. Performing certain priveleged actions such as creating Apps, managing Environments and Tokens, or managing User access requires access to your account keys.
+
+The first time you perform such an action, you will be asked to enter your `sudo` password.
+
+![sudo password](/assets/images/console/users/sudo-password.png)
+
+When entered correctly, your account keys will be decrypted and held in memory. You will not need to enter this password again for the duration of your session, unless you close the tab or reload the page using the browser 'refresh' action.
+
+## User roles
+
+Users in Phase can have 3 possible roles:
+
+- Owner
+- Admin
+- Developer
+
+### Owner
+
+When you create an Organisation, you are designated as the `Owner`. You will have access to all Apps, Environments and Secrets. Owners have all permissiont to Manage Users in the Organisation including inviting new members, removing members, updating member app accesss and member roles.
+
+### Admin
+
+`Admin` accounts essentially have the same permissions as Owners. They have access to all Apps and Envs, and can manage all administrative functions of the Organisation including adding or removing members and chaning member roles.
+
+### Developer
+
+When a user in invited to an Organisation, they are assigned the `Developer` role by default.
+Developers have limited access to specific Apps and Environments. Developers cannot delete Apps, Environments or Members, but can create, edit and delete Secrets within the Environments they have access to.
+
+## Add users to an Organisation
+
+You can add a user as an Organistion member by inviting them from the [Organisation members](/console/organisation#members) screen.
+
+To invite a new member, click on the "Add a member" button, enter the email of the user you wish to invite, optionally select which Apps they will have access to, and click "Invite".
+
+![invite user](/assets/images/console/users/users-invite.png)
+
+<Note>
+Note: Invited members will not have access to any Environments after joining your organisation. Once they accept your invite, you may assign them a role and grant them access to specific Environments from the App Members screen.
+
+</Note>
+
+## Update member roles
+
+If you are an `Owner` or `Admin`, you can update a member's role from the [Organisation members](/console/organisation#members) screen.
+
+### Upgrade a User to `Admin`
+
+When you upgrade a `Developer` account to `Admin`, they will be given access to all Apps, Environments and Secrets in the Organisation.
+
+### Downgrade a User to `Developer`
+
+When you downgrade an `Admin` account to `Developer`, they will retain access to all Apps, Environments and Secrets in the Organisation. You can limit their access to specific Apps or Environments by vising the respective App Members screen.
+
+## Remove a member from an Organisation
+
+You can permanently remove a member from an Organsation from the [Organisation members](/console/organisation#members) screen. To remove a member, click on the "Remove member" button beside their name.
