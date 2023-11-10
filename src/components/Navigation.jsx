@@ -192,6 +192,19 @@ export const navigation = [
     ],
   },
   {
+    title: 'Phase Console',
+    links: [
+      { title: 'Overview', href: '/console' },
+      { title: 'Organisations', href: '/console/organisation' },
+      { title: 'Users', href: '/console/users' },
+      { title: 'Apps', href: '/console/apps' },
+      { title: 'Environments', href: '/console/environments' },
+      { title: 'Secrets', href: '/console/secrets' },
+      { title: 'Tokens', href: '/console/tokens' },
+
+    ],
+  },
+  {
     title: 'Phase CLI',
     links: [
       { title: 'Install', href: '/cli/install' },
