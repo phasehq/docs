@@ -188,7 +188,7 @@ export const navigation = [
     title: 'Getting Started',
     links: [
       { title: 'Introduction', href: '/' },
-      { title: 'Quickstart', href: '/console/quickstart' },
+      { title: 'Quickstart', href: '/quickstart' },
     ],
   },
   {
