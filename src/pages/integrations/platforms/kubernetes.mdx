@@ -10,13 +10,80 @@ You can use Phase run to inject secrets to your application process during runti
 
 ## Prerequisites
 
-- Have signed up for the [Phase Console](https://console.phase.dev) and created an application.
-- `PHASE_SERVICE_TOKEN` (Ideally for each of your services).
+- Have signed up for the [Phase Console](/quickstart) and created an application.
+- A [`PHASE_SERVICE_TOKEN`](/console/tokens#service-tokens) for your application.
 
-<Note>
-  If you are using a Self-Hosted instance of the Phase Console, you may supply
-  `PHASE_HOST` environment variable with your URL (`https://<HOST>`).
-</Note>
+## Using Phase Kubernetes operator
+
+![Phase Cryptography](/assets/phase-kubernetes-operator.svg)
+
+### 1. Add
+
+```fish
+helm repo add phase https://helm.phase.dev && helm repo update
+```
+
+```fish
+helm install phase-secrets-operator phase/phase-kubernetes-operator --set image.tag=v0.1.0
+```
+
+### 1. Create a service token secret in kubernetes
+
+1. Base64 encode the Phase service token
+
+Example:
+
+```fish
+λ echo -n 'pss_service:v1:a6720814be12945adac50c07cd5ff9d9e295cfecef24be90802028cec826fe24:cbc30f5058b73ef4533b0a293a0e2e3c21
+b684dcf3385784d0d2bc637468141c:54b0d7c089fe560112d97ac4591a6a9ed800e6e57da463dc3e785719dc8fbdf8:6009b8986180132b7ef02197ea981
+fa51732945f339b1af16a605d3b08793899' | base64 -w 0
+
+cHNzX3NlcnZpY2U6djE6YTY3MjA4MTRiZTEyOTQ1YWRhYzUwYzA3Y2Q1ZmY5ZDllMjk1Y2ZlY2VmMjRiZTkwODAyMDI4Y2VjODI2ZmUyNDpjYmMzMGY1MDU4YjczZWY0NTMzYjBhMjkzYTBlMmUzYzIxYjY4NGRjZjMzODU3ODRkMGQyYmM2Mzc0NjgxNDFjOjU0YjBkN2MwODlmZTU2MDExMmQ5N2FjNDU5MWE2YTllZDgwMGU2ZTU3ZGE0NjNkYzNlNzg1NzE5ZGM4ZmJkZjg6NjAwOWI4OTg2MTgwMTMyYjdlZjAyMTk3ZWE5ODFmYTUxNzMyOTQ1ZjMzOWIxYWYxNmE2MDVkM2IwODc5Mzg5OQ==⏎
+```
+
+2. Paste the base64 encoded Phase service token in the `token` field
+
+`service-token.yml`
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: phase-service-token
+  namespace: default # You specify the desired namespace here.
+type: Opaque
+data:
+  token: '<phase service token>' # Base64 Phase service token
+```
+
+3. Deploy the secret
+
+```fish
+kubectl apply -f service-token.yml
+```
+
+### 2. Deploy the Phase Kubernetes CR (custom resource)
+
+`phase-cr.yaml`
+
+```yaml
+apiVersion: secrets.phase.dev/v1alpha1
+kind: PhaseSecret
+metadata:
+  name: example-phase-secret
+  namespace: default
+spec:
+  phaseAppEnv: 'prod ' # OPTIONAL - The Phase application environment to fetch secrets from
+  phaseHost: 'https://console.phase.dev' # OPTIONAL - URL of a Phase Console instance
+  authentication:
+    serviceToken:
+      serviceTokenSecretReference:
+        secretName: 'phase-service-token' # Name of the Phase service token with access to your application
+        secretNamespace: 'default'
+  managedSecretReferences: # Managed secrets in Kubernetes that Phase will sync secrets with
+    - secretName: 'my-application-secret' # Name of the managed secret in Kubernetes that will be consumed by your application
+      secretNamespace: 'default'
+```
 
 ## Using Init Container
 
