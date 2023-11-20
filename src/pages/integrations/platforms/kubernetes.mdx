@@ -6,17 +6,312 @@ export const description = 'Integrate Phase with Kubernetes'
 
 # Kubernetes
 
-You can use Phase run to inject secrets to your application process during runtime. There's no need for you to change any code or add a dependency.
+You can use Phase to sync secrets with applications running in your Kubernetes cluster.
 
-## Prerequisites
+### Prerequisites
 
-- Have signed up for the [Phase Console](https://console.phase.dev) and created an application.
-- `PHASE_SERVICE_TOKEN` (Ideally for each of your services).
+- Sign up for the [Phase Console](/quickstart) and create an application.
+- Obtain a [`PHASE_SERVICE_TOKEN`](/console/tokens#service-tokens) for your application, that has access to the environment you are trying to fetch secrets from.
+
+## Using the Phase Kubernetes Operator
+
+This section provides a step-by-step guide to help you get started with the Phase Kubernetes Operator. Feel free to adjust the provided options and configurations to suit your specific needs.
+
+![Phase Cryptography](/assets/phase-kubernetes-operator.svg)
+
+### 1. Install the Operator via Helm
+
+Add the Phase Helm repository and update it:
+
+```fish
+helm repo add phase https://helm.phase.dev && helm repo update
+```
+
+Install the Phase Secrets Operator:
+
+```fish
+helm install phase-secrets-operator phase/phase-kubernetes-operator --set image.tag=v0.1.0
+```
 
 <Note>
-  If you are using a Self-Hosted instance of the Phase Console, you may supply
-  `PHASE_HOST` environment variable with your URL (`https://<HOST>`).
+  It's best practice to specify the version in production environments to avoid
+  unintended upgrades. Find available versions on our [GitHub
+  releases](https://github.com/phasehq/kubernetes-secrets-operator/releases).
 </Note>
+
+### 2. Create a Service Token Secret in Kubernetes
+
+Securely create a Service Token Secret using `read` (recommended for more security as it avoids writing the token to disk or shell history)
+
+Run this command, paste the Phase Service Token and hit enter:
+
+```fish
+read -s TOKEN
+kubectl create secret generic phase-service-token \
+  --from-literal=token=$TOKEN \
+  --type=Opaque \
+  --namespace=default
+unset TOKEN
+```
+
+Alternatively, create it directly using `kubectl`:
+
+```fish
+kubectl create secret generic phase-service-token \
+  --from-literal=token=<TOKEN> \
+  --type=Opaque \
+  --namespace=default
+```
+
+### 3. Deploy the Phase Secrets Operator CR (Custom Resource)
+
+Create a custom resource file: `phase-secrets-operator-cr.yaml`
+
+```yaml
+apiVersion: secrets.phase.dev/v1alpha1
+kind: PhaseSecret
+metadata:
+  name: example-phase-secret
+  namespace: default
+spec:
+  phaseAppEnv: 'prod' # OPTIONAL - The Phase application environment to fetch secrets from
+  phaseHost: 'https://console.phase.dev' # OPTIONAL - URL of the Phase Console instance
+  authentication:
+    serviceToken:
+      serviceTokenSecretReference:
+        secretName: 'phase-service-token' # Name of the service token with access to your Phase application
+        secretNamespace: 'default'
+  managedSecretReferences:
+    - secretName: 'my-application-secret' # Name of the Kubernetes managed secret that Phase will sync
+      secretNamespace: 'default'
+```
+
+Deploy the custom resource:
+
+```fish
+kubectl apply -f phase-secrets-operator-cr.yaml
+```
+
+Watch for `my-application-secret` managed secret being created:
+
+```fish
+watch kubectl get secrets
+```
+
+View the secrets:
+
+```fish
+kubectl get secret my-application-secret -o yaml
+```
+
+<Note>The operator automatically synchronizes secrets every 60 seconds.</Note>
+
+### Properties
+
+<Properties>
+  <Property name="phaseAppEnv" type="optional">
+  The Phase application environment to fetch secrets from (e.g., dev, staging, prod). <b> Default </b>: `prod`.
+  </Property>
+  <Property name="phaseHost" type="optional">
+  The URL of a Phase Console instance. <b> Default </b>: `https://console.phase.dev`.
+  </Property>
+  <Property name="authentication.serviceToken.serviceTokenSecretReference.secretName" type="required">
+  The name of the Kubernetes managed secret containing your Phase service token.
+  </Property>
+  <Property name="authentication.serviceToken.serviceTokenSecretReference.secretNamespace" type="required">
+  The namespace of the Kubernetes managed secret containing your service token.
+  </Property>
+  <Property name="managedSecretReferences.secretName">
+  Name of the Kubernetes managed secret that Phase will sync secrets to.
+  </Property>
+  <Property name="managedSecretReferences.secretNamespace">
+  The namespace of the Kubernetes managed secret that Phase will sync secrets to.
+  </Property>
+
+</Properties>
+
+### Consuming secrets in Kubernetes Deployments with Phase Operator
+
+#### 1. Using Environment Variables
+
+Inject secrets directly into your application's environment variables:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app-deployment
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+        - name: my-app
+          image: my-app-image
+          env:
+            - name: MY_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: my-application-secret
+                  key: MY_SECRET_KEY
+```
+
+#### 2. Using `envFrom` to inject all secrets
+
+Inject all data from a secret as environment variables:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app-deployment
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+        - name: my-app
+          image: my-app-image
+          envFrom:
+            - secretRef:
+                name: my-application-secret
+```
+
+#### 3. Mounting secrets as an in-memory volume
+
+Mount secrets as an in-memory volume for scenarios requiring configuration files:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app-deployment
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+        - name: my-app
+          image: my-app-image
+          volumeMounts:
+            - name: secret-volume
+              mountPath: /etc/secrets
+              readOnly: true
+      volumes:
+        - name: secret-volume
+
+          secret:
+            secretName: my-application-secret
+```
+
+### Security Considerations
+
+- **Least Privilege**: Ensure applications have access only to the secrets they need.
+- **RBAC Policies**: Implement Role-Based Access Control policies to restrict access to secrets.
+
+### Troubleshooting and Debugging the Phase Kubernetes Operator
+
+### Check Operator Logs
+
+View logs for potential errors or misconfigurations:
+
+```fish
+kubectl get pods
+```
+
+```fish
+kubectl logs <operator-pod-name>
+```
+
+Example (revoked Service Token):
+
+```fish
+λ kubectl logs phase-secrets-operator-phase-kubernetes-operator-8b69db6f-f4m8s -f
+[2023-11-20 10:54:07,948] kopf._core.engines.a [INFO    ] Initial authentication has been initiated.
+[2023-11-20 10:54:07,950] kopf.activities.auth [INFO    ] Activity 'login_via_client' succeeded.
+[2023-11-20 10:54:07,951] kopf._core.engines.a [INFO    ] Initial authentication has finished.
+[2023-11-20 10:54:08,047] kopf._core.reactor.o [WARNING ] Not enough permissions to watch for resources: changes (creation/deletion/updates) will not be noticed; the resources are only refreshed on operator restarts.
+[2023-11-20 10:54:08,692] kopf._core.reactor.r [WARNING ] Cleanup activity is not executed at all due to cancellation.
+
+🚫 Not authorized. Token expired or revoked.
+Failed to fetch secrets: The environment 'dev' either does not exist or you do not have access to it.
+```
+
+### Verify Operator Status
+
+Ensure the operator is running correctly:
+
+```fish
+kubectl get deployment <operator-deployment-name> -n <operator-namespace>
+```
+
+### Inspect the Custom Resource (CR)
+
+Check for correct configuration:
+
+```fish
+kubectl get phasesecret example-phase-secret -n default -o yaml
+```
+
+### Check Events
+
+View Kubernetes events for a timeline of cluster activities:
+
+```fish
+kubectl describe phasesecret example-phase-secret -n default
+```
+
+### Review Kubernetes Secrets
+
+Verify the presence and content of synced secrets:
+
+```fish
+kubectl get secret my-application-secret -n default -o yaml
+```
+
+### Examine RBAC Settings
+
+Ensure appropriate permissions are set:
+
+```fish
+kubectl get clusterrole <operator-cluster-role>
+kubectl get clusterrolebinding <operator-cluster-rolebinding>
+```
+
+### Operator Version and Updates
+
+Compare the deployed version with the latest available version:
+
+```fish
+helm list -n <operator-namespace>
+```
+
+### Resource Limits and Quotas
+
+Check for any resource constraints:
+
+```fish
+kubectl describe deployment <operator-deployment-name> -n <operator-namespace>
+```
+
+### Uninstall the Operator
+
+Remove the operator using Helm:
+
+```fish
+helm uninstall phase-secrets-operator
+```
+
+<div className="not-prose">
+  <Button
+    href="https://kubernetes.io/docs/concepts/configuration/secret/"
+    variant="text"
+    arrow="right"
+    children="Kubernetes - Secrets Management"
+  />
+</div>
+
+---
 
 ## Using Init Container
 
@@ -24,51 +319,67 @@ You can easily integrate with your kubernetes workload and inject secrets secure
 
 1. Create `PHASE_SERVICE_TOKEN` secret.
 
+Via `read` (**More secure**): This method is more secure as the token is not written to disk in a `.yaml` or in shell history.
+
 ```fish
-kubectl create secret generic phase-token --from-literal=PHASE_SERVICE_TOKEN=<YOUR_PHASE_SERVICE_TOKEN>
+read -s TOKEN
+kubectl create secret generic phase-service-token \
+  --from-literal=PHASE_SERVICE_TOKEN=$TOKEN \
+  --namespace=default
+unset TOKEN
 ```
 
-2. Create or edit your `docker-compose.yml`:
+Alternatively, via `kubectl` inline:
+
+```fish
+kubectl create secret generic phase-service-token --from-literal=PHASE_SERVICE_TOKEN=<TOKEN> --namespace=default
+```
+
+2. Here's an example `deploy.yaml`:
 
 ```yaml
-apiVersion: v1
-kind: Pod
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: alpine-pod
+  name: my-deployment
 spec:
-  volumes:
-    - name: secrets-volume
-      emptyDir:
-        medium: Memory
-  initContainers:
-    - name: fetch-secrets
-      image: phasehq/cli:latest
-      volumeMounts:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      volumes:
         - name: secrets-volume
-          mountPath: /secrets
-      env:
-        - name: PHASE_SERVICE_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: phase-token
-              key: PHASE_SERVICE_TOKEN
-      command:
-        - /bin/sh
-        - -c
-        - phase secrets export > /secrets/secrets.env
-  containers:
-    - name: alpine-main
-      image: alpine:latest
-      volumeMounts:
-        - name: secrets-volume
-          mountPath: /secrets
-      command:
-        - /bin/sh
-        - -c
-        - source /secrets/secrets.env && printenv
+          emptyDir:
+            medium: Memory
+      initContainers:
+        - name: fetch-secrets
+          image: phasehq/cli:latest
+          volumeMounts:
+            - name: secrets-volume
+              mountPath: /secrets
+          env:
+            - name: PHASE_SERVICE_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: phase-service-token
+                  key: PHASE_SERVICE_TOKEN
+          command:
+            ['/bin/sh', '-c', 'phase secrets export > /secrets/secrets.env']
+      containers:
+        - name: main-container
+          image: alpine:latest
+          volumeMounts:
+            - name: secrets-volume
+              mountPath: /secrets
+          command: ['/bin/sh', '-c', 'cat /secrets/secrets.env && sleep 3600']
 ```
 
-## Security Benefits
+### Security Benefits
 
 1. **Isolation of Responsibilities**: Init containers allow you to separate the responsibility of setting up the environment from the primary purpose of the main container. By using init containers solely to fetch secrets and populate in-memory volumes, you reduce the surface area for potential attacks targeted at the main application.
 
@@ -76,7 +387,7 @@ spec:
 
 3. **No Persistent Storage**: Since secrets fetched and placed in an in-memory volume aren't written to any persistent storage, there's no risk of them being exposed if the underlying storage is compromised or improperly decommissioned.
 
-## Security Considerations
+### Security Considerations
 
 1. **In-Memory Exposure**: While the secrets are not persisted to disk, they are still available in the node's RAM. A process or user with sufficient privileges on the node could potentially access data directly from memory.
 
