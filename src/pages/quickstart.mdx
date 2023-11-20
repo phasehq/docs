@@ -33,6 +33,8 @@ In order to use Phase with your application, you'll need to [create an App](/con
 
 Enter a name for your like 'TestApp' and turn off the 'Create example secrets' switch. Click "Create"
 
+![create an app](/assets/images/console/quickstart/quickstart-create-app.png)
+
 ## Install the CLI
 
 Next, we need to [install the Phase CLI](/cli/install) on our machine. Use the option relevant to your platform and go through the installation process.
@@ -98,11 +100,21 @@ Lets get rid of our `.env` file now:
 rm .env
 ```
 
-The environment variables in our `.env` file have now been encrypted and imported into your Phase app. Go back to your App in the Phase Console to view them:
+The environment variables in our `.env` file have now been encrypted and imported into your Phase App. Go back to your App in the Phase Console to view them:
 
 ![console secrets](/assets/images/console/quickstart/quickstart-console-secrets.png)
 
-Our environment variables have been imported into the Development Environment by default. Now we can edit, manage and deploy these secrets from Phase.
+Our environment variables have been imported into the `Development` Environment by default. Now we can edit, manage and deploy these secrets from Phase.
+
+## Inject secrets locally
+
+To inject secrets locally into our application, simply prefix the normal command you would use with 
+
+```
+phase run [command]
+```
+
+For example, instead of `yarn dev`, simply run `phase run yarn dev`. Your secrets will be decrypted and injected into your application process at runtime, and you can access them in your code as usual.
 
 ## Next steps
 
