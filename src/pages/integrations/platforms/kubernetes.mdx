@@ -41,7 +41,9 @@ helm install phase-secrets-operator phase/phase-kubernetes-operator --set image.
 
 ### 2. Create a Service Token Secret in Kubernetes
 
-Securely create a service token secret using `read` (recommended for more security as it avoids writing the token to disk or shell history):
+Securely create a service token secret using `read` (recommended for more security as it avoids writing the token to disk or shell history)
+
+Run this command, paste the Phase Service Token and hit enter:
 
 ```fish
 read -s TOKEN
