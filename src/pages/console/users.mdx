@@ -9,17 +9,33 @@ export const description =
 
 Learn how User accounts work in Phase.
 
-## Account keys & setup
+## Account keys & Signup
 
 Phase is end-to-end encrypted, which means that each member of an [Organisation](/console/organisation) has a unique set of encryption keys.
 These keys are used to cryptographically assign or revoke access to specific [Environments](/console/environments) and [Secrets](/console/secrets).
 
 When you signup or accept an Organisation invite for Phase, you will need to go through a 2-step process to create and secure your account keys.
 
-1. When your account is being setup, a cryptographically secure random seed is generated based on the bip-39 spec.
-2. This seed is used to derive your account keys — an X25519 signing keypair.
-3. You will be asked to setup a `sudo` password. This password is used to encrypt your account keys so they can be stored safely.
-4. You will be provided with a recovery kit. This kit contains a recovery phrase that can be used to derive your account keys if you forget your `sudo` password.
+### Step 1: Create a sudo password
+
+First, you must create a strong password, known as the `sudo` password. We call it this, because it used to secure your account encryption keys. 
+Certain action that require access to your account keys can only be preformed when your account keyring is unlocked by entering this password.
+
+The sudo password must:
+
+- be 16 characters or longer
+- contain letters or numbers
+
+We suggest using a long phrase that you can remember easily.
+
+![sudo password](/assets/images/console/users/create-sudo-password.png)
+
+### Step 2: Save your account recovery kit
+
+In case you lose or forget your `sudo` password, you will need a recovery phrase to restore your account keys. This step provides you with a downloadable recovery kit that you can print out and store somewhere safe. 
+You can also copy the entire contents of the recovery kit to store as a secure note in a password manager or digital wallet. You can choose either option, but we recommend both. 
+
+![account recovery](/assets/images/console/users/users-account-recovery.png)
 
 <Warning>
   Make sure to save your recovery kit in a safe place! If you forget your `sudo`
