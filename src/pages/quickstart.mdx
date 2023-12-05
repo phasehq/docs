@@ -7,13 +7,16 @@ export const description =
 
 # Quickstart
 
-Setup your account and start using Phase to manage your application secrets in just a few minutes.
+Setup your account and start using Phase to manage your application secrets in just a few minutes. This guide will walk you through the following:
 
-This guide will walk you through creating an account and securing it with a recovery phrase and `sudo` password. Then we'll create an [App](/console/apps), connect it to our local project and import our [Secrets](/console/secrets).
+- Create a new account on the [Phase Console](https://console.phase.dev)
+- Set up recovery phrase and `sudo` password
+- Create an [App](/console/apps)
+- Link the [Phase CLI](/cli/commands) it to your local project and import [Secrets](/console/secrets).
 
 ## 1. Login and create an Organisation
 
-You can login to the Phase <a href="https://console.phase.dev" target="_blank">console</a> with Google, GitHub or GitLab.
+You can login to the <a href="https://console.phase.dev" target="_blank"> Phase Console</a> with Google, GitHub or GitLab.
 
 [Setup your account](/console/users#account-keys-and-setup) and [create an Organisation](/console/organisation#create-an-organisation).
 
@@ -80,7 +83,7 @@ docker run phasehq/cli
 
 ## 2.1 Authenticate the CLI
 
-Once the CLI is installed, we need to conenct it with our Phase account and App.
+Once the CLI is installed, you need to authenticate it with your Phase account and App.
 
 Run `phase auth` and choose the "Phase Cloud" option:
 
@@ -133,10 +136,10 @@ Lastly, run `phase init` and select 'TestApp' or the name of the App you created
 
 ## 2.3 Import your secrets into Phase - **_Optional_**
 
-Next, lets import our secrets from our `.env` file.
+Next, import your secrets from `.env` file.
 
 ```fish
-cat .env # Example .env file
+cat .env
 
 DEBUG=yes
 BACKEND_API_URL=https://api.myapp.com
@@ -152,13 +155,13 @@ Successfully imported and encrypted 3 secrets.
 To view them please run: phase secrets list
 ```
 
-Lets get rid of our `.env` file now, its best practice not to leave secrets in plain text on disk:
+Once done, get rid of your `.env` file now, its best practice not to leave secrets in plain text on disk:
 
 ```fish
 rm .env
 ```
 
-The environment variables in our `.env` file have now been encrypted and imported into your Phase App. Go back to your App in the Phase Console to view them:
+The environment variables in your `.env` file have now been encrypted and imported into your Phase App. Go back to your App in the Phase Console to view them:
 
 ![console secrets](/assets/images/console/quickstart/quickstart-console-secrets.png)
 
@@ -166,10 +169,16 @@ Our environment variables have been imported into the `Development` Environment 
 
 ## 3. Inject secrets
 
-To inject secrets locally into our application, simply prefix the normal command you would use with
+To inject secrets locally into your application, simply prefix the normal command you would use with
 
 ```fish
 phase run [command]
+
+# Start node dev server
+phase run yarn dev
+
+# Chaining multiple commands together
+phase run "printenv | grep AWS_ACCESS_KEY_ID"
 ```
 
 For example, instead of `yarn dev`, simply run `phase run yarn dev`. Your secrets will be decrypted and injected into your application process at runtime, and you can access them in your code as usual.
