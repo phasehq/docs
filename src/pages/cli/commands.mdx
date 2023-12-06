@@ -33,7 +33,7 @@ Options:
                show program's version number and exit
 
 Commands:
-  
+
     auth             💻 Authenticate with Phase
     init             🔗 Link your project with your Phase app
     run              🚀 Run and inject secrets to your app
@@ -75,24 +75,63 @@ To view all available commands and their descriptions, run:
 
 ## `auth`
 
-Authenticate with Phase. If you using the cli on your own machines you can use `phase auth` to login to Phase Cloud or your own Self-hosted instance.
+Authenticate with Phase. If you using the cli on your own machines you can use `phase auth` to login to Phase Cloud or your own Self-hosted instance. There are two ways:
 
-You can get a Phase User token in [Phase Console](https://console.phase.dev) -> Apps -> Tokens -> User tokens
+1. Webauth (**Default**): Automatic authentication where the Phase CLI will open the Phase Console in the users default browser where a user can simply enter their `sudo` password and seamlessly authenticate their CLI.
 
-```
-» phase auth
+2. Token: Manual form of authenticate where the user will have to create a Personal Access Token in the Phase Console and manually supply it to the Phase CLI.
+
+```bash
+> phase auth
 ? Choose your Phase instance type: (Use arrow keys)
  » ☁️ Phase Cloud
    🛠️ Self Hosted
 ```
 
+- `mode`: Mode of authentication (`token`, `webauth`) Default: `webauth`
+
 You will have to provide the credentials:
 
-- Host URL - *Only for Self-hosted instances*
+- Host URL - _Only for Self-hosted instances_
 - Email
-- Phase User token
+- Phase Personal Access Token
+
+You can get a Phase Personal Access Token in [Phase Console](https://console.phase.dev) -> Personal Access Tokens -> Create User Token
 
 Note: If you are running the CLI in an headless environment (eg. CI/CD, Docker container, bash script) you can use pass the `PHASE_HOST` and `PHASE_SERVICE_TOKEN` environment variable. See [Environment Variable](commands#environment-variables) for more details.
+
+Example:
+
+```bash
+» phase auth
+? Choose your Phase instance type: ☁️ Phase Cloud
+Please authenticate via the Phase Console: https://console.phase.dev/webauth/OTM3MC00ZWViYmI1MGVlMTU3ZTliOWZkZTY0YTY3YTA1OTBhZTBlMjEwODk0YzNmZTQ0MWEyNGU2
+ODVjYzI3ZjRmZjA2LXlvdS1zbmVha2x5LWJhc3RhcmQtOykgaHR0cHM6Ly9waGFzZS5kZXYvY2FyZWVycwo=
+```
+
+This will open the Phase Console in a new tab. Enter your `sudo` password when prompted.
+
+![webauth password](/assets/images/console/quickstart/webauth-password.png)
+
+Once complete, you should see the success screen:
+
+![webauth success](/assets/images/console/quickstart/webauth-success.png)
+
+Go back to your terminal. You should see the following:
+
+```bash
+» phase auth
+? Choose your Phase instance type: ☁️ Phase Cloud
+Please authenticate via the Phase Console: https://console.phase.dev/webauth/OTM3MC00ZWViYmI1MGVlMTU3ZTliOWZkZTY0YTY3YTA1OTBhZTBlMjEwODk0YzNmZTQ0MWEyNGU2
+ODVjYzI3ZjRmZjA2LXlvdS1zbmVha2x5LWJhc3RhcmQtOykgaHR0cHM6Ly9waGFzZS5kZXYvY2FyZWVycwo=
+
+✅ Authentication successful. Credentials saved in the Phase keyring.
+🎉 Welcome to Phase CLI!
+
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+🙋 Need help?: https://slack.phase.dev
+💻 Bug reports / feature requests: https://github.com/phasehq/cli
+```
 
 ---
 
@@ -151,7 +190,6 @@ Usage:
 - `command_to_run`: The command you wish to run. For example: `yarn dev`.
 - `--env`: (Optional) Specify the environment (e.g., `dev`, `staging`, `production`).
 
-
 Examples:
 
 ```fish
@@ -165,12 +203,11 @@ DJANGO_SECRET_KEY=7842cc89c5a703acdf4797e0f063e1851734cea0677ad9382158cfcee26195
 
 Injecting [Referenced secrets](/cli/commands#secret-referencing):
 
-
 ```fish
 > phase secrets get PROD_AWS_KEY --env dev
-KEY 🗝️                | VALUE ✨                                                          
+KEY 🗝️                | VALUE ✨
 ----------------------------------------------------------------------------------------
-PROD_AWS_KEY         | ⛓️` ${prod.AWS_ACCESS_KEY_ID}                                    
+PROD_AWS_KEY         | ⛓️` ${prod.AWS_ACCESS_KEY_ID}
 
 > phase run --env dev "printenv | grep PROD_AWS_KEY"
 PROD_AWS_KEY=AKIA2OGYBAH63UA3VNFG
@@ -186,7 +223,6 @@ Chaining multiple commands:
 ```fish
 > phase run --env prod "python manage.py migrate && python manage.py runserver backend:8000"
 ```
-
 
 ---
 
@@ -236,9 +272,10 @@ Usage:
 - `--env`: (Optional) Specify the environment.
 
 Example:
+
 ```fish
 > phase secrets get DJANGO_SECRET_KEY
-KEY 🗝️                | VALUE ✨                                                                     
+KEY 🗝️                | VALUE ✨
 ---------------------------------------------------------------------------------------------------
 DJANGO_SECRET_KEY    | 38d325eec2020f01556d50dfa12a6d9a31a27e90fa9e3adc22c539ec7d361d73
 ```
@@ -257,19 +294,19 @@ Usage:
 - `--env`: (Optional) Specify the environment.
 
 ```fish
-> phase secrets create DEBUG 
+> phase secrets create DEBUG
 Please enter the value (hidden):  # Set to True
-KEY 🗝️                    | VALUE ✨                                                                 
----------------------------------------------------------------------------------------------------                                                          
-DEBUG                     | ****                                                                    
+KEY 🗝️                    | VALUE ✨
+---------------------------------------------------------------------------------------------------
+DEBUG                     | ****
 
 🥽 To uncover the secrets, use: phase secrets list --show
 
 # Pipe a value via stdin:
 > cat ~/.ssh/id_rsa | phase secrets create SSH_PRIVATE_KEY
-KEY 🗝️                           | VALUE ✨                                       
+KEY 🗝️                           | VALUE ✨
 --------------------------------------------------------------------------------
-SSH_PRIVATE_KEY                  | ---**************************************** 
+SSH_PRIVATE_KEY                  | ---****************************************
 
 🥽 To uncover the secrets, use: phase secrets list --show
 ```
@@ -290,20 +327,20 @@ Usage:
 Example:
 
 ```fish
-> phase secrets update DEBUG 
+> phase secrets update DEBUG
 Please enter the new value for DEBUG (hidden): # Set to False
-Successfully updated the secret. 
-KEY 🗝️                    | VALUE ✨                                             
+Successfully updated the secret.
+KEY 🗝️                    | VALUE ✨
 ---------------------------------------------------------------------------------------------------
-DEBUG                     | *****                                               
+DEBUG                     | *****
 
 🥽 To uncover the secrets, use: phase secrets list --show
 
 # Pipe a value via stdin:
 > cat ~/.ssh/id_ed25519 | phase secrets update SSH_PRIVATE_KEY
-KEY 🗝️                           | VALUE ✨                                       
+KEY 🗝️                           | VALUE ✨
 ---------------------------------------------------------------------------------------------------
-SSH_PRIVATE_KEY                  | ---**************************************** 
+SSH_PRIVATE_KEY                  | ---****************************************
 
 🥽 To uncover the secrets, use: phase secrets list --show
 ```
@@ -322,10 +359,11 @@ Usage:
 - `--env`: (Optional) Specify the environment.
 
 Example:
+
 ```fish
 > phase secrets delete DEBUG
 Successfully deleted the secrets.
-KEY 🗝️                    | VALUE ✨                                             
+KEY 🗝️                    | VALUE ✨
 ---------------------------------------------------------------------------------------------------
 
 🥽 To uncover the secrets, use: phase secrets list --show
@@ -345,6 +383,7 @@ Usage:
 - `--env`: (Optional) Specify the environment.
 
 Example:
+
 ```fish
 > cat .env
 AWS_ACCESS_KEY_ID="AKIA2OGYBAH63UA3VNFG"
@@ -355,10 +394,10 @@ Successfully imported and encrypted 2 secrets.
 To view them please run: phase secrets list --env prod
 
 > phase secrets list --env prod
-KEY 🗝️                    | VALUE ✨                                                                  
+KEY 🗝️                    | VALUE ✨
 ---------------------------------------------------------------------------------------------------
-AWS_ACCESS_KEY_ID        | AKI**************NFG                                                     
-AWS_SECRET_ACCESS_KEY    | V5y**********************************6W1                                 
+AWS_ACCESS_KEY_ID        | AKI**************NFG
+AWS_SECRET_ACCESS_KEY    | V5y**********************************6W1
 
 🥽 To uncover the secrets, use: phase secrets list --show
 
@@ -390,7 +429,7 @@ AWS_SECRET_ACCESS_KEY="V5yWXDe82Gohf9DYBhpatYZ74a5fiKfJVx8rx6W1"
 
 # Export all secrets in the dev (default) environment and pipe them to a .env file
 > phase secrets export > .env.example
-> head .env.example 
+> head .env.example
 AWS_SECRET_ACCESS_KEY="V5yWXDe82Gohf9DYBhpatYZ74a5fiKfJVx8rx6W1"
 DB_NAME="XP1_LM"
 DB_UER="j_mclaren"
@@ -449,7 +488,7 @@ Cross environment secret referencing:
 
 ```fish
 > phase secrets list --env prod --show
-KEY 🗝️                    | VALUE ✨                                          
+KEY 🗝️                    | VALUE ✨
 ----------------------------------------------------------------------------
 DATABASE_URL              | ⛓️ postgresql://${dev.DB_USER}:${dev.DB_PASSWORD}@${dev.DB_HOST}:${dev.DB_PORT}/${dev.DB_NAME}
 
@@ -520,6 +559,7 @@ Type: Boolean
 Description: Set to true to get full tracebacks for error messages
 
 Example:
+
 ```fish
 > PHASE_DEBUG=True phase secrets list
 Exception: 🗿 Network error: Please check your internet connection. Detail: HTTPConnectionPool(host='localhost', port=443): Max retries exceeded with url: /secrets/tokens/ (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f7c2041d7d0>: Failed to establish a new connection: [Errno 111] Connection refused'))
@@ -532,6 +572,7 @@ Type: String
 Description: A full URL to the REST API of the Phase Service
 
 Example:
+
 ```fish
 > export PHASE_HOST=https://phase.internal.company.domain.com
 
@@ -546,6 +587,7 @@ Type: String
 Description: A way to authenticate with the Phase Service via tokens, useful for running the cli in an headless environment like CI/CD, Docker containers etc.
 
 Example:
+
 ```fish
 > export PHASE_SERVICE_TOKEN=pss_service...
 
@@ -562,6 +604,7 @@ Description: A way to temporarily disable TLS certificate verification checks
 Note: Disable TLS certificate verification is dangerous and can expose you to risks of [MITM](https://en.wikipedia.org/wiki/Man-in-the-middle_attack) attacks.
 
 Example:
+
 ```fish
 > export PHASE_VERIFY_SSL=True
 
