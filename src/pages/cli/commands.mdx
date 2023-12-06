@@ -81,6 +81,13 @@ Authenticate with Phase. If you using the cli on your own machines you can use `
 
 2. Token: Manual form of authenticate where the user will have to create a Personal Access Token in the Phase Console and manually supply it to the Phase CLI.
 
+<Note>
+  Note: If you are running the CLI in an headless environment (eg. CI/CD, Docker
+  container, bash script) you can use pass the `PHASE_HOST` and
+  `PHASE_SERVICE_TOKEN` environment variable. See [Environment
+  Variable](commands#environment-variables) for more details.
+</Note>
+
 ```bash
 > phase auth
 ? Choose your Phase instance type: (Use arrow keys)
@@ -90,15 +97,13 @@ Authenticate with Phase. If you using the cli on your own machines you can use `
 
 - `mode`: Mode of authentication (`token`, `webauth`) Default: `webauth`
 
-You will have to provide the credentials:
+For `token` mode you will have to provide the following:
 
 - Host URL - _Only for Self-hosted instances_
 - Email
 - Phase Personal Access Token
 
 You can get a Phase Personal Access Token in [Phase Console](https://console.phase.dev) -> Personal Access Tokens -> Create User Token
-
-Note: If you are running the CLI in an headless environment (eg. CI/CD, Docker container, bash script) you can use pass the `PHASE_HOST` and `PHASE_SERVICE_TOKEN` environment variable. See [Environment Variable](commands#environment-variables) for more details.
 
 Example:
 
