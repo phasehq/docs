@@ -242,7 +242,7 @@ To update the documentation for the `secrets` command based on the CLI source co
 
 Manage your secrets with various sub-commands.
 
-### 📇 a. `list`
+### 📇 `secrets list`
 
 List all the secrets in a specified environment, with options to show uncensored secrets, filter by app, and filter by tags.
 
@@ -259,7 +259,7 @@ Usage:
 
 Example:
 
-![create an app](/assets/images/cli/phase-secrets-list.png)
+![phase-secrets-list](/assets/images/cli/phase-secrets-list.png)
 
 **Indicators**:
 
@@ -269,7 +269,7 @@ Example:
 - `💬`: Indicates a comment associated with a secret.
 - `🔏`: Indicates a personal secret, visible only to the user who set it.
 
-### 🔍 b. `get`
+### 🔍 `secrets get`
 
 Retrieve detailed information about a specific secret, with the ability to specify the application and filter by tags.
 
@@ -304,7 +304,7 @@ Example:
 - The `get` command provides a JSON-formatted output including key details such as the secret value, whether it's overridden, tags associated with it, and any comments.
 - Using the `--tags` option allows you to filter the secret based on specific tags.
 
-### 💳 c. `create`
+### 💳 `secrets create`
 
 Create a new secret with options to input the value manually, read from stdin, or generate a random value of specified type and length.
 
@@ -335,7 +335,7 @@ Examples:
 - `key128` : 16 Byte high entropy base64 encoded symmetric key - suitable for AES-128
 - `key256` : 32 Byte high entropy base64 encoded symmetric key - suitable for use with ChaCha20 or AES-256
 
-#### 📝 d. `update`
+### 📝 `secrets update`
 
 Update an existing secret with options to input the new value manually, read from stdin, or generate a random value of specified type and length.
 
@@ -369,7 +369,7 @@ Examples:
 - `key128` : 16 Byte high entropy base64 encoded symmetric key - suitable for AES-128
 - `key256` : 32 Byte high entropy base64 encoded symmetric key - suitable for use with ChaCha20 or AES-256
 
-#### 🗑️ e. `delete`
+### 🗑️ `secrets delete`
 
 Delete one or more secrets from a specified environment, with an option to specify the application.
 
@@ -400,7 +400,7 @@ Successfully deleted the secrets.
 - The `delete` command can be used to remove a single secret or multiple secrets at once by providing their keys as arguments.
 - If you have an `.phase.json` file in your project directory, it will be used to determine the default application. Use the `--app` option to override this behavior.
 
-#### 📩 f. `import`
+### 📩 `secrets import`
 
 Import secrets into your Phase environment from a `.env` file, with an option to specify the application.
 
@@ -439,7 +439,7 @@ To view them please run: phase secrets list --env prod
 - The `import` command reads key-value pairs from the specified `.env` file and imports them as secrets into the chosen environment.
 - If an `.phase.json` file exists in your project directory, it will determine the default application. The `--app` option can be used to override this behavior.
 
-#### 🥡 g. `export`
+### 🥡 `secrets export`
 
 Export secrets from your Phase environment, with options to filter by keys, tags, and to specify the export format.
 
@@ -557,7 +557,7 @@ DATABASE_URL=postgresql://j_mclaren:6c37810ec6e74ec3228416d2844564fceb99ebd94b29
 
 Manage users and accounts in the Phase CLI. This command includes sub-commands for user management.
 
-### 🙋 a. `whoami`
+### 🙋 `users whoami`
 
 See details of the current user.
 
@@ -571,7 +571,7 @@ This command displays information about the currently logged-in user in the Phas
 
 ---
 
-### 🏃 b. `logout`
+### 🏃 `users logout`
 
 Logout from the Phase CLI.
 
@@ -585,7 +585,7 @@ Usage:
 
 ---
 
-### c. `keyring`
+### `users keyring`
 
 Display information about the Phase keyring. The Phase keyring holds sensitive credentials such as user tokens.
 
