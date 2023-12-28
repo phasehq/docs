@@ -46,9 +46,9 @@ Commands:
     secrets import   📩 Import secrets from a .env file
     secrets export   🥡 Export secrets in a dotenv format
     users            👥 Manage users and accounts
-    whoami           🙋 See details of the current user
-    logout           🏃 Logout from phase-cli
-    keyring          🔐 Display information about the Phase keyring
+    users whoami     🙋 See details of the current user
+    users logout     🏃 Logout from phase-cli
+    users keyring    🔐 Display information about the Phase keyring
     console          🖥️ Open the Phase Console in your browser
     update           🆙 Update the Phase CLI to the latest version
 ```
@@ -439,51 +439,67 @@ To view them please run: phase secrets list --env prod
 - The `import` command reads key-value pairs from the specified `.env` file and imports them as secrets into the chosen environment.
 - If an `.phase.json` file exists in your project directory, it will determine the default application. The `--app` option can be used to override this behavior.
 
-#### g. `export`
+#### 🥡 g. `export`
 
-Export secrets in a dotenv format.
+Export secrets from your Phase environment, with options to filter by keys, tags, and to specify the export format.
 
 Usage:
 
 ```fish
-> phase secrets export [KEYS...] [--env ENVIRONMENT]
+> phase secrets export [KEYS...] [--env ENVIRONMENT] [--app APP_NAME] [--tags TAGS] [--format FORMAT]
 ```
 
-- `KEYS`: (Optional) List of keys separated by space.
-- `--env`: (Optional) Specify the environment.
+- `KEYS...`: (Optional) List of keys to export, separated by space.
+- `--env`: (Optional) Specify the environment from which the secrets will be exported.
+- `--app`: (Optional) Name of your Phase application. Use this to override the `.phase.json` file or when it's not present in your project directory.
+- `--tags`: (Optional) Comma-separated list of tags to filter the secrets. Supports partial matching and treats underscores as spaces.
+- `--format`: (Optional) Specify the export format. Supported formats are `dotenv`, `json`, `csv`, `yaml`, `xml`, `toml`, `hcl`, `ini`, `java_properties`. Default format is `dotenv`.
+
+Examples:
 
 ```fish
-# Export all the secrets in the production environment
+# Export all the secrets in the 'prod' environment to dotenv format
 > phase secrets export --env prod
 AWS_ACCESS_KEY_ID="AKIA2OGYBAH63UA3VNFG"
 AWS_SECRET_ACCESS_KEY="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"
+```
 
-# Export only the AWS_SECRET_ACCESS_KEY in the production environment
+```
+# Export only specific secrets in the 'prod' environment
 > phase secrets export AWS_SECRET_ACCESS_KEY --env prod
 AWS_SECRET_ACCESS_KEY="V5yWXDe82Gohf9DYBhpatYZ74a5fiKfJVx8rx6W1"
+```
 
-# Export all secrets in the dev (default) environment and pipe them to a .env file
-> phase secrets export > .env.example
-> head .env.example
-AWS_SECRET_ACCESS_KEY="V5yWXDe82Gohf9DYBhpatYZ74a5fiKfJVx8rx6W1"
-DB_NAME="XP1_LM"
-DB_UER="j_mclaren"
-DJANGO_SECRET_KEY="38d325eec2020f01556d50dfa12a6d9a31a27e90fa9e3adc22c539ec7d361d73"
-DJANGO_DEBUG="True"
-DB_PASSWORD="601602017dde26ce94f46748e0fc342b046d4e36f623957b9be94ca4d616076c"
-DB_HOST="mc-laren-prod-db.c9ufzjtplsaq.us-west-1.rds.amazonaws.com"
-DB_PORT="5432"
-DATABASE_URL="postgresql://j_mclaren:601602017dde26ce94f46748e0fc342b046d4e36f623957b9be94ca4d616076c@mc-laren-prod-db.c9ufzjtplsaq.us-west-1.rds.amazonaws.com:5432/XP1_LM"
+```
+# Export all secrets in the 'dev' environment to a .env file
+> phase secrets export --env dev > .env.example
+```
 
-# In the event a user doesn't have access to prod / production environment
+```fish
+# Export secrets with specific tags in 'dev' environment to JSON format
+> phase secrets export --env dev --tags "tag1,tag2" --format json
+{
+  "AWS_SECRET_ACCESS_KEY": "V5yWXDe82Gohf9DYBhpatYZ74a5fiKfJVx8rx6W1",
+  "DB_NAME": "XP1_LM",
+
+}
+```
+
+```fish
+# In the event a user doesn't have access to a specified environment
 > phase secrets export PROD_AWS_KEY PROD_AWS_SECRET_ACCESS_KEY --env prod
 AWS_ACCESS_KEY_ID="AKIA2OGYBAH63UA3VNFGds"
 # Warning: The environment 'prod' for key 'PROD_AWS_SECRET_ACCESS_KEY' either does not exist or you do not have access to it.
 PROD_AWS_SECRET_ACCESS_KEY=""
-
 ```
 
-## Secret referencing
+**Notes**:
+
+- The `export` command allows you to export secrets in various formats, making it flexible for different use cases.
+- Use the `--tags` option to filter secrets by tags, which supports partial matching and considers underscores as spaces.
+- If an `.phase.json` file exists in your project directory, it will determine the default application. The `--app` option can be used to override this behavior.
+
+### Secret referencing
 
 Phase Console and CLI also support dotenv styled secret referencing.
 
@@ -535,7 +551,27 @@ DATABASE_URL=postgresql://j_mclaren:6c37810ec6e74ec3228416d2844564fceb99ebd94b29
 
 ---
 
-## `logout`
+---
+
+## 👥 `users`
+
+Manage users and accounts in the Phase CLI. This command includes sub-commands for user management.
+
+### 🙋 a. `whoami`
+
+See details of the current user.
+
+Usage:
+
+```fish
+> phase users whoami
+```
+
+This command displays information about the currently logged-in user in the Phase CLI.
+
+---
+
+### 🏃 b. `logout`
 
 Logout from the Phase CLI.
 
@@ -545,11 +581,25 @@ Usage:
 > phase logout [--purge]
 ```
 
-- `--purge`: Purge all local data.
+- `--purge`: Purge all local data. This option will remove any local configuration and data related to the current user's session.
 
 ---
 
-## `console`
+### c. `keyring`
+
+Display information about the Phase keyring. The Phase keyring holds sensitive credentials such as user tokens.
+
+Usage:
+
+```fish
+> phase users keyring
+```
+
+This command provides insights into the Phase keyring, which is used to securely store user credentials.
+
+---
+
+## 🖥️ `console`
 
 Open the Phase Console in your web browser.
 
@@ -559,11 +609,13 @@ Usage:
 > phase console
 ```
 
+This command is a shortcut to quickly access the Phase Console in your default web browser.
+
 ---
 
-## `update`
+## 🆙 `update`
 
-Update the Phase CLI to the latest version. This subcommand will be only shown on linux systems when the cli is installed via the installation script.
+Update the Phase CLI to the latest version. This subcommand is available only on Linux systems when the CLI is installed via the installation script.
 
 Usage:
 
@@ -571,17 +623,7 @@ Usage:
 > phase update
 ```
 
----
-
-## `keyring`
-
-Display information about the Phase keyring. Phase keyring holds sensitive credentials such as user tokens.
-
-Usage:
-
-```fish
-> phase keyring
-```
+This command checks for updates and installs the latest version of the Phase CLI.
 
 ---
 
