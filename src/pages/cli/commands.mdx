@@ -369,64 +369,75 @@ Examples:
 - `key128` : 16 Byte high entropy base64 encoded symmetric key - suitable for AES-128
 - `key256` : 32 Byte high entropy base64 encoded symmetric key - suitable for use with ChaCha20 or AES-256
 
-#### e. `delete`
+#### 🗑️ e. `delete`
 
-Delete a secret.
+Delete one or more secrets from a specified environment, with an option to specify the application.
 
 Usage:
 
 ```fish
-> phase secrets delete KEYS... [--env ENVIRONMENT]
+> phase secrets delete KEYS... [--env ENVIRONMENT] [--app APP_NAME]
 ```
 
-- `KEYS`: One or more keys to be deleted.
-- `--env`: (Optional) Specify the environment.
+- `KEYS...`: One or more keys of the secrets to be deleted. Separate multiple keys with spaces.
+- `--env`: (Optional) Specify the environment from which the secrets will be deleted.
+- `--app`: (Optional) Name of your Phase application. Use this to override the `.phase.json` file or when it's not present in your project directory.
 
 Example:
 
 ```fish
+# Delete a single secret
 > phase secrets delete DEBUG
-Successfully deleted the secrets.
-KEY 🗝️                    | VALUE ✨
----------------------------------------------------------------------------------------------------
+Successfully deleted the secret.
 
-🥽 To uncover the secrets, use: phase secrets list --show
+# Delete multiple secrets
+> phase secrets delete SECRET1 SECRET2 SECRET3
+Successfully deleted the secrets.
 ```
 
-#### f. `import`
+**Notes**:
 
-Import secrets from a .env file.
+- The `delete` command can be used to remove a single secret or multiple secrets at once by providing their keys as arguments.
+- If you have an `.phase.json` file in your project directory, it will be used to determine the default application. Use the `--app` option to override this behavior.
+
+#### 📩 f. `import`
+
+Import secrets into your Phase environment from a `.env` file, with an option to specify the application.
 
 Usage:
 
 ```fish
-> phase secrets import ENV_FILE [--env ENVIRONMENT]
+> phase secrets import ENV_FILE [--env ENVIRONMENT] [--app APP_NAME]
 ```
 
-- `ENV_FILE`: The `.env` file to import from.
-- `--env`: (Optional) Specify the environment.
+- `ENV_FILE`: The path to the `.env` file from which the secrets will be imported.
+- `--env`: (Optional) Specify the environment where the secrets will be imported.
+- `--app`: (Optional) Name of your Phase application. Use this to override the `.phase.json` file or when it's not present in your project directory.
 
 Example:
 
 ```fish
+# View the contents of the .env file
 > cat .env
 AWS_ACCESS_KEY_ID="AKIA2OGYBAH63UA3VNFG"
 AWS_SECRET_ACCESS_KEY="V5yWXDe82Gohf9DYBhpatYZ74a5fiKfJVx8rx6W1"
 
+# Import secrets from the .env file into the 'prod' environment
 > phase secrets import .env --env prod
 Successfully imported and encrypted 2 secrets.
 To view them please run: phase secrets list --env prod
 
+# List imported secrets in the 'prod' environment
 > phase secrets list --env prod
-KEY 🗝️                    | VALUE ✨
----------------------------------------------------------------------------------------------------
-AWS_ACCESS_KEY_ID        | AKI**************NFG
-AWS_SECRET_ACCESS_KEY    | V5y**********************************6W1
 
-🥽 To uncover the secrets, use: phase secrets list --show
-
+# Optional: Remove the .env file if no longer needed
 > rm .env
 ```
+
+**Notes**:
+
+- The `import` command reads key-value pairs from the specified `.env` file and imports them as secrets into the chosen environment.
+- If an `.phase.json` file exists in your project directory, it will determine the default application. The `--app` option can be used to override this behavior.
 
 #### g. `export`
 
