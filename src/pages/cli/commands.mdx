@@ -318,7 +318,7 @@ Usage:
 - `--env`: (Optional) Specify the environment where the secret will be created.
 - `--app`: (Optional) Name of your Phase application. Use this to override the `.phase.json` file or when it's not present in your project directory.
 - `--random`: (Optional) Specify the type of random value to generate. Available types are `hex`, `alphanumeric`, `base64`, `base64url`, `key128`, `key256`. Example: `--random hex`.
-- `--length`: (Optional) Specify the length of the random value. Applicable for types other than `key128` and `key256`. Default length is 32. Example: `--length 16`.
+- `--length`: (Optional) Specify the length of the random value, between 1 and 256. Applicable for types other than `key128` and `key256`. Default length is 32. Example: `--length 16`.
 
 Examples:
 
@@ -332,42 +332,42 @@ Examples:
 
 **Notes**:
 
-- When using `--random`, the command will automatically generate a secret value based on the specified type and length.
-- The `--length` option is applicable for types other than `key128` and `key256`, which have predefined lengths.
+- `key128` : 16 Byte high entropy base64 encoded symmetric key - suitable for AES-128
+- `key256` : 32 Byte high entropy base64 encoded symmetric key - suitable for use with ChaCha20 or AES-256
 
-#### d. `update`
+#### 📝 d. `update`
 
-Update an existing secret.
+Update an existing secret with options to input the new value manually, read from stdin, or generate a random value of specified type and length.
 
 Usage:
 
 ```fish
-> phase secrets update KEY [--env ENVIRONMENT]
+> phase secrets update KEY [--env ENVIRONMENT] [--app APP_NAME] [--random TYPE] [--length LENGTH]
 ```
 
-- `KEY`: The key associated with the secret to update.
-- `--env`: (Optional) Specify the environment.
+- `KEY`: The key associated with the secret to update. If the new value is not provided as an argument, it will be read from stdin.
+- `--env`: (Optional) Specify the environment where the secret will be updated.
+- `--app`: (Optional) Name of your Phase application. Use this to override the `.phase.json` file or when it's not present in your project directory.
+- `--random`: (Optional) Specify the type of random value to generate. Available types are `hex`, `alphanumeric`, `base64`, `base64url`, `key128`, `key256`. Example: `--random hex`.
+- `--length`: (Optional) Specify the length of the random value, between 1 and 256. Applicable for types other than `key128` and `key256`. Default length is 32. Example: `--length 16`.
 
-Example:
+Examples:
 
 ```fish
+# Update a secret by manually entering a new value
 > phase secrets update DEBUG
-Please enter the new value for DEBUG (hidden): # Set to False
-Successfully updated the secret.
-KEY 🗝️                    | VALUE ✨
----------------------------------------------------------------------------------------------------
-DEBUG                     | *****
 
-🥽 To uncover the secrets, use: phase secrets list --show
-
-# Pipe a value via stdin:
+# Update a secret by piping a value via stdin
 > cat ~/.ssh/id_ed25519 | phase secrets update SSH_PRIVATE_KEY
-KEY 🗝️                           | VALUE ✨
----------------------------------------------------------------------------------------------------
-SSH_PRIVATE_KEY                  | ---****************************************
 
-🥽 To uncover the secrets, use: phase secrets list --show
+# Update a secret with a randomly generated hexadecimal value of 32 characters
+> phase secrets update MY_SECRET_KEY --random hex --length 32
 ```
+
+**Notes**:
+
+- `key128` : 16 Byte high entropy base64 encoded symmetric key - suitable for AES-128
+- `key256` : 32 Byte high entropy base64 encoded symmetric key - suitable for use with ChaCha20 or AES-256
 
 #### e. `delete`
 
