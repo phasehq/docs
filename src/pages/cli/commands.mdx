@@ -304,36 +304,36 @@ Example:
 - The `get` command provides a JSON-formatted output including key details such as the secret value, whether it's overridden, tags associated with it, and any comments.
 - Using the `--tags` option allows you to filter the secret based on specific tags.
 
-#### c. `create`
+### 💳 c. `create`
 
-Create a new secret.
+Create a new secret with options to input the value manually, read from stdin, or generate a random value of specified type and length.
 
 Usage:
 
 ```fish
-> phase secrets create [KEY] [--env ENVIRONMENT]
+> phase secrets create [KEY] [--env ENVIRONMENT] [--app APP_NAME] [--random TYPE] [--length LENGTH]
 ```
 
-- `KEY`: (Optional) The key for the secret to be created.
-- `--env`: (Optional) Specify the environment.
+- `KEY`: (Optional) The key for the new secret. It will be converted to uppercase. If the value is not provided as an argument, it will be read from stdin.
+- `--env`: (Optional) Specify the environment where the secret will be created.
+- `--app`: (Optional) Name of your Phase application. Use this to override the `.phase.json` file or when it's not present in your project directory.
+- `--random`: (Optional) Specify the type of random value to generate. Available types are `hex`, `alphanumeric`, `base64`, `base64url`, `key128`, `key256`. Example: `--random hex`.
+- `--length`: (Optional) Specify the length of the random value. Applicable for types other than `key128` and `key256`. Default length is 32. Example: `--length 16`.
+
+Examples:
 
 ```fish
-> phase secrets create DEBUG
-Please enter the value (hidden):  # Set to True
-KEY 🗝️                    | VALUE ✨
----------------------------------------------------------------------------------------------------
-DEBUG                     | ****
-
-🥽 To uncover the secrets, use: phase secrets list --show
-
-# Pipe a value via stdin:
+# Create a secret by reading the value from stdin
 > cat ~/.ssh/id_rsa | phase secrets create SSH_PRIVATE_KEY
-KEY 🗝️                           | VALUE ✨
---------------------------------------------------------------------------------
-SSH_PRIVATE_KEY                  | ---****************************************
 
-🥽 To uncover the secrets, use: phase secrets list --show
+# Create a secret with a randomly generated hexadecimal value of 32 characters
+> phase secrets create RAND --random hex --length 32
 ```
+
+**Notes**:
+
+- When using `--random`, the command will automatically generate a secret value based on the specified type and length.
+- The `--length` option is applicable for types other than `key128` and `key256`, which have predefined lengths.
 
 #### d. `update`
 
