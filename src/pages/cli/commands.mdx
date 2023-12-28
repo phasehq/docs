@@ -136,7 +136,7 @@ Please authenticate via the Phase Console: https://console.phase.dev/webauth/OTM
 
 ## `init`
 
-Link your local project to your Phase app.
+Link your local application or project to your Phase app. The `phase init` command creates a `.phase.json` file in the root of your projects which holds important contexts for the `phase` cli, so you don't have to pass arguments repetitively. This file does not contain any sensitive information and can be check into your git repo.
 
 Usage:
 
@@ -144,7 +144,7 @@ Usage:
 > phase init
 ```
 
-Example:
+During the process, you'll be asked to select an app previously created in the Phase Console:
 
 ```fish
 > phase init
@@ -154,15 +154,15 @@ Example:
  » keyspace
    inception
    Exit
+```
 
+Choosing an app will create a `.phase.json` configuration file in your project's working directory:
+
+```fish
 > phase init
 ? Select an App: keyspace
 ✅ Initialization completed successfully.
-```
 
-This would create a Phase application config in your projects working directly:
-
-```fish
 > cat .phase.json
 {
   "version": "1",
@@ -172,7 +172,7 @@ This would create a Phase application config in your projects working directly:
 }
 ```
 
-**Tip**: You can manually set the default environment context for the Phase CLI by modifying the `defaultEnv`. Eg. `"defaultEnv": "Production"`
+**Tip**: Modify the `defaultEnv` in `.phase.json` to set the default environment context for the Phase CLI. For example, `"defaultEnv": "production"`.
 
 ---
 
