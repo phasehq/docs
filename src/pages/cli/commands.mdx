@@ -236,59 +236,73 @@ Chaining multiple commands:
 
 ---
 
-## `secrets`
+To update the documentation for the `secrets` command based on the CLI source code, I'll incorporate additional options and details that are currently not covered in the documentation. Here's how the revised version would look:
 
-Manage your secrets. This command has several sub-commands.
+## 🗝️ `secrets`
 
-#### a. `list`
+Manage your secrets with various sub-commands.
 
-List all the secrets.
+### 📇 a. `list`
+
+List all the secrets in a specified environment, with options to show uncensored secrets, filter by app, and filter by tags.
 
 Usage:
 
 ```fish
-> phase secrets list [--show] [--env ENVIRONMENT]
+> phase secrets list [--show] [--env ENVIRONMENT] [--app APP_NAME] [--tags TAGS]
 ```
 
 - `--show`: Display secrets uncensored.
 - `--env`: (Optional) Specify the environment.
+- `--app`: (Optional) Name of your Phase application. Use this to override the `.phase.json` file or when it's not present in your project directory.
+- `--tags`: (Optional) Comma-separated list of tags to filter secrets.
 
 Example:
 
-```fish
-phase secrets list --env prod --show
-KEY 🗝️                   | VALUE ✨
--------------------------------------------------------------------------------------------------
-DJANGO_SECRET_KEY        | 7842cc89c5a703acdf4797e0f063e1851734cea0677ad9382158cfcee26195df
-DJANGO_DEBUG             | True
-DB_NAME                  | XP1_LM
-DB_USER                  | j_mclaren
-DB_PASSWORD              | 6c37810ec6e74ec3228416d2844564fceb99ebd94b29f4334c244db011630b0e
-DB_HOST                  | mc-laren-prod-db.c9ufzjtplsaq.us-west-1.rds.amazonaws.com
-DB_PORT                  | 5432
-```
+![create an app](/assets/images/cli/phase-secrets-list.png)
 
-#### b. `get`
+**Indicators**:
 
-Retrieve a specific secret by key.
+- `🔗`: Indicates a reference to another secret within the same environment.
+- `⛓️`: Indicates a cross-environment reference to a secret in another environment.
+- `🏷️`: Indicates a tag associated with a secret.
+- `💬`: Indicates a comment associated with a secret.
+- `🔏`: Indicates a personal secret, visible only to the user who set it.
+
+### 🔍 b. `get`
+
+Retrieve detailed information about a specific secret, with the ability to specify the application and filter by tags.
 
 Usage:
 
 ```fish
-> phase secrets get KEY [--env ENVIRONMENT]
+> phase secrets get KEY [--env ENVIRONMENT] [--app APP_NAME] [--tags TAGS]
 ```
 
-- `KEY`: The key associated with the secret to fetch.
-- `--env`: (Optional) Specify the environment.
+- `KEY`: The key associated with the secret you want to fetch.
+- `--env`: (Optional) Specify the environment in which to search for the secret.
+- `--app`: (Optional) Name of your Phase application. Use this option to override the `.phase.json` file in your project directory or when it's not present.
+- `--tags`: (Optional) Comma-separated list of tags to filter secrets.
 
 Example:
 
 ```fish
-> phase secrets get DJANGO_SECRET_KEY
-KEY 🗝️                | VALUE ✨
----------------------------------------------------------------------------------------------------
-DJANGO_SECRET_KEY    | 38d325eec2020f01556d50dfa12a6d9a31a27e90fa9e3adc22c539ec7d361d73
+> phase secrets get DJANGO_DEBUG
+{
+    "key": "DJANGO_DEBUG",
+    "value": "True",
+    "overridden": true,
+    "tags": [
+        "local-development"
+    ],
+    "comment": "This is only for local development. NOT to be used in production."
+}
 ```
+
+**Notes**:
+
+- The `get` command provides a JSON-formatted output including key details such as the secret value, whether it's overridden, tags associated with it, and any comments.
+- Using the `--tags` option allows you to filter the secret based on specific tags.
 
 #### c. `create`
 
