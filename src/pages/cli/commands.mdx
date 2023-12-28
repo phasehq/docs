@@ -73,7 +73,7 @@ To view all available commands and their descriptions, run:
 
 ---
 
-## `auth`
+## 💻 `auth`
 
 Authenticate with Phase using the CLI on your own machine. The `phase auth` command lets you log in to either Phase Cloud or a Self-hosted instance of Phase. You have two authentication methods:
 
@@ -134,7 +134,7 @@ Please authenticate via the Phase Console: https://console.phase.dev/webauth/OTM
 
 ---
 
-## `init`
+## 🔗 `init`
 
 Link your local application or project to your Phase app. The `phase init` command creates a `.phase.json` file in the root of your projects which holds important contexts for the `phase` cli, so you don't have to pass arguments repetitively. This file does not contain any sensitive information and can be check into your git repo.
 
@@ -176,18 +176,22 @@ Choosing an app will create a `.phase.json` configuration file in your project's
 
 ---
 
-## `run`
+## 🚀 `run`
 
-Run and inject secrets into your app.
+Run and inject secrets into your app with the ability to override default settings.
 
 Usage:
 
 ```fish
-> phase run [command_to_run] [--env ENVIRONMENT]
+> phase run [--env ENVIRONMENT] [--app APP_NAME] [--tags TAGS] [command_to_run]
 ```
 
-- `command_to_run`: The command you wish to run. For example: `yarn dev`.
-- `--env`: (Optional) Specify the environment (e.g., `dev`, `staging`, `production`).
+- `command_to_run`: The command you wish to run, such as `yarn dev`. You can also chain multiple command together by wrapping them in double quotes, example: `phase run "printenv | grep secret"`
+- `--env`: (Optional) Specify the environment (e.g., `dev`, `staging`, `production`). Supports partial string matching eg. `prod` for `production`
+- `--app`: (Optional) Name of your Phase application. Use this if you don't have a `.phase.json` file in your project directory or want to override it.
+- `--tags`: (Optional) Comma-separated list of tags to filter secrets.
+
+The `run` command executes your specified shell command, setting environment variables to the secrets fetched from Phase. It resolves cross-environment and local references in secrets.
 
 Examples:
 
@@ -222,6 +226,13 @@ Chaining multiple commands:
 ```fish
 > phase run --env prod "python manage.py migrate && python manage.py runserver backend:8000"
 ```
+
+**Additional Notes**:
+
+- The `phase run` only exposes secrets to your applications runtime and not to the rest of your system for security reasons.
+- When specifying tags with `--tags`, only secrets matching these tags will be injected into the environment.
+- Cross-environment and local references in secrets are automatically resolved and injected. Warnings are issued if any references cannot be resolved.
+- Errors during the command execution or secret fetching process will result in an appropriate error message and termination of the process.
 
 ---
 
