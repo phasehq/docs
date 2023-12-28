@@ -75,17 +75,19 @@ To view all available commands and their descriptions, run:
 
 ## `auth`
 
-Authenticate with Phase. If you using the cli on your own machines you can use `phase auth` to login to Phase Cloud or your own Self-hosted instance. There are two ways:
+Authenticate with Phase using the CLI on your own machine. The `phase auth` command lets you log in to either Phase Cloud or a Self-hosted instance of Phase. You have two authentication methods:
 
-1. Webauth (**Default**): Automatic authentication where the Phase CLI will open the Phase Console in the users default browser where a user can simply enter their `sudo` password and seamlessly authenticate their CLI.
+1. **Webauth (Default)**: This automated method opens the Phase Console in your default browser for authentication. You'll simply enter your `sudo` password to authenticate the CLI seamlessly. For Self-Hosted instances, you'll be prompted to enter the host URL.
 
-2. Token: Manual form of authenticate where the user will have to create a Personal Access Token in the Phase Console and manually supply it to the Phase CLI.
+Note that during this process, an ephemeral X25519 keypair is generated and a crypto sealed box is used for enhanced security and no tokens or private keys are exchanged in plain text.
+
+2. **Token**: A manual method where you create a Personal Access Token in the Phase Console and supply it to the CLI. For Self-Hosted instances, you'll need to provide the host URL along with your email and Phase Personal Access Token.
 
 <Note>
-  Note: If you are running the CLI in an headless environment (eg. CI/CD, Docker
-  container, bash script) you can use pass the `PHASE_HOST` and
-  `PHASE_SERVICE_TOKEN` environment variable. See [Environment
-  Variable](commands#environment-variables) for more details.
+  If you're running the CLI in a headless environment (e.g., CI/CD, Docker
+  container, bash script), pass the `PHASE_HOST` and `PHASE_SERVICE_TOKEN`
+  environment variables. For more details, see [Environment
+  Variables](commands#environment-variables).
 </Note>
 
 ```bash
@@ -95,40 +97,32 @@ Authenticate with Phase. If you using the cli on your own machines you can use `
    🛠️ Self Hosted
 ```
 
-- `mode`: Mode of authentication (`token`, `webauth`) Default: `webauth`
+- `mode`: Choose the mode of authentication (`token`, `webauth`). Default: `webauth`
 
-For `token` mode you will have to provide the following:
+For `token` mode, provide the following:
 
 - Host URL - _Only for Self-hosted instances_
 - Email
 - Phase Personal Access Token
 
-You can get a Phase Personal Access Token in [Phase Console](https://console.phase.dev) -> Personal Access Tokens -> Create User Token
+Obtain a Phase Personal Access Token from [Phase Console](https://console.phase.dev) -> Personal Access Tokens -> Create User Token.
 
 Example:
 
 ```bash
 » phase auth
 ? Choose your Phase instance type: ☁️ Phase Cloud
-Please authenticate via the Phase Console: https://console.phase.dev/webauth/OTM3MC00ZWViYmI1MGVlMTU3ZTliOWZkZTY0YTY3YTA1OTBhZTBlMjEwODk0YzNmZTQ0MWEyNGU2
-ODVjYzI3ZjRmZjA2LXlvdS1zbmVha2x5LWJhc3RhcmQtOykgaHR0cHM6Ly9waGFzZS5kZXYvY2FyZWVycwo=
+Please authenticate via the Phase Console: https://console.phase.dev/webauth/OTM3MC00ZWViYmI1MGVlMTU3ZTliOWZk...
 ```
 
-This will open the Phase Console in a new tab. Enter your `sudo` password when prompted.
+This opens the Phase Console in a new tab. Enter your `sudo` password when prompted. The CLI securely receives your credentials via encrypted POST requests to finalize authentication. If you are already authenticated, it will display your email address and provide instructions for switching accounts.
 
-![webauth password](/assets/images/console/quickstart/webauth-password.png)
-
-Once complete, you should see the success screen:
-
-![webauth success](/assets/images/console/quickstart/webauth-success.png)
-
-Go back to your terminal. You should see the following:
+Once complete, you should see a success screen. Return to your terminal to find:
 
 ```bash
 » phase auth
 ? Choose your Phase instance type: ☁️ Phase Cloud
-Please authenticate via the Phase Console: https://console.phase.dev/webauth/OTM3MC00ZWViYmI1MGVlMTU3ZTliOWZkZTY0YTY3YTA1OTBhZTBlMjEwODk0YzNmZTQ0MWEyNGU2
-ODVjYzI3ZjRmZjA2LXlvdS1zbmVha2x5LWJhc3RhcmQtOykgaHR0cHM6Ly9waGFzZS5kZXYvY2FyZWVycwo=
+Please authenticate via the Phase Console: https://console.phase.dev/webauth/OTM3MC00ZWViYmI1MGVlMTU3ZTliOWZkZT...
 
 ✅ Authentication successful. Credentials saved in the Phase keyring.
 🎉 Welcome to Phase CLI!
