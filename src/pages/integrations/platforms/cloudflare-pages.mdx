@@ -1,0 +1,83 @@
+import { Tag } from '@/components/Tag'
+
+export const description = 'Integrate Phase with Cloudflare Pages'
+
+<Tag variant="small">INTEGRATE</Tag>
+
+# Cloudflare Pages
+
+You can use Phase to sync secrets with your Cloudflare Pages.
+
+<Warning>
+  When secret syncing is enabled, secrets stored inside Phase will be treated as
+  a source of truth. Any secrets on target service will be overwritten /
+  deleted. Please import your secrets in Phase before continuing.
+</Warning>
+
+### Prerequisites
+
+- Sign up for the [Phase Console](/quickstart) and create an application.
+
+Note: For security reasons Phase sets the secret type in Cloudflare Pages environment variables as type `Encrypted` for additional protection. This means that you will not be able to see the secret value in the Cloudflare Pages UI. You can still use the secret in your build commands and environment variables.
+
+## Get your Cloudflare Account ID
+
+1. Log into the [Cloudflare dashboard](https://dash.cloudflare.com)
+
+2. Click on **Workers & Pages** in the sidebar to the left.
+
+![Image 1](/assets/images/platform-integrations/cloudflare-pages/1.png)
+
+3. Copy the **Account ID** by clicking on the copy button in the Account Details section on the right
+
+![Image 2](/assets/images/platform-integrations/cloudflare-pages/2.png)
+
+## Create a Cloudflare token
+
+1. Go to Cloudflare's [API tokens](https://dash.cloudflare.com/profile/api-tokens) page and click on **Create Token**
+
+![Image 3](/assets/images/platform-integrations/cloudflare-pages/3.png)
+
+2. In the Create API Tokens, create a **Custom Token** by clicking on **Get started** in the **Custom token** section.
+
+![Image 4](/assets/images/platform-integrations/cloudflare-pages/4.png)
+
+3. Give your token a descriptive name and give it **Edit** access to **Cloudflare Pages** like in the screen below:
+
+![Image 5](/assets/images/platform-integrations/cloudflare-pages/5.png)
+
+Scroll down and click **Continue to summary**
+
+![Image 6](/assets/images/platform-integrations/cloudflare-pages/6.png)
+
+4. Confirm the permissions and create the token by clicking on **Create token**
+
+![Image 7](/assets/images/platform-integrations/cloudflare-pages/7.png)
+![Image 8](/assets/images/platform-integrations/cloudflare-pages/8.png)
+
+## Set up third party integration in Phase
+
+<Note>
+  Enabling syncing on your Phase application will allow the server to access
+  your encrypted secrets during syncing. This is necessary for the server to
+  sync your secrets to third parties. Depending on your threat model you may
+  want to consider [self-hosting](/self-hosting) the Phase Console.
+</Note>
+
+1. Enable syncing: Go to your application in the Phase Console and Select **Syncing**, click enable **Enable Syncing** and click **Enable**
+
+![](/assets/images/platform-integrations/secret-syncing-sync.png)
+
+![](/assets/images/platform-integrations/secret-syncing-enable.png)
+
+2. Select **Cloudflare Pages**
+
+![Image 3](/assets/images/platform-integrations/cloudflare-pages/phase-console-cloudflare-pages.png)
+
+![Image 3](/assets/images/platform-integrations/cloudflare-pages/phase-console-cloudflare-pages-sync-add-creds.png)
+
+![Image 3](/assets/images/platform-integrations/cloudflare-pages/phase-console-cloudflare-pages-sync-add-integration-creds.png)
+
+3.
+
+## Set up secret syncing
