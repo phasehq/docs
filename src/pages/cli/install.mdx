@@ -44,7 +44,7 @@ scoop install git
 ```
 
 ```fish {{ title: 'Alpine Linux' }}
-curl -fsSL https://pkg.phase.dev/install.sh | sh
+apk add --no-cache curl && curl
 ```
 
 ```fish {{ title: 'RedHat/CentOS/Amazon Linux' }}
@@ -88,7 +88,7 @@ scoop install phase
 ```
 
 ```fish {{ title: 'Alpine Linux' }}
-curl -fsSL https://pkg.phase.dev/install.sh | sh
+apk add --no-cache curl && curl -fsSL https://pkg.phase.dev/install.sh | sh
 ```
 
 ```fish {{ title: 'RedHat/CentOS/Amazon Linux' }}
