@@ -39,8 +39,7 @@ Create a TeamCity build configuration and add the following build steps:
    - Custom script:
      ```fish
      curl -fsSL https://pkg.phase.dev/install.sh | bash
-     phase secrets export --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN
-     export $(phase secrets export --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN | xargs)
+     export $(phase secrets export --app "my application name" --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN | xargs)
      ```
 
 2. **Build and Push (Command Line Runner)**:

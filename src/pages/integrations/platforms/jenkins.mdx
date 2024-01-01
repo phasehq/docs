@@ -39,8 +39,7 @@ pipeline {
             steps {
                 sh 'curl -fsSL https://pkg.phase.dev/install.sh | bash'
                 sh '''
-                   phase secrets export --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN
-                   export $(phase secrets export --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN | xargs)
+                   export $(phase secrets export --app "my application name" --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN | xargs)
                    '''
             }
         }
@@ -72,7 +71,7 @@ pipeline {
                 script {
                     withCredentials([string(credentialsId: 'phase-service-token', variable: 'PHASE_SERVICE_TOKEN')]) {
                         docker.image('phasehq/cli').inside {
-                            sh 'phase secrets export --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN > envs.txt'
+                            sh 'phase secrets export --app "my application name" --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN > envs.txt'
                         }
                         env.DOCKERHUB_USERNAME = sh(script: "cat envs.txt | grep DOCKERHUB_USERNAME | cut -d '=' -f2", returnStdout: true).trim()
                         env.DOCKERHUB_TOKEN = sh(script: "cat envs.txt | grep DOCKERHUB_TOKEN | cut -d '=' -f2", returnStdout: true).trim()

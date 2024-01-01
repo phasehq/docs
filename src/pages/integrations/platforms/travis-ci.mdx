@@ -36,8 +36,7 @@ jobs:
     - stage: prepare
       script:
         - curl -fsSL https://pkg.phase.dev/install.sh | bash
-        - phase secrets export --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN
-        - export $(phase secrets export --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN | xargs)
+        - export $(phase secrets export --app "my application name" --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN | xargs)
 
     - stage: build_and_push
       script:

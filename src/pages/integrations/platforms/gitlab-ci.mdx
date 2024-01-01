@@ -39,8 +39,7 @@ prepare_phase_cli:
   stage: prepare
   script:
     - curl -fsSL https://pkg.phase.dev/install.sh | bash
-    - phase secrets export --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN
-    - export $(phase secrets export --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN | xargs)
+    - export $(phase secrets export --app "my application name" --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN | xargs)
 
 build_and_push_image:
   stage: build_and_push
@@ -61,7 +60,7 @@ prepare_phase_cli:
   image: phasehq/cli
   stage: prepare
   script:
-    - phase secrets export --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN
+    - phase secrets export --app "my application name" --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN
   artifacts:
     untracked: true
 

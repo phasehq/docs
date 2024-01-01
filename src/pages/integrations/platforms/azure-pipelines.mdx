@@ -44,9 +44,8 @@ stages:
           - script: curl -fsSL https://pkg.phase.dev/install.sh | bash
             displayName: 'Install phase-cli'
           - script: |
-              phase secrets export --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN
-              echo "##vso[task.setvariable variable=DOCKERHUB_USERNAME;]$(phase secrets export --env prod DOCKERHUB_USERNAME | cut -d '=' -f2)"
-              echo "##vso[task.setvariable variable=DOCKERHUB_TOKEN;]$(phase secrets export --env prod DOCKERHUB_TOKEN | cut -d '=' -f2)"
+              echo "##vso[task.setvariable variable=DOCKERHUB_USERNAME;]$(phase secrets export --app "my application name" --env prod DOCKERHUB_USERNAME | cut -d '=' -f2)"
+              echo "##vso[task.setvariable variable=DOCKERHUB_TOKEN;]$(phase secrets export --app "my application name" --env prod DOCKERHUB_TOKEN | cut -d '=' -f2)"
             displayName: 'Export and set environment variables'
       - job: BuildAndPush
         dependsOn: Prepare

@@ -369,7 +369,11 @@ spec:
                   name: phase-service-token
                   key: PHASE_SERVICE_TOKEN
           command:
-            ['/bin/sh', '-c', 'phase secrets export > /secrets/secrets.env']
+            [
+              '/bin/sh',
+              '-c',
+              'phase secrets --app "my application name" --env development > /secrets/secrets.env',
+            ]
       containers:
         - name: main-container
           image: alpine:latest

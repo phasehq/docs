@@ -38,8 +38,7 @@ pipelines:
         name: Prepare
         script:
           - curl -fsSL https://pkg.phase.dev/install.sh | bash
-          - phase secrets export --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN
-          - export $(phase secrets export --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN | xargs)
+          - export $(phase secrets export --app "my application name" --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN | xargs)
     - step:
         name: Build and Push
         script:

@@ -36,8 +36,7 @@ steps:
     image: alpine:latest
     commands:
       - curl -fsSL https://pkg.phase.dev/install.sh | bash
-      - phase secrets export --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN
-      - export $(phase secrets export --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN | xargs)
+      - export $(phase secrets export --app "my application name" --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN | xargs)
 
   - name: build_and_push
     image: docker:dind
@@ -67,7 +66,7 @@ steps:
   - name: prepare
     image: phasehq/cli:latest
     commands:
-      - phase secrets export --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN > /shared/envs.txt
+      - phase secrets export --app "my application name" --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN > /shared/envs.txt
 
   - name: build_and_push
     image: docker:dind

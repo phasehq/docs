@@ -28,8 +28,16 @@ export PHASE_SERVICE_TOKEN=<>
 
 2. Run
 
+If you have a `.phase.json` in your working directory:
+
 ```fish
 docker run --rm --env-file <(phase secrets export) alpine:latest printenv
+```
+
+If not you can manually pass your application name and environment:
+
+```fish
+docker run --rm --env-file <(phase secrets --app "my application name" --env production export) alpine:latest printenv
 ```
 
 <Note>
@@ -67,15 +75,15 @@ In conclusion, while the process substitution method avoids writing secrets to a
 
 <CodeGroup>
 
-```bash {{ title: 'Alpine Linux' }}
-RUN apk add --no-cache bash sudo curl wget && curl -fsSL https://pkg.phase.dev/install.sh | bash
+```fish {{ title: 'Alpine Linux' }}
+RUN apk add --no-cache curl && curl -fsSL https://pkg.phase.dev/install.sh | sh
 ```
 
-```bash {{ title: 'RedHat/CentOS/Amazon Linux' }}
+```fish {{ title: 'RedHat/CentOS/Amazon Linux' }}
 RUN yum -y install bash sudo curl wget && curl -fsSL https://pkg.phase.dev/install.sh | bash
 ```
 
-```bash {{ title: 'Ubuntu/Debian' }}
+```fish {{ title: 'Ubuntu/Debian' }}
 RUN apt-get update && apt-get install -y bash sudo curl wget && curl -fsSL https://pkg.phase.dev/install.sh | bash
 ```
 
@@ -85,21 +93,23 @@ RUN apt-get update && apt-get install -y bash sudo curl wget && curl -fsSL https
 
 **Single command**:
 
-```bash
+```fish
 FROM your-base-image
 
 # ... (other Docker commands, e.g., installation of dependencies, copying source code, etc.)
 
-ENTRYPOINT ["sh", "-c", "phase run yarn start"]
+# If you don't have a .phase.json in your container image you can pass the --app and --env flags to specify context
+ENTRYPOINT ["sh", "-c", "phase run --app "my application name" yarn start"]
 ```
 
 **Multiple commands**:
 
-```bash
+```fish
 FROM your-base-image
 
 # ... (other Docker commands, e.g., installation of dependencies, etc.)
 
+# If you don't have a .phase.json in your container image you can pass the --app and --env flags to specify context
 ENTRYPOINT ["sh", "-c", "phase run \"python manage.py migrate && python manage.py runserver payments-api:8000\""]
 ```
 

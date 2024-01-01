@@ -48,8 +48,7 @@ jobs:
 
       - name: Export and set environment variables
         run: |
-          phase secrets export --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN
-          export $(phase secrets export --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN | xargs)
+          export $(phase secrets export --app "my application name" --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN | xargs)
 
       - name: Build and Push Docker image
         run: |
