@@ -224,6 +224,7 @@ export const navigation = [
         href: '/integrations/platforms/docker-compose',
       },
       { title: 'Kubernetes', href: '/integrations/platforms/kubernetes' },
+      { title: 'Cloudflare Pages', href: '/integrations/platforms/cloudflare-pages' },
       {
         title: 'GitHub Actions',
         href: '/integrations/platforms/github-actions',
