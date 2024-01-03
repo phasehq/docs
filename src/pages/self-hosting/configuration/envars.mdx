@@ -142,10 +142,6 @@ After setting up your Application on GitLab, set the Client ID and Client secret
 <Properties>
   <Property name="DATABASE_HOST" type="string">
     The database hostname. Defaults to `postgres`.
-    <Note>
-      Changing this value is not recommended unless you are also modifying the
-      webserver configuration.
-    </Note>
   </Property>
   <Property name="DATABASE_NAME" type="string">
     Defaults to `postgres-db-name`
@@ -159,6 +155,23 @@ After setting up your Application on GitLab, set the Client ID and Client secret
   </Property>
   <Property name="DATABASE_PORT" type="number">
     Defaults to `5432`
+  </Property>
+</Properties>
+
+---
+
+## Redis configuration
+
+<Properties>
+  <Property name="REDIS_HOST" type="string">
+    The Redis server hostname. Defaults to `redis`.
+  </Property>
+  <Property name="REDIS_PORT" type="number">
+    The Redis server port. Defaults to `6379`.
+  </Property>
+  <Property name="REDIS_PASSWORD" type="string">
+    The password for the Redis server. It is recommended to set a strong
+    password if Redis is accessible externally.
   </Property>
 </Properties>
 
