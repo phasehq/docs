@@ -9,11 +9,12 @@ export const description =
 
 Learn how to set up the Phase Console using AWS EC2 and managed PostgreSQL RDS via the Docker Compose template. {{ className: 'lead' }}
 
-Keep in mind the steps listed below serve as a rough outline on how to self-hosting Phase Services on your own infrastructure. 
+Keep in mind the steps listed below serve as a rough outline on how to self-hosting Phase Services on your own infrastructure.
 
 You may:
-- Choose to run the Phase Console components on managed services (PaaS) or alternative container orchestration tools like Kubernetes instead of Docker Compose. 
-- Consider running the Phase Service behind a VPN or a VPC and not to expose it the internet directly. 
+
+- Choose to run the Phase Console components on managed services (PaaS) or alternative container orchestration tools like Kubernetes instead of Docker Compose.
+- Consider running the Phase Service behind a VPN or a VPC and not to expose it the internet directly.
 - Need to set up things like TLS certificates, web application firewall, database backups and replication, DDoS protection, rate limiting, SSOs etc.
 
 ### I. Set Up an EC2 instance
@@ -60,7 +61,27 @@ You may:
 
 6. **Launch** the RDS instance.
 
-### III. SSH into EC2 & Setup Database
+### III. Set Up an ElastiCache Redis Instance
+
+1. **Log in to AWS Management Console**:
+   Navigate to the ElastiCache dashboard.
+
+2. **Create a new Redis instance**:
+
+   - Choose **Redis** as the cluster engine.
+   - Select the **cache.t3.micro** node type for testing or an appropriate type for production.
+   - Ensure the VPC settings allow the instance to connect to your EC2 instance.
+   - Enable **automatic backups** if desired.
+
+3. **Configure Security Group**:
+
+   - Allow **Redis** (default port 6379) from your EC2 instance.
+
+4. **Launch** the Redis instance.
+
+5. **Note down** the primary endpoint of the Redis instance.
+
+### IV. SSH into EC2 & Setup Database
 
 1. Navigate to the directory containing the downloaded key pair.
 2. **Provide necessary permissions** for the key:
@@ -101,7 +122,7 @@ You may:
    \q
    ```
 
-### IV. Prepare for Docker Deployment
+### V. Prepare for Docker Deployment
 
 1. **Generate a strong database password**:
 
@@ -139,11 +160,13 @@ You may:
 
    - Replace **DATABASE_HOST** with your RDS endpoint.
    - Update **DATABASE_NAME**, **DATABASE_USER**, and **DATABASE_PASSWORD** with your desired credentials.
+   - Add **REDIS_HOST**, **REDIS_PORT**, **REDIS_PASSWORD** and set it to your ElastiCache Redis primary endpoint.
    - Modify other environment variables as needed.
 
 5. **Edit `docker-compose.yml`**:
 
    - Comment out the PostgreSQL service.
+   - Comment out the Redis service.
 
 6. **Start services**:
 
