@@ -8,11 +8,12 @@ export const description = 'Run Phase on your own digitalocean infrastructure.'
 
 Learn how to set up the Phase Console using DigitalOcean droplet and managed PostgreSQL via the Docker Compose template. {{ className: 'lead' }}
 
-Keep in mind the steps listed below serve as a rough outline on how to self-hosting Phase Services on your own infrastructure. 
+Keep in mind the steps listed below serve as a rough outline on how to self-hosting Phase Services on your own infrastructure.
 
 You may:
-- Choose to run the Phase Console components on managed services (PaaS) or alternative container orchestration tools like Kubernetes instead of Docker Compose. 
-- Consider running the Phase Service behind a VPN or a VPC and not to expose it the internet directly. 
+
+- Choose to run the Phase Console components on managed services (PaaS) or alternative container orchestration tools like Kubernetes instead of Docker Compose.
+- Consider running the Phase Service behind a VPN or a VPC and not to expose it the internet directly.
 - Need to set up things like TLS certificates, web application firewall, database backups and replication, DDoS protection, rate limiting, SSOs etc.
 
 ### I. Set Up a DigitalOcean Droplet
@@ -51,7 +52,21 @@ You may:
 4. **Database Connection Settings**:
    - Note down the connection details for later. You'll specifically need the host (private network vpc host), user, database, and password.
 
-### III. SSH into Droplet & Setup Database
+### III. Set Up Managed Redis Database
+
+1. Navigate to **Databases** in the DigitalOcean Dashboard.
+
+2. **Click on 'Create Database'** and select **Redis**:
+
+   - Choose a version, e.g., **6.x**.
+   - Select the **Standard** plan and choose a size that suits your requirements.
+   - Choose the same datacenter region as your Droplet for better latency.
+   - Block public incoming connections to your Redis instance by restricting access.
+
+3. **Redis Configuration**:
+   - Once created, note down the connection details (host, port, and password).
+
+### IV. SSH into Droplet & Setup Database
 
 1. Open your terminal and navigate to the directory containing your SSH key.
 
@@ -79,7 +94,7 @@ You may:
    \q
    ```
 
-### IV. Prepare for Docker Deployment
+### V. Prepare for Docker Deployment
 
 1. **Generate a strong database password**:
 
@@ -114,13 +129,13 @@ You may:
      ```
 
 4. **Edit `.env` file**:
-
    - Replace **DATABASE_HOST** with your Managed PostgreSQL host.
    - Update **DATABASE_NAME**, **DATABASE_USER**, and **DATABASE_PASSWORD** with your credentials.
-
+   - Add **REDIS_HOST**, **REDIS_PORT**, and **REDIS_PASSWORD** and set them to your Managed Redis host, port, and password.
 5. **Edit `docker-compose.yml`**:
 
    - Comment out the PostgreSQL service.
+   - Comment out the Redis service.
 
 6. **Start services**:
 
