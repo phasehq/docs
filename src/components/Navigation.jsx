@@ -228,6 +228,10 @@ export const navigation = [
         href: '/integrations/platforms/aws-secrets-manager',
       },
       {
+        title: 'AWS Parameter Store',
+        href: '/integrations/platforms/aws-parameter-store',
+      },
+      {
         title: 'Cloudflare Pages',
         href: '/integrations/platforms/cloudflare-pages',
       },
