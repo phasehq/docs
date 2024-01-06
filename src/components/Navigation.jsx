@@ -201,7 +201,6 @@ export const navigation = [
       { title: 'Environments', href: '/console/environments' },
       { title: 'Secrets', href: '/console/secrets' },
       { title: 'Tokens', href: '/console/tokens' },
-
     ],
   },
   {
@@ -224,7 +223,14 @@ export const navigation = [
         href: '/integrations/platforms/docker-compose',
       },
       { title: 'Kubernetes', href: '/integrations/platforms/kubernetes' },
-      { title: 'Cloudflare Pages', href: '/integrations/platforms/cloudflare-pages' },
+      {
+        title: 'AWS Secrets Manager',
+        href: '/integrations/platforms/aws-secrets-manager',
+      },
+      {
+        title: 'Cloudflare Pages',
+        href: '/integrations/platforms/cloudflare-pages',
+      },
       {
         title: 'GitHub Actions',
         href: '/integrations/platforms/github-actions',
