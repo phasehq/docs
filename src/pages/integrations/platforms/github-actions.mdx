@@ -22,6 +22,17 @@ Automatically sync secrets to GitHub Actions form your Phase apps `dev`, `stagin
 
 - Sign up for the [Phase Console](/quickstart) and [create an App](/console/apps#create-an-app).
 
+<Note>
+  Phase will encrypt your secrets via libsodiums `SealedBox` using your GitHub
+  repository's public key before sending it to GitHub. You wu For more
+  information read: [GitHub
+  Docs](https://docs.github.com/en/rest/guides/encrypting-secrets-for-the-rest-api?apiVersion=2022-11-28#example-encrypting-a-secret-using-python)
+</Note>
+
+### (///Authentication flow steps/// )
+
+here
+
 ## Using the Phase CLI
 
 Fetch secrets directly inside your GitHub Actions workflow during runtime without storing them in GitHub.
