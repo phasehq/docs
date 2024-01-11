@@ -199,6 +199,26 @@ After setting up your Application on GitLab, set the Client ID and Client secret
 
 ---
 
+## Third party integrations configuration
+
+### GitHub integration:
+
+1. Create a new GitHub Oauth application (This is different from the one you may already have set up for GitHub SSO)
+2. Set the Authorization callback URL to: `https://[**YOUR_DOMAIN**]/service/oauth/github/callback`
+3. Hit Register application
+4. Supply the following secrets to your Phase Console instance
+
+<Properties>
+  <Property name="GITHUB_INTEGRATION_CLIENT_ID" type="string">
+    GitHub OAuth application Client ID
+  </Property>
+  <Property name="GITHUB_INTEGRATION_CLIENT_SECRET" type="string">
+    GitHub OAuth application Client Secret
+  </Property>
+</Properties>
+
+---
+
 ## Debugging
 
 <Properties>
