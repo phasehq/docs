@@ -29,7 +29,7 @@
     "next": "13.0.2",
     "next-seo": "^6.0.0",
     "postcss-focus-visible": "^6.0.4",
-    "posthog-js": "^1.93.3",
+    "posthog-js": "^1.98.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "recma-nextjs-static-props": "^1.0.0",
