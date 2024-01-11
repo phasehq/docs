@@ -23,11 +23,17 @@ Automatically sync secrets to GitHub Actions form your Phase apps `dev`, `stagin
 - Sign up for the [Phase Console](/quickstart) and [create an App](/console/apps#create-an-app).
 
 <Note>
-  Phase will encrypt your secrets via libsodiums `SealedBox` using your GitHub
-  repository's public key before sending it to GitHub. You wu For more
-  information read: [GitHub
-  Docs](https://docs.github.com/en/rest/guides/encrypting-secrets-for-the-rest-api?apiVersion=2022-11-28#example-encrypting-a-secret-using-python)
+  If you are using a Self-Hosted instance of the Phase Console, you will need to
+  set up a new GitHub Oauth Application and supply the
+  `GITHUB_INTEGRATION_CLIENT_ID` and `GITHUB_INTEGRATION_CLIENT_SECRET`
+  environment variables. [More
+  info](/self-hosting/configuration/envars#third-party-integrations-configuration)
 </Note>
+
+Phase will encrypt your secrets via libsodiums `SealedBox` using your GitHub
+repository's public key before sending it to GitHub. You wu For more
+information read: [GitHub
+Docs](https://docs.github.com/en/rest/guides/encrypting-secrets-for-the-rest-api?apiVersion=2022-11-28#example-encrypting-a-secret-using-python)
 
 ### Step 1: Authenticate with GitHub
 
@@ -50,11 +56,11 @@ Automatically sync secrets to GitHub Actions form your Phase apps `dev`, `stagin
 ![GitHub credentials stored](/assets/images/platform-integrations/github/github-credentials-created.png)
 
 <Note>
-  Your credentials are kept secure with robust application-layer encryption. 
-  Phase encrypts your credentials directly in the browser and only decrypts them in memory to perform sync operations. 
-  Your credentials are never stored in plaintext.
+  Your credentials are kept secure with robust application-layer encryption.
+  Phase encrypts your credentials directly in the browser and only decrypts them
+  in memory to perform sync operations. Your credentials are never stored in
+  plaintext.
 </Note>
-
 
 ### Step 2: Configure Sync
 
@@ -79,15 +85,14 @@ Automatically sync secrets to GitHub Actions form your Phase apps `dev`, `stagin
 
 ![Choose sync authentication credentials](/assets/images/platform-integrations/github/select-gh-credentials.png)
 
-4. Choose the source and destination to sync secrets. Select an Environment as the source for Secrets. 
-Next, choose a GitHub repository from the dropdown as the destination to sync Secrets to.  
+4. Choose the source and destination to sync secrets. Select an Environment as the source for Secrets.
+   Next, choose a GitHub repository from the dropdown as the destination to sync Secrets to.
 
 ![Configure sync](/assets/images/platform-integrations/github/gh-actions-configure-sync.png)
 
-6. Once you have selected your desired source and destination, click **Create**. 
-The sync has been set up! Secrets will automatically be Synced from your chosen Phase Environment to the GitHub repository as Secrets that can be used for GitHub Actions. 
-You can click on the **Manage** button on the Sync card to view sync logs, pause syncing or update authentication credentials.
-
+6. Once you have selected your desired source and destination, click **Create**.
+   The sync has been set up! Secrets will automatically be Synced from your chosen Phase Environment to the GitHub repository as Secrets that can be used for GitHub Actions.
+   You can click on the **Manage** button on the Sync card to view sync logs, pause syncing or update authentication credentials.
 
 ## Using the Phase CLI
 
