@@ -228,6 +228,10 @@ export const navigation = [
         href: '/integrations/platforms/aws-secrets-manager',
       },
       {
+        title: 'Hashicorp Vault',
+        href: '/integrations/platforms/hashicorp-vault',
+      },
+      {
         title: 'Cloudflare Pages',
         href: '/integrations/platforms/cloudflare-pages',
       },
