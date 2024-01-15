@@ -199,7 +199,7 @@ If you are using Hashicorp Cloud Platform (HCP) managed Vault instance you can c
 
 Example: https://vault-cluster-public-vault-gbef9712.627dc7e1.z2.hashicorp.cloud:8200
 
-### Step 1: Set up your AWS credentials in Phase
+### Step 1: Set up your Vault credentials in Phase
 
 <Note>
   Your credentials are kept secure with robust application-layer encryption.
@@ -208,7 +208,7 @@ Example: https://vault-cluster-public-vault-gbef9712.627dc7e1.z2.hashicorp.cloud
   plaintext.
 </Note>
 
-1. Create an `AccessKey` via the AWS Console. See [Step 5](#step-5-create-access-keys) for instructions on creating the key. Note the `AccessKeyId` and `SecretAccessKey`.
+1. Create an `role_id` and `secret_id` via the Vault CLI. See [Step 2](#step-2-setting-up-app-role-authentication-and-acl-policy) for instructions.
 
 2. Go to **Integrations** from the sidebar and click on **Add credentials** in the 'Service credentials' section
 
@@ -216,14 +216,15 @@ Example: https://vault-cluster-public-vault-gbef9712.627dc7e1.z2.hashicorp.cloud
 
 ![Add a credential](/assets/images/platform-integrations/add-credential-button.png)
 
-3. Click on **AWS**
+3. Click on **Hashicorp Vault**
 
-![Click on AWS](/assets/images/platform-integrations/aws/create-credentials-aws.png)
+![Click on Vault](/assets/images/platform-integrations/hashicorp/vault/vault-create-creds-button.png)
 
-4. Copy and paste your `AccessKeyId` and `SecretAccessKey` from the AWS Console.
-   Select the correct region code and add a descriptive name for these credentials. Click **Save**.
+4. Enter your vault instance url under `VAULT ADDR`. Paste your `role_id` and `secret_id` into the `VAULT ROLE ID` and `VAULT SECRET ID` fields respectively. 
+`VAULT_NAMESPACE` is optional if you would like Secrets to be synced to a custom namespace.
+   Add a descriptive name for these credentials and click **Save**.
 
-![Input AWS credentials](/assets/images/platform-integrations/aws/input-aws-credentials.png)
+![Input AWS credentials](/assets/images/platform-integrations/hashicorp/vault/vault-input-creds.png)
 
 ### Step 2: Configure Sync
 
@@ -240,33 +241,29 @@ Example: https://vault-cluster-public-vault-gbef9712.627dc7e1.z2.hashicorp.cloud
   want to consider [self-hosting](/self-hosting) the Phase Console.
 </Note>
 
-2. Select **AWS Secrets Manager** under the 'Create a new Sync' menu.
+2. Select **Hashicorp Vault** under the 'Create a new Sync' menu.
 
-![Create AWS SM Sync](/assets/images/platform-integrations/aws/create-aws-sm-sync-button.png)
+![Create Vault Sync](/assets/images/platform-integrations/hashicorp/vault/vault-create-sync-button.png)
 
 3. Select the credentials stored in the previous step as the authentication method for this sync, and click **Next**
 
-![Choose sync authentication credentials](/assets/images/platform-integrations/aws/select-aws-credentials.png)
+![Choose sync authentication credentials](/assets/images/platform-integrations/hashicorp/vault/vault-select-creds.png)
 
 <Note>
   If you see an error message and cannot proceed to the next screen, it is most
-  likely an issue with the `AccessKeyId` or `SecretAccessKey`. Verify that you
-  created the AWS credentials correctly and update them from the Integrations
-  screen if needed.
+  likely an issue with the stored credentials. Verify that you
+  created the Vault credentials correctly, and set the right ACL policies. See [Step 2](#step-2-setting-up-app-role-authentication-and-acl-policy) for instructions. 
+  You can update your credentials from the Integrations screen if needed.
 </Note>
 
 4. Choose the source and destination to sync secrets. Select an Environment as the source for Secrets.
-   Next, either enter a name for a new AWS Secret, or click on "Use existing AWS Secret" and select a Secret from the dropdown list.
+   The KV engine and path will be pre-filled as the destination for syncing. 
+   `Vault KV Secret Engine` is prefilled as `phase-console-kv-sync/` as per the instructions in [Step 1](#step-1-create-a-new-kv-secrets-engine-in-vault-version-2-kv-v2). If you used a different name for your KV engine, make sure to update it here.
+   The `Vault Secret Path` is prefilled as `[app_name]/[env_name]`. You can edit this if desired. 
 
-![Choose sync source and destination](/assets/images/platform-integrations/aws/configure-aws-sm-sync-basic.png)
+![Choose sync source and destination](/assets/images/platform-integrations/hashicorp/vault/vault-configure-sync.png)
 
-5. (Optional) Use a Customer Manager Key (CMK) to encrypt secrets. If you would like to use an AWS KMS CMK to encrypt your AWS Secret,
-   click on the **Advanced** pane to expand it, and paste the ARN of the key to use.
 
-![Set up KMS CMK](/assets/images/platform-integrations/aws/configure-aws-sm-sync-advanced.png)
-
-6. Once you have selected your desired source and destination, click **Create**.
-   The sync has been set up! Secrets will automatically be Synced from your chosen Phase Environment to the AWS Secret.
+5. Once you have selected your desired source and destination, click **Create**.
+   The sync has been set up! Secrets will automatically be Synced from your chosen Phase Environment to your Vault instance.
    You can click on the **Manage** button on the Sync card to view sync logs, pause syncing or update authentication credentials.
-
-![Sync card](/assets/images/platform-integrations/aws/aws-sm-sync-card.png)
