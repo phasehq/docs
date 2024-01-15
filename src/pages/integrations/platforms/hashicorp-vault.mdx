@@ -21,11 +21,11 @@ You can use Phase to sync secrets to your Hashicorp Vault instance.
   instance](/integrations/platforms/hashicorp-vault#optional-import-existing-secrets-from-hashicorp-vault-in-phase)
 </Warning>
 
-## Step 1: Create a new KV Secrets Engine in Vault (Version 2 - KV v2)
+## Step 1: Create a new KV Secrets Engine in Vault (KV v2)
 
-Using namespaces requires access to Vault Enterprise:
+<Note>Using namespaces requires access to Vault Enterprise</Note>
 
-1. **Create a Namespace (optional):**
+**Create a Namespace (optional):**
 
 ```fish
 vault namespace create phase-console-namespace
@@ -42,14 +42,15 @@ id                 jtrH2
 path               admin/phase-console-namespace/
 ```
 
-2. **Switch to the Namespace (optional):**
+**Switch to the Namespace (optional):**
 
 ```fish
 export VAULT_NAMESPACE=admin/phase-console-namespace
 ```
 
-3. **Enable Secrets Engine**:
-   To enable a KV v2 secrets engine at a specific path (`phase-console-kv-sync` in this case), use the following command:
+### 1. **Enable Secrets Engine**:
+
+To enable a KV v2 secrets engine at a specific path (`phase-console-kv-sync` in this case), use the following command:
 
 ```fish
 vault secrets enable -path=phase-console-kv-sync -version=2 kv
@@ -191,13 +192,7 @@ rm .env
 
 ## Sync Secrets from Phase
 
-You can automatically sync secrets from your environments in your Phase App to a Secret in AWS Secrets Manager.
-You first need to setup credentials to use for the sync, and then choose a source and destination.
-
-If you are using Hashicorp Cloud Platform (HCP) managed Vault instance you can copy the Public URL by clicking the 📋Public button
-![HCL portal vault cluster ](/assets/images/platform-integrations/hashicorp/vault/hcl-vault-portal.png)
-
-Example: https://vault-cluster-public-vault-gbef9712.627dc7e1.z2.hashicorp.cloud:8200
+Phase can automatically sync secrets to your Hashicorp Vault instance. First, you need to setup credentials to use for the sync, and then choose a source and destination.
 
 ### Step 1: Set up your Vault credentials in Phase
 
@@ -220,11 +215,16 @@ Example: https://vault-cluster-public-vault-gbef9712.627dc7e1.z2.hashicorp.cloud
 
 ![Click on Vault](/assets/images/platform-integrations/hashicorp/vault/vault-create-creds-button.png)
 
-4. Enter your vault instance url under `VAULT ADDR`. Paste your `role_id` and `secret_id` into the `VAULT ROLE ID` and `VAULT SECRET ID` fields respectively. 
-`VAULT_NAMESPACE` is optional if you would like Secrets to be synced to a custom namespace.
+4. Enter your vault instance url under `VAULT ADDR`. Paste your `role_id` and `secret_id` into the `VAULT ROLE ID` and `VAULT SECRET ID` fields respectively.
+   `VAULT_NAMESPACE` is optional if you would like Secrets to be synced to a custom namespace.
    Add a descriptive name for these credentials and click **Save**.
 
-![Input AWS credentials](/assets/images/platform-integrations/hashicorp/vault/vault-input-creds.png)
+![Input Vault credentials](/assets/images/platform-integrations/hashicorp/vault/vault-input-creds.png)
+
+If you are using Hashicorp Cloud Platform (HCP) managed Vault instance you can copy the Public URL by clicking the 📋Public button
+![HCL portal vault cluster ](/assets/images/platform-integrations/hashicorp/vault/hcl-vault-portal.png)
+
+Example: https://vault-cluster-public-vault-gbef9712.627dc7e1.z2.hashicorp.cloud:8200
 
 ### Step 2: Configure Sync
 
@@ -251,18 +251,19 @@ Example: https://vault-cluster-public-vault-gbef9712.627dc7e1.z2.hashicorp.cloud
 
 <Note>
   If you see an error message and cannot proceed to the next screen, it is most
-  likely an issue with the stored credentials. Verify that you
-  created the Vault credentials correctly, and set the right ACL policies. See [Step 2](#step-2-setting-up-app-role-authentication-and-acl-policy) for instructions. 
-  You can update your credentials from the Integrations screen if needed.
+  likely an issue with the stored credentials. Verify that you created the Vault
+  credentials correctly, and set the right ACL policies. See [Step
+  2](#step-2-setting-up-app-role-authentication-and-acl-policy) for
+  instructions. You can update your credentials from the Integrations screen if
+  needed.
 </Note>
 
 4. Choose the source and destination to sync secrets. Select an Environment as the source for Secrets.
-   The KV engine and path will be pre-filled as the destination for syncing. 
+   The KV engine and path will be pre-filled as the destination for syncing.
    `Vault KV Secret Engine` is prefilled as `phase-console-kv-sync/` as per the instructions in [Step 1](#step-1-create-a-new-kv-secrets-engine-in-vault-version-2-kv-v2). If you used a different name for your KV engine, make sure to update it here.
-   The `Vault Secret Path` is prefilled as `[app_name]/[env_name]`. You can edit this if desired. 
+   The `Vault Secret Path` is prefilled as `[app_name]/[env_name]`. You can edit this if desired.
 
 ![Choose sync source and destination](/assets/images/platform-integrations/hashicorp/vault/vault-configure-sync.png)
-
 
 5. Once you have selected your desired source and destination, click **Create**.
    The sync has been set up! Secrets will automatically be Synced from your chosen Phase Environment to your Vault instance.
