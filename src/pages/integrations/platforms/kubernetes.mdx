@@ -110,31 +110,125 @@ kubectl get secret my-application-secret -o yaml
 
 <Properties>
   <Property name="phaseAppEnv" type="optional">
-  The Phase application environment to fetch secrets from (e.g., dev, staging, prod). <b> Default </b>: `prod`.
+    The Phase application environment to fetch secrets from (e.g., dev, staging,
+    prod). <b>Default</b>: `prod`.
+  </Property>
+  <Property name="phaseAppEnvTag" type="optional">
+    Tag for filtering secrets in the specified Phase app environment.{' '}
+    <b>Default</b>: `None`.
   </Property>
   <Property name="phaseHost" type="optional">
-  The URL of a Phase Console instance. <b> Default </b>: `https://console.phase.dev`.
+    The URL of a Phase Console instance. <b>Default</b>:
+    `https://console.phase.dev`.
   </Property>
-  <Property name="authentication.serviceToken.serviceTokenSecretReference.secretName" type="required">
-  The name of the Kubernetes managed secret containing your Phase service token.
+  <Property
+    name="authentication.serviceToken.serviceTokenSecretReference.secretName"
+    type="required"
+  >
+    The name of the Kubernetes managed secret containing your Phase service
+    token.
   </Property>
-  <Property name="authentication.serviceToken.serviceTokenSecretReference.secretNamespace" type="required">
-  The namespace of the Kubernetes managed secret containing your service token.
+  <Property
+    name="authentication.serviceToken.serviceTokenSecretReference.secretNamespace"
+    type="required"
+  >
+    The namespace of the Kubernetes managed secret containing your service
+    token.
   </Property>
   <Property name="managedSecretReferences.secretName">
-  Name of the Kubernetes managed secret that Phase will sync secrets to.
+    Name of the Kubernetes managed secret that Phase will sync secrets to.
   </Property>
   <Property name="managedSecretReferences.secretNamespace">
-  The namespace of the Kubernetes managed secret that Phase will sync secrets to.
+    The namespace of the Kubernetes managed secret that Phase will sync secrets
+    to.
   </Property>
-
+  <Property name="managedSecretReferences.secretType" type="optional">
+    The type of the Kubernetes Secret. Options include: "Opaque",
+    "kubernetes.io/tls"
+  </Property>
+  <Property name="managedSecretReferences.processors" type="optional">
+    Processors to transform the data during ingestion. Each processor has
+    properties like 'asName', 'nameTransformer', and 'type', with various
+    options for transforming the secret key name and the type of process to be
+    performed. <b>Default</b> for 'type': `plain`.
+  </Property>
 </Properties>
 
-### Consuming secrets in Kubernetes Deployments with Phase Operator
+## Secret processors:
 
-#### 1. Using Environment Variables
+### Secret value transformation
 
-Inject secrets directly into your application's environment variables:
+In the custom resource, the `processors` field is used to transform and manage secrets. Here's an explanation using PKCS12 secrets as an example:
+
+- `asName`: This parameter renames the secret in compliance to Kubernetes secret formats. For instance, `PKCS12_PRIVATE_KEY` is renamed to `tls.crt`.
+- `type`: Specifies the encoding type of the secret. In this case, `base64` indicates that the secret is already base64 encoded.
+
+This setup is specifically for a PKCS12 secret that is pre-encoded in base64. If a secret is set to `type: "plain"`, which is the default, the Kubernetes operator will encode it in base64.
+
+#### Example: **PKCS12** Secret Transformation
+
+Suppose we have the following secrets stored in the Phase service:
+
+1. `PKCS12_PRIVATE_KEY`: A private key in PKCS12 format, already base64 encoded.
+2. `PKCS12_CERTIFICATE`: A certificate in PKCS12 format, also already base64 encoded.
+
+In the custom resource, these are handled as follows:
+
+```yaml
+apiVersion: secrets.phase.dev/v1alpha1
+kind: PhaseSecret
+metadata:
+  name: example-phase-secret
+  namespace: default
+spec:
+  phaseAppEnv: 'prod'
+  phaseAppEnvTag: 'certs'
+  phaseHost: 'https://console.phase.dev'
+  authentication:
+    serviceToken:
+      serviceTokenSecretReference:
+        secretName: 'phase-service-token'
+        secretNamespace: 'default'
+  managedSecretReferences:
+    - secretName: 'pkcs12-cert'
+      secretNamespace: 'default'
+      secretType: 'kubernetes.io/tls'
+      processors:
+        PKCS12_PRIVATE_KEY:
+          asName: 'tls.crt'
+          type: 'base64'
+        PKCS12_CERTIFICATE:
+          asName: 'tls.key'
+          type: 'base64'
+```
+
+| Secret Stored in Phase Console | Secret synced in Kubernetes Cluster |
+| ------------------------------ | ----------------------------------- |
+| `PKCS12_PRIVATE_KEY`           | `tls.crt` (base64 encoded)          |
+| `PKCS12_CERTIFICATE`           | `tls.key` (base64 encoded)          |
+
+This table illustrates the transformation of secrets from how they are stored in the Phase console to how they are saved in the Kubernetes cluster.
+
+### Secret key
+
+Additionally, the following table shows various transformations that can be applied to a generic secret key:
+
+| Type            | Secret stored in Phase | Post transformation |
+| --------------- | ---------------------- | ------------------- |
+| **camel**       | SECRET_KEY             | secretKey           |
+| **upper-camel** | SECRET_KEY             | SecretKey           |
+| **lower-snake** | SECRET_KEY             | secret_key          |
+| **tf-var**      | SECRET_KEY             | TF_VAR_secret_key   |
+| **dotnet-env**  | DB\_\_USER_NAME        | Db\_\_UserName      |
+| **lower-kebab** | SECRET_KEY             | secret-key          |
+
+These transformations dictate how the secret keys are renamed or formatted when stored in Kubernetes.
+
+## Using secrets in Kubernetes Deployments
+
+### 1. Using Environment Variables
+
+Expose specific secret(s) from your Kubernetes secret to your deployment as environment variables:
 
 ```yaml
 apiVersion: apps/v1
@@ -143,7 +237,13 @@ metadata:
   name: my-app-deployment
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: my-app
   template:
+    metadata:
+      labels:
+        app: my-app
     spec:
       containers:
         - name: my-app
@@ -156,9 +256,9 @@ spec:
                   key: MY_SECRET_KEY
 ```
 
-#### 2. Using `envFrom` to inject all secrets
+### 2. Using `envFrom` to inject all secrets
 
-Inject all data from a secret as environment variables:
+Expose all secrets in your Kubernetes secrets to your deployment as environment variables:
 
 ```yaml
 apiVersion: apps/v1
@@ -167,7 +267,13 @@ metadata:
   name: my-app-deployment
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: my-app
   template:
+    metadata:
+      labels:
+        app: my-app
     spec:
       containers:
         - name: my-app
@@ -177,7 +283,7 @@ spec:
                 name: my-application-secret
 ```
 
-#### 3. Mounting secrets as an in-memory volume
+### 3. Mounting secrets as an in-memory volume
 
 Mount secrets as an in-memory volume for scenarios requiring configuration files:
 
@@ -188,7 +294,13 @@ metadata:
   name: my-app-deployment
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: my-app
   template:
+    metadata:
+      labels:
+        app: my-app
     spec:
       containers:
         - name: my-app
@@ -199,10 +311,65 @@ spec:
               readOnly: true
       volumes:
         - name: secret-volume
-
           secret:
             secretName: my-application-secret
 ```
+
+### 4. Auto-Redeploying Deployments When Secrets Change
+
+To ensure that deployments are automatically redeployed when their associated secrets change, add the `secrets.phase.dev/redeploy` annotation with a value of `"true"` to your deployment. This instructs the Phase Kubernetes Operator to redeploy the application whenever the specified secrets are updated.
+
+Here's an example deployment manifest incorporating this approach:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app-autoredeploy
+  annotations:
+    secrets.phase.dev/redeploy: 'true'
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-app-autoredeploy
+  template:
+    metadata:
+      labels:
+        app: my-app-autoredeploy
+    spec:
+      containers:
+        - name: my-app
+          image: my-app-image
+          env:
+            - name: ANOTHER_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: my-application-secret
+                  key: ANOTHER_SECRET_KEY
+```
+
+### When Operator Triggers Redeployment
+
+The operator triggers redeployment in the following case:
+
+1. **Secret Change Detected**: When the operator updates a Kubernetes secret (either creates a new one, updates an existing one, or deletes and recreates one due to type change), it checks for deployments in the same namespace that have the `REDEPLOY_ANNOTATION` set.
+
+2. **Annotation Present on Deployment**: If a deployment has the annotation `secrets.phase.dev/redeploy` (the value of `REDEPLOY_ANNOTATION`), it indicates that this deployment is reliant on the secret(s) being managed by the operator.
+
+3. **Patching the Deployment for Redeployment**: When such a deployment is found, the operator triggers a redeployment by patching the deployment. This is typically done by updating an annotation on the deployment's pod template, which results in Kubernetes redeploying the pods.
+
+### When Operator Does Not Trigger Redeployment
+
+The operator does not trigger redeployment in the following cases:
+
+1. **No Secret Change**: If there are no changes in the secrets (i.e., the fetched secrets from Phase service are the same as what's already in Kubernetes), the operator does not perform any secret update actions, and consequently, no redeployment is triggered.
+
+2. **Deployment Lacks Annotation**: If a deployment in the namespace does not have the `secrets.phase.dev/redeploy` annotation, it will not be considered for redeployment by the operator, even if it uses the secrets being managed.
+
+3. **Secret Change Not Affecting Deployments**: If the updated secret is not used by any deployment or if the deployments using the secret do not rely on the operator for updates (i.e., they do not have the redeploy annotation), those deployments will not be redeployed.
+
+4. **Errors During Processing**: If there's an error in processing the secrets (e.g., fetching from Phase service, processing, or updating in Kubernetes), and as a result, the secret update doesn’t happen, then no redeployment will be triggered.
 
 ### Security Considerations
 
