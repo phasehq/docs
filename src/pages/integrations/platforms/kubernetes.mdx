@@ -30,7 +30,7 @@ helm repo add phase https://helm.phase.dev && helm repo update
 Install the Phase Secrets Operator:
 
 ```fish
-helm install phase-secrets-operator phase/phase-kubernetes-operator --set image.tag=v0.1.0
+helm install phase-secrets-operator phase/phase-kubernetes-operator --set image.tag=v1.0.0
 ```
 
 <Note>
@@ -67,6 +67,8 @@ kubectl create secret generic phase-service-token \
 
 Create a custom resource file: `phase-secrets-operator-cr.yaml`
 
+A Basic custom resource to sync all secrets from `production` environment in an app in the Phase Console to your Kubernetes cluster as `my-application-secret`, type `Opaque`.
+
 ```yaml
 apiVersion: secrets.phase.dev/v1alpha1
 kind: PhaseSecret
@@ -74,16 +76,46 @@ metadata:
   name: example-phase-secret
   namespace: default
 spec:
-  phaseAppEnv: 'prod' # OPTIONAL - The Phase application environment to fetch secrets from
-  phaseHost: 'https://console.phase.dev' # OPTIONAL - URL of the Phase Console instance
+  phaseAppEnv: 'production' # OPTIONAL - The Phase application environment to fetch secrets from
+  phaseHost: 'https://console.phase.dev' # OPTIONAL - URL of a Phase Console instance
   authentication:
     serviceToken:
       serviceTokenSecretReference:
-        secretName: 'phase-service-token' # Name of the service token with access to your Phase application
+        secretName: 'phase-service-token' # Name of the Phase service token with access to your application
         secretNamespace: 'default'
   managedSecretReferences:
     - secretName: 'my-application-secret' # Name of the Kubernetes managed secret that Phase will sync
       secretNamespace: 'default'
+```
+
+Optionally, an example of a more complex custom resource that syncs PKCS12 base64 encoded secrets tagged as `certs` from a `production` environment in an app in the Phase Console to your Kubernetes cluster as `pkcs12`, type `kubernetes.io/tls`.
+
+```yaml
+apiVersion: secrets.phase.dev/v1alpha1
+kind: PhaseSecret
+metadata:
+  name: example-phase-secret
+  namespace: default
+spec:
+  phaseAppEnv: 'production' # The Phase application environment to fetch secrets from
+  phaseAppEnvTag: 'certs' # Tag for filtering secrets in the specified Phase app environment.
+  phaseHost: 'https://console.phase.dev' # URL of a Phase Console instance
+  authentication:
+    serviceToken:
+      serviceTokenSecretReference:
+        secretName: 'phase-service-token' # Name of the Phase service token with access to your application
+        secretNamespace: 'default'
+  managedSecretReferences:
+    - secretName: 'pkcs12'
+      secretNamespace: 'default'
+      secretType: 'kubernetes.io/tls' # The secret type to be created
+      processors:
+        PKCS12_PRIVATE_KEY: # The name of the secret stored in the Phase Console
+          asName: 'tls.crt' # The name of the secret to be created inside the secretName secret
+          type: 'base64' # Instruct the operator that the secret is already base64 encoded so as not to re-encode it
+        PKCS12_CERTIFICATE:
+          asName: 'tls.key'
+          type: 'base64'
 ```
 
 Deploy the custom resource:
