@@ -76,6 +76,7 @@ metadata:
   name: example-phase-secret
   namespace: default
 spec:
+  phaseApp: 'your-phase-app' # The name of your Phase application
   phaseAppEnv: 'production' # OPTIONAL - The Phase application environment to fetch secrets from
   phaseHost: 'https://console.phase.dev' # OPTIONAL - URL of a Phase Console instance
   authentication:
@@ -97,9 +98,10 @@ metadata:
   name: example-phase-secret
   namespace: default
 spec:
-  phaseAppEnv: 'production' # The Phase application environment to fetch secrets from
-  phaseAppEnvTag: 'certs' # Tag for filtering secrets in the specified Phase app environment.
-  phaseHost: 'https://console.phase.dev' # URL of a Phase Console instance
+  phaseApp: 'your-phase-app'
+  phaseAppEnv: 'production' # OPTIONAL - The Phase application environment to fetch secrets from
+  phaseAppEnvTag: 'certs' # OPTIONAL - Tag for filtering secrets in the specified Phase app environment.
+  phaseHost: 'https://console.phase.dev' # OPTIONAL - URL of a Phase Console instance
   authentication:
     serviceToken:
       serviceTokenSecretReference:
