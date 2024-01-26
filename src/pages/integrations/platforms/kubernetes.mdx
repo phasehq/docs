@@ -82,7 +82,7 @@ spec:
   authentication:
     serviceToken:
       serviceTokenSecretReference:
-        secretName: 'phase-service-token' # Name of the Phase service token with access to your application
+        secretName: 'phase-service-token' # Name of the Phase Service Token with access to your application
         secretNamespace: 'default'
   managedSecretReferences:
     - secretName: 'my-application-secret' # Name of the Kubernetes managed secret that Phase will sync
