@@ -30,7 +30,7 @@ helm repo add phase https://helm.phase.dev && helm repo update
 Install the Phase Secrets Operator:
 
 ```fish
-helm install phase-secrets-operator phase/phase-kubernetes-operator --set image.tag=v1.0.0
+helm install phase-secrets-operator phase/phase-kubernetes-operator --set image.tag=v1.0.1
 ```
 
 <Note>
@@ -144,8 +144,8 @@ kubectl get secret my-application-secret -o yaml
 
 <Properties>
   <Property name="phaseAppEnv" type="optional">
-    The Phase App Environment to fetch secrets from (e.g., dev, staging,
-    prod). <b>Default</b>: `prod`.
+    The Phase App Environment to fetch secrets from (e.g., dev, staging, prod).{' '}
+    <b>Default</b>: `production`.
   </Property>
   <Property name="phaseAppEnvTag" type="optional">
     Tag for filtering secrets in the specified Phase App Environment.{' '}
