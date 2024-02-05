@@ -39,6 +39,19 @@ export default function App({ Component, pageProps }) {
           <title>{`${pageProps.title} - Phase Docs`}</title>
         )}
         <meta name="description" content={pageProps.description} />
+        <link
+          rel="icon"
+          type="image/svg+xml"
+          href={`${router.basePath}/favicon.svg`}
+          key="favicon"
+        />
+        <link
+          rel="mask-icon"
+          type="image/svg+xml"
+          href={`${router.basePath}/favicon.svg`}
+          key="favicon-safari"
+          color="#000000"
+        />
       </Head>
       <NextSeo
         title={router.pathname === '/' ? 'Phase Docs' : `${pageProps.title} - Phase Docs`}
