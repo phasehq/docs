@@ -37,7 +37,7 @@ docker run --rm --env-file <(phase secrets export) alpine:latest printenv
 If not you can manually pass your application name and environment:
 
 ```fish
-docker run --rm --env-file <(phase secrets --app "my application name" --env production export) alpine:latest printenv
+docker run --rm --env-file <(phase secrets export --app "my application name" --env production export) alpine:latest printenv
 ```
 
 <Note>

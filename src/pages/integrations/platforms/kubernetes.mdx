@@ -573,7 +573,7 @@ spec:
             [
               '/bin/sh',
               '-c',
-              'phase secrets --app "my application name" --env development > /secrets/secrets.env',
+              'phase secrets export --app "my application name" --env development > /secrets/secrets.env',
             ]
       containers:
         - name: main-container

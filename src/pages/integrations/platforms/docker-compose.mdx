@@ -56,7 +56,7 @@ export PHASE_SERVICE_TOKEN=<YOUR_PHASE_SERVICE_TOKEN>
 
 ```bash
 mkfifo /path/to/your/fifo
-phase secrets --app "my application name" --env development > /path/to/your/fifo &
+phase secrets export --app "my application name" --env development > /path/to/your/fifo &
 ```
 
 3. In your `docker-compose.yml`, use the FIFO as an environment file:
@@ -91,7 +91,7 @@ Using `mkfifo` avoids writing secrets to disk, but as with other methods, ensure
 1. Export secrets as environment variables in your shell.
 
 ```bash
-eval $(phase secrets --app "my application name" --env development)
+eval $(phase secrets export --app "my application name" --env development)
 ```
 
 2. Reference these environment variables directly in your `docker-compose.yml`:
