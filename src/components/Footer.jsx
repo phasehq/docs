@@ -241,14 +241,11 @@ function SmallPrint() {
         <SocialLink href="https://slack.phase.dev" icon={SlackIcon}>
           Join our Slack
         </SocialLink>
-        <SocialLink
-          href="https://www.linkedin.com/company/phasehq/"
-          icon={XIcon}
-        >
+        <SocialLink href="https://twitter.com/phasedotdev" icon={XIcon}>
           Follow us on Twitter
         </SocialLink>
         <SocialLink
-          href="https://www.linkedin.com/company/phasehq/"
+          href="https://www.linkedin.com/company/phasehq"
           icon={LinkedInIcon}
         >
           Follow us on LinkedIn
