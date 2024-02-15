@@ -98,6 +98,12 @@ import "github.com/phasehq/golang-sdk/phase"
 
 Before interacting with the Phase service, initialize the SDK with your service token and the host information.
 
+Parameters:
+
+- `serviceToken` type `string`: Your Phase Service Token used to authenticate with the service and decrypt secrets
+- `host` type `sting`: The URL of the Phase Console instance
+- `debug` type `bool`: Setting to true will results in higher level of log verbosity useful when debugging
+
 ```go
 package main
 
@@ -124,7 +130,18 @@ func main() {
 
 ### Creating a Secret
 
-Define key-value pairs and specify the Environment, App name, and  path (optional) for each key to create new Secrets.
+Define key-value pairs and specify the Environment, App name, and path (optional) for each key to create new Secrets.
+
+Options:
+
+```go
+type CreateSecretsOptions struct {
+    KeyValuePairs []map[string]string
+    EnvName       string
+    AppName       string
+    SecretPath    map[string]string
+}
+```
 
 ```go
 opts := phase.CreateSecretsOptions{
@@ -144,7 +161,19 @@ if err != nil {
 
 ### Retrieving a Secret
 
-To retrieve a Secret, provide the Environment name, App name, Key, and optionally a tag and path.
+To retrieve the value of a single Secret, provide the Environment name, App name, Key, and optionally a tag and path.
+
+Options:
+
+```go
+type GetSecretOptions struct {
+    EnvName   string
+    AppName   string
+    KeyToFind string
+    Tag       string
+    SecretPath string
+}
+```
 
 ```go
 getOpts := phase.GetSecretOptions{
@@ -161,9 +190,53 @@ if err != nil {
 }
 ```
 
+### Retrieving all Secrets
+
+To retrieve the value of a single Secret, provide the Environment name, App name, Key, and optionally a tag and path.
+
+Options:
+
+```go
+type GetAllSecretsOptions struct {
+    EnvName string
+    AppName string
+    Tag     string
+    SecretPath string
+}
+```
+
+```go
+getOpts := phase.GetSecretOptions{
+    EnvName:   "Production",
+    AppName:   "MyApp",
+    Tag:       "",
+    SecretPath: "",
+
+}
+
+secrets, err := phaseClient.GetAll(getOpts)
+if err != nil {
+    log.Fatalf("Failed to fetch all secrets: %v", err)
+} else {
+    log.Printf("Secrets: %+v", secrets)
+}
+```
+
 ### Updating a Secret
 
 Provide the new value along with the environment name, application name, key, and optionally the path to update an existing secret.
+
+Options:
+
+```go
+type SecretUpdateOptions struct {
+    EnvName    string
+    AppName    string
+    Key        string
+    Value      string
+    SecretPath string
+}
+```
 
 ```go
 updateOpts := phase.SecretUpdateOptions{
@@ -183,6 +256,17 @@ if err != nil {
 ### Deleting a Secret
 
 Specify the environment name, application name, key to delete, and optionally the path to delete a secret.
+
+Options:
+
+```go
+type DeleteSecretOptions struct {
+    EnvName     string
+    AppName     string
+    KeyToDelete string
+    SecretPath  string
+}
+```
 
 ```go
 deleteOpts := phase.DeleteSecretOptions{
