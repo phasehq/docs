@@ -52,6 +52,11 @@ function useVisibleSections(sectionStore) {
         sectionIndex++
       ) {
         let { id, headingRef, offsetRem } = sections[sectionIndex]
+        // Check if headingRef and headingRef.current are defined
+        if (!headingRef || !headingRef.current) {
+          console.warn(`Skipping section ${id} because its ref is not defined.`)
+          continue // Skip this iteration if headingRef or headingRef.current is undefined
+        }
         let offset = remToPx(offsetRem)
         let top = headingRef.current.getBoundingClientRect().top + scrollY
 
@@ -61,11 +66,11 @@ function useVisibleSections(sectionStore) {
 
         let nextSection = sections[sectionIndex + 1]
         let nextSectionTop =
-          nextSection?.headingRef?.current?.getBoundingClientRect().top
+          nextSection?.headingRef?.current?.getBoundingClientRect()?.top +
+          scrollY
         let nextSectionOffsetRem = remToPx(nextSection?.offsetRem ?? 0)
 
-        let bottom =
-          (nextSectionTop ?? Infinity) + scrollY - nextSectionOffsetRem
+        let bottom = (nextSectionTop ?? Infinity) - nextSectionOffsetRem
 
         if (
           (top > scrollY && top < scrollY + innerHeight) ||
