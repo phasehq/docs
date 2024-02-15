@@ -317,6 +317,7 @@ export const navigation = [
       { title: 'JavaScript', href: '/sdks/js' },
       { title: 'Node.js', href: '/sdks/node' },
       { title: 'Python', href: '/sdks/python' },
+      { title: 'Golang', href: '/sdks/go' },
     ],
   },
   {

@@ -10,16 +10,15 @@ import logoPython from '@/images/logos/python.svg'
 import logoRuby from '@/images/logos/ruby.svg'
 import clsx from 'clsx'
 
-const clientSdks = [
+// Merged list of SDKs
+const sdks = [
   {
     href: '/sdks/js',
     name: 'JavaScript',
     description: "Encrypt data directly in your users' browsers.",
     logo: logoJavaScript,
+    available: true,
   },
-]
-
-const serverSdks = [
   {
     href: '/sdks/node',
     name: 'Node.js',
@@ -36,14 +35,14 @@ const serverSdks = [
     logo: logoPython,
     available: true,
   },
-  // {
-  //   href: '',
-  //   name: 'Go (Coming soon)',
-  //   description:
-  //     'Encrypt and decrypt data in your preferred Go application server.',
-  //   logo: logoGo,
-  //   available: false,
-  // },
+  {
+    href: '/sdks/go',
+    name: 'Golang',
+    description: 'Create, read, update, delete secrets in your Go application.',
+    logo: logoGo,
+    available: true,
+  },
+  // Add any other SDKs here
 ]
 
 function ArrowIcon(props) {
@@ -64,62 +63,29 @@ let arrowIcon = <ArrowIcon className={clsx('mt-0.5 -mr-1 h-5 w-5')} />
 export function Libraries() {
   return (
     <div className="my-16 xl:max-w-none">
-      <Heading level={2} id="client">
-        Client
-      </Heading>
-      <p>Client SDKs allow you encrypt data in client-side applications.</p>
-      <div className="not-prose mt-4 grid grid-cols-1 gap-x-6 gap-y-10 border-t border-zinc-900/5 pt-10 dark:border-white/5 sm:grid-cols-2 xl:max-w-none xl:grid-cols-3">
-        {clientSdks.map((library) => (
-          <Card key={library.name}>
-            <Link href={library.href} className="flex flex-row-reverse gap-6">
-              <div className="flex-auto">
-                <h3 className=" font-semibold text-zinc-900 dark:text-white">
-                  {library.name}
-                </h3>
-                <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-                  {library.description}
-                </p>
-                <div className="mt-4">
-                  <div className="flex items-center text-emerald-500">
-                    Explore {arrowIcon}
-                  </div>
-                </div>
-              </div>
-              <Image
-                src={library.logo}
-                alt=""
-                className="h-12 w-12"
-                unoptimized
-              />
-            </Link>
-          </Card>
-        ))}
-      </div>
-      <hr />
-
-      <Heading level={2} id="server">
-        Server
+      <Heading level={2} id="sdks">
+        SDKs
       </Heading>
       <p>
-        Server SDKs allow you to Encrypt and decrypt data on server-side
-        applications.
+        Explore our SDKs for encrypting and decrypting data in both client-side
+        and server-side applications.
       </p>
       <div className="not-prose mt-4 grid grid-cols-1 gap-x-6 gap-y-10 border-t border-zinc-900/5 pt-10 dark:border-white/5 sm:grid-cols-2 xl:max-w-none xl:grid-cols-3">
-        {serverSdks.map((library) => (
-          <Card key={library.name}>
+        {sdks.map((sdk) => (
+          <Card key={sdk.name}>
             <Link
-              href={library.href}
+              href={sdk.href}
               className={clsx(
                 'flex flex-row-reverse gap-6',
-                !library.available && 'cursor-not-allowed opacity-40'
+                !sdk.available && 'cursor-not-allowed opacity-40'
               )}
             >
               <div className="flex-auto">
                 <h3 className="font-semibold text-zinc-900 dark:text-white">
-                  {library.name}
+                  {sdk.name}
                 </h3>
                 <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-                  {library.description}
+                  {sdk.description}
                 </p>
                 <div className="mt-4">
                   <div className="flex items-center text-emerald-500">
@@ -127,12 +93,7 @@ export function Libraries() {
                   </div>
                 </div>
               </div>
-              <Image
-                src={library.logo}
-                alt=""
-                className="h-12 w-12"
-                unoptimized
-              />
+              <Image src={sdk.logo} alt="" className="h-12 w-12" unoptimized />
             </Link>
           </Card>
         ))}
