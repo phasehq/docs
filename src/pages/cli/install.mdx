@@ -28,18 +28,15 @@ C:> py -m ensurepip --upgrade
 
 ```fish {{ title: 'MacOS' }}
 # Install brew - https://brew.sh/
-
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
 ```powershell {{ title: 'Windows' }}
 # Install scoop - https://scoop.sh
-
 Set-ExecutionPolicy RemoteSigned -Scope CurrentUser # Optional: Needed to run a remote script the first time
 irm get.scoop.sh | iex
 
 # Install git - Optional: if you don't have it already
-
 scoop install git
 ```
 
@@ -68,6 +65,17 @@ curl -fsSL https://get.docker.com | bash
 # Others: https://docs.docker.com/engine/install
 ```
 
+```fish {{ title: 'Raspberry Pi' }}
+# Install Python and pip
+sudo apt update && sudo apt install -y python3-pip python3-full
+
+# Set up a Python virtual environment
+python3 -m venv ~/phase-cli-venv
+
+# Switch to the virtual environment
+source ~/phase-cli-venv/bin/activate
+```
+
 </CodeGroup>
 
 ## Installation {{ className: 'lead' }}
@@ -75,7 +83,7 @@ curl -fsSL https://get.docker.com | bash
 <CodeGroup>
 
 ```fish {{ title: 'Pip' }}
-pip install phase-cli
+pip3 install phase-cli
 ```
 
 ```zsh {{ title: 'MacOS' }}
@@ -110,6 +118,10 @@ docker run phasehq/cli
 # Optional: run a specific version - docker run phasehq/cli:<version>
 ```
 
+```fish {{ title: 'Raspberry Pi' }}
+pip3 install phase-cli
+```
+
 </CodeGroup>
 
 ## Updates {{ className: 'lead' }}
@@ -117,7 +129,7 @@ docker run phasehq/cli
 <CodeGroup>
 
 ```fish {{ title: 'Pip' }}
-pip install --upgrade phase-cli
+pip3 install --upgrade phase-cli
 ```
 
 ```fish {{ title: 'MacOS' }}
@@ -149,6 +161,10 @@ phase update
 docker pull phasehq/cli
 
 # Optional: pull a specific version - docker pull phasehq/cli:<version>
+```
+
+```fish {{ title: 'Raspberry Pi' }}
+pip3 install --upgrade phase-cli
 ```
 
 </CodeGroup>
