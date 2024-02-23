@@ -6,16 +6,16 @@ export const description = 'Integrate Phase with Hashicorp Nomad'
 
 # Hashicorp Nomad
 
-You can use Phase run to inject secrets to your application running to Hashicorp Nomad process during runtime.
+You can use Phase to inject secrets to your application running on Hashicorp Nomad during runtime.
 
 ## Prerequisites
 
-- Have signed up for the [Phase Console](https://console.phase.dev) created an application
+- Have signed up for the [Phase Console](https://console.phase.dev) and created an App
 - Get a [`PHASE_SERVICE_TOKEN`](/console/tokens#service-tokens)
 
 ## Nomad task
 
-In order to deploy secrets to our application running in a Nomad cluster we will use the Phase CLI Docker image, available at [Docker Hub](https://hub.docker.com/r/phasehq/cli/tags) configured as a [prestart](https://developer.hashicorp.com/nomad/docs/job-specification/lifecycle) container which will authenticate with the Phase service using the `PHASE_SERVICE_TOKEN`, fetch secrets and write them to a shared directory which our run-alpine task will use to consume the secrets.
+In order to deploy secrets to our application running in a Nomad cluster we will use the Phase CLI Docker image, available at [Docker Hub](https://hub.docker.com/r/phasehq/cli/tags). We will configure this as a [prestart](https://developer.hashicorp.com/nomad/docs/job-specification/lifecycle) container which will authenticate with the Phase service using the `PHASE_SERVICE_TOKEN`, fetch secrets and write them to a shared directory which our `run-alpine` task will use to consume the secrets.
 
 Here's an example task `my-application-deployment.nomad`:
 
@@ -44,7 +44,7 @@ job "my-application-deployment" {
       }
 
       env {
-        PHASE_SERVICE_TOKEN = "pss_service:v1:<your-applications-phase-service-token>"
+        PHASE_SERVICE_TOKEN = "<your-phase-service-token>"
         // For self hosted Phase instances
         // PHASE_HOST = "https://phase.example.com"
       }
