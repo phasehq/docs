@@ -232,6 +232,10 @@ export const navigation = [
         href: '/integrations/platforms/hashicorp-vault',
       },
       {
+        title: 'Hashicorp Nomad',
+        href: '/integrations/platforms/hashicorp-nomad',
+      },
+      {
         title: 'Cloudflare Pages',
         href: '/integrations/platforms/cloudflare-pages',
       },
