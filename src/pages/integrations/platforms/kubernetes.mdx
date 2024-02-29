@@ -152,6 +152,10 @@ kubectl get secret my-application-secret -o yaml
     Tag for filtering secrets in the specified Phase App Environment.{' '}
     <b>Default</b>: `None`.
   </Property>
+  <Property name="phaseAppEnvPath" type="optional">
+    Path within the Phase application environment to fetch secrets from.{' '}
+    <b>Default</b>: `/`.
+  </Property>
   <Property name="phaseHost" type="optional">
     The URL of a Phase Console instance. <b>Default</b>:
     `https://console.phase.dev`.
