@@ -78,6 +78,7 @@ metadata:
 spec:
   phaseApp: 'your-phase-app' # The name of your Phase application
   phaseAppEnv: 'production' # OPTIONAL - The Phase App Environment to fetch secrets from
+  phaseAppEnvPath: '/' # OPTIONAL Path within the Phase application environment to fetch secrets from
   phaseHost: 'https://console.phase.dev' # OPTIONAL - URL of a Phase Console instance
   authentication:
     serviceToken:
@@ -100,7 +101,7 @@ metadata:
 spec:
   phaseApp: 'your-phase-app'
   phaseAppEnv: 'production' # OPTIONAL - The Phase App Environment to fetch secrets from
-  phaseAppEnvTag: 'certs' # OPTIONAL - Tag for filtering secrets in the specified Phase app environment.
+  phaseAppEnvPath: 'certs/' # OPTIONAL Path within the Phase application environment to fetch secrets from
   phaseHost: 'https://console.phase.dev' # OPTIONAL - URL of a Phase Console instance
   authentication:
     serviceToken:
