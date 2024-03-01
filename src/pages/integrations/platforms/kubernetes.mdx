@@ -30,7 +30,7 @@ helm repo add phase https://helm.phase.dev && helm repo update
 Install the Phase Secrets Operator:
 
 ```fish
-helm install phase-secrets-operator phase/phase-kubernetes-operator --set image.tag=v1.0.1
+helm install phase-secrets-operator phase/phase-kubernetes-operator --set image.tag=v1.2.0
 ```
 
 <Note>
@@ -78,6 +78,7 @@ metadata:
 spec:
   phaseApp: 'your-phase-app' # The name of your Phase application
   phaseAppEnv: 'production' # OPTIONAL - The Phase App Environment to fetch secrets from
+  phaseAppEnvPath: '/' # OPTIONAL Path within the Phase application environment to fetch secrets from
   phaseHost: 'https://console.phase.dev' # OPTIONAL - URL of a Phase Console instance
   authentication:
     serviceToken:
@@ -100,7 +101,7 @@ metadata:
 spec:
   phaseApp: 'your-phase-app'
   phaseAppEnv: 'production' # OPTIONAL - The Phase App Environment to fetch secrets from
-  phaseAppEnvTag: 'certs' # OPTIONAL - Tag for filtering secrets in the specified Phase app environment.
+  phaseAppEnvPath: 'certs/' # OPTIONAL Path within the Phase application environment to fetch secrets from
   phaseHost: 'https://console.phase.dev' # OPTIONAL - URL of a Phase Console instance
   authentication:
     serviceToken:
@@ -150,6 +151,10 @@ kubectl get secret my-application-secret -o yaml
   <Property name="phaseAppEnvTag" type="optional">
     Tag for filtering secrets in the specified Phase App Environment.{' '}
     <b>Default</b>: `None`.
+  </Property>
+  <Property name="phaseAppEnvPath" type="optional">
+    Path within the Phase application environment to fetch secrets from.{' '}
+    <b>Default</b>: `/`.
   </Property>
   <Property name="phaseHost" type="optional">
     The URL of a Phase Console instance. <b>Default</b>:
