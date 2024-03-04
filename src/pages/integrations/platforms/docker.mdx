@@ -134,8 +134,6 @@ docker run --env PHASE_SERVICE_TOKEN=[pss_env:...] [IMAGE]...
   />
 </div>
 
-Certainly! Using the `ENTRYPOINT` in a Dockerfile to inject secrets via a tool like "phase" can have some benefits, but it also comes with its own set of security considerations. Let's discuss them:
-
 ### Security Considerations
 
 1. **Exposure in process list**: Commands run in containers can sometimes be viewed from the host system's process list (e.g., `ps aux`). This could potentially expose sensitive information if secrets are passed as command-line arguments. In the example provided, the actual secret content wouldn't be visible because it's fetched by the tool at runtime, but the command itself is.
