@@ -219,7 +219,7 @@ export const navigation = [
       //{ title: 'Overview', href: '/das' },
       { title: 'Docker', href: '/integrations/platforms/docker' },
       {
-        title: 'Docker-compose',
+        title: 'Docker Compose',
         href: '/integrations/platforms/docker-compose',
       },
       { title: 'Kubernetes', href: '/integrations/platforms/kubernetes' },
