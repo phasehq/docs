@@ -18,15 +18,67 @@ You can use Phase run to inject secrets to your application process during runti
   `PHASE_HOST` environment variable with your URL (`https://<HOST>`).
 </Note>
 
-## Using Docker `Entrypoint`
+## Docker `CMD`
 
-1. Set `PHASE_SERVICE_TOKEN` as an environment variable.
+This method uses the Phase CLI running inside each of your Docker containers to inject secrets to your application at runtime.
 
-```fish
-export PHASE_SERVICE_TOKEN=<YOUR_PHASE_SERVICE_TOKEN>
+1. **Installing the Phase CLI in Your Docker Container**
+
+To maintain deterministic Docker builds and prevent accidentally breaking things, it's highly recommended to specify the `--version` flag for production deployments. You can find the latest versions of the CLI at the [Phase CLI GitHub releases](https://github.com/phasehq/cli/releases). If no `--version` flag is provided then the latest version of the CLI will be installed.
+
+<CodeGroup>
+
+```fish {{ title: 'Alpine Linux' }}
+ENV VERSION=<X.XX.XX>
+RUN apk add --no-cache curl && curl -fsSL https://pkg.phase.dev/install.sh | sh -s -- --version $VERSION
 ```
 
-2. Create or edit your `docker-compose.yml`:
+```fish {{ title: 'RedHat/CentOS/Amazon Linux' }}
+ENV VERSION=<X.XX.XX>
+RUN yum -y install bash sudo curl wget && curl -fsSL https://pkg.phase.dev/install.sh | bash -s -- --version $VERSION
+```
+
+```fish {{ title: 'Ubuntu/Debian' }}
+ENV VERSION=<X.XX.XX>
+RUN apt-get update && apt-get install -y bash sudo curl wget && curl -fsSL https://pkg.phase.dev/install.sh | bash -s -- --version $VERSION
+```
+
+</CodeGroup>
+
+2. **Defining Your Container's Start Command**
+
+Use `CMD` to specify the default command to run when starting your container, offering flexibility to override it easily. For initializing the Phase CLI with or without a `.phase.json`, including the `--app` and `--env` flags as context.
+
+**For a Single Command**:
+
+```fish
+FROM your-base-image
+
+# ... (other Docker commands, e.g., installing dependencies, copying source code, etc.)
+
+# Use CMD to define the default command. Include --app, --env, and optionally --version flags to specify context.
+CMD ["sh", "-c", "phase run --app \"my application name\" --env \"production\" yarn start"]
+```
+
+**For Multiple Commands**:
+
+```fish
+FROM your-base-image
+
+# ... (other Docker commands, e.g., installing dependencies, etc.)
+
+# Use CMD to define a series of commands with correct format and escaping, including Phase CLI version specification if needed.
+CMD ["sh", "-c", "phase run \"python manage.py migrate && python manage.py runserver payments-api:8000\""]
+```
+
+2. Set `PHASE_SERVICE_TOKEN` as an environment variable.
+
+```fish
+export PHASE_SERVICE_TOKEN_FOR_WEB=<YOUR_PHASE_SERVICE_TOKEN_FOR_WEB>
+export PHASE_SERVICE_TOKEN_FOR_API=<YOUR_PHASE_SERVICE_TOKEN_FOR_API>
+```
+
+3. Create or edit your `docker-compose.yml`:
 
 ```yaml
 version: '3'
@@ -44,47 +96,14 @@ services:
       - PHASE_SERVICE_TOKEN=${PHASE_SERVICE_TOKEN_FOR_API}
 ```
 
-## Using `mkfifo`
-
-1. Set `PHASE_SERVICE_TOKEN` as a environment variable.
-
-```fish
-export PHASE_SERVICE_TOKEN=<YOUR_PHASE_SERVICE_TOKEN>
-```
-
-2. In your shell, create a named pipe:
-
-```bash
-mkfifo /path/to/your/fifo
-phase secrets export --app "my application name" --env development > /path/to/your/fifo &
-```
-
-3. In your `docker-compose.yml`, use the FIFO as an environment file:
-
-```yaml
-version: '3'
-services:
-  web:
-    build: .
-    image: example-service-1
-    environment:
-      - /path/to/your/fifo
-```
-
-<Note>Make sure to clean up (remove) the FIFO once it's no longer in use.</Note>
-
 <div className="not-prose">
   <Button
-    href="https://man7.org/linux/man-pages/man3/mkfifo.3.html"
+    href="https://docs.docker.com/compose/environment-variables/set-environment-variables/"
     variant="text"
     arrow="right"
-    children="Mkfifo Linux manual page"
+    children="Learn more about Docker Compose environment variables"
   />
 </div>
-
-### Security Considerations
-
-Using `mkfifo` avoids writing secrets to disk, but as with other methods, ensure that the FIFO is only accessible by the intended processes. Also, be aware that while data in the FIFO isn't saved to a regular file, it can still be read by any process with the right permissions.
 
 ## Using `eval`
 
