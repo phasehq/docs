@@ -18,9 +18,78 @@ You can use Phase run to inject secrets to your application process during runti
   `PHASE_HOST` environment variable with your URL (`https://<HOST>`).
 </Note>
 
-## Docker `CMD`
+## Using Phase run
 
-This method uses the Phase CLI running inside each of your Docker containers to inject secrets to your application at runtime.
+This method uses the Phase CLI to inject secrets into your `docker compose` services without requiring any change in your docker file.
+
+1. Reference the required environment variables directly in your `docker-compose.yml`:
+
+<Note>
+  Only the secrets explicitly listed inside the `environment:` map will be
+  supplied to your services. Make sure to update the list every time you add a
+  new secret in Phase.
+</Note>
+
+```yaml
+version: '3'
+
+services:
+  web:
+    build: .
+    image: example-service-1
+    # 👇 Explicitly mention each secret that you want to supply to each service
+    environment:
+      - SECRET_VAR
+      - REDIS_HOST
+      - REDIS_PASSWORD
+    depends_on:
+      - redis
+
+  api:
+    build: .
+    image: example-service-2
+    environment:
+      # 👇 Explicitly mention each secret that you want to supply to each service
+      - ANOTHER_SECRET
+      - PG_HOST
+      - PG_USER
+      - PG_PASSWORD
+      - PG_DB_NAME
+    depends_on:
+      - pgql
+
+  pgql:
+    image: postgres:latest
+    environment:
+      # 👇 Explicitly mention each secret that you want to supply to each service
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:latest
+    environment:
+      # 👇 Explicitly mention each secret that you want to supply to each service
+      - REDIS_PASSWORD
+      - '6379:6379'
+
+volumes:
+  pgdata:
+```
+
+2. Inject secrets into `docker compose`:
+
+```fish
+phase run --app "my application name" docker compose up
+```
+
+## Using Docker `CMD`
+
+This method uses the Phase CLI running inside each of your Docker containers to inject secrets to your application at runtime. You will need to install the Phase CLI inside each of your Containers and adjust your `CMD` to add the `phase run` command as prefix.
 
 1. **Installing the Phase CLI in Your Docker Container**
 
@@ -107,9 +176,11 @@ services:
 
 ## Using `eval`
 
+This method let's you export all secrets stored in Phase as environment variable on the host system which can be used by `docker compose`.
+
 1. Export secrets as environment variables in your shell.
 
-```bash
+```fish
 eval $(phase secrets export --app "my application name" --env development)
 ```
 
@@ -122,10 +193,11 @@ services:
   web:
     build: .
     image: example-service-1
+    # 👇 Explicitly mention each secret that you want to supply to each service
     environment:
-      - SECRET_VAR=${SECRET_VAR}
-      - REDIS_HOST=redis
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - SECRET_VAR
+      - REDIS_HOST
+      - REDIS_PASSWORD
     depends_on:
       - redis
 
@@ -133,20 +205,22 @@ services:
     build: .
     image: example-service-2
     environment:
-      - ANOTHER_SECRET=${ANOTHER_SECRET}
-      - PG_HOST=pgql
-      - PG_USER=${PG_USER}
-      - PG_PASSWORD=${PG_PASSWORD}
-      - PG_DB_NAME=${PG_DB_NAME}
+      # 👇 Explicitly mention each secret that you want to supply to each service
+      - ANOTHER_SECRET
+      - PG_HOST
+      - PG_USER
+      - PG_PASSWORD
+      - PG_DB_NAME
     depends_on:
       - pgql
 
   pgql:
     image: postgres:latest
     environment:
-      - POSTGRES_USER=${PG_USER}
-      - POSTGRES_PASSWORD=${PG_PASSWORD}
-      - POSTGRES_DB=${PG_DB_NAME}
+      # 👇 Explicitly mention each secret that you want to supply to each service
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
     ports:
       - '5432:5432'
     volumes:
@@ -155,17 +229,76 @@ services:
   redis:
     image: redis:latest
     environment:
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
-    ports:
+      # 👇 Explicitly mention each secret that you want to supply to each service
+      - REDIS_PASSWORD
       - '6379:6379'
 
 volumes:
   pgdata:
 ```
 
-### Security Considerations
+<div className="not-prose">
+  <Button
+    href="https://docs.docker.com/engine/reference/run/#env-environment-variables"
+    variant="text"
+    arrow="right"
+    children="Docker Run - Docs"
+  />
+</div>
 
-When using `eval`, secrets are loaded directly into your shell environment. While they aren't written to disk, they are accessible in the shell session. Care should be taken not to accidentally expose or log these variables.
+## Using Phase export
+
+This method let's you export all secrets stored in Phase to a file on disk and supply them to `docker compose` via `env_file:`.
+
+1. Export secrets as environment variables in your shell.
+
+```fish
+phase secrets export --app "my application name" --env development > secrets.env
+```
+
+2. Reference these environment variables directly in your `docker-compose.yml`:
+
+```yaml
+version: '3'
+
+services:
+  web:
+    build: .
+    image: example-service-1
+    # 👇 Path to the file where you exported secrets to
+    env_file:
+      - secrets.env
+    depends_on:
+      - redis
+
+  api:
+    build: .
+    image: example-service-2
+    # 👇 Path to the file where you exported secrets to
+    env_file:
+      - secrets.env
+    depends_on:
+      - pgql
+
+  pgql:
+    image: postgres:latest
+    # 👇 Path to the file where you exported secrets to
+    env_file:
+      - secrets.env
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:latest
+    # 👇 Path to the file where you exported secrets to
+    env_file:
+      - secrets.env
+
+volumes:
+  pgdata:
+```
 
 <div className="not-prose">
   <Button
