@@ -56,31 +56,36 @@ This technique uses a feature that's available in Bash and some other shells, bu
   />
 </div>
 
+---
+
 ## Docker `CMD`
 
 1. **Installing the Phase CLI in Your Docker Container**
 
-To ensure the Phase CLI is available within your Docker container, include the appropriate installation commands for your base image's Linux distribution:
+To maintain deterministic Docker builds and prevent accidentally breaking things, it's highly recommended to specify the `--version` flag for production deployments. You can find the latest versions of the CLI at the [Phase CLI GitHub releases](https://github.com/phasehq/cli/releases). If no `--version` flag is provided then the latest version of the CLI will be installed.
 
 <CodeGroup>
 
 ```fish {{ title: 'Alpine Linux' }}
-RUN apk add --no-cache curl && curl -fsSL https://pkg.phase.dev/install.sh | sh
+ENV VERSION=<X.XX.XX>
+RUN apk add --no-cache curl && curl -fsSL https://pkg.phase.dev/install.sh | sh -s -- --version $VERSION
 ```
 
 ```fish {{ title: 'RedHat/CentOS/Amazon Linux' }}
-RUN yum -y install bash sudo curl wget && curl -fsSL https://pkg.phase.dev/install.sh | bash
+ENV VERSION=<X.XX.XX>
+RUN yum -y install bash sudo curl wget && curl -fsSL https://pkg.phase.dev/install.sh | bash -s -- --version $VERSION
 ```
 
 ```fish {{ title: 'Ubuntu/Debian' }}
-RUN apt-get update && apt-get install -y bash sudo curl wget && curl -fsSL https://pkg.phase.dev/install.sh | bash
+ENV VERSION=<X.XX.XX>
+RUN apt-get update && apt-get install -y bash sudo curl wget && curl -fsSL https://pkg.phase.dev/install.sh | bash -s -- --version $VERSION
 ```
 
 </CodeGroup>
 
 2. **Defining Your Container's Start Command**
 
-Use `CMD` to specify the default command to run when starting your container. This approach allows more flexibility compared to `ENTRYPOINT`, as `CMD` can easily be overridden by providing a different command at the end of the `docker run` statement.
+Use `CMD` to specify the default command to run when starting your container, offering flexibility to override it easily. For initializing the Phase CLI with or without a `.phase.json`, including the `--app` and `--env` flags as context.
 
 **For a Single Command**:
 
@@ -89,8 +94,8 @@ FROM your-base-image
 
 # ... (other Docker commands, e.g., installing dependencies, copying source code, etc.)
 
-# Use CMD to define the default command, especially if you don't have a .phase.json in your container image. Include --app and --env flags to specify context if needed.
-CMD ["sh", "-c", "phase run --app \"my application name\" yarn start"]
+# Use CMD to define the default command. Include --app, --env, and optionally --version flags to specify context.
+CMD ["sh", "-c", "phase run --app \"my application name\" --env \"production\" yarn start"]
 ```
 
 **For Multiple Commands**:
@@ -100,18 +105,13 @@ FROM your-base-image
 
 # ... (other Docker commands, e.g., installing dependencies, etc.)
 
-# Use CMD for defining a series of commands. It's crucial to correctly format and escape the commands.
+# Use CMD to define a series of commands with correct format and escaping, including Phase CLI version specification if needed.
 CMD ["sh", "-c", "phase run \"python manage.py migrate && python manage.py runserver payments-api:8000\""]
 ```
 
-<Note>
-  Opting for `CMD` instead of `ENTRYPOINT` allows for greater flexibility in
-  overriding the default command. This can be particularly useful in scenarios
-  where the container needs to be started with different commands without
-  modifying the Dockerfile.
-</Note>
-
 3. **Providing the `PHASE_SERVICE_TOKEN` to Your Container**
+
+Ensure the `PHASE_SERVICE_TOKEN` is securely provided to your container for authentication with Phase services.
 
 ```fish
 export PHASE_SERVICE_TOKEN=[pss_env:...]
@@ -126,6 +126,6 @@ docker run -e PHASE_SERVICE_TOKEN="$PHASE_SERVICE_TOKEN" your-application-contai
     href="https://docs.docker.com/engine/reference/builder/#cmd"
     variant="text"
     arrow="right"
-    children="Docker CMD - Docs"
+    children="Learn more about Docker CMD"
   />
 </div>
