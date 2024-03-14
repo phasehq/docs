@@ -18,6 +18,10 @@ Install the Phase CLI on the platform or operating system of your choice.
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
+```fish {{ title: 'Linux' }}
+curl -fsSL https://pkg.phase.dev/install.sh | sh
+```
+
 ```powershell {{ title: 'Windows' }}
 # Install scoop - https://scoop.sh
 Set-ExecutionPolicy RemoteSigned -Scope CurrentUser # Optional: Needed to run a remote script the first time
@@ -31,19 +35,7 @@ scoop install git
 apk add --no-cache curl && curl
 ```
 
-```fish {{ title: 'RedHat/CentOS/Amazon Linux' }}
-curl -fsSL https://pkg.phase.dev/install.sh | sh
-```
-
-```fish {{ title: 'Ubuntu/Debian' }}
-curl -fsSL https://pkg.phase.dev/install.sh | sh
-```
-
-```fish {{ title: 'Arch Linux' }}
-curl -fsSL https://pkg.phase.dev/install.sh | sh
-```
-
-```fish {{ title: 'Pip' }}
+```fish {{ title: 'Python pip' }}
 # Install python pip: https://pip.pypa.io/en/stable/installation/
 
 # Linux:
@@ -69,6 +61,10 @@ curl -fsSL https://get.docker.com | sh
 curl -fsSL https://pkg.phase.dev/install.sh | sh
 ```
 
+```fish {{ title: 'ARM64' }}
+curl -fsSL https://pkg.phase.dev/install.sh | sh
+```
+
 </CodeGroup>
 
 ## Installation {{ className: 'lead' }}
@@ -77,6 +73,10 @@ curl -fsSL https://pkg.phase.dev/install.sh | sh
 
 ```fish {{ title: 'MacOS' }}
 brew install phasehq/cli/phase
+```
+
+```fish {{ title: 'Linux' }}
+curl -fsSL https://pkg.phase.dev/install.sh | sh
 ```
 
 ```fish {{ title: 'Windows' }}
@@ -88,19 +88,7 @@ scoop install phase
 apk add --no-cache curl && curl -fsSL https://pkg.phase.dev/install.sh | sh
 ```
 
-```fish {{ title: 'RedHat/CentOS/Amazon Linux' }}
-curl -fsSL https://pkg.phase.dev/install.sh | sh
-```
-
-```fish {{ title: 'Ubuntu/Debian' }}
-curl -fsSL https://pkg.phase.dev/install.sh | sh
-```
-
-```fish {{ title: 'Arch Linux' }}
-curl -fsSL https://pkg.phase.dev/install.sh | sh
-```
-
-```fish {{ title: 'Pip' }}
+```fish {{ title: 'Python pip' }}
 pip3 install phase-cli
 ```
 
@@ -115,6 +103,10 @@ docker run phasehq/cli
 curl -fsSL https://pkg.phase.dev/install.sh | sh
 ```
 
+```fish {{ title: 'ARM64' }}
+curl -fsSL https://pkg.phase.dev/install.sh | sh
+```
+
 </CodeGroup>
 
 ## Updates {{ className: 'lead' }}
@@ -125,6 +117,10 @@ curl -fsSL https://pkg.phase.dev/install.sh | sh
 brew update && brew upgrade phase
 ```
 
+```fish {{ title: 'Linux' }}
+phase update
+```
+
 ```fish {{ title: 'Windows' }}
 scoop update phase
 ```
@@ -133,19 +129,7 @@ scoop update phase
 phase update
 ```
 
-```fish {{ title: 'RedHat/CentOS/Amazon Linux' }}
-phase update
-```
-
-```fish {{ title: 'Ubuntu/Debian' }}
-phase update
-```
-
-```fish {{ title: 'Arch Linux' }}
-phase update
-```
-
-```fish {{ title: 'Pip' }}
+```fish {{ title: 'Python pip' }}
 pip3 install --upgrade phase-cli
 ```
 
@@ -157,6 +141,10 @@ docker pull phasehq/cli
 ```
 
 ```fish {{ title: 'Raspberry Pi' }}
+phase update
+```
+
+```fish {{ title: 'ARM64' }}
 phase update
 ```
 
