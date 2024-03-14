@@ -13,22 +13,13 @@ Install the Phase CLI on the platform or operating system of your choice.
 
 <CodeGroup>
 
-```fish {{ title: 'Pip' }}
-# Install python pip: https://pip.pypa.io/en/stable/installation/
-
-# Linux:
-python -m ensurepip --upgrade
-
-# MacOS:
-python -m ensurepip --upgrade
-
-# Windows:
-C:> py -m ensurepip --upgrade
-```
-
 ```fish {{ title: 'MacOS' }}
 # Install brew - https://brew.sh/
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+```fish {{ title: 'Linux' }}
+curl -fsSL https://pkg.phase.dev/install.sh | sh
 ```
 
 ```powershell {{ title: 'Windows' }}
@@ -44,36 +35,34 @@ scoop install git
 apk add --no-cache curl && curl
 ```
 
-```fish {{ title: 'RedHat/CentOS/Amazon Linux' }}
-curl -fsSL https://pkg.phase.dev/install.sh | bash
-```
+```fish {{ title: 'Python pip' }}
+# Install python pip: https://pip.pypa.io/en/stable/installation/
 
-```fish {{ title: 'Ubuntu/Debian' }}
-curl -fsSL https://pkg.phase.dev/install.sh | bash
-```
+# Linux:
+python -m ensurepip --upgrade
 
-```fish {{ title: 'Arch Linux' }}
-curl -fsSL https://pkg.phase.dev/install.sh | bash
+# MacOS:
+python -m ensurepip --upgrade
+
+# Windows:
+C:> py -m ensurepip --upgrade
 ```
 
 ```fish {{ title: 'Docker' }}
 # Install Docker on your system
 
 # Linux:
-curl -fsSL https://get.docker.com | bash
+curl -fsSL https://get.docker.com | sh
 
 # Others: https://docs.docker.com/engine/install
 ```
 
 ```fish {{ title: 'Raspberry Pi' }}
-# Install Python and pip
-sudo apt update && sudo apt install -y python3-pip python3-full
+curl -fsSL https://pkg.phase.dev/install.sh | sh
+```
 
-# Set up a Python virtual environment
-python3 -m venv ~/phase-cli-venv
-
-# Switch to the virtual environment
-source ~/phase-cli-venv/bin/activate
+```fish {{ title: 'ARM64' }}
+curl -fsSL https://pkg.phase.dev/install.sh | sh
 ```
 
 </CodeGroup>
@@ -82,12 +71,12 @@ source ~/phase-cli-venv/bin/activate
 
 <CodeGroup>
 
-```fish {{ title: 'Pip' }}
-pip3 install phase-cli
+```fish {{ title: 'MacOS' }}
+brew install phasehq/cli/phase
 ```
 
-```zsh {{ title: 'MacOS' }}
-brew install phasehq/cli/phase
+```fish {{ title: 'Linux' }}
+curl -fsSL https://pkg.phase.dev/install.sh | sh
 ```
 
 ```fish {{ title: 'Windows' }}
@@ -99,16 +88,8 @@ scoop install phase
 apk add --no-cache curl && curl -fsSL https://pkg.phase.dev/install.sh | sh
 ```
 
-```fish {{ title: 'RedHat/CentOS/Amazon Linux' }}
-curl -fsSL https://pkg.phase.dev/install.sh | bash
-```
-
-```fish {{ title: 'Ubuntu/Debian' }}
-curl -fsSL https://pkg.phase.dev/install.sh | bash
-```
-
-```fish {{ title: 'Arch Linux' }}
-curl -fsSL https://pkg.phase.dev/install.sh | bash
+```fish {{ title: 'Python pip' }}
+pip3 install phase-cli
 ```
 
 ```fish {{ title: 'Docker' }}
@@ -119,7 +100,11 @@ docker run phasehq/cli
 ```
 
 ```fish {{ title: 'Raspberry Pi' }}
-pip3 install phase-cli
+curl -fsSL https://pkg.phase.dev/install.sh | sh
+```
+
+```fish {{ title: 'ARM64' }}
+curl -fsSL https://pkg.phase.dev/install.sh | sh
 ```
 
 </CodeGroup>
@@ -128,12 +113,12 @@ pip3 install phase-cli
 
 <CodeGroup>
 
-```fish {{ title: 'Pip' }}
-pip3 install --upgrade phase-cli
-```
-
 ```fish {{ title: 'MacOS' }}
 brew update && brew upgrade phase
+```
+
+```fish {{ title: 'Linux' }}
+phase update
 ```
 
 ```fish {{ title: 'Windows' }}
@@ -144,16 +129,8 @@ scoop update phase
 phase update
 ```
 
-```fish {{ title: 'RedHat/CentOS/Amazon Linux' }}
-phase update
-```
-
-```fish {{ title: 'Ubuntu/Debian' }}
-phase update
-```
-
-```fish {{ title: 'Arch Linux' }}
-phase update
+```fish {{ title: 'Python pip' }}
+pip3 install --upgrade phase-cli
 ```
 
 ```fish {{ title: 'Docker' }}
@@ -164,40 +141,11 @@ docker pull phasehq/cli
 ```
 
 ```fish {{ title: 'Raspberry Pi' }}
-pip3 install --upgrade phase-cli
+phase update
+```
+
+```fish {{ title: 'ARM64' }}
+phase update
 ```
 
 </CodeGroup>
-
-## Troubleshooting
-
-Phase not found on Windows:
-
-Installed via `pip install phase-cli` but the `phase` command is not found:
-
-![phase-not-found-windows](/assets/phase-pip-install-no-found-windows.png)
-
-1. **Check where `phase-cli` is installed**:
-
-```
-pip show phase-cli
-```
-
-![phase-not-found-windows](/assets/phase-pip-show-install-windows.png)
-
-Here is it indicated that python packages are installed in `C:\Users\<your-username>\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_<id>\LocalCache\local-packages\Python311\site-packages` which means your cli is available one directory up in the `\Scripts` folder.
-
-**i.e.** `C:\Users\<your-username>\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_<id>\LocalCache\local-packages\Python311\Scripts`
-
-2. **Add the `Scripts` directory to the `PATH`**:
-
-   - Search for "Environment Variables" on your computer (you can use the start menu search).
-   - Click on "Edit the system environment variables."
-   - In the System Properties window, go the Advanced tab and click the “Environment Variables” button.
-   - Under "System variables" table, scroll and find the `PATH` or `Path` variable, then click "Edit."
-   - In the Edit window, click "New" and then paste the path to your `Scripts` directory. **Example**: `C:\Users\<your-username>\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.11_<id>\LocalCache\local-packages\Python311\Scripts`
-   - Click OK to close each of the windows.
-
-3. **Open a new Command Prompt or PowerShell window**:
-   - After updating the `PATH`, you need to open a new command prompt or PowerShell window to reflect the changes.
-   - Now, try running your CLI command again.
