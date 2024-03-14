@@ -13,19 +13,6 @@ Install the Phase CLI on the platform or operating system of your choice.
 
 <CodeGroup>
 
-```fish {{ title: 'Pip' }}
-# Install python pip: https://pip.pypa.io/en/stable/installation/
-
-# Linux:
-python -m ensurepip --upgrade
-
-# MacOS:
-python -m ensurepip --upgrade
-
-# Windows:
-C:> py -m ensurepip --upgrade
-```
-
 ```fish {{ title: 'MacOS' }}
 # Install brew - https://brew.sh/
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -56,6 +43,19 @@ curl -fsSL https://pkg.phase.dev/install.sh | sh
 curl -fsSL https://pkg.phase.dev/install.sh | sh
 ```
 
+```fish {{ title: 'Pip' }}
+# Install python pip: https://pip.pypa.io/en/stable/installation/
+
+# Linux:
+python -m ensurepip --upgrade
+
+# MacOS:
+python -m ensurepip --upgrade
+
+# Windows:
+C:> py -m ensurepip --upgrade
+```
+
 ```fish {{ title: 'Docker' }}
 # Install Docker on your system
 
@@ -75,11 +75,7 @@ curl -fsSL https://pkg.phase.dev/install.sh | sh
 
 <CodeGroup>
 
-```fish {{ title: 'Pip' }}
-pip3 install phase-cli
-```
-
-```zsh {{ title: 'MacOS' }}
+```fish {{ title: 'MacOS' }}
 brew install phasehq/cli/phase
 ```
 
@@ -104,6 +100,10 @@ curl -fsSL https://pkg.phase.dev/install.sh | sh
 curl -fsSL https://pkg.phase.dev/install.sh | sh
 ```
 
+```fish {{ title: 'Pip' }}
+pip3 install phase-cli
+```
+
 ```fish {{ title: 'Docker' }}
 # Run the latest version
 docker run phasehq/cli
@@ -120,10 +120,6 @@ curl -fsSL https://pkg.phase.dev/install.sh | sh
 ## Updates {{ className: 'lead' }}
 
 <CodeGroup>
-
-```fish {{ title: 'Pip' }}
-pip3 install --upgrade phase-cli
-```
 
 ```fish {{ title: 'MacOS' }}
 brew update && brew upgrade phase
@@ -147,6 +143,10 @@ phase update
 
 ```fish {{ title: 'Arch Linux' }}
 phase update
+```
+
+```fish {{ title: 'Pip' }}
+pip3 install --upgrade phase-cli
 ```
 
 ```fish {{ title: 'Docker' }}
