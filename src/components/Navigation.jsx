@@ -325,6 +325,15 @@ export const navigation = [
     ],
   },
   {
+    title: 'API',
+    links: [
+      { title: 'Overview', href: '/public-api' },
+      { title: 'Encryption', href: '/public-api/encryption' },
+      { title: 'Authentication', href: '/public-api/authentication' },
+      { title: 'Secrets', href: '/public-api/secrets' },
+    ],
+  },
+  {
     title: 'Security',
     links: [
       { title: 'Overview', href: '/security' },
