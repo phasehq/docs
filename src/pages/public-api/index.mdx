@@ -9,4 +9,33 @@ export const description =
 # API
 
 The Phase Console exposes a public REST API to allow you to manage secrets programmatically, 
-and build your own automations for your stack. The API allows you to create, fetch, update and delete secrets accross all apps, envs and folders. 
+and build your own automations for your stack. The API allows you to create, fetch, update and delete secrets accross all apps, envs and folders. {{ className: 'lead' }}
+
+## Overview
+
+The Phase API is organized around [REST](https://en.wikipedia.org/wiki/Representational_State_Transfer). The API accepts data in the request body only in JSON-encoded format. The API uses standard HTTP methods and response codes.
+
+The API also return specific error messages when something goes wrong. Check out the API [errors page](/public-api/errors) for more details.
+
+## Authentication
+
+All API requests must be authenticated with a token in the `Authorization` header of each request. Check out the [API authentication](/public-api/authentication) page for more information on creating and using authentication tokens.
+
+## Base url
+
+If you are using Phase Cloud, the API can be accessed at `https://api.phase.dev`:
+
+```bash {{ title: 'Example request for Phase Cloud' }}
+curl https://api.phase.dev/v1/secrets?app_id=<app_id>&env=development \
+  -H "Authorization: Bearer {token}"
+```
+
+If you are self-hosting phase, the API is exposed at `${HTTP_PROTOTOCL}${HOST}/service/public`. For example, if you are running phase at `https://localhost`, the API will be accessible at `https://localhost/service/public`
+
+```bash {{ title: 'Example request for Phase self-hosted' }}
+curl https://localhost/service/public/v1/secrets?app_id=<app_id>&env=development \
+  -H "Authorization: Bearer {token}"
+```
+## Encryption mode
+
+Certain API endpoints that allow manipulation of encrypted data such as Secrets require Server-side encryption (SSE) to be enabled for the App. You can enable SSE for an App from the [App settings page](/console/apps#settings).
