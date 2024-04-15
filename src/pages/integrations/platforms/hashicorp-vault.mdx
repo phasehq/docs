@@ -228,20 +228,9 @@ Example: https://vault-cluster-public-vault-gbef9712.627dc7e1.z2.hashicorp.cloud
 
 ### Step 2: Configure Sync
 
-1. Go to your App in the Phase Console and go to the **Syncing** tab. If syncing is not yet enabled, click **Enable Syncing** and then **Enable**.
+1. Enable Server-side Encyrption (SSE) for the App from the [Settings](http://localhost:3000/console/apps#settings) tab if not enabled already.
 
-![Enable syncing button](/assets/images/platform-integrations/secret-syncing-sync.png)
-
-![Enable syncing dialog](/assets/images/platform-integrations/secret-syncing-enable.png)
-
-<Note>
-  Enabling syncing on your Phase application will allow the server to access
-  your encrypted secrets during syncing. This is necessary for the server to
-  sync your secrets to third parties. Depending on your threat model you may
-  want to consider [self-hosting](/self-hosting) the Phase Console.
-</Note>
-
-2. Select **Hashicorp Vault** under the 'Create a new Sync' menu.
+2. Go to your App in the Phase Console and go to the **Syncing** tab. Select **Hashicorp Vault** under the 'Create a new Sync' menu.
 
 ![Create Vault Sync](/assets/images/platform-integrations/hashicorp/vault/vault-create-sync-button.png)
 
