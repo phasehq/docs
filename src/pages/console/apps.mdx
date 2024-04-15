@@ -60,11 +60,34 @@ To remove a member from an App, click the "Remove member" button.
 
 ## Settings
 
-This screen shows you when this App was created, and allows you to delete an App.
+This screen shows you metadata for the App and allows you to perform administrative tasks such as changing the Encryption mode of the App or deleting it permanently.
+
+### Encryption
+Phase Apps are secured with end-to-end encryption (E2EE) by default. This means only users who are granted access to the App and its Environments can decrypt the secrets that are stored within it.
+
+However, in order to use certain features of Phase such as third-party integrations or the [public REST API](/public-api), you will need to enable server-side encryption (SSE).
+
+Enabling SSE will store a copy of each Environment's root key on the server, encrypted with the server's encryption key. This allows the server to decrypt secrets for syncing with third parties, or to make them available over the API. 
+
+### Enabling SSE
+
+To enable SSE for an App, click on the "Enable SSE" button under the "Encryption" section of the App Settings tab.
+
+![enable sse button](/assets/images/console/settings/encryption-section-e2ee.webp)
+
+Click "Enable" on the confirmation dialog:
+
+![enable sse dialog](/assets/images/console/settings/enable-sse-dialog.webp)
+
+Once enabled, the settings page will show you the updated Encryption mode:
+
+![sse enabled](/assets/images/console/settings/sse-enabled.webp)
+
+
 
 ### Delete an App
 
-To delete an app, click on the "Delete" button.
+To delete an app, click on the "Delete" button in the Settings tab.
 
 <Warning>
   Deleting an app will permanently delete all Environments, Secrets and Tokens

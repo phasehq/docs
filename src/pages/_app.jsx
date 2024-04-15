@@ -9,6 +9,8 @@ import dynamic from 'next/dynamic';
 import '@/styles/tailwind.css'
 import '@/styles/asciinema-player.css'
 import 'focus-visible'
+import { JetBrains_Mono } from 'next/font/google'
+
 
 // Dynamically import PostHogProvider with SSR turned off
 const PostHogProvider = dynamic(

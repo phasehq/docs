@@ -36,6 +36,17 @@ module.exports = {
         7.5: '0.075',
         15: '0.15',
       },
+      fontFamily: {
+        mono: [
+          'JetBrains Mono',
+          'Menlo',
+          'Monaco',
+          'Consolas',
+          'Liberation Mono',
+          'Courier New',
+          'monospace',
+        ],
+      },
     },
   },
   plugins: [require('@tailwindcss/typography')],
