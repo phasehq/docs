@@ -5,19 +5,14 @@ import { motion, useMotionTemplate, useMotionValue } from 'framer-motion'
 
 import { GridPattern } from '@/components/GridPattern'
 import { Heading } from '@/components/Heading'
-import { ChatBubbleIcon } from '@/components/icons/ChatBubbleIcon'
-import { EnvelopeIcon } from '@/components/icons/EnvelopeIcon'
-import { UserIcon } from '@/components/icons/UserIcon'
-import { UsersIcon } from '@/components/icons/UsersIcon'
 import { TbSdk, TbTerminal2, TbApi, TbTableExport } from 'react-icons/tb'
-import { GoTerminal } from 'react-icons/go'
 
 const resources = [
   {
     href: '/console',
     name: 'Console',
     description:
-      'Manage secrets across different environments, invite teammates and view logs in a web dashboard.',
+      'Manage secrets across environments and teams via a web dashboard.',
     icon: TbTableExport,
     pattern: {
       y: 16,
@@ -144,7 +139,7 @@ function Resource({ resource }) {
   )
 }
 
-export function Resources() {
+export function Platform() {
   return (
     <div className="my-16 xl:max-w-none">
       <Heading level={2} id="resources">
