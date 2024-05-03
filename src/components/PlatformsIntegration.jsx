@@ -14,6 +14,7 @@ import logoKubernetes from '@/images/logos/kubernetes.svg'
 import logoGitHub from '@/images/logos/github.svg'
 import logoAws from '@/images/logos/aws.svg'
 import logoNomad from '@/images/logos/nomad.svg'
+import logoCloudflarePages from '@/images/logos/cloudflare-pages.svg'
 
 import clsx from 'clsx'
 
@@ -48,22 +49,18 @@ const SDKs = [
     available: true,
   },
   {
-    href: '/integrations/platforms/aws-secrets-manager',
+    href: '/integrations/platforms/hashicorp-nomad',
     name: 'Hashicorp Nomad',
     description: 'Deploy secrets to your Hashicorp Nomad jobs.',
     logo: logoNomad,
     available: true,
   },
-]
-
-const serverSdks = [
   {
-    href: '',
-    name: 'Go (Coming soon)',
-    description:
-      'Encrypt and decrypt data in your preferred Go application server.',
-    logo: logoGo,
-    available: false,
+    href: '/integrations/platforms/cloudflare-pages',
+    name: 'Cloudflare Pages',
+    description: 'Deploy secrets to your Cloudflare Pages deployments.',
+    logo: logoCloudflarePages,
+    available: true,
   },
 ]
 
