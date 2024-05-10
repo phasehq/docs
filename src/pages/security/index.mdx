@@ -2,38 +2,73 @@ import { Tag } from '@/components/Tag'
 import { HeroPattern } from '@/components/HeroPattern'
 
 export const description =
-  'An overview of the Phase Encryption architecture, threat model and high level concepts.'
+  'An overview of the Phase architecture, threat model and high level concepts.'
 
 <HeroPattern />
 
 <Tag variant="small">SECURITY</Tag>
 
-# Overview
+# Security Overview
 
-Phase has been designed to give app developers access to some of the best cryptography available while being easy to integrate, manage and observe key usage; all while providing robust security. This involves various decisions around how and where encryption keys are generated, deployed and managed, how data is encrypted or decrypted, what algorithms are used for various cryptographic operations and how Phase interacts with your applications.
+Phase is designed to give developers strong, versatile, reliable application secrets and configuration management platform that is laser focused on security, developer experience and integrations. Giving developers access to strong security tools that can be easily adopted and implement in early stages of development help shift security left.
 
-In this page we will first provide an overview of high level concepts before explaining the details of how Phase encryption works.
+## TL;DR
 
-## Threat model and security assumptions
+What is end-to-end encrypted?
 
-- The Phase `APP_SECRET` is kept safe by you
-- The application runtime where you are using Phase to decrypt data is trusted
-- The device and operating system that is being used to access the Phase Console and generate keys is trusted
-- The JavaScript that you are executing when you are accessing the Phase Console is authentic and trusted. If this is a genuine concern, please consider self hosting the Phase Console. In the future, we plan to explore cryptographically signing JavaScript and validating it client side before execution.
+-
 
-## Security audits
+When is something not end-to-end encrypted?
 
-Phase uses strong and robust cryptographic libraries and implementations such as [libsodium](https://doc.libsodium.org/) which have gone though a formal audit. We plan to go through a similar formal security assessment and audit with the Phase Console.
+What is encrypted only at transport via TLS?
 
-From the libsodium report:
+How is it encrypted?
 
-> Our review of libsodium did not uncover any critical flaws or vulnerabilities in the core library. Libsodium developers have followed best practices in terms of cryptographic design and secure development in C. The library provides the right level of abstraction for application developers that need a secure, easy-to-use API for cryptography. Moreover, the library provides secure defaults for every cryptographic primitive with production-level quality...
+## Security Objectives
 
-The audit was sponsored by [Private Internet Access](https://www.privateinternetaccess.com/blog/libsodium-v1-0-12-and-v1-0-13-security-assessment/) (PIA) VPN.
+To provide developers with strong security via end-to-end encrypted configuration and secrets management system that is secure, cryptographically sound, reliable, easy to use, and easy to integrate.
 
-[Download the report](/assets/libsodium_audit.pdf)
+No host server or third party should be trusted by any EnvKey client. Even if an EnvKey host server is compromised, it shouldn't be possible for the attacker to read or modify an organization's secrets (except for deleting them).
+
+Even if an attacker compromises the email or SSO account a user uses to authenticate with EnvKey, it shouldn't be possible for the attacker to read or modify an organization's secrets.
+
+Implement reliable, standards-based cryptography with proven libraries.
+
+Protect against real world threats and avoid known theoretical vulnerabilities. Beyond that, don't increase key sizes, add optimizations, or complicate user experience beyond what's needed to achieve this goal.
+
+## Out of scope
+
+User devices and connected servers are assumed to be trusted. EnvKey does not attempt to protect against endpoint compromise, either through physical access, or through viruses, keyloggers, Operating System exploits, privilege escalation, or other attacks.
+
+EnvKey does make it easy to cut off access as soon as possible, to track which secrets may have been exposed, and to contain the fallout by rotating them quickly.
+
+EnvKey also integrates with the OS keyring on Mac and Windows, only stores encrypted data on disk, and evicts secrets from RAM if they haven't been accessed recently, all of which could help to mitigate the fallout of an endpoint attack.
 
 ---
+
+## Third party services (Phase Cloud)
+
+### Hosting - Cloudflare
+
+- Reverse proxy
+- Cache
+- Workers
+- Pages
+- WAF
+- DDoS Protection
+- Rate limiting
+
+### Hosting - AWS
+
+- EC2 - Compute
+- RDS Postgresql - Relational database
+- ElastiCache Redis - In memory database
+- SES - Transactional Emails
+
+### Analytics
+
+- PostHog
+- Cloudflare Web Analytics
 
 ## Account
 
@@ -56,8 +91,6 @@ Depending on your threat model, we recommend you:
 - Write down or print the 24-word recovery phrase and store it some place safe
 - Save it in a password manager or vault
 
-In the future we have plans to let users store their recovery key on a self custodial HSM like [YubiKey](https://en.wikipedia.org/wiki/YubiKey).
-
 ### The `sudo` password
 
 Part of the signup / login process also involves setting up a `sudo` password. This password is used to encrypt your Account keys and store them locally in your browser. To perform certain operations such as creating an App, or rotating an `APP_SECRET`, you will be asked to enter this `sudo` password so that your Account Keyring can be decrypted in memory.
@@ -75,7 +108,16 @@ If you want to login to the Phase console on a new device or browser, you will n
 
 ---
 
-## App keys
+## Tokens
+
+User token
+
+Service token
+
+```bash
+pss_user_pattern = re.compile(r"^pss_user:v(\d+):([a-fA-F0-9]{64}):([a-fA-F0-9]{64}):([a-fA-F0-9]{64}):([a-fA-F0-9]{64})$")
+pss_service_pattern = re.compile(r"^pss_service:v(\d+):([a-fA-F0-9]{64}):([a-fA-F0-9]{64}):([a-fA-F0-9]{64}):([a-fA-F0-9]{64})$")
+```
 
 To use Phase encryption with your application, you will need to create an App on Phase. Each Phase App is associated with the following cryptographic keys:
 
@@ -99,7 +141,7 @@ The `APP_SECRET`, as the name suggests, is secret and should never be placed in 
 
 ---
 
-## Dual-Key model
+## Secret sharding
 
 The App private key is used to decrypt data, however storing this private key in plaintext in a single location poses several security risks. A breach of this value is impossible to recover from, since the private key itself cannot be changed for given App.
 
@@ -112,22 +154,6 @@ This means that your App private key is never stored in a single place where it 
 <div className="not-prose">
   <Button
     href="/security/phase-encryption#app-keys-and-secret-generation"
-    variant="text"
-    arrow="right"
-    children="More info"
-  />
-</div>
-
----
-
-## Secret rotation
-
-The Dual-Key model also allows your `APP_SECRET` to be rotated in the event that this value is leaked. When you rotate an App key in the phase console, the encrypted share within Phase KMS is deleted, making it impossible to use the previous `APP_SECRET` to decrypt data.
-Your App private key is split into 2 brand new shares, and you will be provided with a new `APP_SECRET` to use in your application's environment variables.
-
-<div className="not-prose">
-  <Button
-    href="/security/phase-encryption#key-rotation-and-revocation"
     variant="text"
     arrow="right"
     children="More info"
