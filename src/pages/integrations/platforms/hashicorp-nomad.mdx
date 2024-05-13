@@ -6,7 +6,7 @@ export const description = 'Integrate Phase with Hashicorp Nomad'
 
 # Hashicorp Nomad
 
-You can use Phase to inject secrets to your application running on Hashicorp Nomad during runtime.
+Deploy secrets in Phase to your Nomad cluster as variables.
 
 <Warning>
   When secret syncing is enabled, secrets stored inside Phase will be treated as
@@ -38,11 +38,11 @@ While choosing a path in your policy you may want to consider the following Noma
 - Use `nomad/jobs/my-nomad-job/web` for access from all tasks in a specific task group
 - Use `nomad/jobs/my-nomad-job/web/http` for access from a specific task
 
-[Learn more about Nomad Variables](https://developer.hashicorp.com/nomad/tutorials/variables)
+[Learn more about automatic access to Nomad Variables](https://developer.hashicorp.com/nomad/tutorials/variables/variables-tasks)
 
-Below is a sample policy that you can use to deploy secrets to any path under `nomad/jobs/my-nomad-job*` in the `default` namespace.
+Below is a sample policy that you can use to deploy secrets to any path under `nomad/jobs/my-nomad-job*` in the `default` namespace. Feel free to adapt it for your own needs.
 
-Create the ACL Policy via the Nomad CLI:
+### Create the `ACL Policy` via the Nomad CLI:
 
 Create a `policy.hcl`
 
@@ -64,23 +64,27 @@ Apply the policy:
 nomad acl policy apply phase-console-nomad-secret-sync policy.hcl
 ```
 
-Create the ACL Policy
+### Create the `ACL Policy` via the Nomad web UI
 
-/ui/access-control/policies/new
+Go to `Access Control` -> `Policies` -> `+ Create Policy`
 
-Access Control -> Policies -> + Create Policy
+Enter an desired adaptation of the above policy that suites your purpose and a descriptive policy name.
 
 ![nomad-ui-policy-create](/assets/images/platform-integrations/hashicorp/nomad/nomad-ui-policy-create.png)
 
-create the token
+Click `Save Policy`.
 
-```
+Next, let's create a `Client Token`.
+
+### Create the client token via the Nomad CLI:
+
+```fish
 nomad acl token create -name='phase-console-nomad-sync-token' -policy='phase-console-nomad-secret-sync'
 ```
 
-On the cli, you should see:
+You should see the following output, please grab the `Secret ID` this is our `Client Token`.
 
-```
+```fish
 Accessor ID  = 0d39be90-c87a-62dd-66cb-925ddf6086d1
 Secret ID    = 6a5bd881-33d4-0199-6276-f8e4816d8b87 👈
 Name         = phase-console-nomad-sync-token
@@ -96,8 +100,14 @@ Roles
 <none>
 ```
 
-#### Create a new Client Token
+### Create the `Client Token` via the Nomad web UI
 
-/ui/access-control/tokens/new
+Go to `Access Control` -> `Tokens` -> `+ Create Token`
+
+Enter a descriptive `Token Name`, make sure the `Expiration time` to set to **Never** and the token type in the `Client or Management token?` option is **Client**. Select the policy you previously created from the `Policies` table and click `Save Token`.
 
 ![nomad-ui-token-create](/assets/images/platform-integrations/hashicorp/nomad/nomad-ui-token-create.png)
+
+In the following screen you will presented with a `Token Secret` which is the `Client Token`, please select it with your cursor and copy it manually as the copy button that is next to the text box is unreliable and instances of Nomad web UI that are accessed over a non-https connection.
+
+![nomad-ui-token-copy](/assets/images/platform-integrations/hashicorp/nomad/nomad-ui-token-copy.png)
