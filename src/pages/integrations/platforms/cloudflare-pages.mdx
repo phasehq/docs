@@ -17,10 +17,14 @@ You can use Phase to sync secrets with your Cloudflare Pages.
 ### Prerequisites
 
 - Sign up for the [Phase Console](/quickstart) and [create an App](/console/apps#create-an-app).
-- Enable Server-side Encyrption (SSE) for the App from the [Settings](http://localhost:3000/console/apps#settings) tab.
+- Enable Server-side Encyrption (SSE) for the App from the [Settings](/console/apps#settings) tab.
 
 <Note>
-For security reasons Phase sets the secret type in Cloudflare Pages environment variables as type `Encrypted` for additional protection. This means that you will not be able to see the secret value in the Cloudflare Pages UI. You can still use the secret in your build commands and environment variables.
+  For security reasons Phase sets the secret type in Cloudflare Pages
+  environment variables as type `Encrypted` for additional protection. This
+  means that you will not be able to see the secret value in the Cloudflare
+  Pages UI. You can still use the secret in your build commands and environment
+  variables.
 </Note>
 
 ## Step 1: Authentication
@@ -63,9 +67,10 @@ Scroll down and click **Continue to summary**
 ### Save your credentials in Phase
 
 <Note>
-  Your credentials are kept secure with robust application-layer encryption. 
-  Phase encrypts your credentials directly in the browser and only decrypts them in memory to perform sync operations. 
-  Your credentials are never stored in plaintext.
+  Your credentials are kept secure with robust application-layer encryption.
+  Phase encrypts your credentials directly in the browser and only decrypts them
+  in memory to perform sync operations. Your credentials are never stored in
+  plaintext.
 </Note>
 
 1. Go to **Integrations** from the sidebar and click on **Add credentials** in the 'Service credentials' section
@@ -97,15 +102,17 @@ Now that you have set up your Cloudflare account with Phase, you can start creat
 ![Choose sync authentication credentials](/assets/images/platform-integrations/cloudflare-pages/create-sync-choose-creds.png)
 
 <Note>
-  If you see an error message and cannot proceed to the next screen, it is most likely an issue with the Account ID or Access Token. 
-  Verify that you created the Cloudflare credentials correctly and update them from the Integrations screen if needed.
+  If you see an error message and cannot proceed to the next screen, it is most
+  likely an issue with the Account ID or Access Token. Verify that you created
+  the Cloudflare credentials correctly and update them from the Integrations
+  screen if needed.
 </Note>
 
-3. Choose the source and destination to sync secrets. Select an Environment as the source for Secrets. 
-Next, select your Cloudflare pages project from the 'Cloudflare project' field, and select either the 'Preview' or 'Production' environment. Once you have selected your desired source and destination, click **Create**.
+3. Choose the source and destination to sync secrets. Select an Environment as the source for Secrets.
+   Next, select your Cloudflare pages project from the 'Cloudflare project' field, and select either the 'Preview' or 'Production' environment. Once you have selected your desired source and destination, click **Create**.
 
 ![Choose sync source and destination](/assets/images/platform-integrations/cloudflare-pages/create-sync-source-destination.png)
 
-The sync has been set up! Secrets will automatically be Synced from your chosen Phase Environment to the Cloudflare pages project. You can click on the **Manage** button on the Sync card to view sync logs, pause syncing or update authentication credentials. 
+The sync has been set up! Secrets will automatically be Synced from your chosen Phase Environment to the Cloudflare pages project. You can click on the **Manage** button on the Sync card to view sync logs, pause syncing or update authentication credentials.
 
 ![Sync created](/assets/images/platform-integrations/cloudflare-pages/sync-created.png)
