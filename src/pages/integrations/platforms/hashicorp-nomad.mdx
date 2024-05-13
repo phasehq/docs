@@ -40,11 +40,11 @@ While choosing a path in your policy you may want to consider the following Noma
 
 [Learn more about automatic access to Nomad Variables](https://developer.hashicorp.com/nomad/tutorials/variables/variables-tasks)
 
+### Create a `Client Token` via the Nomad CLI:
+
+First let's start by creating an `ACL Policy`, create a `policy.hcl` file and write a valid policy to it.
+
 Below is a sample policy that you can use to deploy secrets to any path under `nomad/jobs/my-nomad-job*` in the `default` namespace. Feel free to adapt it for your own needs.
-
-### Create the `ACL Policy` via the Nomad CLI:
-
-Create a `policy.hcl`
 
 ```hcl
 namespace "default" {
@@ -64,19 +64,7 @@ Apply the policy:
 nomad acl policy apply phase-console-nomad-secret-sync policy.hcl
 ```
 
-### Create the `ACL Policy` via the Nomad web UI
-
-Go to `Access Control` -> `Policies` -> `+ Create Policy`
-
-Enter an desired adaptation of the above policy that suites your purpose and a descriptive policy name.
-
-![nomad-ui-policy-create](/assets/images/platform-integrations/hashicorp/nomad/nomad-ui-policy-create.png)
-
-Click `Save Policy`.
-
-Next, let's create a `Client Token`.
-
-### Create the client token via the Nomad CLI:
+Create the `Client Token` with the above policy.
 
 ```fish
 nomad acl token create -name='phase-console-nomad-sync-token' -policy='phase-console-nomad-secret-sync'
@@ -100,7 +88,31 @@ Roles
 <none>
 ```
 
-### Create the `Client Token` via the Nomad web UI
+### Create a `Client Token` via the Nomad web UI:
+
+First, let's start by creating a `ACL Policy`
+
+Go to `Access Control` -> `Policies` -> `+ Create Policy`
+
+Below is a sample policy that you can use to deploy secrets to any path under `nomad/jobs/my-nomad-job*` in the `default` namespace. Feel free to adapt it for your own needs.
+
+```hcl
+namespace "default" {
+  policy = "write"
+
+  variables {
+    path "nomad/jobs/my-nomad-job*" {
+      capabilities = ["write"]
+    }
+  }
+}
+```
+
+![nomad-ui-policy-create](/assets/images/platform-integrations/hashicorp/nomad/nomad-ui-policy-create.png)
+
+Click `Save Policy`.
+
+Next, let's create a `Client Token`.
 
 Go to `Access Control` -> `Tokens` -> `+ Create Token`
 
@@ -111,3 +123,5 @@ Enter a descriptive `Token Name`, make sure the `Expiration time` to set to **Ne
 In the following screen you will presented with a `Token Secret` which is the `Client Token`, please select it with your cursor and copy it manually as the copy button that is next to the text box is unreliable and instances of Nomad web UI that are accessed over a non-https connection.
 
 ![nomad-ui-token-copy](/assets/images/platform-integrations/hashicorp/nomad/nomad-ui-token-copy.png)
+
+## Step 2: Set up a secret sync
