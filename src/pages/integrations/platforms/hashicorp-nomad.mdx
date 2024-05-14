@@ -19,7 +19,7 @@ Deploy secrets in Phase to your Nomad cluster as variables.
 - Sign up for the [Phase Console](/quickstart) and [create an App](/console/apps#create-an-app).
 - Enable Server-side Encyrption (SSE) for the App from the [Settings](/console/apps#settings) tab.
 
-## Optional: Import exiting secrets from Hashicorp Nomad to Phase
+## Optional: Import existing secrets from Hashicorp Nomad to Phase
 
 You can use the following commands to import existing secrets from Nomad variables to Phase via the respective CLIs. Please make sure to replace the placeholders with appropriate source and destination for your secrets.
 
@@ -31,7 +31,7 @@ phase secrets import .env --env <YOUR_PHASE_ENV> --app <YOUR_PHASE_APPLICATION>
 
 ## Step 1: Authentication
 
-1. Create a ACL policy that will allow the Phase Console to write secrets to your Nomad cluster.
+1. Create an ACL policy that will allow the Phase Console to write secrets to your Nomad cluster.
 
 While choosing a path in your policy you may want to consider the following Nomad variable path conventions.
 
@@ -126,4 +126,48 @@ In the following screen you will presented with a `Token Secret` which is the `C
 
 ![nomad-ui-token-copy](/assets/images/platform-integrations/hashicorp/nomad/nomad-ui-token-copy.png)
 
+
+### Store authentication credentials in Phase
+
+<Note>
+  Your credentials are kept secure with robust application-layer encryption.
+  Phase encrypts your credentials directly in the browser and only decrypts them
+  in memory to perform sync operations. Your credentials are never stored in
+  plaintext.
+</Note>
+
+1. Create an `role_id` and `secret_id` via the Vault CLI. See [Step 2](#step-2-setting-up-app-role-authentication-and-acl-policy) for instructions.
+
+2. Go to **Integrations** from the sidebar and click on **Add credentials** in the 'Service credentials' section
+
+![Go to integrations](/assets/images/platform-integrations/integrations-sidebar.png)
+
+![Add a credential](/assets/images/platform-integrations/add-credential-button.png)
+
+3. Click on **Hashicorp Nomad**
+
+![Click on Nomad](/assets/images/platform-integrations/hashicorp/nomad/nomad-create-creds-button.png)
+
+4. Enter your Nomad instance host including the port, and your `Token Secret` from the previous step. Enter a descriptive name and click **Save**
+
+![Input Nomad credentials](/assets/images/platform-integrations/hashicorp/nomad/nomad-input-creds.png)
+
+Your credentials will be encrypted and saved. You can view and manage these credentials under *Service Credentials* in the *Integrations* screen.
+
 ## Step 2: Set up a secret sync
+
+1. Go to your App in the Phase Console and go to the **Syncing** tab. Select **Hashicorp Nomad** under the 'Create a new Sync' menu.
+
+![Nomad create sync](/assets/images/platform-integrations/hashicorp/nomad/nomad-create-sync-button.png)
+
+2. Choose the credentials you added in the previous step as the authentication mode, and click **Next**:
+
+![Nomad select credentials](/assets/images/platform-integrations/hashicorp/nomad/nomad-sync-choose-creds.png)
+
+3. Next, you can select the source and destination to sync secrets. Select an Environment, and optionally specify a path in your Phase App as the source. 
+The Nomad variable in the destination will be pre-filled as `[app_name]/[env_name]`, and the namespace will be `default`. Change these values as required, and click **Create**
+
+![Nomad setup sync](/assets/images/platform-integrations/hashicorp/nomad/nomad-setup-sync.png)
+
+Your sync is now set up! Phase will now automatically update your Nomad variables whenever you make changes to your secrets in Phase.
+You can manage and keep track of this sync at any time from the *Syncing* tab in your App, or the *Integrations* screen from the sidebar.
