@@ -6,84 +6,168 @@ export const description = 'Integrate Phase with Hashicorp Nomad'
 
 # Hashicorp Nomad
 
-You can use Phase to inject secrets to your application running on Hashicorp Nomad during runtime.
+Deploy secrets in Phase to your Nomad cluster as variables.
 
-## Prerequisites
+<Warning>
+  When secret syncing is enabled, secrets stored inside Phase will be treated as
+  a source of truth. Any secrets on target service will be overwritten /
+  deleted. Please import your secrets in Phase before continuing.
+</Warning>
 
-- Have signed up for the [Phase Console](https://console.phase.dev) and created an App
-- Get a [`PHASE_SERVICE_TOKEN`](/console/tokens#service-tokens)
+### Prerequisites
 
-## Nomad task
+- Sign up for the [Phase Console](/quickstart) and [create an App](/console/apps#create-an-app).
+- Enable Server-side Encyrption (SSE) for the App from the [Settings](/console/apps#settings) tab.
 
-In order to deploy secrets to our application running in a Nomad cluster we will use the Phase CLI Docker image, available at [Docker Hub](https://hub.docker.com/r/phasehq/cli/tags). We will configure this as a [prestart](https://developer.hashicorp.com/nomad/docs/job-specification/lifecycle) container which will authenticate with the Phase service using the `PHASE_SERVICE_TOKEN`, fetch secrets and write them to a shared directory which our `run-alpine` task will use to consume the secrets.
+## Optional: Import existing secrets from Hashicorp Nomad to Phase
 
-Here's an example task `my-application-deployment.nomad`:
+You can use the following commands to import existing secrets from Nomad variables to Phase via the respective CLIs. Please make sure to replace the placeholders with appropriate source and destination for your secrets.
+
+```fish
+nomad var get -out json <PATH_TO_YOUR_NOMAD_VARIABLE> | \
+jq -r '.Items | to_entries | map("\(.key)=\(.value | tostring)") | .[]' > .env && \
+phase secrets import .env --env <YOUR_PHASE_ENV> --app <YOUR_PHASE_APPLICATION>
+```
+
+## Step 1: Authentication
+
+1. Create an ACL policy that will allow the Phase Console to write secrets to your Nomad cluster.
+
+While choosing a path in your policy you may want to consider the following Nomad variable path conventions.
+
+- Use `nomad/jobs` for access in all tasks in all jobs
+- Use `nomad/jobs/my-nomad-job` for access from all tasks in this job
+- Use `nomad/jobs/my-nomad-job/web` for access from all tasks in a specific task group
+- Use `nomad/jobs/my-nomad-job/web/http` for access from a specific task
+
+[Learn more about automatic access to Nomad Variables](https://developer.hashicorp.com/nomad/tutorials/variables/variables-tasks)
+
+### Create a `Client Token` via the Nomad CLI:
+
+First let's start by creating an `ACL Policy`, create a `policy.hcl` file and write a valid policy to it.
+
+Below is a sample policy that you can use to deploy secrets to any path under `nomad/jobs/my-nomad-job*` in the `default` namespace. Feel free to adapt it for your own needs.
 
 ```hcl
-job "my-application-deployment" {
-  datacenters = ["dc1"]
+namespace "default" {
+  policy = "write"
 
-  group "app" {
-    ephemeral_disk {
-      size = 200
-      sticky = true
-      migrate = true
-    }
-
-    task "fetch-secrets" {
-      driver = "docker"
-
-      config {
-        // Set a specific version of the Phase CLI Docker image
-        image = "phasehq/cli:<VERSION>"
-        command = "/bin/sh"
-        args = [
-          "-c",
-          "phase secrets export --app your-phase-application --env production > /alloc/secrets"
-        ]
-      }
-
-      env {
-        PHASE_SERVICE_TOKEN = "<your-phase-service-token>"
-        // For self hosted Phase instances
-        // PHASE_HOST = "https://phase.example.com"
-      }
-
-      lifecycle {
-        hook = "prestart"
-        sidecar = false
-      }
-
-      resources {
-        cpu    = 100
-        memory = 128
-      }
-    }
-
-    task "run-alpine" {
-      driver = "docker"
-
-      config {
-        image = "alpine:latest"
-        command = "/bin/sh"
-        args = [
-          "-c",
-          "set -a && . /alloc/secrets && set +a && printenv && sleep infinity"
-        ]
-
-      }
-
-      resources {
-        cpu    = 100
-        memory = 128
-      }
+  variables {
+    path "nomad/jobs/my-nomad-job*" {
+      capabilities = ["write"]
     }
   }
 }
 ```
 
-To deploy:
+Apply the policy:
 
+```fish
+nomad acl policy apply phase-console-nomad-secret-sync policy.hcl
 ```
-nomad job run my-application-deployment.nomad
+
+Create the `Client Token` with the above policy.
+
+```fish
+nomad acl token create -name='phase-console-nomad-sync-token' -policy='phase-console-nomad-secret-sync'
 ```
+
+You should see the following output, please grab the `Secret ID` this is our `Client Token`.
+
+```fish
+Accessor ID  = 0d39be90-c87a-62dd-66cb-925ddf6086d1
+Secret ID    = 6a5bd881-33d4-0199-6276-f8e4816d8b87 👈
+Name         = phase-console-nomad-sync-token
+Type         = client
+Global       = false
+Create Time  = 2024-05-13 08:06:15.401142664 +0000 UTC
+Expiry Time  = <none>
+Create Index = 5285
+Modify Index = 5285
+Policies     = [phase-console-nomad-secret-sync]
+
+Roles
+<none>
+```
+
+### Create a `Client Token` via the Nomad web UI:
+
+First, let's start by creating a `ACL Policy`
+
+Go to `Access Control` -> `Policies` -> `+ Create Policy`
+
+Below is a sample policy that you can use to deploy secrets to any path under `nomad/jobs/my-nomad-job*` in the `default` namespace. Feel free to adapt it for your own needs.
+
+```hcl
+namespace "default" {
+  policy = "write"
+
+  variables {
+    path "nomad/jobs/my-nomad-job*" {
+      capabilities = ["write"]
+    }
+  }
+}
+```
+
+![nomad-ui-policy-create](/assets/images/platform-integrations/hashicorp/nomad/nomad-ui-policy-create.png)
+
+Click `Save Policy`.
+
+Next, let's create a `Client Token`.
+
+Go to `Access Control` -> `Tokens` -> `+ Create Token`
+
+Enter a descriptive `Token Name`, make sure the `Expiration time` to set to **Never** and the token type in the `Client or Management token?` option is **Client**. Select the policy you previously created from the `Policies` table and click `Save Token`.
+
+![nomad-ui-token-create](/assets/images/platform-integrations/hashicorp/nomad/nomad-ui-token-create.png)
+
+In the following screen you will presented with a `Token Secret` which is the `Client Token`, please select it with your cursor and copy it manually as the copy button that is next to the text box is unreliable and instances of Nomad web UI that are accessed over a non-https connection.
+
+![nomad-ui-token-copy](/assets/images/platform-integrations/hashicorp/nomad/nomad-ui-token-copy.png)
+
+
+### Store authentication credentials in Phase
+
+<Note>
+  Your credentials are kept secure with robust application-layer encryption.
+  Phase encrypts your credentials directly in the browser and only decrypts them
+  in memory to perform sync operations. Your credentials are never stored in
+  plaintext.
+</Note>
+
+1. Create an `role_id` and `secret_id` via the Vault CLI. See [Step 2](#step-2-setting-up-app-role-authentication-and-acl-policy) for instructions.
+
+2. Go to **Integrations** from the sidebar and click on **Add credentials** in the 'Service credentials' section
+
+![Go to integrations](/assets/images/platform-integrations/integrations-sidebar.png)
+
+![Add a credential](/assets/images/platform-integrations/add-credential-button.png)
+
+3. Click on **Hashicorp Nomad**
+
+![Click on Nomad](/assets/images/platform-integrations/hashicorp/nomad/nomad-create-creds-button.png)
+
+4. Enter your Nomad instance host including the port, and your `Token Secret` from the previous step. Enter a descriptive name and click **Save**
+
+![Input Nomad credentials](/assets/images/platform-integrations/hashicorp/nomad/nomad-input-creds.png)
+
+Your credentials will be encrypted and saved. You can view and manage these credentials under *Service Credentials* in the *Integrations* screen.
+
+## Step 2: Set up a secret sync
+
+1. Go to your App in the Phase Console and go to the **Syncing** tab. Select **Hashicorp Nomad** under the 'Create a new Sync' menu.
+
+![Nomad create sync](/assets/images/platform-integrations/hashicorp/nomad/nomad-create-sync-button.png)
+
+2. Choose the credentials you added in the previous step as the authentication mode, and click **Next**:
+
+![Nomad select credentials](/assets/images/platform-integrations/hashicorp/nomad/nomad-sync-choose-creds.png)
+
+3. Next, you can select the source and destination to sync secrets. Select an Environment, and optionally specify a path in your Phase App as the source. 
+The Nomad variable in the destination will be pre-filled as `[app_name]/[env_name]`, and the namespace will be `default`. Change these values as required, and click **Create**
+
+![Nomad setup sync](/assets/images/platform-integrations/hashicorp/nomad/nomad-setup-sync.png)
+
+Your sync is now set up! Phase will now automatically update your Nomad variables whenever you make changes to your secrets in Phase.
+You can manage and keep track of this sync at any time from the *Syncing* tab in your App, or the *Integrations* screen from the sidebar.
