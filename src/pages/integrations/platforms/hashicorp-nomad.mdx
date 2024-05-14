@@ -21,10 +21,12 @@ Deploy secrets in Phase to your Nomad cluster as variables.
 
 ## Optional: Import exiting secrets from Hashicorp Nomad to Phase
 
+You can use the following commands to import existing secrets from Nomad variables to Phase via the respective CLIs. Please make sure to replace the placeholders with appropriate source and destination for your secrets.
+
 ```fish
 nomad var get -out json <PATH_TO_YOUR_NOMAD_VARIABLE> | \
 jq -r '.Items | to_entries | map("\(.key)=\(.value | tostring)") | .[]' > .env && \
-phase secrets import .env --env prod --app my-application
+phase secrets import .env --env <YOUR_PHASE_ENV> --app <YOUR_PHASE_APPLICATION>
 ```
 
 ## Step 1: Authentication
