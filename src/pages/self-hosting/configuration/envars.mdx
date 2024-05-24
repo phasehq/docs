@@ -98,7 +98,8 @@ Using the default values, this would be:
 https://localhost/api/auth/callback/gitlab
 ```
 
-After setting up your Application on GitLab, set the Client ID and Client secret values in your `.env` file:
+After setting up your Application on GitLab, set the Client ID and Client secret values in your `.env` file. 
+If you are using a self-hosted GitLab instance, you can optionally set the `GITLAB_AUTH_URL` env var. 
 
 <Properties>
   <Property name="GITLAB_CLIENT_ID" type="string">
@@ -107,7 +108,12 @@ After setting up your Application on GitLab, set the Client ID and Client secret
   <Property name="GITLAB_CLIENT_SECRET" type="string">
     GitLab OAuth Client secret
   </Property>
+  <Property name="GITLAB_AUTH_URL" type="string (Optional)">
+    GitLab instance host url
+  </Property>
 </Properties>
+
+
 
 ---
 
