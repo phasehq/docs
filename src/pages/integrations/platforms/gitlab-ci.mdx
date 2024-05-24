@@ -104,6 +104,9 @@ This feature is only available on GitLab if you have the Premium or Ultimate lic
 
 ![Group Access Token copy](/assets/images/platform-integrations/gitlab/gitlab-gat-groups-setting-access-tokens-create-gat-copy.png)
 
+
+### Store authentication credentials in Phase
+
 <Note>
   Your credentials are kept secure with robust application-layer encryption.
   Phase encrypts your credentials directly in the browser and only decrypts them
@@ -111,25 +114,59 @@ This feature is only available on GitLab if you have the Premium or Ultimate lic
   plaintext.
 </Note>
 
+1. Go to **Integrations** from the sidebar and click on **Add credentials** in the 'Service credentials' section
+
+![Go to integrations](/assets/images/platform-integrations/integrations-sidebar.png)
+
+![Add a credential](/assets/images/platform-integrations/add-credential-button.png)
+
+2. Click on **GitLab**
+
+![Click on GitLab](/assets/images/platform-integrations/gitlab/gitlab-creds-button.png)
+
+3. Enter your GitLab instance host and token. Enter a descriptive name for these credentials and click **Save**
+
+![Input GitLab credentials](/assets/images/platform-integrations/gitlab/gitlab-creds-input.png)
+
+Your credentials will be encrypted and saved. You can view and manage these credentials under *Service Credentials* in the *Integrations* screen.
+
 ## Step 2: Configure Sync
 
 Now that you have authenticated with GitLab, you can configure syncs for your app.
 
 1. Go to your App in the Phase Console and go to the **Syncing** tab. Select **GitLab CI** under the 'Create a new Sync' menu.
 
-![Create a new sync button](/assets/images/platform-integrations/gitlab/create-gitlab-ci-sync-button.png)
+![Create a new sync button](/assets/images/platform-integrations/gitlab/gitlab-create-sync-button.png)
 
 2. Select the credentials stored in the previous step as the authentication method for this sync, and click **Next**.
 
-![Choose sync authentication credentials](/assets/images/platform-integrations/gitlab/select-gitlab-credentials.png)
+![Choose sync authentication credentials](/assets/images/platform-integrations/gitlab/gitlab-choose-creds.png)
 
 3. Choose the source and destination to sync secrets. Select an Environment as the source for Secrets.
-   Next, choose a GitLab project from the dropdown as the destination to sync Secrets to.
+   Next, choose a GitLab Project or GitLab Group from the dropdown as the destination to sync Secrets to.
 
-![Configure sync](/assets/images/platform-integrations/gitlab/gitlab-configure-sync.png)
+   You can optionally also choose to [mask](https://docs.gitlab.com/ee/ci/variables/#mask-a-cicd-variable) and/or [protect](https://docs.gitlab.com/ee/ci/variables/) secrets synced to GitLab.
+
+   <Note>
+   Masked variables must meet the following criteria in GitLab. 
+   If any secrets in the selected environment and path do not meet these requirements, the sync will fail.
+
+   Masked variables must:
+
+   - Be a single line.
+   - Be 8 characters or longer.
+   - Not match the name of an existing predefined or custom CI/CD variable. 
+
+   Additionally, if variable expansion is enabled, the value can contain only:
+
+   - Characters from the Base64 alphabet (RFC4648).
+   - The @, :, ., or ~ characters. 
+   </Note>
+
+![Configure sync](/assets/images/platform-integrations/gitlab/gitlab-setup-sync.png)
 
 4. Once you have selected your desired source and destination, click **Create**.
-   The sync has been set up! Secrets will automatically be synced from your chosen Phase Environment to the GitLab project as CI/CD variables.
+   The sync has been set up! Secrets will automatically be synced from your chosen Phase Environment to the GitLab Project or Group as CI/CD variables.
    You can click on the **Manage** button on the Sync card to view sync logs, pause syncing, or update authentication credentials.
 
 ## Using the Phase CLI
