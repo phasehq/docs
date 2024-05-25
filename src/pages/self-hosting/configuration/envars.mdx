@@ -91,6 +91,10 @@ After setting up your App on GitHub, set the Client ID and Client secret values 
 
 You can find instructions for setting up SSO with a GitLab OAuth Application [here](https://docs.gitlab.com/ee/integration/oauth_provider.html).
 
+Make sure the application has the `read_user` scope.
+
+You can use user-owned or group-owned applications to login to Phase. If you are running a self-hosted instance, you can also use an instance-wide application.
+
 Set the "callback URL" for your GitLab OAuth App as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/gitlab/`.
 Using the default values, this would be:
 
