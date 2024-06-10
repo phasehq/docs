@@ -18,7 +18,7 @@ Certain environment variables are required, while others are optional based on y
 
 All environment variables are defined in a `.env` file.
 
-## Single sign-on (SS0)
+## Single sign-on (SSO)
 
 In order to authenticate with the Phase Console, you must enable **at least one** SSO provider.
 Enabling an SSO provider requires adding the provider to the list of `SSO_PROVIDERS` as well as providing valid credentials.
@@ -51,7 +51,7 @@ Set the "redirect URI" for your Google OAuth application as `${HTTP_PROTOCOL}${H
 Using the default values, this would be:
 
 ```bash
-https://localhost/api/auth/callback/google
+https://[**YOUR_DOMAIN**]/api/auth/callback/google
 ```
 
 After setting up your credentials on the Google Cloud console, set the Client ID and Client secret values in your `.env` file:
@@ -72,8 +72,8 @@ You can find instructions for setting up SSO with a GitHub OAuth App [here](http
 Set the "Authorization callback URL" for your GitHub OAuth App as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/github/`.
 Using the default values, this would be:
 
-```
-https://localhost/api/auth/callback/github
+```bash
+https://[**YOUR_DOMAIN**]/api/auth/callback/github
 ```
 
 After setting up your App on GitHub, set the Client ID and Client secret values in your `.env` file:
@@ -98,12 +98,12 @@ You can use user-owned or group-owned applications to login to Phase. If you are
 Set the "callback URL" for your GitLab OAuth App as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/gitlab/`.
 Using the default values, this would be:
 
-```
-https://localhost/api/auth/callback/gitlab
+```bash
+https://[**YOUR_DOMAIN**]/api/auth/callback/gitlab
 ```
 
-After setting up your Application on GitLab, set the Client ID and Client secret values in your `.env` file. 
-If you are using a self-hosted GitLab instance, you can optionally set the `GITLAB_AUTH_URL` env var. 
+After setting up your Application on GitLab, set the Client ID and Client secret values in your `.env` file.
+If you are using a self-hosted GitLab instance, you can optionally set the `GITLAB_AUTH_URL` env var.
 
 <Properties>
   <Property name="GITLAB_CLIENT_ID" type="string">
@@ -116,8 +116,6 @@ If you are using a self-hosted GitLab instance, you can optionally set the `GITL
     GitLab instance host url
   </Property>
 </Properties>
-
-
 
 ---
 
@@ -143,7 +141,7 @@ If you are using a self-hosted GitLab instance, you can optionally set the `GITL
   <Property name="HOST" type="string">
     The hostname where you would like to run Phase. Defaults to `localhost`
   </Property>
-  <Property name="HTTP_PROTOTOCL" type="string">
+  <Property name="HTTP_PROTOCOL" type="string">
     The url scheme for your host. Defaults to `https://`
   </Property>
   <Property name="USER_EMAIL_DOMAIN_WHITELIST" type="string (Optional)">
@@ -210,7 +208,7 @@ If you are using a self-hosted GitLab instance, you can optionally set the `GITL
   <Property name="SMTP_PASSWORD" type="string">
     Your SMTP email gateway password.
   </Property>
-  <Property name="DEFAULT_FROM_EMAIL" type="number">
+  <Property name="DEFAULT_FROM_EMAIL" type="string">
     Email address from which you want to dispatch emails.
   </Property>
 </Properties>
@@ -230,6 +228,9 @@ If you are using a self-hosted GitLab instance, you can optionally set the `GITL
   <Property name="GITHUB_INTEGRATION_CLIENT_ID" type="string">
     GitHub OAuth application Client ID
   </Property>
+  <Property name="NEXT_PUBLIC_GITHUB_INTEGRATION_CLIENT_ID" type="string">
+    GitHub OAuth application Client ID for public use
+  </Property>
   <Property name="GITHUB_INTEGRATION_CLIENT_SECRET" type="string">
     GitHub OAuth application Client Secret
   </Property>
@@ -248,5 +249,57 @@ If you are using a self-hosted GitLab instance, you can optionally set the `GITL
     Never run the application with Debug mode enabled in production!
     </Warning>
 
+  </Property>
+</Properties>
+
+---
+
+## Additional Environment Variables
+
+<Properties>
+  <Property name="NEXTAUTH_URL" type="string">
+    The URL for NextAuth. References `${HTTP_PROTOCOL}${HOST}`
+    
+    Example: `https://[**YOUR_DOMAIN**]`
+  </Property>
+  <Property name="OAUTH_REDIRECT_URI" type="string">
+    The OAuth redirect URI. References `${HTTP_PROTOCOL}${HOST}`
+    
+    Example: `https://[**YOUR_DOMAIN**]`
+  </Property>
+  <Property name="BACKEND_API_BASE" type="string">
+    The base URL for the backend API. References `${HTTP_PROTOCOL}${HOST}/service`
+    
+    Example: `https://[**YOUR_DOMAIN**]/service`
+  </Property>
+  <Property name="NEXT_PUBLIC_BACKEND_API_BASE" type="string">
+    The public base URL for the backend API. References `${HTTP_PROTOCOL}${HOST}/service`
+    
+    Example: `https://[**YOUR_DOMAIN**]/service`
+  </Property>
+  <Property name="NEXT_PUBLIC_NEXTAUTH_PROVIDERS" type="string">
+    Comma-separated list of NextAuth providers. References `${SSO_PROVIDERS}`
+    
+    Example: `google,github,gitlab`
+  </Property>
+  <Property name="ALLOWED_HOSTS" type="string">
+    Comma-separated list of allowed hosts used the backend. References `${HOST},backend`
+    
+    Example: `[**YOUR_DOMAIN**],backend`
+  </Property>
+  <Property name="ALLOWED_ORIGINS" type="string">
+    Comma-separated list of allowed origins used by Django. References `${HTTP_PROTOCOL}${HOST}`
+    
+    Example: `https://[**YOUR_DOMAIN**]`
+  </Property>
+  <Property name="SESSION_COOKIE_DOMAIN" type="string">
+    Domain for the session cookie used by Django. References `${HOST}`
+    
+    Example: `[**YOUR_DOMAIN**]`
+  </Property>
+  <Property name="NEXT_TELEMETRY_DISABLED" type="string">
+    Disable Next.js telemetry. Set to `1` to disable.
+    
+    Example: `1`
   </Property>
 </Properties>
