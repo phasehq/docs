@@ -1,6 +1,5 @@
 import { Tag } from '@/components/Tag'
 import { HeroPattern } from '@/components/HeroPattern'
-import { Deployments } from '@/components/Deployments'
 
 export const description =
   'Overview of Phase Console deployment environment variables'
@@ -268,12 +267,12 @@ If you are using a self-hosted GitLab instance, you can optionally set the `GITL
     Example: `https://[**YOUR_DOMAIN**]`
   </Property>
   <Property name="BACKEND_API_BASE" type="string">
-    The base URL for the backend API. References `${HTTP_PROTOCOL}${HOST}/service`
+    The base URL for the backend API. This will be accessed privately by the Phase frontend container. References `${HTTP_PROTOCOL}${HOST}/service`
     
     Example: `https://[**YOUR_DOMAIN**]/service`
   </Property>
   <Property name="NEXT_PUBLIC_BACKEND_API_BASE" type="string">
-    The public base URL for the backend API. References `${HTTP_PROTOCOL}${HOST}/service`
+    The public base URL for the backend API. This URL will be accessed publicly by the browser running Phase Console. References `${HTTP_PROTOCOL}${HOST}/service`
     
     Example: `https://[**YOUR_DOMAIN**]/service`
   </Property>
@@ -283,17 +282,17 @@ If you are using a self-hosted GitLab instance, you can optionally set the `GITL
     Example: `google,github,gitlab`
   </Property>
   <Property name="ALLOWED_HOSTS" type="string">
-    Comma-separated list of allowed hosts used the backend. References `${HOST},backend`
+    Comma-separated list of allowed hosts used the backend. Default: `${HOST},backend`
     
     Example: `[**YOUR_DOMAIN**],backend`
   </Property>
   <Property name="ALLOWED_ORIGINS" type="string">
-    Comma-separated list of allowed origins used by Django. References `${HTTP_PROTOCOL}${HOST}`
+    Comma-separated list of allowed origins used by the Phase backend. References `${HTTP_PROTOCOL}${HOST}`
     
     Example: `https://[**YOUR_DOMAIN**]`
   </Property>
   <Property name="SESSION_COOKIE_DOMAIN" type="string">
-    Domain for the session cookie used by Django. References `${HOST}`
+    Domain for the session cookie used by the Phase backend. References `${HOST}`
     
     Example: `[**YOUR_DOMAIN**]`
   </Property>
