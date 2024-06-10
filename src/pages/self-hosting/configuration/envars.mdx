@@ -265,7 +265,7 @@ These variables are not required if using the suggested [docker-compose template
     Example: `https://[**YOUR_DOMAIN**]`
   </Property>
   <Property name="BACKEND_API_BASE" type="string">
-    The base URL for the backend API. This will be accessed privately by the Phase frontend container. References `${HTTP_PROTOCOL}${HOST}/service`
+    The base URL for the backend API. This will be accessed privately by the Phase frontend container. You may use a private, non publicly accessible url like `http://backend:8000` to avoid over the internet roundtrip for performance reasons. References `${HTTP_PROTOCOL}${HOST}/service`
     
     Example: `https://[**YOUR_DOMAIN**]/service`
   </Property>
