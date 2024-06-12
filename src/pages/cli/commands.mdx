@@ -1,4 +1,5 @@
 import { Tag } from '@/components/Tag'
+import CliDemo from '@/components/CliDemo'
 
 export const description =
   'Mange your secrets and environment variables with the Phase CLI'
@@ -163,6 +164,8 @@ Choosing an app will create a `.phase.json` configuration file in your project's
 
 Run and inject secrets into your app with the ability to override default settings.
 
+<CliDemo castFile="phase-run.cast" terminalFontSize="small" />
+
 Usage:
 
 ```fish
@@ -229,6 +232,8 @@ Manage your secrets with various sub-commands.
 ### 📇 `secrets list`
 
 List all the secrets in a specified environment, with options to show uncensored secrets, filter by app, and filter by tags.
+
+<CliDemo castFile="phase-secrets-list.cast" terminalFontSize="small" />
 
 Usage:
 
