@@ -12,7 +12,9 @@ import logoNext from '@/images/logos/nextjs.svg'
 import logoDocker from '@/images/logos/docker.svg'
 import logoKubernetes from '@/images/logos/kubernetes.svg'
 import logoGitHub from '@/images/logos/github.svg'
-import logoGitLab from '@/images/logos/gitlab.svg'
+import logoAws from '@/images/logos/aws.svg'
+import logoNomad from '@/images/logos/nomad.svg'
+import logoCloudflarePages from '@/images/logos/cloudflare-pages.svg'
 
 import clsx from 'clsx'
 
@@ -20,44 +22,45 @@ const SDKs = [
   {
     href: '/integrations/platforms/docker',
     name: 'Docker',
-    description:
-      'Inject secrets and environment variables inside your Docker container.',
+    description: 'Inject secrets inside your Docker containers.',
     logo: logoDocker,
   },
   {
     href: '/integrations/platforms/kubernetes',
     name: 'Kubernetes',
     description:
-      'Inject secrets and environment variables inside your Kubernetes pods.',
+      'Deploy secrets to your Kubernetes pods via the Phase Kubernetes Operator.',
     logo: logoKubernetes,
     available: true,
   },
   {
     href: '/integrations/platforms/github-actions',
     name: 'GitHub Actions',
-    description:
-      'Inject secrets and environment variables inside your GitHub Actions CI.',
+    description: 'Sync secrets to GitHub Actions workflows.',
     logo: logoGitHub,
     available: true,
   },
   {
-    href: '/integrations/platforms/gitlab-ci',
-    name: 'GitLab CI',
+    href: '/integrations/platforms/aws-secrets-manager',
+    name: 'AWS Secrets Manager',
     description:
-      'Inject secrets and environment variables inside your GitLab CI.',
-    logo: logoGitLab,
+      'Deploy secrets to your AWS deployments via the AWS Secrets Manager.',
+    logo: logoAws,
     available: true,
   },
-]
-
-const serverSdks = [
   {
-    href: '',
-    name: 'Go (Coming soon)',
-    description:
-      'Encrypt and decrypt data in your preferred Go application server.',
-    logo: logoGo,
-    available: false,
+    href: '/integrations/platforms/hashicorp-nomad',
+    name: 'Hashicorp Nomad',
+    description: 'Deploy secrets to your Hashicorp Nomad jobs.',
+    logo: logoNomad,
+    available: true,
+  },
+  {
+    href: '/integrations/platforms/cloudflare-pages',
+    name: 'Cloudflare Pages',
+    description: 'Deploy secrets to your Cloudflare Pages deployments.',
+    logo: logoCloudflarePages,
+    available: true,
   },
 ]
 
