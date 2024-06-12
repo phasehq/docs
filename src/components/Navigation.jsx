@@ -240,6 +240,10 @@ export const navigation = [
         href: '/integrations/platforms/cloudflare-pages',
       },
       {
+        title: 'Vercel',
+        href: '/integrations/platforms/vercel',
+      },
+      {
         title: 'GitHub Actions',
         href: '/integrations/platforms/github-actions',
       },
