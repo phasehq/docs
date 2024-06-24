@@ -8,6 +8,7 @@ import { useMobileNavigationStore } from '@/components/MobileNavigation'
 import dynamic from 'next/dynamic';
 import '@/styles/tailwind.css'
 import '@/styles/asciinema-player.css'
+import '@/styles/zoomable-image.css'
 import 'focus-visible'
 import { JetBrains_Mono } from 'next/font/google'
 

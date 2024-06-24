@@ -2,6 +2,7 @@ import Link from 'next/link'
 import clsx from 'clsx'
 
 import { Heading } from '@/components/Heading'
+import ZoomableImage from './ZoomableImage'
 
 export const a = Link
 export { Button } from '@/components/Button'
@@ -103,3 +104,7 @@ export function Property({ name, type, children }) {
     </li>
   )
 }
+
+export const img = (props) => (
+  <ZoomableImage {...props} width={props.width || 800} height={props.height || 600} />
+);
