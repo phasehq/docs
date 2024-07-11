@@ -2,7 +2,7 @@ import { Tag } from '@/components/Tag'
 import { HeroPattern } from '@/components/HeroPattern'
 
 export const description =
-  'An overview of the Phase architecture, threat model and high level concepts.'
+  'An overview of the Phase architecture, threat model, and high-level concepts.'
 
 <HeroPattern />
 
@@ -10,43 +10,48 @@ export const description =
 
 # Security Overview
 
-Phase is designed to give developers strong, versatile, reliable application secrets and configuration management platform that is laser focused on security, developer experience and integrations. Giving developers access to strong security tools that can be easily adopted and implement in early stages of development help shift security left.
+Phase provides a secure and easy-to-integrate platform for managing application secrets and configurations. Our focus is on strong security, developer experience, and seamless integration to encourage early adoption of security measures.
 
-## TL;DR
+## Security FAQ:
 
-What is end-to-end encrypted?
+**What is end-to-end encrypted?**
+- Secrets (keys, values) and comments.
 
--
+**How is it encrypted?**
+- Phase uses X25519 with XChaCha20-Poly1305 for encryption.
 
-When is something not end-to-end encrypted?
+**When is data not end-to-end encrypted?**
+- When server-side (SSE) encryption is enabled. This allows integration with third-party services and access via a REST API.
 
-What is encrypted only at transport via TLS?
+**How does Phase protect secret 0?**
+- Secret 0 is the a token used to access other secrets in a secret manager. Phase uses private-key-sharding to split cryptographic materials into two shards. One shard is stored on the Phase API and must be called during decryption, allowing for key rotations and audit logging.
 
-How is it encrypted?
+**Where is Phase Cloud hosted?**
+- Frankfurt (eu-central-1) on AWS.
 
 ## Security Objectives
 
-To provide developers with strong security via end-to-end encrypted configuration and secrets management system that is secure, cryptographically sound, reliable, easy to use, and easy to integrate.
+- Provide strong, secure by default end-to-end encrypted configuration and secrets management.
+- Abstract the underlying complexity of the system away from the user. 
+- Ensure no host server or third party can read or modify secrets, even if compromised.
+- Implement reliable, standards-based cryptography with proven libraries.
+- Protect against real-world threats without complicating user experience.
 
-No host server or third party should be trusted by any EnvKey client. Even if an EnvKey host server is compromised, it shouldn't be possible for the attacker to read or modify an organization's secrets (except for deleting them).
-
-Even if an attacker compromises the email or SSO account a user uses to authenticate with EnvKey, it shouldn't be possible for the attacker to read or modify an organization's secrets.
-
-Implement reliable, standards-based cryptography with proven libraries.
-
-Protect against real world threats and avoid known theoretical vulnerabilities. Beyond that, don't increase key sizes, add optimizations, or complicate user experience beyond what's needed to achieve this goal.
-
-## Out of scope
-
-User devices and connected servers are assumed to be trusted. EnvKey does not attempt to protect against endpoint compromise, either through physical access, or through viruses, keyloggers, Operating System exploits, privilege escalation, or other attacks.
-
-EnvKey does make it easy to cut off access as soon as possible, to track which secrets may have been exposed, and to contain the fallout by rotating them quickly.
-
-EnvKey also integrates with the OS keyring on Mac and Windows, only stores encrypted data on disk, and evicts secrets from RAM if they haven't been accessed recently, all of which could help to mitigate the fallout of an endpoint attack.
+## Out of Scope
+- Compromise of the client's machine.
+- Attacker gaining access to runtime memory state and extracting loaded cryptographic key material.
+- Misconfiguration or tampering by a user.
+- Network-level attacks that do not target Phase's infrastructure.
+- Physical security breaches of the client's premises.
+- Denial of Service (DoS) attacks that do not impact Phase's infrastructure.
+- Social engineering attacks targeting individual users.
+- Browser vulnerabilities or exploits.
+- Loss or theft of the client's physical devices.
+- Usage of insecure communication channels outside of Phase's provided interfaces.
 
 ---
 
-## Third party services (Phase Cloud)
+## Infrastructure - Third Party Services (Phase Cloud)
 
 ### Hosting - Cloudflare
 
@@ -61,41 +66,25 @@ EnvKey also integrates with the OS keyring on Mac and Windows, only stores encry
 ### Hosting - AWS
 
 - EC2 - Compute
-- RDS Postgresql - Relational database
-- ElastiCache Redis - In memory database
+- RDS PostgreSQL - Relational database
+- ElastiCache Redis - In-memory database
 - SES - Transactional Emails
 
-### Analytics
+### Account Recovery
 
-- PostHog
-- Cloudflare Web Analytics
+Upon signing up, your account is set up with a cryptographic keyring. You will record a 24-word recovery phrase to recover these keys. This recovery phrase deterministically derives the keys for your Account Keyring:
 
-## Account
+- **Symmetric Key** - Secures your App keys.
+- **Signing Key Pair** - Validates your recovery key during account recovery or new device login.
 
-Your Phase account is more than just a way to login and access the Phase Console. It is associated with cryptographic keys which help secure your Apps, and ensure that sensitive privileged operations can only be performed by you.
+Store your recovery phrase safely as it is the root source for retrieving your Account Keyring. Recommended actions:
 
-### Keyring
+- Write down or print the recovery phrase and store it securely.
+- Save it in a password manager or vault.
 
-When you sign up for the Phase Console, your Account will be setup with a set of cryptographic keys, called an Account Keyring.
-Part of the signup process will involve recording and safely storing a 24-word recovery phrase that is used to recover these keys.
+### The `sudo` Password
 
-The recovery phrase is used to deterministically derive the following cryptographic keys which comprise your Account Keyring:
-
-- **[Symmetric Key](/security/phase-encryption#phase-console-client-side-key-generation)** - used to secure your App keys.
-- **[Signing Key Pair](/security/phase-encryption#phase-console-client-side-key-generation)** - used to validate your recovery key when recovering your account or logging in on a new device.
-
-Once your Account is setup, you will have sole access to the recovery phrase. It is extremely important that you store your recovery phrase in a safe place, as it is the root source of entropy from which your Account Keyring can be retrieved.
-
-Depending on your threat model, we recommend you:
-
-- Write down or print the 24-word recovery phrase and store it some place safe
-- Save it in a password manager or vault
-
-### The `sudo` password
-
-Part of the signup / login process also involves setting up a `sudo` password. This password is used to encrypt your Account keys and store them locally in your browser. To perform certain operations such as creating an App, or rotating an `APP_SECRET`, you will be asked to enter this `sudo` password so that your Account Keyring can be decrypted in memory.
-
-If you want to login to the Phase console on a new device or browser, you will need to re-enter your recovery key and set up a new `sudo` password.
+During signup, you will set up a `sudo` password. This encrypts your Account keys for local storage in your browser. Enter this password for certain operations, such as creating an App or rotating an `APP_SECRET`, to decrypt your Account Keyring in memory. To log in on a new device, re-enter your recovery key and set up a new `sudo` password.
 
 <div className="not-prose">
   <Button
@@ -110,25 +99,38 @@ If you want to login to the Phase console on a new device or browser, you will n
 
 ## Tokens
 
-User token
+### User Token
 
-Service token
+A user token is generated as follows:
+- A random 32-byte wrappingKey is generated.
+- The userKxPrivateKey is split into two shares, `s0` and `s1`.
+- `s0` is embedded in the token string, along with the wrappingKey and the userKxPublicKey.
+- `s1` is encrypted with the wrappingKey and stored on the backend.
 
+The token string has the format:
 ```bash
-pss_user_pattern = re.compile(r"^pss_user:v(\d+):([a-fA-F0-9]{64}):([a-fA-F0-9]{64}):([a-fA-F0-9]{64}):([a-fA-F0-9]{64})$")
-pss_service_pattern = re.compile(r"^pss_service:v(\d+):([a-fA-F0-9]{64}):([a-fA-F0-9]{64}):([a-fA-F0-9]{64}):([a-fA-F0-9]{64})$")
+pss_user:v<version>:<userKxPublicKey>:<s0>:<wrappingKey>
 ```
 
-To use Phase encryption with your application, you will need to create an App on Phase. Each Phase App is associated with the following cryptographic keys:
+### Service Tokens
 
-- **[App Public Key](https://en.wikipedia.org/wiki/YubiKey)** - used to encrypt application data
-- **[App Private Key](https://en.wikipedia.org/wiki/YubiKey)** - used to decrypt application data
+Service tokens are used to programmatically access secrets stored in Phase.
 
-These two keys are used to create your `APP_ID` and `APP_SECRET` respectively. App keys are used by the Phase [SDKs](/sdks) to encrypt and decrypt data in your applications.
+- Service tokens are instantiated with a random publicKey/privateKey keypair, a 32-byte `tokenId` as well as a random wrappingKey.
+- The token privateKey is split using an xor-based secret sharding algorithm into 2 shares, `s0` and `s1`.
+  - `s0` is embedded in the service token string, along with the wrappingKey and the token publicKey.
+  - `s1` is encrypted with the wrappingKey, and stored on the backend.
+- For each environment that the service token is scoped to, the respective `envSeed` and `envSalt` is encrypted asymmetrically (wrapped) with the service token publicKey. These wrapped `envSeed` and `envSalt` values, called `wrappedSeed` and `wrappedSalt` are stored on the backend, and supplied for use when the service token is used by the CLI or SDKs.
+- To decrypt data with the service token:
+  - `s1` is decrypted with the wrappingKey.
+  - The service token privateKey is reconstructed from `s0` and `s1`.
+  - The service token privateKey is then used to "unwrap" or decrypt the wrappedSeed to get the environment envSeed.
+  - The environment keys can then be derived from envSeed, and used to decrypt secrets.
 
-The `APP_ID` is public and not considered a secret. You can add this value as an environment variable in front-end applications safely.
-
-The `APP_SECRET`, as the name suggests, is secret and should never be placed in front-end code. Anyone with access to this value will be able to decrypt data in your application.
+The token string has the format:
+```bash
+pss_service:{version}:{tokenId}:{publicKey}:{s0}:{wrappingKey}
+```
 
 <div className="not-prose">
   <Button
@@ -141,19 +143,138 @@ The `APP_SECRET`, as the name suggests, is secret and should never be placed in 
 
 ---
 
-## Secret sharding
+## Secret Sharding
 
-The App private key is used to decrypt data, however storing this private key in plaintext in a single location poses several security risks. A breach of this value is impossible to recover from, since the private key itself cannot be changed for given App.
+The App private key decrypts data. Storing it in plaintext poses security risks. Phase uses a Dual-Key model, splitting the private key into two shares: one in the `APP_SECRET` and the other on the Phase KMS. Each share alone cannot recreate the private key.
 
-To solve this problem, Phase uses a Dual-Key model. Your App private key is split into 2 shares. One of these shares is contained within the `APP_SECRET`, while the other is stored on the Phase KMS (Key Management Service). Each share on its own cannot be used to recreate your private key.
-
-During a decrypt operation, the Phase SDKs put these two shares together to reconstruct your App private key in memory, which is then used to decrypt application data.
-
-This means that your App private key is never stored in a single place where it could be accidentally committed to version control, stolen by an attacker or otherwise compromised.
+During decryption, the Phase SDKs combine the two shares to reconstruct the private key in memory, which is then used to decrypt data. This ensures the private key is never stored in a single location.
 
 <div className="not-prose">
   <Button
     href="/security/phase-encryption#app-keys-and-secret-generation"
+    variant="text"
+    arrow="right"
+    children="More info"
+  />
+</div>
+
+## Lockbox
+
+Phase Lockbox facilitates one-time secret sharing via links. The key generation and sharing process includes the following steps:
+
+1. **Key Generation**: A unique key is generated for each lockbox using key exchange algorithms and Key Derivation Functions (KDF).
+2. **URL Fragment**: The secret is shared through a secure URL containing a fragment with the key.
+3. **Expiry**: Lockbox links can be set to expire after a certain period.
+4. **Views**: The number of times the secret can be viewed can be limited for additional security.
+
+---
+
+## Phase Console Authentication
+
+### OAuth SSO
+Phase supports OAuth SSO for authentication, providing seamless and secure integration with various identity providers.
+
+### Cookies
+Cookies used in the Phase console have the following security flags:
+- HttpOnly
+- Secure
+- SameSite
+
+### Sudo Password
+The sudo password is required for sensitive operations, adding an extra layer of security.
+
+### Recovery
+In case of password loss, recovery is possible through the recovery phrase.
+
+<div className="not-prose">
+  <Button
+    href="/security/phase-encryption#phase-console-client-side-key-generation"
+    variant="text"
+    arrow="right"
+    children="More info"
+  />
+</div>
+
+## Phase Cryptography
+
+### Generic Encryption
+All encryption operations are done asymmetrically. Each operation uses an ephemeral keypair in combination with the public key of the 'recipient' or 'target' to create a session key. Encryption is then performed using the XChaCha-Poly1305 algorithm. The ephemeral public key is prepended to the ciphertext, and the corresponding private key is discarded.
+
+### Generic Decryption
+All decryption operations are performed asymmetrically. Each operation uses the recipient's private key in combination with the ephemeral public key prepended to the ciphertext to recreate the session key. Decryption is carried out using the XChaCha-Poly1305 algorithm. The session key is derived from the recipient's private key and the ephemeral public key, and once decryption is complete, the session keys are securely wiped from memory.
+
+### Secret Splitting
+Phase uses an xor-based secret splitting scheme to split a given secret into 2 or more shares that can each be stored safely without being able to recreate the original secret.
+
+### User Keys
+Each Phase user account has a unique set of keys associated with it. Primarily, this consists of an Ed25519 signing key pair, derived deterministically from a high-entropy seed. This signing key pair is also used to derive an X25519 key-exchange keypair for asymmetric encryption operations.
+
+User keys are derived as follows:
+- **Mnemonic Phrase**: Derived from BIP39 wordlist (32 bytes of entropy).
+- **Account Seed** (64 bytes): Computed as Argon2ID hash with:
+  - Input: Mnemonic with spaces replaced by "-" hyphens.
+  - Salt: Blake2b hash of organization UUID (16 bytes).
+
+- **Account Keyring**: PublicKey/PrivateKey, SymmetricKey both derived from Account Seed.
+  - **PublicKey/PrivateKey Derivation**:
+    - SigningKeySeed (32 bytes) derived using libsodium `crypto_kdf_derive_from_key` (Blake2B under the hood) with constants:
+      - KEY_ID = 1
+      - CONTEXT = __sign__
+    - PublicKey/PrivateKey = `crypto_sign_seed_keypair(SigningKeySeed)` (Ed25519).
+
+  - **SymmetricKey Derivation**:
+    - `crypto_kdf_derive_from_key` (Blake2B under the hood) with constants:
+      - KEY_ID = 0
+      - CONTEXT = _secret_
+
+  - **DeviceKey**: Computed as Argon2ID hash with:
+    - Input: User "sudo" password.
+    - Salt: Blake2b hash of user email (16 bytes).
+
+- **Encrypted Keyring**: AccountKeyring encrypted using XChaChaPoly1305 asymmetrically with DeviceKey.
+- **Encrypted Mnemonic**: Mnemonic encrypted user XChaChaPoly1305 asymmetrically with DeviceKey.
+- **Key Exchange Keys**: `userKxPublicKey` / `userKxPrivateKey` are derived from PublicKey/PrivateKey using libsodium utils: `crypto_sign_ed25519_pk_to_curve25519` and `crypto_sign_ed25519_sk_to_curve25519` respectively.
+
+### Environment Keys
+Each Environment in a Phase App has a unique encryption key pair to allow secrets to be asymmetrically encrypted and decrypted.
+
+Environment keys are derived as follows:
+- **EnvSeed**: 32-byte master key from libsodium `crypto_kdf_keygen`.
+- **EnvSalt**: 32-byte master key from libsodium `crypto_kdf_keygen` (used for secret key hash which is used for server-side key lookups).
+- **EnvToken**: 32-byte master key from libsodium `crypto_kdf_keygen`.
+- **EnvKeys**: Derived from EnvSeed using libsodium `crypto_kx_seed_keypair(EnvSeed)` → `envPublicKey` / `envPrivateKey`.
+
+### Secret Encryption / Decryption
+- Secret properties key, value, and comment are encrypted asymmetrically with XChaChaPoly1305 using `envPublicKey`.
+- Secret properties key, value, and comment are decrypted asymmetrically with XChaChaPoly1305 using `envPrivateKey`.
+
+### Keydigest
+To ensure the integrity and authenticity of keys, a key digest mechanism is employed.
+
+### Environment Access Provisioning
+**Users**
+- Users are granted access to environments cryptographically, by encrypting the environments' `envSeed` and `envSalt` with the user account's `userKxPublicKey` to compute a `wrappedSeed` and `wrappedSalt` respectively. These are stored on the backend as an EnvironmentKey object. These "wrapped" keys are decrypted client-side and then used to decrypt secrets in an environment.
+
+
+### User Tokens (PATs)
+- User tokens are generated as follows:
+  - A random 32-byte wrappingKey is generated.
+  - The userKxPrivateKey is split into 2 shares, `s0` and `s1`.
+  - `s0` is embedded in the token string, along with the wrappingKey and the userKxPublicKey.
+  - `s1` is encrypted with the wrappingKey and stored on the backend.
+
+The token string has the format:
+```python
+pss_user:{phase_crypto_version}:{userKxPublicKey}:{s0}:{wrappingKey}
+```
+
+### Sudo Password:
+- **Password Requirements**: Length and complexity constraints to ensure security.
+- **KDF**: Argon2ID parameters, input, and salt details for secure password hashing.
+
+<div className="not-prose">
+  <Button
+    href="/security/phase-encryption#phase-console-client-side-key-generation"
     variant="text"
     arrow="right"
     children="More info"
