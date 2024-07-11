@@ -27,7 +27,7 @@ Phase provides a secure and easy-to-integrate platform for managing application 
 - Secret 0 is the a token used to access other secrets in a secret manager. Phase uses private-key-sharding to split cryptographic materials into two shards. One shard is stored on the Phase API and must be called during decryption, allowing for key rotations and audit logging.
 
 **Where is Phase Cloud hosted?**
-- Frankfurt (eu-central-1) on AWS.
+- 🇩🇪 Frankfurt (eu-central-1) on AWS.
 
 ## Security Objectives
 
@@ -51,9 +51,9 @@ Phase provides a secure and easy-to-integrate platform for managing application 
 
 ---
 
-## Infrastructure - Third Party Services (Phase Cloud)
+## Infrastructure (Phase Cloud)
 
-### Hosting - Cloudflare
+### Cloudflare
 
 - Reverse proxy
 - Cache
@@ -63,7 +63,7 @@ Phase provides a secure and easy-to-integrate platform for managing application 
 - DDoS Protection
 - Rate limiting
 
-### Hosting - AWS
+### AWS
 
 - EC2 - Compute
 - RDS PostgreSQL - Relational database
@@ -72,7 +72,10 @@ Phase provides a secure and easy-to-integrate platform for managing application 
 
 ### Account Recovery
 
-Upon signing up, your account is set up with a cryptographic keyring. You will record a 24-word recovery phrase to recover these keys. This recovery phrase deterministically derives the keys for your Account Keyring:
+During signup, users are provided with a recovery kit that includes their account mnemonic. In the event that a user forgets or misplaces their sudoPassword and cannot decrypt their encryptedKeyring, they can use this recovery kit to recover their account keys and set a new sudoPassword. 
+
+The entered mnemonic is used to repeat the account key derivation process described above, and the user is prompted to set a new sudoPassword. The new encryptedKeyring and encryptedMnemonic are updated on the backend.
+
 
 - **Symmetric Key** - Secures your App keys.
 - **Signing Key Pair** - Validates your recovery key during account recovery or new device login.
@@ -82,9 +85,6 @@ Store your recovery phrase safely as it is the root source for retrieving your A
 - Write down or print the recovery phrase and store it securely.
 - Save it in a password manager or vault.
 
-### The `sudo` Password
-
-During signup, you will set up a `sudo` password. This encrypts your Account keys for local storage in your browser. Enter this password for certain operations, such as creating an App or rotating an `APP_SECRET`, to decrypt your Account Keyring in memory. To log in on a new device, re-enter your recovery key and set up a new `sudo` password.
 
 <div className="not-prose">
   <Button
@@ -99,29 +99,37 @@ During signup, you will set up a `sudo` password. This encrypts your Account key
 
 ## Tokens
 
-### User Token
+### User Tokens (PATs)
 
-A user token is generated as follows:
-- A random 32-byte wrappingKey is generated.
-- The userKxPrivateKey is split into two shares, `s0` and `s1`.
-- `s0` is embedded in the token string, along with the wrappingKey and the userKxPublicKey.
-- `s1` is encrypted with the wrappingKey and stored on the backend.
+User tokens are are used to programmatically access secrets stored in Phase. They scope of the user token depends on access the user has to apps and the role associated with their account. By default user tokens can be used to access secrets from `0.0.0.0/0` and `::/0`.
+
+- User tokens are generated as follows:
+  - A random 32-byte wrappingKey is generated.
+  - The userKxPrivateKey is split into 2 shares, `s0` and `s1`.
+  - `s0` is embedded in the token string, along with the wrappingKey and the userKxPublicKey.
+  - `s1` is encrypted with the wrappingKey and stored on the backend.
+- For each environment that the user token has access to, the respective `envSeed` and `envSalt` is encrypted asymmetrically (wrapped) with the user token publicKey. These wrapped `envSeed` and `envSalt` values, called `wrappedSeed` and `wrappedSalt` are stored on the backend, and retrieved for use when the user token is used by the CLI or SDKs.
+- To decrypt secrets with the user token:
+  - `s1` is decrypted with the wrappingKey.
+  - The user token privateKey is reconstructed from `s0` and `s1`.
+  - The user token privateKey is then used to "unwrap" or decrypt the wrappedSeed to get the environment envSeed.
+  - The environment keys can then be derived from envSeed, and used to decrypt secrets.
 
 The token string has the format:
 ```bash
-pss_user:v<version>:<userKxPublicKey>:<s0>:<wrappingKey>
+pss_user:{version}:{userKxPublicKey}:{s0}:{wrappingKey}
 ```
 
 ### Service Tokens
 
-Service tokens are used to programmatically access secrets stored in Phase.
+Service tokens are are used to programmatically access secrets stored in Phase. They can be scoped to a single environment of an application. By default service tokens can be used to access secrets from `0.0.0.0/0` and `::/0`.
 
 - Service tokens are instantiated with a random publicKey/privateKey keypair, a 32-byte `tokenId` as well as a random wrappingKey.
 - The token privateKey is split using an xor-based secret sharding algorithm into 2 shares, `s0` and `s1`.
   - `s0` is embedded in the service token string, along with the wrappingKey and the token publicKey.
   - `s1` is encrypted with the wrappingKey, and stored on the backend.
-- For each environment that the service token is scoped to, the respective `envSeed` and `envSalt` is encrypted asymmetrically (wrapped) with the service token publicKey. These wrapped `envSeed` and `envSalt` values, called `wrappedSeed` and `wrappedSalt` are stored on the backend, and supplied for use when the service token is used by the CLI or SDKs.
-- To decrypt data with the service token:
+- For each environment that the service token is scoped to, the respective `envSeed` and `envSalt` is encrypted asymmetrically (wrapped) with the service token publicKey. These wrapped `envSeed` and `envSalt` values, called `wrappedSeed` and `wrappedSalt` are stored on the backend, and retrieved for use when the service token is used by the CLI or SDKs.
+- To decrypt secrets with the service token:
   - `s1` is decrypted with the wrappingKey.
   - The service token privateKey is reconstructed from `s0` and `s1`.
   - The service token privateKey is then used to "unwrap" or decrypt the wrappedSeed to get the environment envSeed.
@@ -158,33 +166,29 @@ During decryption, the Phase SDKs combine the two shares to reconstruct the priv
   />
 </div>
 
+### Keydigest
+Secret keys are hashed using Blake2B with the corresponding Environments envSalt as the salt. 
+Blake2B(input=key, salt=envSalt, length=32bytes)
+These hashes are stored along side each secret on the backend and used for querying secrets via the CLI and SDKs. The required digest can be recomputed by these clients and used to query the backend.
+
 ## Lockbox
-
-Phase Lockbox facilitates one-time secret sharing via links. The key generation and sharing process includes the following steps:
-
-1. **Key Generation**: A unique key is generated for each lockbox using key exchange algorithms and Key Derivation Functions (KDF).
-2. **URL Fragment**: The secret is shared through a secure URL containing a fragment with the key.
-3. **Expiry**: Lockbox links can be set to expire after a certain period.
-4. **Views**: The number of times the secret can be viewed can be limited for additional security.
+Lockbox allows secrets to be shared via a single link with a zero-trust encryption scheme. 
+To create a new lockbox link with some secret data s:
+- A random 32-byte `seed` is generated by libsodium `crypto_kdf_keygen()`
+- An X25519 keypair (`boxPublicKey` / `boxPrivateKey`) is derived from the seed by libsodium `crypto_kx_seed_keypair(seed)`
+- The secret s is encrypted with the `boxPublicKey` to compute ciphertext `c`, and the boxPrivateKey is discarded
+- The ciphertext `c` is stored on the backend along with metadata such as the number of allowed views, link expiry etc and given a unique uuid `boxId`
+- The `boxId` and `seed` are used to generate the link: `/lockbox/${boxId}#${seed}`. Note that the `seed` is added as a URL fragment, and thus only parsed by the browser and never sent to the server.
+- To retrieve and decrypt a secret shared via Lockbox:
+- The `boxId` is used to retrieve the ciphertext `c`
+- The `seed` in the link URL fragment is used to compute the keypair (`boxPublicKey` / `boxPrivateKey`) client-side
+Ciphertext c is decrypted with the `boxPrivateKey` to get the original secret s
 
 ---
 
 ## Phase Console Authentication
 
-### OAuth SSO
-Phase supports OAuth SSO for authentication, providing seamless and secure integration with various identity providers.
-
-### Cookies
-Cookies used in the Phase console have the following security flags:
-- HttpOnly
-- Secure
-- SameSite
-
-### Sudo Password
-The sudo password is required for sensitive operations, adding an extra layer of security.
-
-### Recovery
-In case of password loss, recovery is possible through the recovery phrase.
+Users login to the Phase Console via OAuth using one of the available OAuth providers. The OAuth token is validated on the backend, which then issues a session token via an http-only secure cookie. This is used for authenticated requests between the frontend and backend for the remainder of the session.    
 
 <div className="not-prose">
   <Button
@@ -197,10 +201,10 @@ In case of password loss, recovery is possible through the recovery phrase.
 
 ## Phase Cryptography
 
-### Generic Encryption
+### Encryption
 All encryption operations are done asymmetrically. Each operation uses an ephemeral keypair in combination with the public key of the 'recipient' or 'target' to create a session key. Encryption is then performed using the XChaCha-Poly1305 algorithm. The ephemeral public key is prepended to the ciphertext, and the corresponding private key is discarded.
 
-### Generic Decryption
+### Decryption
 All decryption operations are performed asymmetrically. Each operation uses the recipient's private key in combination with the ephemeral public key prepended to the ciphertext to recreate the session key. Decryption is carried out using the XChaCha-Poly1305 algorithm. The session key is derived from the recipient's private key and the ephemeral public key, and once decryption is complete, the session keys are securely wiped from memory.
 
 ### Secret Splitting
@@ -255,18 +259,6 @@ To ensure the integrity and authenticity of keys, a key digest mechanism is empl
 **Users**
 - Users are granted access to environments cryptographically, by encrypting the environments' `envSeed` and `envSalt` with the user account's `userKxPublicKey` to compute a `wrappedSeed` and `wrappedSalt` respectively. These are stored on the backend as an EnvironmentKey object. These "wrapped" keys are decrypted client-side and then used to decrypt secrets in an environment.
 
-
-### User Tokens (PATs)
-- User tokens are generated as follows:
-  - A random 32-byte wrappingKey is generated.
-  - The userKxPrivateKey is split into 2 shares, `s0` and `s1`.
-  - `s0` is embedded in the token string, along with the wrappingKey and the userKxPublicKey.
-  - `s1` is encrypted with the wrappingKey and stored on the backend.
-
-The token string has the format:
-```python
-pss_user:{phase_crypto_version}:{userKxPublicKey}:{s0}:{wrappingKey}
-```
 
 ### Sudo Password:
 - **Password Requirements**: Length and complexity constraints to ensure security.
