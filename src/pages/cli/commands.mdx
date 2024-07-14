@@ -302,7 +302,7 @@ Create a new secret with options to input the value manually, read from stdin, o
 Usage:
 
 ```fish
-> phase secrets create [KEY] [--env ENVIRONMENT] [--app APP_NAME] [--random TYPE] [--length LENGTH]
+> phase secrets create [KEY] [--env ENVIRONMENT] [--app APP_NAME] [--random TYPE] [--length LENGTH] [--override]
 ```
 
 - `KEY`: (Optional) The key for the new secret. It will be converted to uppercase. If the value is not provided as an argument, it will be read from stdin.
@@ -311,6 +311,7 @@ Usage:
 - `--app`: (Optional) Name of your Phase application. Use this to override the `.phase.json` file or when it's not present in your project directory.
 - `--random`: (Optional) Specify the type of random value to generate. Available types are `hex`, `alphanumeric`, `base64`, `base64url`, `key128`, `key256`. Example: `--random hex`.
 - `--length`: (Optional) Specify the length of the random value, between 1 and 256. Applicable for types other than `key128` and `key256`. Default length is 32. Example: `--length 16`.
+- `--override`: (Optional) Update the personal override value.
 
 Examples:
 
@@ -334,7 +335,7 @@ Update an existing secret with options to input the new value manually, read fro
 Usage:
 
 ```fish
-> phase secrets update KEY [--env ENVIRONMENT] [--app APP_NAME] [--random TYPE] [--length LENGTH]
+> phase secrets update KEY [--env ENVIRONMENT] [--app APP_NAME] [--random TYPE] [--length LENGTH] [--override] [--toggle-override]
 ```
 
 - `KEY`: The key associated with the secret to update. If the new value is not provided as an argument, it will be read from stdin.
@@ -344,6 +345,8 @@ Usage:
 - `--app`: (Optional) Name of your Phase application. Use this to override the `.phase.json` file or when it's not present in your project directory.
 - `--random`: (Optional) Specify the type of random value to generate. Available types are `hex`, `alphanumeric`, `base64`, `base64url`, `key128`, `key256`. Example: `--random hex`.
 - `--length`: (Optional) Specify the length of the random value, between 1 and 256. Applicable for types other than `key128` and `key256`. Default length is 32. Example: `--length 16`.
+- `--override`: (Optional) Update the personal override value.
+- `--toggle-override`: (Optional) Toggle the override state between active and inactive.
 
 Examples:
 
@@ -356,13 +359,18 @@ Examples:
 
 # Update a secret with a randomly generated hexadecimal value of 32 characters
 > phase secrets update MY_SECRET_KEY --random hex --length 32
+
+# Update a secret with a personal override value
+> phase secrets update POSTGRES_CONNECTION_STRING --override
+
+# Toggle the override state of a secret
+> phase secrets update POSTGRES_CONNECTION_STRING --toggle-override
 ```
 
 **Notes**:
 
 - `key128` : 16 Byte high entropy base64 encoded symmetric key - suitable for AES-128
 - `key256` : 32 Byte high entropy base64 encoded symmetric key - suitable for use with ChaCha20 or AES-256
-
 ### 🗑️ `secrets delete`
 
 Delete one or more secrets from a specified environment, with an option to specify the application.
