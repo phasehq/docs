@@ -244,6 +244,7 @@ export const navigation = [
         href: '/integrations/platforms/github-actions',
       },
       { title: 'GitLab CI', href: '/integrations/platforms/gitlab-ci' },
+      { title: 'Railway', href: '/integrations/platforms/railway' },
       { title: 'Jenkins', href: '/integrations/platforms/jenkins' },
       { title: 'CircleCI', href: '/integrations/platforms/circleci' },
       { title: 'AWS CodeBuild', href: '/integrations/platforms/aws-codebuild' },
