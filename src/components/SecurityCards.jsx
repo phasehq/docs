@@ -1,18 +1,22 @@
+
+
 import Link from 'next/link'
 import { motion, useMotionTemplate, useMotionValue } from 'framer-motion'
 
 import { GridPattern } from '@/components/GridPattern'
-import { Heading } from '@/components/Heading'
 import { ChevronRightLeftIcon } from '@/components/icons/ChevronRightLeftIcon'
 import { BoltIcon } from '@/components/icons/BoltIcon'
-import { CheckIcon } from '@/components/icons/CheckIcon'
+import { UsersIcon } from './icons/UsersIcon'
+import { PackageIcon } from './icons/PackageIcon'
+import { SquaresPlusIcon } from './icons/SquaresPlusIcon'
+import { DocumentIcon } from './icons/DocumentIcon'
 
 const resources = [
   {
-    href: '/security',
-    name: 'Security',
-    description: 'Phase security overview',
-    icon: CheckIcon,
+    href: '/security/cryptography',
+    name: 'Cryptography',
+    description: "Learn more about Phase's cryptography primitives and design decisions.",
+    icon: ChevronRightLeftIcon,
     pattern: {
       y: 16,
       squares: [
@@ -22,10 +26,10 @@ const resources = [
     },
   },
   {
-    href: '/security/architecture',
-    name: 'Architecture',
-    description: 'Phase security architecture and implementation',
-    icon: ChevronRightLeftIcon,
+    href: '/security/architecture#user-keys',
+    name: 'Users',
+    description: 'Learn how Phase generates user keys and secures data.',
+    icon: UsersIcon,
     pattern: {
       y: -6,
       squares: [
@@ -35,9 +39,48 @@ const resources = [
     },
   },
   {
-    href: '/security/cryptography',
-    name: 'Cryptography',
-    description: 'Details of cryptographic algorithms and implementation',
+    href: '/security/architecture#secret-encryption-decryption',
+    name: 'Applications',
+    description: 'Learn how Phase generates application keys and secures data.',
+    icon: PackageIcon,
+    pattern: {
+      y: -8,
+      squares: [
+        [0, 2],
+        [1, 4],
+      ],
+    },
+  },
+  {
+    href: '/security/architecture#environment-keys',
+    name: 'Environments',
+    description: 'Learn how Phase generates environment keys and secures data.',
+    icon: SquaresPlusIcon,
+    pattern: {
+      y: 16,
+      squares: [
+        [0, 1],
+        [1, 3],
+      ],
+    },
+  },
+  {
+    href: '/console/secrets',
+    name: 'Secrets',
+    description: 'Learn how Phase secures secrets and data.',
+    icon: DocumentIcon,
+    pattern: {
+      y: -6,
+      squares: [
+        [-1, 2],
+        [1, 3],
+      ],
+    },
+  },
+  {
+    href: '/security/architecture#tokens',
+    name: 'Tokens',
+    description: 'Learn how Phase securely generates and manages access tokens.',
     icon: BoltIcon,
     pattern: {
       y: -8,
@@ -46,33 +89,9 @@ const resources = [
         [1, 4],
       ],
     },
-  } /*
-  {
-    href: '/messages',
-    name: 'Messages',
-    description:
-      'Learn about the message model and how to create, retrieve, update, delete, and list messages.',
-    icon: EnvelopeIcon,
-    pattern: {
-      y: 32,
-      squares: [
-        [0, 2],
-        [1, 4],
-      ],
-    },
   },
-  {
-    href: '/groups',
-    name: 'Groups',
-    description:
-      'Learn about the group model and how to create, retrieve, update, delete, and list groups.',
-    icon: UsersIcon,
-    pattern: {
-      y: 22,
-      squares: [[0, 1]],
-    },
-  },*/,
-]
+];
+
 
 function ResourceIcon({ icon: Icon }) {
   return (
@@ -151,10 +170,10 @@ function Resource({ resource }) {
   )
 }
 
-export function SecurityResources() {
+export function SecurityCards() {
   return (
     <div className="my-16 xl:max-w-none">
-      <div className="not-prose mt-4 grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-4">
+      <div className="not-prose mt-4 grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
         {resources.map((resource) => (
           <Resource key={resource.href} resource={resource} />
         ))}
