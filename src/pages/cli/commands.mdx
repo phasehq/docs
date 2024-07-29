@@ -599,12 +599,12 @@ You can set a value of a secret to a value of another by simply pointing to it v
 
 ### Secret referencing syntax:
 
-| Value reference syntax            | Environment      | Path                              | Secret Key Being Referenced | Description                                                        |
-| --------------------------------- | ---------------- | --------------------------------- | --------------------------- | ------------------------------------------------------------------ |
-| `${KEY}`                          | same environment | `/`                               | KEY                         | Local reference in the same environment and path root (/).         |
-| `${staging.DEBUG}`                | `dev`            | `/` (root of staging environment) | DEBUG                       | Cross-environment reference to a secret at the root (/).           |
-| `${prod./frontend/SECRET_KEY}`    | `prod`           | `/frontend/`                      | SECRET_KEY                  | Cross-environment reference to a secret in a specific path.        |
-| `${/backend/payments/STRIPE_KEY}` | same environment | `/backend/payments/`              | STRIPE_KEY                  | Local reference with a specified path within the same environment. |
+| Value reference syntax | Environment | Path | Secret Key Being Referenced | Description |
+| ---------------------- | ----------- | ---- | --------------------------- | ----------- |
+| `${KEY}` | same environment | `/` | KEY | Local reference in the same environment and path root (/). |
+| `${staging.DEBUG}` | `staging` | `/` (root of staging environment) | DEBUG | Cross-environment reference to a secret at the root (/). |
+| `${production./frontend/SECRET_KEY}` | `production` | `/frontend/` | SECRET_KEY | Cross-environment reference to a secret in a specific path. |
+| `${/backend/payments/STRIPE_KEY}` | same environment | `/backend/payments/` | STRIPE_KEY | Local reference with a specified path within the same environment. |
 
 For more information see: [Phase Console Secrets](/console/secrets)
 
