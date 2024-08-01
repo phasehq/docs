@@ -319,10 +319,9 @@ export const navigation = [
     title: 'SDKs',
     links: [
       { title: 'Overview', href: '/sdks' },
-      { title: 'JavaScript', href: '/sdks/js' },
-      { title: 'Node.js', href: '/sdks/node' },
       { title: 'Python', href: '/sdks/python' },
       { title: 'Golang', href: '/sdks/go' },
+      { title: 'Node.js', href: '/sdks/node' },
     ],
   },
   {
