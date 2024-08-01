@@ -13,33 +13,26 @@ import clsx from 'clsx'
 // Merged list of SDKs
 const sdks = [
   {
-    href: '/sdks/js',
-    name: 'JavaScript',
-    description: "Encrypt data directly in your users' browsers.",
-    logo: logoJavaScript,
-    available: true,
-  },
-  {
-    href: '/sdks/node',
-    name: 'Node.js',
-    description:
-      'Encrypt and decrypt data in your preferred Node.js application server.',
-    logo: logoNode,
-    available: true,
-  },
-  {
     href: '/sdks/python',
     name: 'Python',
     description:
-      'Encrypt and decrypt data in your preferred Python application server.',
+      'Manage secrets securely in your Python applications.',
     logo: logoPython,
     available: true,
   },
   {
     href: '/sdks/go',
     name: 'Golang',
-    description: 'Create, read, update, delete secrets in your Go application.',
+    description: 'Manage secrets securely in your Go applications.',
     logo: logoGo,
+    available: true,
+  },
+  {
+    href: '/sdks/node',
+    name: 'Node.js',
+    description:
+      'Seamlessly integrate secret management in your Node.js applications.',
+    logo: logoNode,
     available: true,
   },
   // Add any other SDKs here
