@@ -11,25 +11,35 @@ export const description =
 
 # Security Overview
 
-Phase is a platform for managing application secrets and configurations. We focus on security and ease of integration.
+Security is at the core of Phase's design and operations. As a platform for managing application secrets and configurations, Phase implements comprehensive security measures at every level. This security-first approach encompasses all aspects of the platform, including data encryption, key management, access controls, and audit logging. Phase is designed to be secure by default out of the box, prioritizing the protection of secrets at all times without requiring extensive configuration from users.
+
+## Security Objectives
+
+1. Provide a robust, open-source platform for securing application secrets throughout the entire development lifecycle.
+2. Implement end-to-end encryption for all secrets (keys, values, comments) by default, with independent keys for each environment.
+3. Maintain a developer experience (DX) that doesn't compromise on security, catering to fast-moving engineering teams.
+4. Offer secure, efficient private key sharing mechanisms for team collaboration to protect against key compromises.
+5. Ensure seamless integration and compatibility with a wide range of development workflows and deployment environments.
+
+## Platform Security
 
 <SecurityCards />
 
-# Security Overview
+---
 
 ## Version Control and Code Security
 
 ### GPG Signed Commits
 
-Phase implements GPG key signing for all commits to ensure the authenticity and integrity of the codebase. Commits can be verified against the GPG public keys of that of Phase maintainers and the trust chain of a particular git blame can be traced to it's origin
+Phase implements GPG key signing for all commits to ensure the authenticity and integrity of the codebase. Commits can be verified against the GPG public keys of Phase maintainers, and the trust chain of a particular git blame can be traced to its origin.
 
 ### Dependency Management and Scanning
 
-We employ automated dependency updates and security scanning are managed through GitHub Dependabot. This system continuously monitors the project's dependencies across various languages for known vulnerabilities, automatically creating pull requests which are tested and merged based on their severity. This proactive approach helps maintain a secure and up-to-date codebase with minimal manual intervention, reducing the risk of exploitable vulnerabilities in third-party libraries lowering the overall attack surface.
+Phase employs automated dependency updates and security scanning through GitHub Dependabot. This system continuously monitors the project's dependencies across various languages for known vulnerabilities, automatically creating pull requests which are tested and merged based on their severity. This proactive approach maintains a secure and up-to-date codebase with minimal manual intervention, reducing the risk of exploitable vulnerabilities in third-party libraries and lowering the overall attack surface.
 
 ### Public Container Builds
 
-Phase's container images are built publicly in our repos via GitHub Actions, promoting transparency and allowing for community scrutiny of the build process. This open approach ensures that production containers are built from the exact code present in public repositories, enabling independent verification of the build pipeline.
+Phase's container images are built publicly in repositories via GitHub Actions, promoting transparency and allowing for community scrutiny of the build process. This open approach ensures that production containers are built from the exact code present in public repositories, enabling independent verification of the build pipeline.
 
 ## Access Control and Authentication
 
@@ -40,7 +50,6 @@ Phase enforces two-factor authentication (2FA) using U2F / YubiKey for all syste
 ### Password Policies
 
 Strict password policies are enforced across all systems within Phase. These policies ensure that user-created passwords meet minimum complexity requirements and are regularly updated. By implementing robust password standards, Phase reduces the risk of password-based attacks and unauthorized access, contributing to a more secure environment.
-
 
 ## Network Security
 
@@ -56,7 +65,7 @@ All web traffic to Phase services is routed through Cloudflare, leveraging its W
 
 ### AWS EC2 Instances
 
-Phase's infrastructure is built on AWS EC2 T3 instances, which utilize the Nitro System. This advanced virtualization technology provides significant security benefits through hardware-based isolation and direct integration with AWS services at a hardware level. Network access polices applied through AWS security groups are handled directly at the NIC that is attached to the physical machine, reducing the dependence on the hypervisor. The Nitro System enhances overall performance, particularly for compute-intensive tasks, by offloading virtualization functions to dedicated hardware. Additionally, it employs dedicated hardware for encryption operations, reducing CPU overhead and improving security.
+Phase's infrastructure is built on AWS EC2 T3 instances, which utilize the Nitro System. This advanced virtualization technology provides significant security benefits through hardware-based isolation and direct integration with AWS services at a hardware level. Network access policies applied through AWS security groups are handled directly at the NIC attached to the physical machine, reducing dependence on the hypervisor. The Nitro System enhances overall performance, particularly for compute-intensive tasks, by offloading virtualization functions to dedicated hardware. Additionally, it employs dedicated hardware for encryption operations, reducing CPU overhead and improving security.
 
 ### Instance Metadata Service
 
@@ -85,39 +94,3 @@ Phase has enabled DNSSEC for its domains, adding an extra layer of security to t
 ### AWS CloudWatch
 
 Comprehensive logging, monitoring, and alerting across Phase's infrastructure are managed through AWS CloudWatch. This service enables maintenance of visibility into system performance and security status, facilitating quick anomaly detection and timely incident response. Custom alerts and dashboards are configured to monitor key security metrics and events, allowing for proactive management of potential security issues and ensuring the overall health of the infrastructure.
-
-## Security FAQ
-
-**What's end-to-end encrypted?**
-Secrets (keys, values) and comments.
-
-**Encryption method?**
-X25519 with XChaCha20-Poly1305.
-
-**When is data not end-to-end encrypted?**
-With server-side encryption (SSE) for third-party integration and REST API access.
-
-**Phase Cloud hosting location?**
-AWS Frankfurt (eu-central-1).
-
-## Security Objectives
-
-1. Provide secure, end-to-end encrypted configuration management
-2. Abstract complexity from users
-3. Prevent server or third-party access to secrets
-4. Use proven cryptographic libraries
-5. Protect against real threats without complicating UX
-
-## Out of Scope
-
-- Client machine compromise
-- Runtime memory attacks
-- User misconfiguration
-- Non-Phase infrastructure network attacks
-- Physical security breaches
-- Generic DoS attacks
-- Social engineering
-- Browser vulnerabilities
-- Client device theft
-- Insecure external communication channels
-
