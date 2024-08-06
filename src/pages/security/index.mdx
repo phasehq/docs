@@ -3,7 +3,7 @@ import { HeroPattern } from '@/components/HeroPattern'
 import { SecurityCards } from '@/components/SecurityCards'
 
 export const description =
-  'An overview of the Phase architecture, threat model, and high-level concepts.'
+  'Phase architecture, threat model, and security implementation.'
 
 <HeroPattern />
 
@@ -11,41 +11,99 @@ export const description =
 
 # Security Overview
 
-Phase provides a secure and easy-to-integrate platform for managing application secrets and configurations. Our focus is on strong security, developer experience, and seamless integration to encourage early adoption of security measures.
+Phase is a platform for managing application secrets and configurations. We focus on security and ease of integration.
 
-## Security FAQ:
+<SecurityCards />
 
-**What is end-to-end encrypted?**
-- Secrets (keys, values) and comments.
+## Version Control and Code Security
 
-**How are secrets encrypted?**
-- Phase uses X25519 with XChaCha20-Poly1305 for encryption.
+### GPG Signed Commits
+All commits are signed with GPG keys. This practice ensures the authenticity and integrity of our codebase, preventing unauthorized modifications. It allows us to verify that commits come from trusted contributors and haven't been tampered with.
+
+### Dependency Management and Scanning
+We use GitHub Dependabot for automated dependency updates and security scanning. This tool continuously monitors our dependencies for known vulnerabilities and automatically creates pull requests to update them. It helps us maintain a secure and up-to-date codebase with minimal manual intervention.
+
+### Public Container Builds
+Our container images are built in public via GitHub Actions. This transparency allows for community scrutiny of our build process and ensures that our production containers are built from the exact code in our public repositories. You can view our build processes here: [GitHub Actions link].
+
+## Access Control and Authentication
+
+### Two-Factor Authentication (2FA)
+We enforce 2FA using U2F / YubiKey for all access to our systems. This provides an additional layer of security beyond passwords, significantly reducing the risk of unauthorized access even if passwords are compromised. U2F / YubiKey specifically offers strong protection against phishing attacks.
+
+### Password Policies
+Strict password policies are enforced across all our systems. These policies ensure that all user-created passwords meet minimum complexity requirements and are regularly updated. This reduces the risk of password-based attacks and unauthorized access.
+
+### Self-Hosted Password Management
+We use a self-hosted, offline, on-premises Bitwarden server for password storage. This approach gives us full control over our password infrastructure, eliminating reliance on third-party services and reducing the attack surface. It allows us to implement additional security measures tailored to our specific needs.
+
+## Network Security
+
+### Tailscale VPN
+We use Tailscale VPN with centralized management and SSO for secure remote access. Tailscale provides end-to-end encrypted connections between our devices and services, simplifying secure access while maintaining strong authentication. The SSO integration ensures that access is tied to our central identity management system.
+
+### Cloudflare Protection
+All our web traffic is routed through Cloudflare, which provides WAF, reverse proxy, and DDoS protection. This setup allows us to benefit from Cloudflare's global network and advanced security features. Our EC2 instances are configured to only accept HTTP/HTTPS traffic from Cloudflare IPs, as listed here: https://www.cloudflare.com/ips/
+
+## Infrastructure Security
+
+### AWS EC2 Instances
+We use AWS EC2 T3 instances built on the Nitro System. The Nitro System provides additional security through hardware-based isolation and improved performance. You can read more about its benefits here: https://aws.amazon.com/ec2/nitro/
+
+### Instance Metadata Service
+We've disabled the IMDSv2 API for enhanced instance-level security. This prevents potential attacks that could exploit the instance metadata service to gain unauthorized access or information about our instances.
+
+### Database Security
+Our AWS RDS PostgreSQL 14.10 instances are deployed within a VPC and use encryption at rest and in transit. This ensures that our data is protected both when stored and when being transmitted between services. Similarly, our AWS ElastiCache Redis 7.1.0 instances use required transit encryption, securing all data in motion.
+
+## Data Protection and Encryption
+
+### Backup and Recovery
+We maintain 24-hour snapshots along with point-in-time backup for our AWS RDS instances. This comprehensive backup strategy allows us to quickly recover from various failure scenarios and maintain data integrity.
+
+### HTTPS Configuration
+Our HTTPS configuration has achieved an A+ rating from Qualys SSL Lab tests. We enforce a minimum TLS version of 1.2 and support HTTP/3 for improved performance and security. This ensures that all data transmitted between our servers and clients is strongly encrypted and protected against interception or tampering.
+
+### DNSSEC
+We have enabled DNSSEC for our domains. This adds an extra layer of security to the DNS system, protecting against DNS spoofing and cache poisoning attacks. It ensures that clients can trust that they're connecting to our legitimate servers.
+
+## Monitoring and Incident Response
+
+### AWS CloudWatch
+We use AWS CloudWatch for comprehensive logging, monitoring, and alerting across our infrastructure. This allows us to maintain visibility into our systems' performance and security status, detect anomalies quickly, and respond to incidents in a timely manner. We've set up custom alerts and dashboards to monitor key security metrics and events.
+
+## Security FAQ
+
+**What's end-to-end encrypted?**
+Secrets (keys, values) and comments.
+
+**Encryption method?**
+X25519 with XChaCha20-Poly1305.
 
 **When is data not end-to-end encrypted?**
-- When server-side (SSE) encryption is enabled. This allows integration with third-party services and access via a REST API.
+With server-side encryption (SSE) for third-party integration and REST API access.
 
-**Where is Phase Cloud hosted?**
-- 🇩🇪 Frankfurt (eu-central-1) on AWS.
+**Phase Cloud hosting location?**
+AWS Frankfurt (eu-central-1).
 
 ## Security Objectives
 
-- Provide strong, secure by default end-to-end encrypted configuration and secrets management.
-- Abstract the underlying complexity of the system away from the user. 
-- Ensure no host server or third party can read or modify secrets, even if compromised.
-- Implement reliable, standards-based cryptography with proven libraries.
-- Protect against real-world threats without complicating user experience.
+1. Provide secure, end-to-end encrypted configuration management
+2. Abstract complexity from users
+3. Prevent server or third-party access to secrets
+4. Use proven cryptographic libraries
+5. Protect against real threats without complicating UX
 
 ## Out of Scope
-- Compromise of the client's machine.
-- Attacker gaining access to runtime memory state and extracting loaded cryptographic key material.
-- Misconfiguration or tampering by a user.
-- Network-level attacks that do not target Phase's infrastructure.
-- Physical security breaches of the client's premises.
-- Denial of Service (DoS) attacks that do not impact Phase's infrastructure.
-- Social engineering attacks targeting individual users.
-- Browser vulnerabilities or exploits.
-- Loss or theft of the client's physical devices.
-- Usage of insecure communication channels outside of Phase's provided interfaces.
 
+- Client machine compromise
+- Runtime memory attacks
+- User misconfiguration
+- Non-Phase infrastructure network attacks
+- Physical security breaches
+- Generic DoS attacks
+- Social engineering
+- Browser vulnerabilities
+- Client device theft
+- Insecure external communication channels
 
-<SecurityCards />
