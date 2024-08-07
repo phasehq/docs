@@ -3,12 +3,8 @@ import { HeroPattern } from '@/components/HeroPattern'
 import { Tag } from '@/components/Tag'
 
 export const description =
-  'Phase SDKs allow you to encrypt and decrypt data within your applications, no matter your stack.'
+  'Phase SDKs allow you to securely manage secrets within your applications, providing a seamless integration with the Phase platform.'
 
-export const sections = [
-  { title: 'Client', id: 'client' },
-  { title: 'Server', id: 'server' },
-]
 
 <HeroPattern />
 
@@ -16,15 +12,12 @@ export const sections = [
 
 # SDKs
 
-Lightweight, secure and open-source crypto SDKs for your stack. {{ className: 'lead' }}
+Lightweight, secure, and open-source SDKs for managing secrets in your stack. {{ className: 'lead' }}
 
-Phase SDKs allow you use [Phase Encryption](/security/overview) within your applications. Client SDKs allow you encrypt data directly in your users' browsers, while Server SDKs allow you to both encrypt and decrypt data in your server-side applications.
-
-<Note>
-  Phase (Node.js and Python) SDKs currently do not have the functionality to
-  `create`, `reads`, `update`, `delete` secrets and environment variables
-  associated with an application. However this functionality is coming very
-  soon.
-</Note>
+- **End-to-End Encryption**: All secrets are securely encrypted and decrypted client-side, ensuring maximum security.
+- **Secret Management**: Perform CRUD operations on secrets and environment variables with ease.
+- **Environment-Specific Configurations**: Manage secrets across different environments (e.g., development, staging, production).
+- **Personal Secret Overrides**: Support for user-specific secret overrides when using user tokens (PAT).
+- **Secret Reference Resolution**: Automatically resolve references between secrets for complex configurations.
 
 <Libraries />
