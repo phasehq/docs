@@ -42,7 +42,7 @@ The Python SDK is distributed via [PyPI](https://pypi.org/project/phase-dev/). Y
 Once installed, you can import the necessary components from the Python SDK into your project:
 
 ```python
-from phase import Phase, CreateSecretsOptions, GetAllSecretsOptions, GetSecretOptions, SecretUpdateOptions, DeleteSecretOptions
+from phase import Phase, CreateSecretsOptions, GetAllSecretsOptions, GetSecretOptions, UpdateSecretOptions, DeleteSecretOptions
 ```
 
 ---
@@ -121,7 +121,7 @@ if secret:
 Update an existing secret in a specified application and environment:
 
 ```python
-update_options = SecretUpdateOptions(
+update_options = UpdateSecretOptions(
     env_name="Development",
     app_name="Your App Name",
     key="API_KEY",
@@ -170,7 +170,7 @@ Then, you can create and manage personal secret overrides:
 
 ```python
 # Create a personal override
-create_override = SecretUpdateOptions(
+create_override = UpdateSecretOptions(
     env_name="Development",
     app_name="Your App Name",
     key="API_KEY",
@@ -182,7 +182,7 @@ result = phase.update_secret(create_override)
 print(f"Create personal override result: {result}")
 
 # Toggle a personal override
-toggle_override = SecretUpdateOptions(
+toggle_override = UpdateSecretOptions(
     env_name="Development",
     app_name="Your App Name",
     key="API_KEY",
