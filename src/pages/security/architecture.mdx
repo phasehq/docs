@@ -1,0 +1,307 @@
+import { Tag } from '@/components/Tag'
+
+export const description =
+  'Phase Cryptography is the architecture used to generate encryption keys, secure keys for storage / transmission over the network and perform encryption or decryption operations.'
+
+<Tag variant="small">SECURITY</Tag>
+
+# Phase Cryptography
+
+Phase Cryptography is the architecture used to generate encryption keys, secure keys for storage / transmission over the network and perform encryption or decryption operations.
+Keys are generated or derived in the Phase console client-side.
+
+![Phase Cryptography](/assets/phase-console-crypto.svg)
+
+<div className="text-center italic">
+  A high level view of the Phase Cryptography architecture
+</div>
+
+## Encryption
+All encryption operations are done asymmetrically. Each operation uses an ephemeral keypair in combination with the public key of the 'recipient' or 'target' to create a session key. Encryption is then performed using the XChaCha-Poly1305 algorithm. The ephemeral public key is prepended to the ciphertext, and the corresponding private key is discarded.
+
+## Decryption
+All decryption operations are performed asymmetrically. Each operation uses the recipient's private key in combination with the ephemeral public key prepended to the ciphertext to recreate the session key. Decryption is carried out using the XChaCha-Poly1305 algorithm. The session key is derived from the recipient's private key and the ephemeral public key, and once decryption is complete, the session keys are securely wiped from memory.
+
+## Secret Splitting
+Phase uses an xor-based secret splitting scheme to split a given secret into 2 or more shares that can each be stored safely without being able to recreate the original secret.
+
+## Sudo Password:
+- **Password Requirements**: Length and complexity constraints to ensure security.
+- **KDF**: Argon2ID parameters, input, and salt details for secure password hashing.
+
+## User Keys
+Each Phase user account has a unique set of keys associated with it. Primarily, this consists of an Ed25519 signing key pair, derived deterministically from a high-entropy seed. This signing key pair is also used to derive an X25519 key-exchange keypair for asymmetric encryption operations.
+
+User keys are derived as follows:
+- **Mnemonic Phrase**: Derived from BIP39 wordlist (32 bytes of entropy).
+- **Account Seed** (64 bytes): Computed as Argon2ID hash with:
+  - Input: Mnemonic with spaces replaced by "-" hyphens.
+  - Salt: Blake2b hash of organization UUID (16 bytes).
+
+- **Account Keyring**: PublicKey/PrivateKey, SymmetricKey both derived from Account Seed.
+  - **PublicKey/PrivateKey Derivation**:
+    - SigningKeySeed (32 bytes) derived using libsodium `crypto_kdf_derive_from_key` (Blake2B under the hood) with constants:
+      - KEY_ID = 1
+      - CONTEXT = __sign__
+    - PublicKey/PrivateKey = `crypto_sign_seed_keypair(SigningKeySeed)` (Ed25519).
+
+  - **SymmetricKey Derivation**:
+    - `crypto_kdf_derive_from_key` (Blake2B under the hood) with constants:
+      - KEY_ID = 0
+      - CONTEXT = _secret_
+
+  - **DeviceKey**: Computed as Argon2ID hash with:
+    - Input: User "sudo" password.
+    - Salt: Blake2b hash of user email (16 bytes).
+
+- **Encrypted Keyring**: AccountKeyring encrypted using XChaChaPoly1305 asymmetrically with DeviceKey.
+- **Encrypted Mnemonic**: Mnemonic encrypted user XChaChaPoly1305 asymmetrically with DeviceKey.
+- **Key Exchange Keys**: `userKxPublicKey` / `userKxPrivateKey` are derived from PublicKey/PrivateKey using libsodium utils: `crypto_sign_ed25519_pk_to_curve25519` and `crypto_sign_ed25519_sk_to_curve25519` respectively.
+
+## Environment Keys
+Each Environment in a Phase App has a unique encryption key pair to allow secrets to be asymmetrically encrypted and decrypted.
+
+Environment keys are derived as follows:
+- **EnvSeed**: 32-byte master key from libsodium `crypto_kdf_keygen`.
+- **EnvSalt**: 32-byte master key from libsodium `crypto_kdf_keygen` (used for secret key hash which is used for server-side key lookups).
+- **EnvToken**: 32-byte master key from libsodium `crypto_kdf_keygen`.
+- **EnvKeys**: Derived from EnvSeed using libsodium `crypto_kx_seed_keypair(EnvSeed)` → `envPublicKey` / `envPrivateKey`.
+
+## Secret Encryption / Decryption
+- Secret properties key, value, and comment are encrypted asymmetrically with XChaChaPoly1305 using `envPublicKey`.
+- Secret properties key, value, and comment are decrypted asymmetrically with XChaChaPoly1305 using `envPrivateKey`.
+
+### Keydigest
+Secret keys are hashed using Blake2B with the corresponding Environments envSalt as the salt. 
+Blake2B(input=key, salt=envSalt, length=32bytes)
+These hashes are stored along side each secret on the backend and used for querying secrets via the CLI and SDKs. The required digest can be recomputed by these clients and used to query the backend.
+
+## Environment Access Provisioning
+**Users**
+- Users are granted access to environments cryptographically, by encrypting the environments' `envSeed` and `envSalt` with the user account's `userKxPublicKey` to compute a `wrappedSeed` and `wrappedSalt` respectively. These are stored on the backend as an EnvironmentKey object. These "wrapped" keys are decrypted client-side and then used to decrypt secrets in an environment.
+
+## Lockbox
+Lockbox allows secrets to be shared via a single link with a zero-trust encryption scheme. 
+To create a new lockbox link with some secret data s:
+- A random 32-byte `seed` is generated by libsodium `crypto_kdf_keygen()`
+- An X25519 keypair (`boxPublicKey` / `boxPrivateKey`) is derived from the seed by libsodium `crypto_kx_seed_keypair(seed)`
+- The secret s is encrypted with the `boxPublicKey` to compute ciphertext `c`, and the boxPrivateKey is discarded
+- The ciphertext `c` is stored on the backend along with metadata such as the number of allowed views, link expiry etc and given a unique uuid `boxId`
+- The `boxId` and `seed` are used to generate the link: `/lockbox/${boxId}#${seed}`. Note that the `seed` is added as a URL fragment, and thus only parsed by the browser and never sent to the server.
+- To retrieve and decrypt a secret shared via Lockbox:
+- The `boxId` is used to retrieve the ciphertext `c`
+- The `seed` in the link URL fragment is used to compute the keypair (`boxPublicKey` / `boxPrivateKey`) client-side
+Ciphertext c is decrypted with the `boxPrivateKey` to get the original secret s
+
+## Account keyring
+
+Each Phase account is created with an Account Keyring on signup, which comprises an [`XChaCha-Poly1305`](https://doc.libsodium.org/secret-key_cryptography/aead/chacha20-poly1305) symmetric key and an [`Ed25519`](https://www.cryptopp.com/wiki/Ed25519) signing keypair.
+
+An Account Keyring is generated as follows:
+
+### 1. Account Recovery phrase
+
+The Account Recovery phrase allows you to derive your Account Keyring securely when logging in on a new device or browser.
+
+A **24-word mnemonic** phrase is generated using the [BIP39](https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki) Bitcoin spec.
+
+<Note>
+  The native BIP39 implementations use `PBKDF2` with `SHA512` with 2048
+  iterations for key derivation, which for our use case does not provide
+  sufficient protection. We instead use a two-staged key derivation process
+  where we only use BIP39 for recovery phrase generation and use libsodium's
+  implementation of [Argon2ID
+  1.3](https://doc.libsodium.org/password_hashing#argon2) for key derivation.
+</Note>
+
+### 2. Account Seed
+
+The Account Seed is the root source of entropy used to derive all keys in the Account Keyring.
+
+The **24 Word Account Recovery** is securely hashed with [`Argon2ID`](https://en.wikipedia.org/wiki/Argon2) using libsodium's `crypto_pwhash` and the following parameters:
+
+- `crypto_pwhash_OPSLIMIT_SENSITIVE`
+- `crypto_pwhash_MEMLIMIT_SENSITIVE`
+
+```ts
+/**
+ * Computes the account recovery key from the mnemonic phrase and orgId.
+ * Note: This can take between 15-20 seconds to resolve
+ *
+ * @param {string} mnemonic - Mnemonic phrase separated by spaces
+ * @param {string} orgId - The organisation uuid4
+ * @returns {Promise<Uint8Array>} - 64 byte account seed
+ */
+export const organisationSeed = async (
+  mnemonic: string,
+  orgId: string
+): Promise<Uint8Array> => {
+  await _sodium.ready
+  const sodium = _sodium
+
+  const OPSLIMIT = sodium.crypto_pwhash_OPSLIMIT_SENSITIVE
+  const MEMLIMIT = sodium.crypto_pwhash_MEMLIMIT_SENSITIVE
+  const ALG = sodium.crypto_pwhash_ALG_ARGON2ID13
+
+  const seedInput = mnemonic.split(' ').join('-')
+  const salt = await saltFromString(orgId)
+
+  const seed = sodium.crypto_pwhash(
+    32,
+    seedInput,
+    salt as Uint8Array,
+    OPSLIMIT,
+    MEMLIMIT,
+    ALG
+  )
+  return seed
+}
+```
+
+### 3. Account Keys
+
+Account Keys are used to secure Account and App data, and validate your identity when logging in to a new device.
+
+The **Account Seed** is passed to [libsodium](https://doc.libsodium.org/key_derivation#deriving-keys-from-a-single-high-entropy-key)'s `crypto_kdf_derive_from_key()`
+with a unique `ctx` (context) and `subkey_id` to create the two following 256 bit **Account Keys** from a single high entropy seed:
+
+- **_Symmetric Key_**: Used to encrypt all sensitive account data / keys in the Phase Console client. eg. [App seed](/security/architecture#app-keys-and-secret-generation)
+- **_Signing Key Seed_**: Is used to generate an [`Ed25519`](https://www.cryptopp.com/wiki/Ed25519) key pair that's used to sign challenges.
+  A public key known as the **Account Identity Key** is generated from the **_Signing Key Seed_** using the `crypto_sign_seed_keypair()` in libsodium.
+  This public key is stored on the Phase Console backend to cryptographically validate an Account Recovery phrase while trying to log into a new device.
+  (In the future this key can also be used to securely share data from one user to another using `X25519`)
+
+```ts
+/**
+ * Returns the organisation keyring, derived from the hardened seed
+ *
+ * @param {Uint8Array} seed - Account hardened seed
+ * @returns {Promise<OrganisationKeyring>} Account keyring
+ */
+export const organisationKeyring = async (
+  seed: Uint8Array
+): Promise<OrganisationKeyring> => {
+  await _sodium.ready
+  const sodium = _sodium
+
+  const SYMMETRIC_KEY_ID = 0
+  const SYMMETRIC_KEY_CONTEXT = '_secret_'
+
+  const SIGNING_KEY_ID = 1
+  const SIGNING_KEY_CONTEXT = '__sign__'
+
+  const symmetricKey = sodium.crypto_kdf_derive_from_key(
+    32,
+    SYMMETRIC_KEY_ID,
+    SYMMETRIC_KEY_CONTEXT,
+    seed
+  )
+
+  const signingKeySeed = sodium.crypto_kdf_derive_from_key(
+    32,
+    SIGNING_KEY_ID,
+    SIGNING_KEY_CONTEXT,
+    seed
+  )
+
+  const signingKey = sodium.crypto_sign_seed_keypair(signingKeySeed)
+
+  return {
+    symmetricKey: sodium.to_hex(symmetricKey),
+    privateKey: sodium.to_hex(signingKey.privateKey),
+    publicKey: sodium.to_hex(signingKey.publicKey),
+  } as OrganisationKeyring
+}
+```
+
+### 4. Device Vault Key
+
+The Device Vault Key is derived from a user-supplied password, and is used to encrypt the Account Keyring in your browser.
+
+It is derived by hashing a user-supplied local device password known as the `sudo` password with [`Argon2ID`](https://en.wikipedia.org/wiki/Argon2) with the following parameters:
+
+- `crypto_pwhash_OPSLIMIT_MODERATE`
+- `crypto_pwhash_MEMLIMIT_MODERATE`
+
+The Account Keyring is encrypted and decrypted with the Device Vault Key using [`XChaCha-Poly1305`](https://doc.libsodium.org/secret-key_cryptography/aead/chacha20-poly1305)
+
+```ts
+export const deviceVaultKey = async (
+  password: string,
+  email: string
+): Promise<string> => {
+  await _sodium.ready
+  const sodium = _sodium
+
+  const OPSLIMIT = sodium.crypto_pwhash_OPSLIMIT_MODERATE
+  const MEMLIMIT = sodium.crypto_pwhash_MEMLIMIT_MODERATE
+  const ALG = sodium.crypto_pwhash_ALG_ARGON2ID13
+
+  const salt = await saltFromString(email)
+
+  const key = sodium.crypto_pwhash(32, password, salt, OPSLIMIT, MEMLIMIT, ALG)
+  return sodium.to_hex(key)
+}
+```
+
+---
+
+## Tokens
+
+### User Tokens (PATs)
+
+User tokens are are used to programmatically access secrets stored in Phase. They scope of the user token depends on access the user has to apps and the role associated with their account. By default user tokens can be used to access secrets from `0.0.0.0/0` and `::/0`.
+
+- User tokens are generated as follows:
+  - A random 32-byte wrappingKey is generated.
+  - The userKxPrivateKey is split into 2 shares, `s0` and `s1`.
+  - `s0` is embedded in the token string, along with the wrappingKey and the userKxPublicKey.
+  - `s1` is encrypted with the wrappingKey and stored on the backend.
+- For each environment that the user token has access to, the respective `envSeed` and `envSalt` is encrypted asymmetrically (wrapped) with the user token publicKey. These wrapped `envSeed` and `envSalt` values, called `wrappedSeed` and `wrappedSalt` are stored on the backend, and retrieved for use when the user token is used by the CLI or SDKs.
+- To decrypt secrets with the user token:
+  - `s1` is decrypted with the wrappingKey.
+  - The user token privateKey is reconstructed from `s0` and `s1`.
+  - The user token privateKey is then used to "unwrap" or decrypt the wrappedSeed to get the environment envSeed.
+  - The environment keys can then be derived from envSeed, and used to decrypt secrets.
+
+The token string has the format:
+```bash
+pss_user:{version}:{userKxPublicKey}:{s0}:{wrappingKey}
+```
+
+### Service Tokens
+
+Service tokens are are used to programmatically access secrets stored in Phase. They can be scoped to a single environment of an application. By default service tokens can be used to access secrets from `0.0.0.0/0` and `::/0`.
+
+- Service tokens are instantiated with a random publicKey/privateKey keypair, a 32-byte `tokenId` as well as a random wrappingKey.
+- The token privateKey is split using an xor-based secret sharding algorithm into 2 shares, `s0` and `s1`.
+  - `s0` is embedded in the service token string, along with the wrappingKey and the token publicKey.
+  - `s1` is encrypted with the wrappingKey, and stored on the backend.
+- For each environment that the service token is scoped to, the respective `envSeed` and `envSalt` is encrypted asymmetrically (wrapped) with the service token publicKey. These wrapped `envSeed` and `envSalt` values, called `wrappedSeed` and `wrappedSalt` are stored on the backend, and retrieved for use when the service token is used by the CLI or SDKs.
+- To decrypt secrets with the service token:
+  - `s1` is decrypted with the wrappingKey.
+  - The service token privateKey is reconstructed from `s0` and `s1`.
+  - The service token privateKey is then used to "unwrap" or decrypt the wrappedSeed to get the environment envSeed.
+  - The environment keys can then be derived from envSeed, and used to decrypt secrets.
+
+The token string has the format:
+```bash
+pss_service:{version}:{tokenId}:{publicKey}:{s0}:{wrappingKey}
+```
+
+### Encryption
+
+1. Create an ephemeral `Ed25519` key pair with libsodium's `crypto_kx_keypair()` utility.
+2. Create a 256 bit symmetric `sessionKey` via the `X25519` Elliptic Curve Diffie-Hellman key exchange algorithm with the public key from [`APP_ID`](/security/architecture#app-id) and ephemeral key pair.
+3. Use the `sessionKey` to encrypt data with libsodium's `crypto_aead_xchacha20poly1305_ietf_encrypt()`.
+4. Return Phase encrypted data in the [`ph:`](/security/architecture#phase-encrypted-data) format.
+
+### Decryption
+
+1. Authenticate to the Phase KMS via the **App Token** from the `APP_SECRET` and fetch the encrypted `Share1`.
+2. Reconstruct the `Share0` + `Share1` to assemble the App private key.
+3. Derive the `sessionKey` via the `X25519` Elliptic Curve Diffie-Hellman key exchange algorithm from the `ephPublicKey` and the App private key.
+4. Use the `sessionKey` to decrypt data with libsodium's `crypto_aead_xchacha20poly1305_ietf_decrypt()`.
+5. Return plaintext data
+
+---
