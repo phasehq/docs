@@ -9,23 +9,28 @@ export const description =
 
 Learn how to set up the Phase Console using Helm on Kubernetes. {{ className: 'lead' }}
 
-This guide provides a comprehensive outline for self-hosting Phase Services on your own Kubernetes infrastructure.
+This guide will walk you through installing the Phase Console on a Kubernetes cluster. By default, the installation includes:
+
+- Phase Console
+- Database services (PostgreSQL and Redis) running inside the cluster
+- NGINX ingress controller
+- Let's Encrypt certificate for TLS
+
+By default, this guide sets up Phase Console with in-cluster databases and an NGINX ingress using a self-signed certificate. However, you have the flexibility to use external databases if preferred. If you're using your own ingress controller and TLS certificates, you can skip steps 1 to 5 of the deployment process.
 
 ## Prerequisites
 
 - Kubernetes cluster
-- Helm installed
-- `kubectl` configured to communicate with your cluster
+- [Helm](https://helm.sh/docs/intro/install/) installed
+- [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl) installed & configured with your cluster
 
-## Cluster Requirements
+## Minimum Requirements
 
-- CPU: 2.35 cores (2350m)
-- Memory: 3.768 GB (3866Mi)
-- Storage: 50Gi for PostgreSQL
+- **CPU**: 2.35 cores (2350m)
+- **Memory**: 3.768 GB (3866Mi)
+- **Storage**: 50Gi for PostgreSQL
 
-Note: These are minimum requirements. For production use, consider allocating more resources and setting up proper autoscaling.
-
-## Deployment Steps
+## Deployment
 
 ### 1. Install cert-manager
 
@@ -60,7 +65,7 @@ metadata:
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
-    email: your-email@example.com 👈 # Replace with your email here
+    email: your-email@example.com  # 👈 Replace with your email here
     privateKeySecretRef:
       name: letsencrypt-prod
     solvers:
@@ -110,11 +115,11 @@ Create a file named `phase-values.yaml` with the following content:
 
 ```yaml
 global:
-  host: "phase.your-domain.com"
-  version: "v2.29.9"
+  host: "phase.your-domain.com" # 👈 Replace with your domain
+  version: "v2.29.9" # 👈 Replace with your preferred version
 
 sso:
-  providers: "google"
+  providers: "google" # 👈 The login provider you want to use
 
 secrets:
   googleClientId: "your_google_oauth_client_id"
@@ -127,13 +132,13 @@ ingress:
     kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
   hosts:
-    - host: phase.your-domain.com
+    - host: phase.your-domain.com # 👈 Replace with your domain
       paths:
         - path: /
           pathType: Prefix
   tls:
     - hosts:
-        - phase.your-domain.com
+        - phase.your-domain.com # 👈 Replace with your domain
       secretName: phase-tls
 
 certManager:
@@ -142,7 +147,7 @@ certManager:
   issuerKind: "ClusterIssuer"
 ```
 
-Replace `phase.your-domain.com` with your actual domain, and update the `googleClientId` and `googleClientSecret` with your actual GitHub OAuth app credentials.
+You can find the latest version of the Phase Console on the [GitHub release](https://github.com/phasehq/console/releases)
 
 ### 8. Install Phase
 
@@ -162,7 +167,7 @@ Ensure all pods are running, the ingress is correctly configured, and the certif
 
 ### 10. Access Phase Console
 
-Once DNS propagation is complete and the certificate is issued (which may take a few minutes to a few hours), you should be able to access your Phase Console at `https://phase.your-domain.com`.
+Once DNS propagation is complete and the certificate is issued (which may take a up to tens of minutes), you should be able to access your Phase Console at `https://phase.your-domain.com`.
 
 ## Upgrading
 
