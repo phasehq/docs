@@ -6,6 +6,7 @@ import clsx from 'clsx'
 import logoDcoker from '@/images/logos/docker.svg'
 import logoAmazonaws from '@/images/logos/aws.svg'
 import logoDigitalOcean from '@/images/logos/digitalocean.svg'
+import logoKubernetes from '@/images/logos/kubernetes.svg'
 import logoGCP from '@/images/logos/gcp.svg'
 import logoAzure from '@/images/logos/azure.svg'
 
@@ -16,6 +17,14 @@ const deployment_methods = [
     description:
       'Seamlessly deploy the Phase Console via Docker Compose on any machine.',
     logo: logoDcoker,
+    available: true,
+  },
+  {
+    href: '/self-hosting/kubernetes',
+    name: 'Kubernetes',
+    description:
+      'Deploy Phase via the official Helm chart on your Kubernetes cluster.',
+    logo: logoKubernetes,
     available: true,
   },
   {

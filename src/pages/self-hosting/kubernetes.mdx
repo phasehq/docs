@@ -1,0 +1,177 @@
+import { Tag } from '@/components/Tag'
+
+export const description =
+'Deploy Phase via the official Helm chart on your Kubernetes cluster.'
+
+<Tag variant="small">SELF-HOSTING</Tag>
+
+# Kubernetes Helm Deployment
+
+Learn how to set up the Phase Console using Helm on Kubernetes. {{ className: 'lead' }}
+
+This guide provides a comprehensive outline for self-hosting Phase Services on your own Kubernetes infrastructure.
+
+## Prerequisites
+
+- Kubernetes cluster
+- Helm installed
+- `kubectl` configured to communicate with your cluster
+
+## Deployment Steps
+
+### 1. Install cert-manager
+
+Install cert-manager to manage TLS certificates:
+
+```bash
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.2/cert-manager.yaml
+```
+
+Wait for cert-manager to be fully deployed:
+
+```bash
+kubectl wait --for=condition=Ready pods -l app.kubernetes.io/instance=cert-manager -n cert-manager
+```
+
+### 2. Configure ClusterIssuer
+
+Create a file named `cluster-issuer.yaml` with the following content:
+
+```yaml
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: your-email@example.com
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    solvers:
+    - http01:
+        ingress:
+          class: nginx
+```
+
+Apply the ClusterIssuer:
+
+```bash
+kubectl apply -f cluster-issuer.yaml
+```
+
+### 3. Install NGINX Ingress Controller
+
+```bash
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+helm install ingress-nginx ingress-nginx/ingress-nginx --set controller.publishService.enabled=true
+```
+
+Wait for the Ingress Controller to be fully deployed:
+
+```bash
+kubectl wait --for=condition=Ready pods -l app.kubernetes.io/component=controller -n ingress-nginx
+```
+
+### 4. Get the LoadBalancer IP
+
+Run the following command to get the external IP of the ingress-nginx-controller service:
+
+```bash
+kubectl get services ingress-nginx-controller -n ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+```
+
+### 5. Update your DNS
+
+Point your domain (e.g., phase.your-domain.com) to the LoadBalancer IP obtained in step 4.
+
+### 6. Add the Phase Helm repository
+
+```bash
+helm repo add phase https://helm.phase.dev
+helm repo update
+```
+
+### 7. Create a values file
+
+Create a file named `phase-values.yaml` with the following content:
+
+```yaml
+global:
+  host: "phase.your-domain.com"
+  version: "v2.29.9"
+
+sso:
+  providers: "google"
+
+secrets:
+  googleClientId: "your_google_oauth_client_id"
+  googleClientSecret: "your_google_oauth_client_secret"
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  hosts:
+    - host: phase.your-domain.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - hosts:
+        - phase.your-domain.com
+      secretName: phase-tls
+
+certManager:
+  enabled: true
+  issuerName: "letsencrypt-prod"
+  issuerKind: "ClusterIssuer"
+```
+
+Replace `phase.your-domain.com` with your actual domain, and update the `googleClientId` and `googleClientSecret` with your actual GitHub OAuth app credentials.
+
+### 8. Install Phase
+
+```bash
+helm install phase-console phase/phase -f phase-values.yaml
+```
+
+### 9. Verify the deployment
+
+```bash
+kubectl get pods
+kubectl get ingress
+kubectl get certificate
+```
+
+Ensure all pods are running, the ingress is correctly configured, and the certificate is issued.
+
+### 10. Access Phase Console
+
+Once DNS propagation is complete and the certificate is issued (which may take a few minutes to a few hours), you should be able to access your Phase Console at `https://phase.your-domain.com`.
+
+## Additional Configuration
+
+### Monitoring and Logging
+Consider setting up monitoring and logging solutions like Prometheus, Grafana, and the ELK stack to keep track of your deployment's health and performance.
+
+### Security Measures
+- Implement network policies to control traffic between pods.
+- Use Kubernetes secrets for sensitive information.
+- Regularly update your Helm chart and container images.
+
+## Upgrading
+
+To upgrade your Phase Console deployment:
+
+```bash
+helm repo update
+helm upgrade phase-console phase/phase -f phase-values.yaml
+```
+
+Remember to check the changelog for any breaking changes before upgrading.
+
+For more detailed configuration options, refer to the [Phase Helm Chart documentation](https://github.com/phasehq/charts).
