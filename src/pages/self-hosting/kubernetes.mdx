@@ -17,19 +17,34 @@ This guide provides a comprehensive outline for self-hosting Phase Services on y
 - Helm installed
 - `kubectl` configured to communicate with your cluster
 
+## Cluster Requirements
+
+- CPU: 2.35 cores (2350m)
+- Memory: 3.768 GB (3866Mi)
+- Storage: 50Gi for PostgreSQL
+
+Note: These are minimum requirements. For production use, consider allocating more resources and setting up proper autoscaling.
+
 ## Deployment Steps
 
 ### 1. Install cert-manager
 
-Install cert-manager to manage TLS certificates:
+First, add the cert-manager repository:
 
-```bash
+```fish
+helm repo add jetstack https://charts.jetstack.io
+helm repo update
+```
+
+Install cert-manager (replace `v1.15.2` with the latest version from https://github.com/cert-manager/cert-manager/releases):
+
+```fish
 kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.2/cert-manager.yaml
 ```
 
 Wait for cert-manager to be fully deployed:
 
-```bash
+```fish
 kubectl wait --for=condition=Ready pods -l app.kubernetes.io/instance=cert-manager -n cert-manager
 ```
 
@@ -45,7 +60,7 @@ metadata:
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
-    email: your-email@example.com
+    email: your-email@example.com 👈 # Replace with your email here
     privateKeySecretRef:
       name: letsencrypt-prod
     solvers:
@@ -56,39 +71,35 @@ spec:
 
 Apply the ClusterIssuer:
 
-```bash
+```fish
 kubectl apply -f cluster-issuer.yaml
 ```
 
 ### 3. Install NGINX Ingress Controller
 
-```bash
+```fish
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
 helm install ingress-nginx ingress-nginx/ingress-nginx --set controller.publishService.enabled=true
-```
-
-Wait for the Ingress Controller to be fully deployed:
-
-```bash
-kubectl wait --for=condition=Ready pods -l app.kubernetes.io/component=controller -n ingress-nginx
 ```
 
 ### 4. Get the LoadBalancer IP
 
 Run the following command to get the external IP of the ingress-nginx-controller service:
 
-```bash
-kubectl get services ingress-nginx-controller -n ingress-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+```fish
+kubectl get svc
 ```
+
+Look for the `EXTERNAL-IP` of the `ingress-nginx-controller` service. This may be an IP address or a hostname, depending on your cloud provider.
 
 ### 5. Update your DNS
 
-Point your domain (e.g., phase.your-domain.com) to the LoadBalancer IP obtained in step 4.
+Point your domain (e.g., phase.your-domain.com) to the LoadBalancer IP or hostname obtained in step 4. Use an A/AAAA record for an IP address or a CNAME record for a hostname.
 
 ### 6. Add the Phase Helm repository
 
-```bash
+```fish
 helm repo add phase https://helm.phase.dev
 helm repo update
 ```
@@ -135,13 +146,13 @@ Replace `phase.your-domain.com` with your actual domain, and update the `googleC
 
 ### 8. Install Phase
 
-```bash
+```fish
 helm install phase-console phase/phase -f phase-values.yaml
 ```
 
 ### 9. Verify the deployment
 
-```bash
+```fish
 kubectl get pods
 kubectl get ingress
 kubectl get certificate
@@ -153,25 +164,29 @@ Ensure all pods are running, the ingress is correctly configured, and the certif
 
 Once DNS propagation is complete and the certificate is issued (which may take a few minutes to a few hours), you should be able to access your Phase Console at `https://phase.your-domain.com`.
 
-## Additional Configuration
-
-### Monitoring and Logging
-Consider setting up monitoring and logging solutions like Prometheus, Grafana, and the ELK stack to keep track of your deployment's health and performance.
-
-### Security Measures
-- Implement network policies to control traffic between pods.
-- Use Kubernetes secrets for sensitive information.
-- Regularly update your Helm chart and container images.
-
 ## Upgrading
 
 To upgrade your Phase Console deployment:
 
-```bash
+```fish
 helm repo update
 helm upgrade phase-console phase/phase -f phase-values.yaml
 ```
 
-Remember to check the changelog for any breaking changes before upgrading.
+## Uninstalling
 
-For more detailed configuration options, refer to the [Phase Helm Chart documentation](https://github.com/phasehq/charts).
+To uninstall Phase Console:
+
+```fish
+helm uninstall phase-console
+```
+
+## Troubleshooting
+
+If you visit your domain and still see a self-signed certificate, check the logs of the `cm-acme-http-solver` pod:
+
+```fish
+kubectl logs -l acme.cert-manager.io/http01-solver=true
+```
+
+Note that this pod briefly appears to host the Let's Encrypt challenge and terminates itself after completion. If you don't see the pod, you may need to trigger the certificate issuance process again.
