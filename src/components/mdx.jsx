@@ -103,3 +103,8 @@ export function Property({ name, type, children }) {
     </li>
   )
 }
+
+
+export function MathSymbol({ children }) {
+  return (<span className="font-serif font-semibold italic">{children}</span>)
+}
