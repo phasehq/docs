@@ -1,0 +1,197 @@
+import { Tag } from '@/components/Tag'
+
+export const description =
+'Deploy Phase via the official Helm chart on your Kubernetes cluster.'
+
+<Tag variant="small">SELF-HOSTING</Tag>
+
+# Kubernetes Helm Deployment
+
+Learn how to set up the Phase Console using Helm on Kubernetes. {{ className: 'lead' }}
+
+This guide will walk you through installing the Phase Console on a Kubernetes cluster. By default, the installation includes:
+
+- Phase Console
+- Database services (PostgreSQL and Redis) running inside the cluster
+- NGINX ingress controller
+- Let's Encrypt certificate for TLS
+
+By default, this guide sets up Phase Console with in-cluster databases and an NGINX ingress using a self-signed certificate. However, you have the flexibility to use external databases if preferred. If you're using your own ingress controller and TLS certificates, you can skip steps 1 to 5 of the deployment process.
+
+## Prerequisites
+
+- Kubernetes cluster
+- [Helm](https://helm.sh/docs/intro/install/) installed
+- [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl) installed & configured with your cluster
+
+## Minimum Requirements
+
+- **CPU**: 2.35 cores (2350m)
+- **Memory**: 3.768 GB (3866Mi)
+- **Storage**: 50Gi for PostgreSQL
+
+## Deployment
+
+### 1. Install cert-manager
+
+First, add the cert-manager repository:
+
+```fish
+helm repo add jetstack https://charts.jetstack.io
+helm repo update
+```
+
+Install cert-manager (replace `v1.15.2` with the latest version from https://github.com/cert-manager/cert-manager/releases):
+
+```fish
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.2/cert-manager.yaml
+```
+
+Wait for cert-manager to be fully deployed:
+
+```fish
+kubectl wait --for=condition=Ready pods -l app.kubernetes.io/instance=cert-manager -n cert-manager
+```
+
+### 2. Configure ClusterIssuer
+
+Create a file named `cluster-issuer.yaml` with the following content:
+
+```yaml
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: your-email@example.com  # 👈 Replace with your email here
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    solvers:
+    - http01:
+        ingress:
+          class: nginx
+```
+
+Apply the ClusterIssuer:
+
+```fish
+kubectl apply -f cluster-issuer.yaml
+```
+
+### 3. Install NGINX Ingress Controller
+
+```fish
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+helm install ingress-nginx ingress-nginx/ingress-nginx --set controller.publishService.enabled=true
+```
+
+### 4. Get the LoadBalancer IP
+
+Run the following command to get the external IP of the ingress-nginx-controller service:
+
+```fish
+kubectl get svc
+```
+
+Look for the `EXTERNAL-IP` of the `ingress-nginx-controller` service. This may be an IP address or a hostname, depending on your cloud provider.
+
+### 5. Update your DNS
+
+Point your domain (e.g., phase.your-domain.com) to the LoadBalancer IP or hostname obtained in step 4. Use an A/AAAA record for an IP address or a CNAME record for a hostname.
+
+### 6. Add the Phase Helm repository
+
+```fish
+helm repo add phase https://helm.phase.dev
+helm repo update
+```
+
+### 7. Create a values file
+
+Create a file named `phase-values.yaml` with the following content:
+
+```yaml
+global:
+  host: "phase.your-domain.com" # 👈 Replace with your domain
+  version: "v2.29.11" # 👈 Replace with your preferred version
+
+sso:
+  providers: "google" # 👈 The login provider you want to use
+
+secrets:
+  googleClientId: "your_google_oauth_client_id"
+  googleClientSecret: "your_google_oauth_client_secret"
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  hosts:
+    - host: phase.your-domain.com # 👈 Replace with your domain
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - hosts:
+        - phase.your-domain.com # 👈 Replace with your domain
+      secretName: phase-tls
+
+certManager:
+  enabled: true
+  issuerName: "letsencrypt-prod"
+  issuerKind: "ClusterIssuer"
+```
+
+You can find the latest version of the Phase Console on the [GitHub release](https://github.com/phasehq/console/releases)
+
+### 8. Install Phase
+
+```fish
+helm install phase-console phase/phase -f phase-values.yaml
+```
+
+### 9. Verify the deployment
+
+```fish
+kubectl get pods
+kubectl get ingress
+kubectl get certificate
+```
+
+Ensure all pods are running, the ingress is correctly configured, and the certificate is issued.
+
+### 10. Access Phase Console
+
+Once DNS propagation is complete and the certificate is issued (which may take a up to tens of minutes), you should be able to access your Phase Console at `https://phase.your-domain.com`.
+
+## Upgrading
+
+To upgrade your Phase Console deployment:
+
+```fish
+helm repo update
+helm upgrade phase-console phase/phase -f phase-values.yaml
+```
+
+## Uninstalling
+
+To uninstall Phase Console:
+
+```fish
+helm uninstall phase-console
+```
+
+## Troubleshooting
+
+If you visit your domain and still see a self-signed certificate, check the logs of the `cm-acme-http-solver` pod:
+
+```fish
+kubectl logs -l acme.cert-manager.io/http01-solver=true
+```
+
+Note that this pod briefly appears to host the Let's Encrypt challenge and terminates itself after completion. If you don't see the pod, you may need to trigger the certificate issuance process again.

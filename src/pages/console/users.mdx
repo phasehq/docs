@@ -18,17 +18,17 @@ When you signup or accept an Organisation invite for Phase, you will need to go 
 
 ### Step 1: Create a sudo password
 
-First, you must create a strong password, known as the `sudo` password. We call it this, because it used to secure your account encryption keys. 
-Certain action that require access to your account keys can only be preformed when your account keyring is unlocked by entering this password.
+First, you must create a strong password, known as the `sudo` password. We call it this because it is used to secure your account encryption keys. Certain actions that require access to your account keys can only be performed when your account keyring is unlocked by entering this password.
 
 The sudo password must:
+- Be 16 characters or longer
+- Contain letters and numbers
 
-- be 16 characters or longer
-- contain letters or numbers
-
-We suggest using a long phrase that you can remember easily.
+We suggest using a long phrase that you can easily remember.
 
 ![sudo password](/assets/images/console/users/create-sudo-password.png)
+
+By default, the "Remember password on this device" option is turned on. If you are not on a trusted machine, you may want to toggle this off for increased security.
 
 ### Step 2: Save your account recovery kit
 
@@ -42,15 +42,26 @@ You can also copy the entire contents of the recovery kit to store as a secure n
   passsword, it is the **only** way to regain access to your account.
 </Warning>
 
-## `sudo` password
+## The `sudo` password
 
-Your `sudo` password is used to encrypt your account keys. Performing certain priveleged actions such as creating Apps, managing Environments and Tokens, or managing User access requires access to your account keys.
+Your `sudo` password is used to encrypt your account keys. Performing certain privileged actions such as creating Apps, managing Environments and Tokens, or managing User access requires access to your account keys.
 
-The first time you perform such an action, you will be asked to enter your `sudo` password.
+If you chose not to remember your password during onboarding, you will be prompted to enter your `sudo` password when you first perform a privileged action. This unlock screen will look like this:
 
-![sudo password](/assets/images/console/users/sudo-password.png)
+![sudo password](/assets/images/console/users/phase-console-sudo-password.png)
 
 When entered correctly, your account keys will be decrypted and held in memory. You will not need to enter this password again for the duration of your session, unless you close the tab or reload the page using the browser 'refresh' action.
+
+For convenience, you can choose to remember your password on your current device:
+
+1. Click the dropdown arrow next to the "Remember" button.
+2. In the dropdown menu, toggle on "Remember password on this device".
+
+This will automatically unlock your keyring when you log in on this device in the future. However, if you're using a shared or public computer, it's recommended to keep this option off for security reasons.
+
+If you find entering the password frequently inconvenient, you can enable the "Remember password" option at any time from this unlock screen.
+
+Remember: Your `sudo` password is a critical security measure. Always use a strong, unique password and be cautious about where you choose to remember it.
 
 ## User roles
 

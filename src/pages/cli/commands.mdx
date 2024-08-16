@@ -1,4 +1,5 @@
 import { Tag } from '@/components/Tag'
+import CliDemo from '@/components/CliDemo'
 
 export const description =
   'Mange your secrets and environment variables with the Phase CLI'
@@ -151,7 +152,8 @@ Choosing an app will create a `.phase.json` configuration file in your project's
   "version": "1",
   "phaseApp": "keyspace",
   "appId": "511f26b7-5b56-47f3-920e-a4edb9cdbf3c",
-  "defaultEnv": "Development"
+  "defaultEnv": "Development",
+  "envId": "679bf2bc-9353-4fe0-a84f-825f284c8f8d"
 }
 ```
 
@@ -162,6 +164,8 @@ Choosing an app will create a `.phase.json` configuration file in your project's
 ## 🚀 `run`
 
 Run and inject secrets into your app with the ability to override default settings.
+
+<CliDemo castFile="phase-run.cast" terminalFontSize="small" />
 
 Usage:
 
@@ -230,6 +234,8 @@ Manage your secrets with various sub-commands.
 
 List all the secrets in a specified environment, with options to show uncensored secrets, filter by app, and filter by tags.
 
+<CliDemo castFile="phase-secrets-list.cast" terminalFontSize="small" />
+
 Usage:
 
 ```fish
@@ -297,7 +303,7 @@ Create a new secret with options to input the value manually, read from stdin, o
 Usage:
 
 ```fish
-> phase secrets create [KEY] [--env ENVIRONMENT] [--app APP_NAME] [--random TYPE] [--length LENGTH]
+> phase secrets create [KEY] [--env ENVIRONMENT] [--app APP_NAME] [--random TYPE] [--length LENGTH] [--override]
 ```
 
 - `KEY`: (Optional) The key for the new secret. It will be converted to uppercase. If the value is not provided as an argument, it will be read from stdin.
@@ -306,6 +312,7 @@ Usage:
 - `--app`: (Optional) Name of your Phase application. Use this to override the `.phase.json` file or when it's not present in your project directory.
 - `--random`: (Optional) Specify the type of random value to generate. Available types are `hex`, `alphanumeric`, `base64`, `base64url`, `key128`, `key256`. Example: `--random hex`.
 - `--length`: (Optional) Specify the length of the random value, between 1 and 256. Applicable for types other than `key128` and `key256`. Default length is 32. Example: `--length 16`.
+- `--override`: (Optional) Update the personal override value.
 
 Examples:
 
@@ -329,7 +336,7 @@ Update an existing secret with options to input the new value manually, read fro
 Usage:
 
 ```fish
-> phase secrets update KEY [--env ENVIRONMENT] [--app APP_NAME] [--random TYPE] [--length LENGTH]
+> phase secrets update KEY [--env ENVIRONMENT] [--app APP_NAME] [--random TYPE] [--length LENGTH] [--override] [--toggle-override]
 ```
 
 - `KEY`: The key associated with the secret to update. If the new value is not provided as an argument, it will be read from stdin.
@@ -339,6 +346,8 @@ Usage:
 - `--app`: (Optional) Name of your Phase application. Use this to override the `.phase.json` file or when it's not present in your project directory.
 - `--random`: (Optional) Specify the type of random value to generate. Available types are `hex`, `alphanumeric`, `base64`, `base64url`, `key128`, `key256`. Example: `--random hex`.
 - `--length`: (Optional) Specify the length of the random value, between 1 and 256. Applicable for types other than `key128` and `key256`. Default length is 32. Example: `--length 16`.
+- `--override`: (Optional) Update the personal override value.
+- `--toggle-override`: (Optional) Toggle the override state between active and inactive.
 
 Examples:
 
@@ -351,13 +360,18 @@ Examples:
 
 # Update a secret with a randomly generated hexadecimal value of 32 characters
 > phase secrets update MY_SECRET_KEY --random hex --length 32
+
+# Update a secret with a personal override value
+> phase secrets update POSTGRES_CONNECTION_STRING --override
+
+# Toggle the override state of a secret
+> phase secrets update POSTGRES_CONNECTION_STRING --toggle-override
 ```
 
 **Notes**:
 
 - `key128` : 16 Byte high entropy base64 encoded symmetric key - suitable for AES-128
 - `key256` : 32 Byte high entropy base64 encoded symmetric key - suitable for use with ChaCha20 or AES-256
-
 ### 🗑️ `secrets delete`
 
 Delete one or more secrets from a specified environment, with an option to specify the application.
@@ -586,12 +600,12 @@ You can set a value of a secret to a value of another by simply pointing to it v
 
 ### Secret referencing syntax:
 
-| Value reference syntax            | Environment      | Path                              | Secret Key Being Referenced | Description                                                        |
-| --------------------------------- | ---------------- | --------------------------------- | --------------------------- | ------------------------------------------------------------------ |
-| `${KEY}`                          | same environment | `/`                               | KEY                         | Local reference in the same environment and path root (/).         |
-| `${staging.DEBUG}`                | `dev`            | `/` (root of staging environment) | DEBUG                       | Cross-environment reference to a secret at the root (/).           |
-| `${prod./frontend/SECRET_KEY}`    | `prod`           | `/frontend/`                      | SECRET_KEY                  | Cross-environment reference to a secret in a specific path.        |
-| `${/backend/payments/STRIPE_KEY}` | same environment | `/backend/payments/`              | STRIPE_KEY                  | Local reference with a specified path within the same environment. |
+| Value reference syntax | Environment | Path | Secret Key Being Referenced | Description |
+| ---------------------- | ----------- | ---- | --------------------------- | ----------- |
+| `${KEY}` | same environment | `/` | KEY | Local reference in the same environment and path root (/). |
+| `${staging.DEBUG}` | `staging` | `/` (root of staging environment) | DEBUG | Cross-environment reference to a secret at the root (/). |
+| `${production./frontend/SECRET_KEY}` | `production` | `/frontend/` | SECRET_KEY | Cross-environment reference to a secret in a specific path. |
+| `${/backend/payments/STRIPE_KEY}` | same environment | `/backend/payments/` | STRIPE_KEY | Local reference with a specified path within the same environment. |
 
 For more information see: [Phase Console Secrets](/console/secrets)
 

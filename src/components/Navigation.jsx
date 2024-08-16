@@ -244,6 +244,7 @@ export const navigation = [
         href: '/integrations/platforms/github-actions',
       },
       { title: 'GitLab CI', href: '/integrations/platforms/gitlab-ci' },
+      { title: 'Railway', href: '/integrations/platforms/railway' },
       { title: 'Jenkins', href: '/integrations/platforms/jenkins' },
       { title: 'CircleCI', href: '/integrations/platforms/circleci' },
       { title: 'AWS CodeBuild', href: '/integrations/platforms/aws-codebuild' },
@@ -303,6 +304,7 @@ export const navigation = [
     links: [
       { title: 'Overview', href: '/self-hosting' },
       { title: 'Docker Compose', href: '/self-hosting/docker-compose' },
+      { title: 'Kubernetes', href: '/self-hosting/kubernetes' },
       { title: 'AWS', href: '/self-hosting/aws' },
       { title: 'Google Cloud Platform', href: '/self-hosting/gcp' },
       { title: 'Azure', href: '/self-hosting/azure' },
@@ -318,10 +320,9 @@ export const navigation = [
     title: 'SDKs',
     links: [
       { title: 'Overview', href: '/sdks' },
-      { title: 'JavaScript', href: '/sdks/js' },
-      { title: 'Node.js', href: '/sdks/node' },
       { title: 'Python', href: '/sdks/python' },
       { title: 'Golang', href: '/sdks/go' },
+      { title: 'Node.js', href: '/sdks/node' },
     ],
   },
   {
