@@ -16,6 +16,10 @@ Phase uses [libsodium](https://doc.libsodium.org/) for all primitive crypographi
 
 ---
 
+## Random number generation
+
+Phase uses the [ChaCha20 stream cipher](https://cr.yp.to/chacha/chacha-20080128.pdf) via libsodium's `crypto_kdf_keygen` utility for cryptographically secure random number generation (CSPRNG). A reliable entropy source such as `/dev/urandom` in server environments, or Web Crypto's `crypto.getRandomValues()` in browser environments is used to seed the CSPRNG.
+
 ## Encryption
 
 All encryption operations are done asymmetrically. Each operation uses an ephemeral keypair <MathSymbol>(K<sub>eph</sub>, k<sub>eph</sub>)</MathSymbol> in combination with the public key of the 'recipient' or 'target' <MathSymbol>K<sub>recipient</sub></MathSymbol> to derive an X25519 session key <MathSymbol>K<sub>session</sub></MathSymbol>. The plaintext data <MathSymbol>D</MathSymbol> is then encrypted using the XChaCha-Poly1305 algorithm with a random <MathSymbol>IV</MathSymbol> to compute the ciphertext <MathSymbol>C</MathSymbol>. The ephemeral public key <MathSymbol>K<sub>eph</sub></MathSymbol> is prepended to the ciphertext, and the corresponding private key is discarded.
@@ -36,12 +40,11 @@ All decryption operations are performed asymmetrically. Each operation uses the 
 
 ### User Keys
 
-Each Phase user account has a unique set of keys associated with it. Primarily, this consists of an Ed25519 signing key pair, derived deterministically from a high-entropy seed. This signing key pair is also used to derive an X25519 key-exchange keypair for asymmetric encryption operations.
-
+Each Phase user account has a unique set of keys associated with it. Primarily, this consists of an Ed25519 signing key pair (<MathSymbol>K<sub>user</sub><sup>sign</sup></MathSymbol>, <MathSymbol>k<sub>user</sub><sup>sign</sup></MathSymbol>), derived deterministically from a high-entropy seed. This signing key pair is also used to derive an X25519 key-exchange keypair (<MathSymbol>K<sub>user</sub><sup>kx</sup></MathSymbol>, <MathSymbol>k<sub>user</sub><sup>kx</sup></MathSymbol>) for asymmetric encryption operations.
 
 User keys are derived in two stages. First an *Account Seed* is derived deterministically from a combination of a high-entropy seed and the user's organisation id. Then, the *Account Seed* is used to derive the keypairs for encryption and decryption operations. 
 
-#### **Account Seed Derivation**
+#### **Account Seed Derivation** {{ className: 'text-lg'}}
 
 When settings up a new Phase account, a random high-entropy 32-byte seed is encoded as a 24-word mnemonic using the BIP39 wordlist. This mnemonic serves as the account recovery phrase. The mnemonic is hashed with Argon2ID with the following parameters:
 
@@ -52,7 +55,7 @@ When settings up a new Phase account, a random high-entropy 32-byte seed is enco
 
 The output of this hash is used as the *Account Seed*.
 
-#### Account Key Derivation from Seed
+#### **Account Key Derivation from Seed** {{ className: 'text-lg'}}
 
 The *Account Seed* is then used to derive the following keys:
 
@@ -63,9 +66,9 @@ A 32 byte Signing Key Seed is derived using libsodium `crypto_kdf_derive_from_ke
   - KEY_ID = `1`
   - CONTEXT = `__sign__`
 
-The Ed25519 Signing Key Pair is then derived from the Signing Key Seed using libsodium `crypto_sign_seed_keypair(SigningKeySeed)`.
+The Ed25519 signing key pair (<MathSymbol>K<sub>user</sub><sup>sign</sup></MathSymbol>, <MathSymbol>k<sub>user</sub><sup>sign</sup></MathSymbol>)  is then derived from the Signing Key Seed using libsodium `crypto_sign_seed_keypair(SigningKeySeed)`.
 
-2) **Curve25519 Key Exchange Keys** are derived from the Ed25519 PublicKey/PrivateKey pair using libsodium utils `crypto_sign_ed25519_pk_to_curve25519` and `crypto_sign_ed25519_sk_to_curve25519` respectively.
+2) **Curve25519 key-exchange Keys** (<MathSymbol>K<sub>user</sub><sup>kx</sup></MathSymbol>, <MathSymbol>k<sub>user</sub><sup>kx</sup></MathSymbol>) are derived from the Ed25519 PublicKey/PrivateKey pair using libsodium utils `crypto_sign_ed25519_pk_to_curve25519` and `crypto_sign_ed25519_sk_to_curve25519` respectively.
 
 3) A **Symmetric Key** is also derived from the *Account Seed*, although this is currently not used to encrypt or decrypt any data.
 This symmetric key is computed used libsodium `crypto_kdf_derive_from_key` with constants:
@@ -74,7 +77,7 @@ This symmetric key is computed used libsodium `crypto_kdf_derive_from_key` with 
 
 ![user key derivation](/assets/images/security/user-key-derivation.png)
 
-#### Device Key and Sudo Password
+#### **Device Key and Sudo Password** {{ className: 'text-lg'}}
 
 The account keys derived above are encrypted using a *Device Key* for secure storage on the device as well as the backend. This allows the user keyring to be decrypted by entering a single password, and held in memory for the duration of the session. 
 
@@ -84,62 +87,77 @@ The *Device Key* is computed as a Argon2ID hash with the following parameters:
     - Memory: 64MB
     - Iterations: 2
 
-The following data is encrypted using the *Device Key*:
+The following data is encrypted using the *Device Key* and stored on the backend:
 
 - **Encrypted Keyring**: account keys comprising Signing Key Pair and Symmetric Key.
 - **Encrypted Mnemonic**: mnemonic recovery phrase.
 
-![device key derivation](/assets/images/security/device-key.png)
+![sudo password setup](/assets/images/security/sudo-password-setup.png)
+
+
+When a user begins a session on the Phase Console, the encrypted keyring is retrieved from the server. The sudo password is used to compute the *Device Key*, which decrypts the keyring and makes the user's keys available in memory for the duration of the session.
+
+![sudo password login](/assets/images/security/sudo-password-login.png)
 
 
 ### Environment Keys
 
-Each Environment in a Phase App has a unique encryption key pair to allow secrets to be asymmetrically encrypted and decrypted.
+Each Environment in a Phase App has a unique encryption key pair to allow secrets to be asymmetrically encrypted and decrypted. 
 
-Environment keys are derived as follows:
-- **EnvSeed**: 32-byte master key from libsodium `crypto_kdf_keygen`.
-- **EnvSalt**: 32-byte master key from libsodium `crypto_kdf_keygen` (used for secret key hash which is used for server-side key lookups).
-- **EnvToken**: 32-byte master key from libsodium `crypto_kdf_keygen`.
-- **EnvKeys**: Derived from EnvSeed using libsodium `crypto_kx_seed_keypair(EnvSeed)` → `envPublicKey` / `envPrivateKey`.
+A 32-byte high entropy seed <MathSymbol>Seed<sub>env</sub></MathSymbol> is used to derive an X25519 keypair (<MathSymbol>K<sub>env</sub></MathSymbol>, <MathSymbol>k<sub>env</sub></MathSymbol>).
 
-## Secret Encryption / Decryption
+A 32-byte random salt <MathSymbol>Salt<sub>env</sub></MathSymbol> is used to compute hashes of secret keys client-side, which in turn are used for server-side key lookups.  
 
-- Secret properties key, value, and comment are encrypted asymmetrically with XChaChaPoly1305 using `envPublicKey`.
-- Secret properties key, value, and comment are decrypted asymmetrically with XChaChaPoly1305 using `envPrivateKey`.
+![environment keys](/assets/images/security/environment-keys.png)
+
 
 ### Key digests
 
-Secret keys are hashed client-side using Blake2B with the corresponding Environments' `envSalt` as the salt. 
+Secret keys are hashed client-side using Blake2B with the corresponding Environments' salt. These hashes are stored along side encrypted keys on the backend as a `key_digest` field. To perform a server-side key lookups, the client computes the hash and sends it to the backend as a query. The backend attempts to match the queried hash against the `key_digest` field across all secrets in the environment, and returns the matched secret if one is found. 
 
-<MathSymbol>Blake2B(input=key, salt=envSalt, length=32bytes)</MathSymbol>
-These hashes are stored along side each secret on the backend and used for querying secrets via the CLI and SDKs. The required digest can be recomputed by these clients and used to query the backend.
+<MathSymbol>Blake2B(input=secret.key, salt=Salt<sub>env</sub>, length=32bytes)</MathSymbol>
+
+---
 
 ## Environment Access Provisioning
 
-**Users**
-- Users are granted access to environments cryptographically, by encrypting the environments' `envSeed` and `envSalt` with the user account's `userKxPublicKey` to compute a `wrappedSeed` and `wrappedSalt` respectively. These are stored on the backend as an EnvironmentKey object. These "wrapped" keys are decrypted client-side and then used to decrypt secrets in an environment.
+Users are granted access to environments cryptographically, by encrypting the environments' seed <MathSymbol>Seed<sub>env</sub></MathSymbol> and salt <MathSymbol>Salt<sub>env</sub></MathSymbol> with the user account's public key <MathSymbol>K<sub>user</sub><sup>kx</sup></MathSymbol> to compute a *wrapped seed* and *wrapped salt* respectively. These are stored on the backend as an EnvironmentKey object. 
 
-## Lockbox
-Lockbox allows secrets to be shared via a single link with a zero-trust encryption scheme. 
-To create a new lockbox link with some secret data s:
-- A random 32-byte `seed` is generated by libsodium `crypto_kdf_keygen()`
-- An X25519 keypair (`boxPublicKey` / `boxPrivateKey`) is derived from the seed by libsodium `crypto_kx_seed_keypair(seed)`
-- The secret s is encrypted with the `boxPublicKey` to compute ciphertext `c`, and the boxPrivateKey is discarded
-- The ciphertext `c` is stored on the backend along with metadata such as the number of allowed views, link expiry etc and given a unique uuid `boxId`
-- The `boxId` and `seed` are used to generate the link: `/lockbox/${boxId}#${seed}`. Note that the `seed` is added as a URL fragment, and thus only parsed by the browser and never sent to the server.
-- To retrieve and decrypt a secret shared via Lockbox:
-- The `boxId` is used to retrieve the ciphertext `c`
-- The `seed` in the link URL fragment is used to compute the keypair (`boxPublicKey` / `boxPrivateKey`) client-side
-Ciphertext c is decrypted with the `boxPrivateKey` to get the original secret s
+![environment key wrapping for user](/assets/images/security/user-env-key-wrapping.png)
 
+These "wrapped" keys are fetched from the server and decrypted client-side with the user's private key <MathSymbol>k<sub>user</sub><sup>kx</sup></MathSymbol> to retrieve the environment seed and salt. The seed can then be used to re-derive (<MathSymbol>K<sub>env</sub></MathSymbol>, <MathSymbol>k<sub>env</sub></MathSymbol>) for secret encryption and decryption.
+
+![environment key unwrapping for user](/assets/images/security/user-env-key-unwrapping.png)
+
+---
+
+## Secret Encryption / Decryption
+
+Secret properties `key`, `value`, and `comment` are encrypted asymmetrically with XChaChaPoly1305 using the environment's public key <MathSymbol>K<sub>env</sub></MathSymbol>. Each field encryption operation uses an ephemeral keypair and a random IV, as decribed in the [generic encryption](#encryption) description.
+
+![secret encryption](/assets/images/security/secret-encryption.png)
+
+Each field is decrypted using the environment's private key <MathSymbol>k<sub>env</sub></MathSymbol>, the ephemeral public key and the IV that are appended to the ciphertext string as described in the [generic decryption](#decryption) description.
+
+![secret decryption](/assets/images/security/secret-decryption.png)
+
+Putting together the understanding of environment keys, access provisioning and secret encryption gives us a complete picture of how a user may encrypt and decrypt a single secret:
+
+![e2e secret encryption](/assets/images/security/e2e-secret-encryption.png)
+*User encrypting a single secret* {{ className: 'text-sm text-center' }}
+
+![e2e secret decryption](/assets/images/security/e2e-secret-decryption.png)
+*User decrypting a single secret* {{ className: 'text-sm text-center' }}
 
 ---
 
 ## Tokens
 
+Tokens allow programmatic access to resources such as environments and secrets via the [Phase CLI](/cli/install), [API](/public-api), [SDKs](/sdks) or [Kubernetes Operator](/integrations/platforms/kubernetes). Tokens facilitate authentication to these resources, and some additionallycontain the keys required to encrypt and decrypt secrets.
+
 ### User Tokens (PATs)
 
-User tokens are are used to programmatically access secrets stored in Phase. They scope of the user token depends on access the user has to apps and the role associated with their account. By default user tokens can be used to access secrets from `0.0.0.0/0` and `::/0`.
+User tokens are are used to programmatically access secrets stored in Phase as a User. They scope of the user token depends on the Apps and Environments the user has access to, and the role associated with their account.
 
 - User tokens are generated as follows:
   - A random 32-byte wrappingKey is generated.
@@ -178,19 +196,18 @@ The token string has the format:
 pss_service:{version}:{tokenId}:{publicKey}:{s0}:{wrappingKey}
 ```
 
-### Encryption
-
-1. Create an ephemeral `Ed25519` key pair with libsodium's `crypto_kx_keypair()` utility.
-2. Create a 256 bit symmetric `sessionKey` via the `X25519` Elliptic Curve Diffie-Hellman key exchange algorithm with the public key from [`APP_ID`](/security/architecture#app-id) and ephemeral key pair.
-3. Use the `sessionKey` to encrypt data with libsodium's `crypto_aead_xchacha20poly1305_ietf_encrypt()`.
-4. Return Phase encrypted data in the [`ph:`](/security/architecture#phase-encrypted-data) format.
-
-### Decryption
-
-1. Authenticate to the Phase KMS via the **App Token** from the `APP_SECRET` and fetch the encrypted `Share1`.
-2. Reconstruct the `Share0` + `Share1` to assemble the App private key.
-3. Derive the `sessionKey` via the `X25519` Elliptic Curve Diffie-Hellman key exchange algorithm from the `ephPublicKey` and the App private key.
-4. Use the `sessionKey` to decrypt data with libsodium's `crypto_aead_xchacha20poly1305_ietf_decrypt()`.
-5. Return plaintext data
+## Lockbox
+Lockbox allows secrets to be shared via a single link with a zero-trust encryption scheme. 
+To create a new lockbox link with some secret data s:
+- A random 32-byte `seed` is generated by libsodium `crypto_kdf_keygen()`
+- An X25519 keypair (`boxPublicKey` / `boxPrivateKey`) is derived from the seed by libsodium `crypto_kx_seed_keypair(seed)`
+- The secret s is encrypted with the `boxPublicKey` to compute ciphertext `c`, and the boxPrivateKey is discarded
+- The ciphertext `c` is stored on the backend along with metadata such as the number of allowed views, link expiry etc and given a unique uuid `boxId`
+- The `boxId` and `seed` are used to generate the link: `/lockbox/${boxId}#${seed}`. Note that the `seed` is added as a URL fragment, and thus only parsed by the browser and never sent to the server.
+- To retrieve and decrypt a secret shared via Lockbox:
+- The `boxId` is used to retrieve the ciphertext `c`
+- The `seed` in the link URL fragment is used to compute the keypair (`boxPublicKey` / `boxPrivateKey`) client-side
+Ciphertext c is decrypted with the `boxPrivateKey` to get the original secret s
 
 ---
+
