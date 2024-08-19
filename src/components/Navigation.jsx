@@ -209,8 +209,32 @@ export const navigation = [
       { title: 'Install', href: '/cli/install' },
       { title: 'Quickstart', href: '/cli/usage' },
       { title: 'Commands', href: '/cli/commands' },
-      // { title: 'Config', href: '/dfgas' },
-      //{ title: 'FAQ', href: '/quickstart' },
+    ],
+  },
+  {
+    title: 'SDKs',
+    links: [
+      { title: 'Overview', href: '/sdks' },
+      { title: 'Python', href: '/sdks/python' },
+      { title: 'Golang', href: '/sdks/go' },
+      { title: 'Node.js', href: '/sdks/node' },
+    ],
+  },
+  {
+    title: 'API',
+    links: [
+      { title: 'Overview', href: '/public-api' },
+      { title: 'Authentication', href: '/public-api/authentication' },
+      { title: 'Secrets', href: '/public-api/secrets' },
+      { title: 'Errors', href: '/public-api/errors' },
+    ],
+  },
+  {
+    title: 'Security',
+    links: [
+      { title: 'Overview', href: '/security' },
+      { title: 'Architecture', href: '/security/architecture' },
+      { title: 'Cryptographic Algorithms', href: '/security/cryptography' },
     ],
   },
   {
@@ -313,35 +337,9 @@ export const navigation = [
         title: 'Config - Environment Variables',
         href: '/self-hosting/configuration/envars',
       },
-      // { title: 'Python', href: '/sdks/python' },
     ],
   },
-  {
-    title: 'SDKs',
-    links: [
-      { title: 'Overview', href: '/sdks' },
-      { title: 'Python', href: '/sdks/python' },
-      { title: 'Golang', href: '/sdks/go' },
-      { title: 'Node.js', href: '/sdks/node' },
-    ],
-  },
-  {
-    title: 'API',
-    links: [
-      { title: 'Overview', href: '/public-api' },
-      { title: 'Authentication', href: '/public-api/authentication' },
-      { title: 'Secrets', href: '/public-api/secrets' },
-      { title: 'Errors', href: '/public-api/errors' },
-    ],
-  },
-  {
-    title: 'Security',
-    links: [
-      { title: 'Overview', href: '/security' },
-      { title: 'Architecture', href: '/security/architecture' },
-      { title: 'Cryptographic Algorithms', href: '/security/cryptography' },
-    ],
-  },
+  
 ]
 
 export function Navigation(props) {
