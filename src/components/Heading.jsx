@@ -80,13 +80,25 @@ export function Heading({
     }
   })
 
+  // Determine scroll-mt class based on the level
+  let scrollMarginTop
+  if (level === 2) {
+    scrollMarginTop = tag || label ? 'scroll-mt-32' : 'scroll-mt-24'
+  } else if (level === 3) {
+    scrollMarginTop = tag || label ? 'scroll-mt-24' : 'scroll-mt-20'
+  } else if (level === 4) {
+    scrollMarginTop = tag || label ? 'scroll-mt-20' : 'scroll-mt-16'
+  } else {
+    scrollMarginTop = 'scroll-mt-24' // Default for other levels
+  }
+
   return (
     <>
       <Eyebrow tag={tag} label={label} />
       <Component
         ref={ref}
         id={anchor ? id : undefined}
-        className={tag || label ? 'mt-2 scroll-mt-32' : 'scroll-mt-24'}
+        className={`${tag || label ? 'mt-2' : ''} ${scrollMarginTop}`}
         {...props}
       >
         {anchor ? (
@@ -100,3 +112,4 @@ export function Heading({
     </>
   )
 }
+
