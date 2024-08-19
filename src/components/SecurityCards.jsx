@@ -13,9 +13,9 @@ import { DocumentIcon } from './icons/DocumentIcon'
 
 const resources = [
   {
-    href: '/security/cryptography',
-    name: 'Cryptography',
-    description: "Learn more about Phase's cryptography primitives and design decisions.",
+    href: '/security/architecture',
+    name: 'Architecture',
+    description: "Learn more about Phase's cryptographic architecture and design decisions.",
     icon: ChevronRightLeftIcon,
     pattern: {
       y: 16,
@@ -26,9 +26,9 @@ const resources = [
     },
   },
   {
-    href: '/security/architecture#user-keys',
-    name: 'Users',
-    description: 'Learn how Phase generates user keys and secures data.',
+    href: '/security/architecture#key-derivation',
+    name: 'Key Derivation',
+    description: 'Learn how Phase generates and derives encryption keys for Users and Environments',
     icon: UsersIcon,
     pattern: {
       y: -6,
@@ -39,9 +39,9 @@ const resources = [
     },
   },
   {
-    href: '/security/architecture#secret-encryption-decryption',
-    name: 'Applications',
-    description: 'Learn how Phase generates application keys and secures data.',
+    href: '/security/architecture#environment-access-provisioning',
+    name: 'Access Control',
+    description: 'Learn how Phase implements cryptographic access control to Environments and Secrets.',
     icon: PackageIcon,
     pattern: {
       y: -8,
@@ -52,9 +52,9 @@ const resources = [
     },
   },
   {
-    href: '/security/architecture#environment-keys',
-    name: 'Environments',
-    description: 'Learn how Phase generates environment keys and secures data.',
+    href: '/security/architecture#secret-encryption-decryption',
+    name: 'Secret Encryption',
+    description: 'Learn how Secrets in Phase are encrypted and decrypted.',
     icon: SquaresPlusIcon,
     pattern: {
       y: 16,
@@ -65,9 +65,9 @@ const resources = [
     },
   },
   {
-    href: '/console/secrets',
-    name: 'Secrets',
-    description: 'Learn how Phase secures secrets and data.',
+    href: '/security/architecture#tokens',
+    name: 'Tokens',
+    description: 'Learn how Phase generates User and Service tokens for programmatic access to Secrets',
     icon: DocumentIcon,
     pattern: {
       y: -6,
@@ -78,9 +78,9 @@ const resources = [
     },
   },
   {
-    href: '/security/architecture#tokens',
-    name: 'Tokens',
-    description: 'Learn how Phase securely generates and manages access tokens.',
+    href: '/security/cryptography',
+    name: 'Cryptographic Algorithms',
+    description: 'Learn about the low-level cryptographic algorithms used to derive keys, encrypt data, compute hashes and more',
     icon: BoltIcon,
     pattern: {
       y: -8,
