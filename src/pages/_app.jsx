@@ -21,6 +21,14 @@ const PostHogProvider = dynamic(
 
 const options = {
   api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
+  session_recording: {
+    maskAllInputs: false,
+    maskTextSelector: "", // Disable text masking
+    maskInputOptions: {},
+    recordCanvas: true,
+    recordNetwork: true,
+    recordPerformance: true
+  }
 }
 
 function onRouteChange() {
