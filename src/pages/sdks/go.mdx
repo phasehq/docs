@@ -101,8 +101,8 @@ Before interacting with the Phase service, initialize the SDK with your service 
 Parameters:
 
 - `serviceToken` type `string`: Your Phase Service Token used to authenticate with the service and decrypt secrets
-- `host` type `sting`: The URL of the Phase Console instance
-- `debug` type `bool`: Setting to true will results in higher level of log verbosity useful when debugging
+- `host` type `string`: The URL of the Phase Console instance
+- `debug` type `bool`: Setting to true will result in a higher level of log verbosity useful when debugging
 
 ```go
 package main
@@ -115,7 +115,7 @@ import (
 func main() {
     serviceToken := "pss_service:v1:....."
     host := "https://console.phase.dev" // Adjust this for a self-hosted instance of Phase
-    debug := false
+    debug := false // For logging verbosity, disable in production
 
     phaseClient := phase.Init(serviceToken, host, debug)
     if phaseClient == nil {
@@ -128,9 +128,17 @@ func main() {
 
 ## Usage
 
+<Note>
+  Using the AppID ensures precise targeting of the intended application, especially in scenarios where multiple applications might share the same name.
+</Note>
+
+If you can get the AppID by going to your application settings in the Phase Console, hovering over UUID under the App section and clicking the `Copy` button:
+
+![hello world](/assets/images/console/settings/application-id.png)
+
 ### Creating a Secret
 
-Define key-value pairs and specify the Environment, App name, and path (optional) for each key to create new Secrets.
+Define key-value pairs and specify the Environment, App name or ID, and path (optional) for each key to create new Secrets.
 
 Options:
 
@@ -139,6 +147,7 @@ type CreateSecretsOptions struct {
     KeyValuePairs []map[string]string
     EnvName       string
     AppName       string
+    AppID         string
     SecretPath    map[string]string
 }
 ```
@@ -149,7 +158,7 @@ opts := phase.CreateSecretsOptions{
         {"API_KEY": "api_secret"},
     },
     EnvName:    "Production",
-    AppName:    "MyApp",
+    AppName:    "MyApp", // Or use AppID: "app-id-here"
     SecretPath: map[string]string{"API_KEY": "/api/keys"}, // Optional, default path: /
 }
 
@@ -161,16 +170,17 @@ if err != nil {
 
 ### Retrieving a Secret
 
-To retrieve the value of a single Secret, provide the Environment name, App name, Key, and optionally a tag and path.
+To retrieve the value of a single Secret, provide the Environment name, App name or ID, Key, and optionally a tag and path.
 
 Options:
 
 ```go
 type GetSecretOptions struct {
-    EnvName   string
-    AppName   string
-    KeyToFind string
-    Tag       string
+    EnvName    string
+    AppName    string
+    AppID      string
+    KeyToFind  string
+    Tag        string
     SecretPath string
 }
 ```
@@ -178,7 +188,7 @@ type GetSecretOptions struct {
 ```go
 getOpts := phase.GetSecretOptions{
     EnvName:   "Production",
-    AppName:   "MyApp",
+    AppName:   "MyApp", // Or use AppID: "app-id-here"
     KeyToFind: "API_KEY",
 }
 
@@ -192,26 +202,26 @@ if err != nil {
 
 ### Retrieving all Secrets
 
-To retrieve the value of a single Secret, provide the Environment name, App name, Key, and optionally a tag and path.
+To retrieve all Secrets, provide the Environment name, App name or ID, and optionally a tag and path.
 
 Options:
 
 ```go
 type GetAllSecretsOptions struct {
-    EnvName string
-    AppName string
-    Tag     string
+    EnvName    string
+    AppName    string
+    AppID      string
+    Tag        string
     SecretPath string
 }
 ```
 
 ```go
-getOpts := phase.GetSecretOptions{
-    EnvName:   "Production",
-    AppName:   "MyApp",
-    Tag:       "",
+getOpts := phase.GetAllSecretsOptions{
+    EnvName:    "Production",
+    AppName:    "MyApp", // Or use AppID: "app-id-here"
+    Tag:        "",
     SecretPath: "",
-
 }
 
 secrets, err := phaseClient.GetAll(getOpts)
@@ -224,7 +234,7 @@ if err != nil {
 
 ### Updating a Secret
 
-Provide the new value along with the environment name, application name, key, and optionally the path to update an existing secret.
+Provide the new value along with the environment name, application name or ID, key, and optionally the path to update an existing secret.
 
 Options:
 
@@ -232,6 +242,7 @@ Options:
 type SecretUpdateOptions struct {
     EnvName    string
     AppName    string
+    AppID      string
     Key        string
     Value      string
     SecretPath string
@@ -241,7 +252,7 @@ type SecretUpdateOptions struct {
 ```go
 updateOpts := phase.SecretUpdateOptions{
     EnvName:    "Production",
-    AppName:    "MyApp",
+    AppName:    "MyApp", // Or use AppID: "app-id-here"
     Key:        "API_KEY",
     Value:      "my_updated_api_secret",
     SecretPath: "/api/keys", // Optional, default path: /
@@ -255,7 +266,7 @@ if err != nil {
 
 ### Deleting a Secret
 
-Specify the environment name, application name, key to delete, and optionally the path to delete a secret.
+Specify the environment name, application name or ID, key to delete, and optionally the path to delete a secret.
 
 Options:
 
@@ -263,6 +274,7 @@ Options:
 type DeleteSecretOptions struct {
     EnvName     string
     AppName     string
+    AppID       string
     KeyToDelete string
     SecretPath  string
 }
@@ -271,7 +283,7 @@ type DeleteSecretOptions struct {
 ```go
 deleteOpts := phase.DeleteSecretOptions{
     EnvName:     "Production",
-    AppName:     "MyApp",
+    AppName:     "MyApp", // Or use AppID: "app-id-here"
     KeyToDelete: "API_KEY",
     SecretPath:  "/api/keys", // Optional, default path: /
 }
