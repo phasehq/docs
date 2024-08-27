@@ -185,14 +185,14 @@ function NavigationGroup({ group, className }) {
 
 export const navigation = [
   {
-    title: 'Getting Started',
+    title: 'GET STARTED',
     links: [
       { title: 'Introduction', href: '/' },
       { title: 'Quickstart', href: '/quickstart' },
     ],
   },
   {
-    title: 'Phase Console',
+    title: 'CONSOLE',
     links: [
       { title: 'Overview', href: '/console' },
       { title: 'Organisations', href: '/console/organisation' },
@@ -204,7 +204,7 @@ export const navigation = [
     ],
   },
   {
-    title: 'Phase CLI',
+    title: 'CLI',
     links: [
       { title: 'Install', href: '/cli/install' },
       { title: 'Quickstart', href: '/cli/usage' },
@@ -230,7 +230,7 @@ export const navigation = [
     ],
   },
   {
-    title: 'Security',
+    title: 'SECURITY',
     links: [
       { title: 'Overview', href: '/security' },
       { title: 'Architecture', href: '/security/architecture' },
@@ -238,7 +238,7 @@ export const navigation = [
     ],
   },
   {
-    title: 'Platform Integration',
+    title: 'PLATFORM INTEGRATION',
     links: [
       //{ title: 'Overview', href: '/das' },
       { title: 'Docker', href: '/integrations/platforms/docker' },
@@ -299,7 +299,7 @@ export const navigation = [
     ],
   },
   {
-    title: 'Frameworks Integration',
+    title: 'FRAMEWORK INTEGRATION',
     links: [
       { title: 'Overview', href: '/integrations' },
       { title: 'Next.js', href: '/integrations/frameworks/next-js' },
@@ -324,7 +324,7 @@ export const navigation = [
     ],
   },
   {
-    title: 'Self-hosting',
+    title: 'SELF-HOST',
     links: [
       { title: 'Overview', href: '/self-hosting' },
       { title: 'Docker Compose', href: '/self-hosting/docker-compose' },
