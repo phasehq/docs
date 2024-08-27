@@ -58,7 +58,7 @@ function useAutocomplete({ close }) {
             {
               sourceId: 'documentation',
               getItems() {
-                return search(query, { limit: 5 })
+                return search(query, { limit: 10 })
               },
               getItemUrl({ item }) {
                 return item.url
