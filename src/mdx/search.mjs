@@ -93,7 +93,7 @@ export default function Search(nextConfig = {}) {
                 },
                 context: {
                   resolution: 9,
-                  depth: 2,
+                  depth: 3,
                   bidirectional: true
                 }
               })
