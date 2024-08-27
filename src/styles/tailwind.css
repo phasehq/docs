@@ -10,6 +10,12 @@
   --shiki-token-punctuation: theme('colors.zinc.200');
 }
 
+.not-prose {
+  max-width: inherit;
+  margin-left: calc(50% - min(50%, 33rem))!important;
+  margin-right: calc(50% - min(50%, 33rem))!important;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
