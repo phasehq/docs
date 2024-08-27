@@ -96,7 +96,7 @@ export function Deployments() {
               <Image
                 src={library.logo}
                 alt=""
-                className="h-12 w-12"
+                className="h-10 w-10"
                 unoptimized
               />
             </Link>

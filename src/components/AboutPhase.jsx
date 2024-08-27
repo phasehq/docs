@@ -1,49 +1,42 @@
 'use client'
 
-
 import { Button } from '@/components/Button'
 import { Heading } from '@/components/Heading'
 
 
 const resources = [
   {
-    href: '/console',
-    name: 'Console',
-    description:
-      'Manage secrets across environments and teams via a web dashboard.',
-    
+    href: '/console/secrets',
+    name: 'Secrets',
+    description: 'Secrets in Phase are more than just key/value pairs. Explore referencing, overrides and more.',
   },
   {
-    href: '/cli/commands',
-    name: 'CLI',
-    description: 'Securely inject secrets into any application at runtime',
-    
+    href: '/console/environments',
+    name: 'Environments',
+    description:
+      'Environments let you manage secrets for different uses, such as development or production.',
   },
   {
-    href: '/public-api/secrets#get-secrets',
-    name: 'REST API',
+    href: '/console/users',
+    name: 'Users',
     description:
-      'Create, retrieve, update, delete secrets via any HTTP client.',
-    
+      'Learn about how user accounts are set up, secured and granted access to secrets.',
   },
   {
-    href: '/sdks',
-    name: 'SDKs',
+    href: '/security',
+    name: 'Security',
     description:
-      'Create, retrieve, update, delete secrets securely from your application.',
-    
+      'A sophisticated security architecture is at the heart of Phase. Explore the details to learn more. ',
   },
 ]
 
-
-
-export function Platform() {
+export function About() {
   return (
     <div className="my-16 xl:max-w-none">
       <Heading level={2} id="guides">
-        Platform
+        About Phase
       </Heading>
-      <div className="not-prose mt-4 grid grid-cols-1 border-t border-zinc-900/10 gap-8 pt-10 sm:grid-cols-2 xl:grid-cols-4 dark:border-white/5">
+      <div className="not-prose mt-4 grid grid-cols-1 gap-8 border-t border-zinc-900/10 pt-10 dark:border-white/5 sm:grid-cols-2 xl:grid-cols-4">
         {resources.map((resource) => (
           <div key={resource.href}>
             <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">
