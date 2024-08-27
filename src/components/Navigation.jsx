@@ -206,6 +206,7 @@ export const navigation = [
   {
     title: 'CLI',
     links: [
+      { title: 'Overview', href: '/cli' },
       { title: 'Install', href: '/cli/install' },
       { title: 'Quickstart', href: '/cli/usage' },
       { title: 'Commands', href: '/cli/commands' },
