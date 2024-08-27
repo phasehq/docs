@@ -39,7 +39,7 @@ module.exports = ({ theme }) => ({
 
       // Base
       color: 'var(--tw-prose-body)',
-      fontSize: theme('fontSize.base')[0],
+      fontSize: theme('fontSize.sm')[0],
       lineHeight: theme('lineHeight.7'),
 
       // Layout
@@ -60,8 +60,8 @@ module.exports = ({ theme }) => ({
         marginBottom: theme('spacing.6'),
       },
       '[class~="lead"]': {
-        fontSize: theme('fontSize.lg')[0],
-        ...theme('fontSize.lg')[1],
+        fontSize: theme('fontSize.base')[0],
+        ...theme('fontSize.base')[1],
       },
 
       // Lists
@@ -181,31 +181,31 @@ module.exports = ({ theme }) => ({
       h1: {
         color: 'var(--tw-prose-headings)',
         fontWeight: '700',
-        fontSize: theme('fontSize.4xl')[0],
-        ...theme('fontSize.4xl')[1],
+        fontSize: theme('fontSize.2xl')[0],
+        ...theme('fontSize.2xl')[1],
         marginBottom: theme('spacing.2'),
       },
       h2: {
         color: 'var(--tw-prose-headings)',
         fontWeight: '600',
-        fontSize: theme('fontSize.2xl')[0],
-        ...theme('fontSize.2xl')[1],
+        fontSize: theme('fontSize.lg')[0],
+        ...theme('fontSize.lg')[1],
         marginTop: theme('spacing.16'),
         marginBottom: theme('spacing.2'),
       },
       h3: {
         color: 'var(--tw-prose-headings)',
-        fontSize: theme('fontSize.xl')[0],
-        ...theme('fontSize.xl')[1],
+        fontSize: theme('fontSize.base')[0],
+        ...theme('fontSize.base')[1],
         fontWeight: '600',
         marginTop: theme('spacing.10'),
         marginBottom: theme('spacing.2'),
       },
       h4: {
         color: 'var(--tw-prose-headings)',
-        fontSize: theme('fontSize.lg')[0],
-        ...theme('fontSize.lg')[1],
-        fontWeight: '600',
+        fontSize: theme('fontSize.sm')[0],
+        ...theme('fontSize.sm')[1],
+        fontWeight: '700',
         marginTop: theme('spacing.10'),
         marginBottom: theme('spacing.2'),
       },
