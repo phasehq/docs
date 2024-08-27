@@ -16,11 +16,15 @@ export function Layout({ children, sections = [] }) {
           layoutScroll
           className="contents lg:pointer-events-none lg:fixed lg:inset-0 lg:z-40 lg:flex"
         >
-          <div className="contents lg:pointer-events-auto lg:block lg:w-72 lg:overflow-y-auto lg:border-r lg:border-zinc-900/10 lg:px-6 lg:pt-4 lg:pb-8 lg:dark:border-white/10 xl:w-80">
+          <div className="contents lg:pointer-events-auto lg:block lg:w-72 lg:overflow-y-auto lg:border-r lg:border-zinc-900/10 lg:px-6 lg:pb-8 lg:pt-4 lg:dark:border-white/10 xl:w-80">
             <div className="hidden lg:flex">
-              <Link href="/" aria-label="Home" className="flex items-center gap-1">
-              <Logo className="h-10 fill-black dark:fill-white" />
-                <div className="flex gap-1 border-none md:text-xl font-light dark:text-white uppercase tracking-tight">
+              <Link
+                href="/"
+                aria-label="Home"
+                className="flex items-center gap-1"
+              >
+                <Logo className="h-10 fill-black dark:fill-white" />
+                <div className="flex gap-1 border-none font-mono uppercase text-emerald-400 bg-emerald-400/10 rounded-md px-1 md:text-xl font-semibold">
                   docs
                 </div>
               </Link>
