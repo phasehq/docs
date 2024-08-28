@@ -1,13 +1,6 @@
 import Image from 'next/image'
 import { Card } from '@/components/Card'
 import Link from 'next/link'
-import { Heading } from '@/components/Heading'
-import logoGo from '@/images/logos/go.svg'
-import logoNode from '@/images/logos/node.svg'
-import logoJavaScript from '@/images/logos/javascript.svg'
-import logoDjango from '@/images/logos/django.svg'
-import logoReact from '@/images/logos/react.svg'
-import logoNext from '@/images/logos/nextjs.svg'
 
 import logoDocker from '@/images/logos/docker.svg'
 import logoKubernetes from '@/images/logos/kubernetes.svg'
