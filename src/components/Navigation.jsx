@@ -185,14 +185,14 @@ function NavigationGroup({ group, className }) {
 
 export const navigation = [
   {
-    title: 'GET STARTED',
+    title: 'Get Started',
     links: [
       { title: 'Introduction', href: '/' },
       { title: 'Quickstart', href: '/quickstart' },
     ],
   },
   {
-    title: 'CONSOLE',
+    title: 'Console',
     links: [
       { title: 'Overview', href: '/console' },
       { title: 'Organisations', href: '/console/organisation' },
@@ -231,7 +231,7 @@ export const navigation = [
     ],
   },
   {
-    title: 'SECURITY',
+    title: 'Security',
     links: [
       { title: 'Overview', href: '/security' },
       { title: 'Architecture', href: '/security/architecture' },
@@ -239,7 +239,7 @@ export const navigation = [
     ],
   },
   {
-    title: 'PLATFORM INTEGRATION',
+    title: 'Platform Integration',
     links: [
       //{ title: 'Overview', href: '/das' },
       { title: 'Docker', href: '/integrations/platforms/docker' },
@@ -300,7 +300,7 @@ export const navigation = [
     ],
   },
   {
-    title: 'FRAMEWORK INTEGRATION',
+    title: 'Framework Integration',
     links: [
       { title: 'Overview', href: '/integrations' },
       { title: 'Next.js', href: '/integrations/frameworks/next-js' },
@@ -325,7 +325,7 @@ export const navigation = [
     ],
   },
   {
-    title: 'SELF-HOST',
+    title: 'Self-Host',
     links: [
       { title: 'Overview', href: '/self-hosting' },
       { title: 'Docker Compose', href: '/self-hosting/docker-compose' },
