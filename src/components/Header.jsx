@@ -58,12 +58,14 @@ export const Header = forwardRef(function Header({ className }, ref) {
             'bg-zinc-900/7.5 dark:bg-white/7.5'
         )}
       />
-      <Search />
+      <div className="hidden md:block"></div>
+        <Search />
+      
       <div className="flex items-center gap-5 lg:hidden">
         <MobileNavigation />
         <Link href="/" aria-label="Home" className="flex items-center gap-1">
           <Logo className="h-10 fill-black dark:fill-white" />
-          <div className="flex gap-1 border-none md:text-xl font-light dark:text-white uppercase tracking-tight">
+          <div className="flex gap-1 rounded-md border-none bg-emerald-400/10 px-1 font-mono font-semibold uppercase text-emerald-400 md:text-xl">
             docs
           </div>
         </Link>

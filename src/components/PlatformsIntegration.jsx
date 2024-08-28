@@ -1,13 +1,6 @@
 import Image from 'next/image'
 import { Card } from '@/components/Card'
 import Link from 'next/link'
-import { Heading } from '@/components/Heading'
-import logoGo from '@/images/logos/go.svg'
-import logoNode from '@/images/logos/node.svg'
-import logoJavaScript from '@/images/logos/javascript.svg'
-import logoDjango from '@/images/logos/django.svg'
-import logoReact from '@/images/logos/react.svg'
-import logoNext from '@/images/logos/nextjs.svg'
 
 import logoDocker from '@/images/logos/docker.svg'
 import logoKubernetes from '@/images/logos/kubernetes.svg'
@@ -102,7 +95,7 @@ export function PlatformsIntegration() {
               <Image
                 src={library.logo}
                 alt=""
-                className="h-12 w-12"
+                className="h-10 w-10"
                 unoptimized
               />
             </Link>
