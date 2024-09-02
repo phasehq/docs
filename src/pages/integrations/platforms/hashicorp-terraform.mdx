@@ -1,0 +1,156 @@
+import { Tag } from '@/components/Tag'
+import { Button } from '@/components/Button'
+
+export const description = 'Use Phase with Terraform to manage your secrets'
+
+<Tag variant="small">INTEGRATE</Tag>
+
+# Terraform Provider
+
+The Phase Terraform Provider allows you to fetch secrets stored in Phase directly from your Terraform configurations. This integration enables you to incorporate secret management into your infrastructure-as-code workflows.
+
+## Prerequisites
+
+- [Terraform](https://www.terraform.io/downloads.html) 0.13.x or later
+- Sign up for the [Phase Console](/quickstart) and [create an App](/console/apps#create-an-app).
+- Enable Server-side Encryption (SSE) for the App from the [Settings](/console/apps#settings) tab.
+
+## Installing the Provider
+
+To use the Phase provider in your Terraform configuration, add the following Terraform block to your configuration:
+
+```hcl
+terraform {
+  required_providers {
+    phase = {
+      source  = "phasehq/phase"
+      version = "0.1.1" // replace with latest version
+    }
+  }
+}
+```
+
+You can get the latest version of Phase from the official [Terraform Registry](https://registry.terraform.io/providers/phasehq/phase) or [GitHub releases](https://github.com/phasehq/terraform-provider-phase/releases).
+
+## Configuring the Provider
+
+To configure the provider, you need to provide your Phase API credentials. We recommend using environment variables for sensitive information:
+
+```hcl
+provider "phase" {
+  phase_token = var.phase_token
+}
+```
+
+Set the `PHASE_SERVICE_TOKEN` or `PHASE_PAT_TOKEN` environment variable with your Phase service token or personal access token:
+
+```sh
+export PHASE_SERVICE_TOKEN="pss_service:v1:..."
+# or
+export PHASE_PAT_TOKEN="pss_user:v1:..."
+```
+
+If you are using a self-hosted instance of Phase, you can specify the API host using the `host` argument in the provider configuration or the `PHASE_HOST` environment variable.
+
+## Using the Provider
+
+### Fetching Secrets
+
+To fetch secrets from Phase, use the `phase_secrets` data source:
+
+```hcl
+data "phase_secrets" "all" {
+  env    = "development"
+  app_id = "your-app-id"
+  path   = ""
+}
+
+output "all_secret_keys" {
+  value     = data.phase_secrets.all.secrets
+  sensitive = true
+}
+```
+
+### Fetching Secrets from a Specific Path
+
+To fetch all secrets under a specific path:
+
+```hcl
+data "phase_secrets" "path_secrets" {
+  env    = "development"
+  app_id = "your-app-id"
+  path   = "/backend"
+}
+
+output "backend_secret_keys" {
+  value     = data.phase_secrets.path_secrets.secrets["JWT_SECRET"]
+  sensitive = true
+}
+```
+
+### Fetching a Single Secret
+
+To fetch a specific secret:
+
+```hcl
+data "phase_secrets" "single" {
+  env    = "development"
+  app_id = "your-app-id"
+}
+
+output "database_url" {
+  value     = data.phase_secrets.single.secrets["DATABASE_URL"]
+  sensitive = true
+}
+```
+
+### Using Secrets in Resources
+
+You can use the fetched secrets in your Terraform configurations like this:
+
+```hcl
+resource "some_resource" "example" {
+  database_url   = data.phase_secrets.single.secrets["DATABASE_URL"]
+  api_key        = data.phase_secrets.all.secrets["API_KEY"]
+  backend_config = data.phase_secrets.path_secrets.secrets["BACKEND_CONFIG"]
+}
+```
+
+## Personal Secret Overrides
+
+Personal Secret Overrides allow individual users to temporarily override the value of a secret for their own use, without affecting the secret's value for other users or systems. Important points to note:
+
+1. **User Token Requirement**: Personal Secret Overrides require authentication with a Phase User Token (Personal Access Token or PAT). Service tokens do not support this feature.
+
+2. **Activation**: Personal Secret Overrides must be activated through the Phase Console or the Phase CLI. They cannot be directly triggered or modified through the Terraform provider.
+
+3. **Behavior**: When active, the Terraform provider automatically uses the overridden value instead of the main secret value when fetching secrets.
+
+4. **Visibility**: Personal Secret Overrides are only visible and applicable to the user who created them.
+
+5. **Temporary Nature**: These overrides are intended for temporary use, such as during development or testing, and should not be relied upon for production configurations.
+
+## Best Practices
+
+1. Use variables or environment variables for the Phase token to keep it out of your Terraform configurations.
+2. Utilize Terraform's `sensitive` argument when outputting or using secret values to prevent accidental exposure.
+3. Be cautious when using `terraform output` commands, as they may display sensitive information.
+
+## Additional Resources
+
+<div className="not-prose mb-16 mt-6 flex gap-3">
+  <Button
+    href="https://registry.terraform.io/providers/phasehq/phase/latest"
+    variant="text"
+    arrow="right"
+  >
+    Terraform Registry
+  </Button>
+  <Button
+    href="https://github.com/phasehq/terraform-provider-phase"
+    variant="text"
+    arrow="right"
+  >
+    GitHub Repository
+  </Button>
+</div>
