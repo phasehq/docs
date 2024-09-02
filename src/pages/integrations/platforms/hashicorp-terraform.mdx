@@ -86,13 +86,15 @@ output "all_secret_keys" {
 }
 ```
 
+☝️ This will fetch all secrets stored inside your Phase application in the development environment.
+
 ### Fetching Secrets from a Specific Path
 
 To fetch all secrets under a specific path:
 
 ```hcl
 data "phase_secrets" "path_secrets" {
-  env    = "development"
+  env    = "production"
   app_id = "your-app-id"
   path   = "/backend"
 }
@@ -102,6 +104,8 @@ output "backend_secret_keys" {
   sensitive = true
 }
 ```
+
+☝️ This will fetch the `JWT_SECRET` secret from the `/backend` folder inside your Phase application in the production environment.
 
 ### Fetching a Single Secret
 
@@ -118,6 +122,8 @@ output "database_url" {
   sensitive = true
 }
 ```
+☝️ This will fetch the `DATABASE_URL` secret from your Phase application in the development environment.
+
 
 ### Using Secrets in Resources
 
@@ -125,10 +131,27 @@ You can use the fetched secrets in your Terraform configurations like this:
 
 ```hcl
 resource "some_resource" "example" {
-  database_url   = data.phase_secrets.single.secrets["DATABASE_URL"]
+  database_url   = data.phase_secrets.all.secrets["DATABASE_URL"]
   api_key        = data.phase_secrets.all.secrets["API_KEY"]
-  backend_config = data.phase_secrets.path_secrets.secrets["BACKEND_CONFIG"]
+  backend_config = data.phase_secrets.all.secrets["BACKEND_CONFIG"]
 }
+```
+
+## Step 4: Run terraform
+
+Initialize Terraform in the root of your project. This will pull all dependencies and configurations:
+```fish
+terraform init
+```
+
+Run Terraform plan to fetch secrets from Phase and preview the changes that will be made:
+```fish
+terraform plan
+```
+
+Execute your Terraform workflows:
+```fish
+terraform apply
 ```
 
 ## Personal Secret Overrides
