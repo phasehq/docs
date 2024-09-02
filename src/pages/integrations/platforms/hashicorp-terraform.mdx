@@ -7,7 +7,7 @@ export const description = 'Use Phase with Terraform to manage your secrets'
 
 # Terraform Provider
 
-The Phase Terraform Provider allows you to securely fetch secrets stored in Phase directly from your Terraform configurations. This integration enables you to incorporate secret management into your infrastructure-as-code workflows.
+The Phase Terraform Provider allows you to securely retrieve secrets directly from your Terraform configurations. This integration enables you to incorporate secret management into your infrastructure-as-code workflows.
 
 ## Prerequisites
 
@@ -17,7 +17,7 @@ The Phase Terraform Provider allows you to securely fetch secrets stored in Phas
 
 ## Preparation
 
-1. Create a new **Phase Service Token** or a **Personal Access Token** (PAT). If you intend to fetch values of personal secret overrides that you have set in your account via the Phase Console or the Phase CLI, please be sure to use a Personal Access Token (PAT).
+1. Create a new **Phase Service Token** or a **Personal Access Token** (PAT). If you intend to retrieve values of personal secret overrides set in your account via the Phase Console or the Phase CLI, be sure to use a Personal Access Token (PAT).
 
 2. Fetch your Phase **Application ID** (AppID) by going to your application settings in the Phase Console, hovering over UUID under the App section and clicking the `Copy` button:
 
@@ -60,7 +60,7 @@ provider "phase" {
 ```
 
 <Note>
-You may provide the `phase_token` during runtime via the interactive menu or as an environment variable via any of the following environment variables: `PHASE_TOKEN`, `PHASE_SERVICE_TOKEN`, `PHASE_PAT_TOKEN`.
+You can provide the `phase_token` at runtime through the interactive menu or as an environment variable using any of the following: `PHASE_TOKEN`, `PHASE_SERVICE_TOKEN`, `PHASE_PAT_TOKEN`.
 </Note>
 
 ## Step 3: Using the Provider
@@ -140,19 +140,19 @@ Initialize Terraform in the root of your project. This will pull all dependencie
 terraform init
 ```
 
-Run Terraform plan to fetch secrets from Phase and preview the changes that will be made:
+Run Terraform plan to retrieve secrets from Phase and preview the changes that will be made:
 ```fish
 terraform plan
 ```
 
-Execute your Terraform workflows:
+Execute your Terraform workflow:
 ```fish
 terraform apply
 ```
 
 ## Personal Secret Overrides
 
-Personal Secret Overrides allow individual users to temporarily override the value of a secret for their own use, without affecting the secret's value for other users or systems. Important points to note:
+Personal Secret Overrides allow individual users to temporarily override a secret's value for their own use, without affecting the value for other users or systems. Important points to note:
 
 1. **User Token Requirement**: Personal Secret Overrides require authentication with a Phase User Token (Personal Access Token or PAT). Service tokens do not support this feature.
 
@@ -162,10 +162,8 @@ Personal Secret Overrides allow individual users to temporarily override the val
 
 4. **Visibility**: Personal Secret Overrides are only visible and applicable to the user who created them.
 
-5. **Temporary Nature**: These overrides are intended for temporary use, such as during development or testing, and should not be relied upon for production configurations.
-
 ## Best Practices
 
 1. Use variables or environment variables for the Phase token to keep it out of your Terraform configurations.
 2. Utilize Terraform's `sensitive` argument when outputting or using secret values to prevent accidental exposure.
-3. Be cautious when using `terraform output` commands, as they may display sensitive information.
+3. Be cautious when using `terraform output` commands, as these may display sensitive information.
