@@ -7,7 +7,7 @@ export const description = 'Use Phase with Terraform to manage your secrets'
 
 # Terraform Provider
 
-The Phase Terraform Provider allows you to fetch secrets stored in Phase directly from your Terraform configurations. This integration enables you to incorporate secret management into your infrastructure-as-code workflows.
+The Phase Terraform Provider allows you to securely fetch secrets stored in Phase directly from your Terraform configurations. This integration enables you to incorporate secret management into your infrastructure-as-code workflows.
 
 ## Prerequisites
 
@@ -15,7 +15,15 @@ The Phase Terraform Provider allows you to fetch secrets stored in Phase directl
 - Sign up for the [Phase Console](/quickstart) and [create an App](/console/apps#create-an-app).
 - Enable Server-side Encryption (SSE) for the App from the [Settings](/console/apps#settings) tab.
 
-## Installing the Provider
+## Preparation
+
+1. Create a new **Phase Service Token** or a **Personal Access Token** (PAT). If you intend to fetch values of personal secret overrides that you have set in your account via the Phase Console or the Phase CLI, please be sure to use a Personal Access Token (PAT).
+
+2. Fetch your Phase **Application ID** (AppID) by going to your application settings in the Phase Console, hovering over UUID under the App section and clicking the `Copy` button:
+
+![hello world](/assets/images/console/settings/application-id.png)
+
+## Step 1: Install the Provider
 
 To use the Phase provider in your Terraform configuration, add the following Terraform block to your configuration:
 
@@ -32,7 +40,7 @@ terraform {
 
 You can get the latest version of Phase from the official [Terraform Registry](https://registry.terraform.io/providers/phasehq/phase) or [GitHub releases](https://github.com/phasehq/terraform-provider-phase/releases).
 
-## Configuring the Provider
+## Step 2: Configure the Provider
 
 To configure the provider, you need to provide your Phase API credentials. We recommend using environment variables for sensitive information:
 
@@ -50,9 +58,16 @@ export PHASE_SERVICE_TOKEN="pss_service:v1:..."
 export PHASE_PAT_TOKEN="pss_user:v1:..."
 ```
 
-If you are using a self-hosted instance of Phase, you can specify the API host using the `host` argument in the provider configuration or the `PHASE_HOST` environment variable.
+If you are using a self-hosted instance of Phase, you can specify the API host using the `host` argument in the provider configuration or the `PHASE_HOST` environment variable:
 
-## Using the Provider
+```hcl
+provider "phase" {
+  host        = "https://phase.example.io"
+  phase_token = var.phase_token
+}
+```
+
+## Step 3: Using the Provider
 
 ### Fetching Secrets
 
