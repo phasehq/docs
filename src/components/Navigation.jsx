@@ -253,6 +253,10 @@ export const navigation = [
         href: '/integrations/platforms/aws-secrets-manager',
       },
       {
+        title: 'Hashicorp Terraform',
+        href: '/integrations/platforms/hashicorp-terraform',
+      },
+      {
         title: 'Hashicorp Vault',
         href: '/integrations/platforms/hashicorp-vault',
       },
