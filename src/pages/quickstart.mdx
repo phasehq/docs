@@ -1,0 +1,203 @@
+import { Tag } from '@/components/Tag'
+
+export const description =
+  'This guide will get you all set up and ready to use the Phase console.'
+
+<Tag variant="small">GET STARTED</Tag>
+
+# Quickstart
+
+Setup your account and start using Phase to manage your application secrets in just a few minutes. This guide will walk you through the following:
+
+- Create a new account on the [Phase Console](https://console.phase.dev)
+- Create an [App](/console/apps)
+- Link the [Phase CLI](/cli/commands) it to your local project and import [Secrets](/console/secrets)
+- Inject secrets to your app at runtime
+
+## 1. Login and create an Organisation
+
+You can login to the <a href="https://console.phase.dev" target="_blank"> Phase Console</a> with Google, GitHub or GitLab.
+
+[Setup your account](/console/users#account-keys-and-setup) and [create an Organisation](/console/organisation#create-an-organisation).
+
+## 1.1 Create an App
+
+In order to use Phase with your application, you'll need to [create an App](/console/apps#create-an-app).
+
+Enter a name for your like 'TestApp' and turn off the 'Create example secrets' switch. Click "Create"
+
+![create an app](/assets/images/console/quickstart/quickstart-create-app.png)
+
+## 2. Install the CLI
+
+Next, install the Phase CLI on the platform or operating system of your choice.
+
+<CodeGroup>
+
+```fish {{ title: 'Pip' }}
+pip install phase-cli
+```
+
+```fish {{ title: 'MacOS' }}
+brew install phasehq/cli/phase
+```
+
+```fish {{ title: 'Windows' }}
+scoop bucket add phasehq https://github.com/phasehq/scoop-cli.git
+scoop install phase
+```
+
+```fish {{ title: 'Alpine Linux' }}
+apk add --no-cache curl && curl -fsSL https://pkg.phase.dev/install.sh | sh
+```
+
+```fish {{ title: 'RedHat/CentOS/Amazon Linux' }}
+curl -fsSL https://pkg.phase.dev/install.sh | bash
+```
+
+```fish {{ title: 'Ubuntu/Debian' }}
+curl -fsSL https://pkg.phase.dev/install.sh | bash
+```
+
+```fish {{ title: 'Arch Linux' }}
+curl -fsSL https://pkg.phase.dev/install.sh | bash
+```
+
+```fish {{ title: 'Docker' }}
+# Run the latest version
+docker run phasehq/cli
+
+# Optional: run a specific version - docker run phasehq/cli:<version>
+```
+
+</CodeGroup>
+
+<div className="not-prose">
+  <Button
+    href="/cli/install"
+    variant="text"
+    arrow="right"
+    children="Explore CLI Installation"
+  />
+</div>
+
+## 2.1 Authenticate the CLI
+
+Once the CLI is installed, you need to authenticate it with your Phase account and App.
+
+Run `phase auth` and choose the "Phase Cloud" option:
+
+```
+» phase auth
+? Choose your Phase instance type: (Use arrow keys)
+ » ☁️ Phase Cloud
+   🛠️ Self Hosted
+```
+
+This will open the Phase Console in a new tab. Enter your `sudo` password when prompted.
+
+![webauth password](/assets/images/console/quickstart/webauth-password.png)
+
+Once complete, you should see the success screen:
+
+![webauth success](/assets/images/console/quickstart/webauth-success.png)
+
+Go back to your terminal. You should see the following:
+
+```
+✅ Authentication successful. Credentials saved in the Phase keyring.
+🎉 Welcome to Phase CLI!
+
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+🙋 Need help?: https://slack.phase.dev
+💻 Bug reports / feature requests: https://github.com/phasehq/cli
+```
+
+<div className="not-prose">
+  <Button
+    href="/cli/commands"
+    variant="text"
+    arrow="right"
+    children="Explore CLI Usage"
+  />
+</div>
+
+## 2.2 Link your project with Phase
+
+Lastly, run `phase init` and select 'TestApp' or the name of the App you created.
+
+```sh
+»  phase init
+? Select an App: (Use arrow keys)
+ » TestApp
+   Landing page
+   Exit
+```
+
+## 2.3 Import your secrets into Phase - **_Optional_**
+
+Next, import your secrets from `.env` file.
+
+```fish
+cat .env
+
+DEBUG=yes
+BACKEND_API_URL=https://api.myapp.com
+AWS_ACCESS_KEY_ID=AKIA2OGYBAH6QLWOYDVN
+AWS_SECRET_ACCESS_KEY=6ACbdYki5FISnaiWYZwwyQcAEcnKmNrULTCXw+RQ
+```
+
+Run `phase secrets import .env`
+
+```
+»  phase secrets import .env
+Successfully imported and encrypted 3 secrets.
+To view them please run: phase secrets list
+```
+
+Once done, get rid of your `.env` file now, its best practice not to leave secrets in plain text on disk:
+
+```fish
+rm .env
+```
+
+The environment variables in your `.env` file have now been encrypted and imported into your Phase App. Go back to your App in the Phase Console to view them:
+
+![console secrets](/assets/images/console/quickstart/quickstart-console-secrets.png)
+
+Our environment variables have been imported into the `Development` Environment by default. Now we can edit, manage and deploy these secrets from Phase.
+
+## 3. Inject secrets
+
+To inject secrets locally into your application, simply prefix the normal command you would use with
+
+```fish
+phase run [command]
+
+# Start node dev server
+phase run yarn dev
+
+# Chaining multiple commands together
+phase run "printenv | grep AWS_ACCESS_KEY_ID"
+```
+
+For example, instead of `yarn dev`, simply run `phase run yarn dev`. Your secrets will be decrypted and injected into your application process at runtime, and you can access them in your code as usual.
+
+## Next steps
+
+Now that you have setup your account and connected it to your local project, you can explore all that Phase has to offer.
+
+<div className="not-prose mb-16 mt-6 flex gap-3">
+  <Button
+    href="/console"
+    variant="secondary"
+    arrow="right"
+    children="🎛️ Phase Console"
+  />
+  <Button
+    href="/cli/commands"
+    variant="secondary"
+    arrow="right"
+    children="⌨ Phase CLI"
+  />
+</div>

@@ -1,0 +1,102 @@
+import { Tag } from '@/components/Tag'
+
+export const description =
+  'SDK to integrate Phase in server-side applications running Node.js.'
+
+export const sections = [
+  { title: 'Install', id: 'install-the-sdk' },
+  { title: 'Import', id: 'import-the-sdk' },
+  { title: 'Initialize', id: 'initialize-the-sdk' },
+  { title: 'Usage', id: 'usage' },
+]
+
+<Tag variant="small">SDK</Tag>
+
+# Node.js SDK
+
+SDK to integrate Phase in server-side applications running Node.js.
+
+The Node.js SDK allows you to encrypt data server-side, as well as decrypt data.
+
+- [@phase.dev/phase-node](https://www.npmjs.com/package/@phase.dev/phase-node)
+- [github.com/phasehq/node-sdk](https://github.com/phasehq/node-sdk)
+
+<Note>
+  Phase Node.js SDK currently do not have the functionality to
+  `create`, `reads`, `update`, `delete` secrets and environment variables
+  associated with an application. However this functionality is coming very
+  soon.
+</Note>
+
+---
+
+## Install the SDK
+
+The Node.js SDK is distributed via [npm](https://www.npmjs.com/package/@phase.dev/phase-node). You can install it using the following command for your preferred package manager.
+
+<CodeGroup title="Install">
+
+    ```bash {{ title: 'npm' }}
+    npm i @phase.dev/phase-node
+    ```
+
+    ```bash {{ title: 'yarn' }}
+    yarn add @phase.dev/phase-node
+    ```
+
+    ```bash {{ title: 'pnpm' }}
+    pnpm i @phase.dev/phase-node
+    ```
+
+</CodeGroup>
+
+---
+
+## Import the SDK
+
+Once installed, you can import the Node.js SDK into your project.
+
+```js
+const Phase = require('@phase.dev/phase-node')
+```
+
+---
+
+## Initialize the SDK
+
+Initialize the SDK with your `APP_ID` and `APP_SECRET`.
+
+```js
+const phase = new Phase(APP_ID, APP_SECRET)
+```
+
+<Note>
+If you are self-hosting Phase, you must also provide the protocol and host for your Phase instance:
+
+```js
+const PHASE_INSTANCE_HOST = 'https://localhost'
+
+const phase = new Phase(APP_ID, APP_SECRET, PHASE_INSTANCE_HOST)
+```
+
+</Note>
+
+---
+
+## Usage
+
+### Encrypt
+
+The `encrypt` API allows you to encrypt data. It returns a `Promise` that resolves in a encrypted string in the Phase Ciphertext format, so you need to `await` it.
+
+```js
+const ciphertext = await phase.encrypt('hello world')
+```
+
+### Decrypt
+
+The `decrypt` API allows you to decrypt a Phase Ciphertext string. It returns a `Promise` that resolves in a plaintext string, so you need to `await` it.
+
+```js
+const plaintext = await phase.decrypt(ciphertext)
+```

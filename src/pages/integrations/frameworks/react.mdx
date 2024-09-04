@@ -1,0 +1,66 @@
+import { Tag } from '@/components/Tag'
+
+export const description =
+  'Mange your secrets and environment variables in your application with the Phase CLI'
+
+<Tag variant="small">INTEGRATE</Tag>
+
+# React
+
+You can use Phase run to inject secrets to your application process during runtime. There is no need for you to change any code or add a dependency.
+
+## Prerequisites
+
+- Create an account on the Phase Console
+- [Install the CLI](/cli/install)
+
+## Initialize Phase for your [React](https://react.dev) app
+
+In the root of your application's codebase run:
+
+```fish
+phase init
+```
+
+## Start your app with Phase
+
+Example
+
+```fish
+phase run npm start
+```
+
+Alternatively, you can use `phase run` in your package.json file, so secrets will automatically be injected when you `npm run dev`.
+
+**package.json**:
+
+```json
+
+{
+  "name": "McLaren",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "phase run react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "browserslist": "...",
+  "dependencies": {...
+  },
+  "devDependencies": {...
+  }
+}
+```
+
+<Note>React environment variables must be prefixed with `REACT_APP_`</Note>
+
+<div className="not-prose">
+  <Button
+    href="https://create-react-app.dev/docs/adding-custom-environment-variables"
+    variant="text"
+    arrow="right"
+    children="React Docs"
+  />
+</div>

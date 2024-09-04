@@ -1,0 +1,99 @@
+import { Tag } from '@/components/Tag'
+
+export const description = 'Integrate Phase with Jenkins'
+
+<Tag variant="small">INTEGRATE</Tag>
+
+# Jenkins
+
+You can use the Phase CLI to effortlessly inject or expose secret inside your CI pipelines or jobs.
+
+## Prerequisites
+
+- Have signed up for the [Phase Console](https://console.phase.dev) and created an application.
+- `PHASE_SERVICE_TOKEN`.
+
+<Note>
+  If you are using a Self-Hosted instance of the Phase Console, you may supply
+  `PHASE_HOST` environment variable with your URL (`https://<HOST>`).
+</Note>
+
+For detailed cli install options, please see: [Installation](/cli/install)
+
+### Setting `PHASE_SERVICE_TOKEN`:
+
+1. Go to Jenkins Dashboard.
+2. Click on `Manage Jenkins`.
+3. Select `Manage Credentials`.
+4. Click on `(global)` domain.
+5. Add `PHASE_SERVICE_TOKEN` as a secret text.
+
+## Single staged:
+
+```js
+pipeline {
+    agent any
+
+    stages {
+        stage('Prepare') {
+            steps {
+                sh 'curl -fsSL https://pkg.phase.dev/install.sh | bash'
+                sh '''
+                   export $(phase secrets export --app "my application name" --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN | xargs)
+                   '''
+            }
+        }
+
+        stage('Build and Push') {
+            steps {
+                sh '''
+                   docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_TOKEN
+                   docker build -t my-image .
+                   docker push my-image:latest
+                   '''
+            }
+        }
+    }
+}
+```
+
+## Multi staged using `phasehq/cli` Docker image:
+
+Jenkins, with its Docker Pipeline plugin, supports multi-stage Docker builds. Here's how you might achieve this:
+
+```js
+pipeline {
+    agent any
+
+    stages {
+        stage('Prepare') {
+            steps {
+                script {
+                    withCredentials([string(credentialsId: 'phase-service-token', variable: 'PHASE_SERVICE_TOKEN')]) {
+                        docker.image('phasehq/cli').inside {
+                            sh 'phase secrets export --app "my application name" --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN > envs.txt'
+                        }
+                        env.DOCKERHUB_USERNAME = sh(script: "cat envs.txt | grep DOCKERHUB_USERNAME | cut -d '=' -f2", returnStdout: true).trim()
+                        env.DOCKERHUB_TOKEN = sh(script: "cat envs.txt | grep DOCKERHUB_TOKEN | cut -d '=' -f2", returnStdout: true).trim()
+                    }
+                }
+            }
+        }
+        stage('Build and Push') {
+            steps {
+                script {
+                    withCredentials([string(credentialsId: 'dockerhub-username', variable: 'DOCKERHUB_USERNAME'), string(credentialsId: 'dockerhub-token', variable: 'DOCKERHUB_TOKEN')]) {
+                        sh '''
+                            docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_TOKEN
+                            docker build -t my-image .
+                            docker push my-image:latest
+                        '''
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+This method pulls the `phasehq/cli` Docker image, runs it to retrieve the secrets, and then stores those secrets as Jenkins environment variables. These variables are then accessible in subsequent stages.

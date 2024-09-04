@@ -1,0 +1,57 @@
+import { Tag } from '@/components/Tag'
+
+export const metadata = {
+  title: 'Authentication',
+  description:
+    'This guide will explain how to authenticate with the Phase API.',
+}
+
+
+<Tag variant="small">API</Tag>
+
+# Authentication
+
+You'll need to authenticate your requests to access any of the endpoints in the Phase API. In this guide, we'll look at how authentication works. Phase offers two ways to authenticate your API requests: User Tokens and Service Tokens. {{ className: 'lead' }}
+
+Both authentication methods are supplied via an `Authorization` header, prefixed by the `Bearer` keyword:
+
+```bash {{ title: 'Example request' }}
+curl https://api.phase.dev/v1/secrets?app_id=<app_id>&env=development \
+  -H "Authorization: Bearer {token}"
+```
+
+## Personal Access Tokens (PATs)
+
+Personal Access Tokens allow you to manage secrets in all Apps and Environments that you have access to. 
+
+To generate aPATs, click on Personal Access Tokens in the sidebar and click on "Create token":
+
+![create PAT button](/assets/images/api/authentication/create-user-token-button.webp)
+
+Enter a descriptive name for the token, choose an expiry option and click "Create":
+
+![create PAT dialog](/assets/images/api/authentication/create-user-token-dialog.webp)
+
+Switch to the API tab and copy the token:
+
+![copy token](/assets/images/api/authentication/user-token-dialog.webp)
+
+
+
+## Service Tokens
+
+Service Tokens can be used for automated applications or jobs. Service tokens are scoped to a specific App, and can be given granular access to specific Environments.
+
+To generate a Service Token, click on the Tokens tab in the App and click on "Create Service Token":
+
+![create token button](/assets/images/api/authentication/create-service-token-button.webp)
+
+Enter a descriptive name for the token, choose an appropriate environment scope, expiry option and click "Create":
+
+![create token dialog](/assets/images/api/authentication/create-service-token-dialog.webp)
+
+Switch to the API tab and copy the token:
+
+![copy token](/assets/images/api/authentication/service-token-dialog.webp)
+
+You can also copy the `APP_ID` here if required.

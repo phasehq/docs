@@ -1,0 +1,61 @@
+import { Tag } from '@/components/Tag'
+
+export const metadata = {
+  title: 'API Errors',
+  description:
+    'In this guide, we will talk about what happens when something goes wrong while you work with the API.',
+}
+
+<Tag variant="small">API</Tag>
+
+# Errors
+
+The Phase API will return approriate status codes and error messages when something goes wrong or a request cannot be processed. Let's look at some status codes and error messages you might encounter. {{ className: 'lead' }}
+
+You can tell if your request was successful by checking the status code when receiving an API response. If a response comes back unsuccessful, you can use the status code and error message to figure out what has gone wrong and do some rudimentary debugging.
+
+
+---
+
+## Status codes
+
+Here is a list of the different categories of status codes returned by the Protocol API. Use these to understand if a request was successful.
+
+<Properties>
+  <Property name="200">
+    A 200 status code indicates a successful response.
+  </Property>
+  <Property name="400">
+    A 400 status code indicates a bad request. This is typically due to a request that's missing some data requried to process the request, such as missing `id` fields.
+  </Property>
+  <Property name="403">
+    A 403 status code indicates an authentication error. Check your [authentication](/public-api/authentication) credentials if you see this error, and make sure the token you're using has the approriate scope for the App and Environment you're trying to access.
+  </Property>
+  <Property name="409">
+    A 409 status code indicates that the requested operation will create a conflict in your secret configuration. This is generally due to attempting to set the `key` of a secret at a given path where this key already exists. 
+  </Property>
+  <Property name="5xx">
+    A 5xx status code indicates a server error — something went wrong with the Phase API.
+  </Property>
+</Properties>
+
+---
+
+## Error types
+
+<Row>
+  <Col>
+
+    Whenever a request is unsuccessful, the Phase API will return an error response with a message. You can use this information to understand better what has gone wrong and how to fix it.
+
+  </Col>
+  <Col>
+
+    ```bash {{ title: "Error response" }}
+    {
+      "error": "Duplicate secret found",
+    }
+    ```
+
+  </Col>
+</Row>

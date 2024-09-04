@@ -1,0 +1,132 @@
+import { Tag } from '@/components/Tag'
+
+export const description = 'Integrate Phase with Docker'
+
+<Tag variant="small">INTEGRATE</Tag>
+
+# Docker
+
+You can use Phase run to inject secrets to your application process during runtime. There is no need for you to change any code or add a dependency.
+
+## Prerequisites
+
+- Have signed up for the [Phase Console](https://console.phase.dev) created an application
+- `PHASE_SERVICE_TOKEN`
+
+<Note>
+  If you are using a Self-Hosted instance of the Phase Console, you may supply
+  `PHASE_HOST` environment variable with your URL (`https://<HOST>`).
+</Note>
+
+## Docker Run
+
+1. Set `PHASE_SERVICE_TOKEN` as a environment variable
+
+```fish
+export PHASE_SERVICE_TOKEN=<>
+```
+
+2. Run the container
+
+If you have a `.phase.json` in your working directory:
+
+```fish
+docker run --rm --env-file <(phase secrets export) alpine:latest printenv
+```
+
+If not you can manually pass your application name and environment:
+
+```fish
+docker run --rm --env-file <(phase secrets export --app my-application-name --env production) alpine:latest printenv
+```
+
+<Note>
+  Docker by default does not support multi-line secrets when using the
+  --env-file flag.
+</Note>
+
+This technique uses a feature that's available in Bash and some other shells, but might not be available in all environments. If you face any issues, ensure your shell supports process substitution (`<()` syntax).
+
+<div className="not-prose">
+  <Button
+    href="https://docs.docker.com/engine/reference/run/#env-environment-variables"
+    variant="text"
+    arrow="right"
+    children="Docker Run - Docs"
+  />
+</div>
+
+---
+
+## Docker `CMD`
+
+1. **Installing the Phase CLI in Your Docker Container**
+
+To maintain deterministic Docker builds and prevent accidentally breaking things, it's highly recommended to specify the `--version` flag for production deployments. You can find the latest versions of the CLI at the [Phase CLI GitHub releases](https://github.com/phasehq/cli/releases). If no `--version` flag is provided then the latest version of the CLI will be installed.
+
+<CodeGroup>
+
+```fish {{ title: 'Alpine Linux' }}
+ENV VERSION=<X.XX.XX>
+RUN apk add --no-cache curl && curl -fsSL https://pkg.phase.dev/install.sh | sh -s -- --version $VERSION
+```
+
+```fish {{ title: 'RedHat/CentOS/Amazon Linux' }}
+ENV VERSION=<X.XX.XX>
+RUN yum -y install bash sudo curl wget && curl -fsSL https://pkg.phase.dev/install.sh | bash -s -- --version $VERSION
+```
+
+```fish {{ title: 'Ubuntu/Debian' }}
+ENV VERSION=<X.XX.XX>
+RUN apt-get update && apt-get install -y bash sudo curl wget && curl -fsSL https://pkg.phase.dev/install.sh | bash -s -- --version $VERSION
+```
+
+</CodeGroup>
+
+2. **Defining Your Container's Start Command**
+
+Use `CMD` to specify the default command to run when starting your container, offering flexibility to override it easily. For initializing the Phase CLI with or without a `.phase.json`, including the `--app` and `--env` flags as context.
+
+**For a Single Command**:
+
+```fish
+FROM your-base-image
+
+# ... (other Docker commands, e.g., installing dependencies, copying source code, etc.)
+
+# Use CMD to define the default command. Include --app, --env, and optionally --version flags to specify context.
+CMD ["sh", "-c", "phase run --app \"my application name\" --env \"production\" yarn start"]
+```
+
+**For Multiple Commands**:
+
+```fish
+FROM your-base-image
+
+# ... (other Docker commands, e.g., installing dependencies, etc.)
+
+# Use CMD to define a series of commands with correct format and escaping, including Phase CLI version specification if needed.
+CMD ["sh", "-c", "phase run \"python manage.py migrate && python manage.py runserver payments-api:8000\""]
+```
+
+3. **Providing the `PHASE_SERVICE_TOKEN` to Your Container**
+
+Ensure the `PHASE_SERVICE_TOKEN` is securely provided to your container for authentication with Phase services.
+
+```fish
+export PHASE_SERVICE_TOKEN=[pss_env:...]
+```
+
+```fish
+docker run -e PHASE_SERVICE_TOKEN="$PHASE_SERVICE_TOKEN" your-application-container
+```
+
+<div className="not-prose">
+  <Button
+    href="https://docs.docker.com/engine/reference/builder/#cmd"
+    variant="text"
+    arrow="right"
+    children="Learn more about Docker CMD"
+  />
+</div>
+
