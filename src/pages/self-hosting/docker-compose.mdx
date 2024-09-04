@@ -11,14 +11,13 @@ Learn how to set up the Phase Console using the Docker Compose template. {{ clas
 
 Keep in mind the steps listed below serve as a rough outline on how to self-hosting Phase Services on your own infrastructure. 
 
-You may:
-- Choose to run the Phase Console components on managed services (PaaS) or alternative container orchestration tools like Kubernetes instead of Docker Compose. 
+You may: 
 - Consider running the Phase Service behind a VPN or a VPC and not to expose it the internet directly. 
 - Need to set up things like TLS certificates, web application firewall, database backups and replication, DDoS protection, rate limiting, SSOs etc.
 
 ## 1. Install docker on your machine
 
-```bash
+```fish
 # Ubuntu
 sudo apt update && sudo apt upgrade -y && sudo apt install -y docker-compose
 ```
@@ -27,25 +26,25 @@ sudo apt update && sudo apt upgrade -y && sudo apt install -y docker-compose
 
 **.env** template:
 
-```bash
+```fish
 wget -O .env https://raw.githubusercontent.com/phasehq/console/main/.env.example
 ```
 
 **Docker Compose template**:
 
-```bash
+```fish
 wget -O docker-compose.yml https://raw.githubusercontent.com/phasehq/console/main/docker-compose.yml
 ```
 
 **Nginx config**
 
-```bash
+```fish
 mkdir nginx && wget -O ./nginx/default.conf https://raw.githubusercontent.com/phasehq/console/main/nginx/default.conf
 ```
 
 **Nginx Dockerfile**
 
-```bash
+```fish
 wget -O ./nginx/Dockerfile  https://raw.githubusercontent.com/phasehq/console/main/nginx/Dockerfile
 ```
 
@@ -55,8 +54,8 @@ Please make changes to the `.env` file to suit your environment. Refer to the av
 
 ## 4. Start services
 
-```bash
-docker-compose -f docker-compose.yml up -d
+```fish
+docker-compose up -d
 ```
 
 Your Phase console deployment will be available at `https://localhost`. By default Phase will provision a self-signed TLS certificate using nginx. Please use a valid TLS certificate for your own domain in production.

@@ -72,20 +72,20 @@ You may:
 
 2. **SSH into your Droplet**:
 
-   ```bash
+   ```fish
    ssh -i "your-ssh-key-name" root@your-droplet-ip-address
    ```
 
 3. **Install PostgreSQL client**:
 
-   ```bash
+   ```fish
    sudo apt update
    sudo apt install postgresql-client
    ```
 
 4. **Connect to the Managed PostgreSQL instance**:
 
-   ```bash
+   ```fish
    psql -h your-postgresql-host -U phase_api -d phase_db
    ```
 
@@ -98,13 +98,13 @@ You may:
 
 1. **Generate a strong database password**:
 
-   ```bash
+   ```fish
    openssl rand -hex 32
    ```
 
 2. **Install Docker & Docker Compose**:
 
-   ```bash
+   ```fish
    sudo apt update && sudo apt upgrade -y && sudo apt install -y docker-compose
    ```
 
@@ -112,18 +112,18 @@ You may:
 
    - **.env** template:
 
-     ```bash
+     ```fish
      wget -O .env https://raw.githubusercontent.com/phasehq/console/main/.env.example
      ```
 
    - **Docker Compose** template:
 
-     ```bash
+     ```fish
      wget -O docker-compose.yml https://raw.githubusercontent.com/phasehq/console/main/docker-compose.yml
      ```
 
    - **Nginx** config & Dockerfile:
-     ```bash
+     ```fish
      mkdir nginx && wget -O ./nginx/default.conf https://raw.githubusercontent.com/phasehq/console/main/nginx/default.conf
      wget -O ./nginx/Dockerfile  https://raw.githubusercontent.com/phasehq/console/main/nginx/Dockerfile
      ```
@@ -139,7 +139,7 @@ You may:
 
 6. **Start services**:
 
-   ```bash
+   ```fish
    docker-compose -f docker-compose.yml up -d
    ```
 
