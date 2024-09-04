@@ -338,6 +338,7 @@ export const navigation = [
       { title: 'Google Cloud Platform', href: '/self-hosting/gcp' },
       { title: 'Azure', href: '/self-hosting/azure' },
       { title: 'DigitalOcean', href: '/self-hosting/digitalocean' },
+      { title: 'RaspberryPi', href: '/self-hosting/raspberrypi' },
       {
         title: 'Config - Environment Variables',
         href: '/self-hosting/configuration/envars',

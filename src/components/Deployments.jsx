@@ -9,6 +9,7 @@ import logoDigitalOcean from '@/images/logos/digitalocean.svg'
 import logoKubernetes from '@/images/logos/kubernetes.svg'
 import logoGCP from '@/images/logos/gcp.svg'
 import logoAzure from '@/images/logos/azure.svg'
+import logoRaspberryPi from '@/images/logos/raspberry.svg'
 
 const deployment_methods = [
   {
@@ -54,6 +55,13 @@ const deployment_methods = [
     name: 'Microsoft Azure',
     description: 'Deploy the Phase Console on an Azure Virtual Machine and Azure Database for PostgreSQL.',
     logo: logoAzure,
+    available: true,
+  },
+  {
+    href: '/self-hosting/raspberrypi',
+    name: 'Raspberry Pi',
+    description: 'Deploy the Phase Console on a Raspberry Pi.',
+    logo: logoRaspberryPi,
     available: true,
   },
 ]
