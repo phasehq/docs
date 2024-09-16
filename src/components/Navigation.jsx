@@ -231,6 +231,14 @@ export const navigation = [
     ],
   },
   {
+    title: 'Auth Methods',
+    links: [
+      { title: 'Overview', href: '/auth-methods' },
+      { title: 'OAuth SSO', href: '/auth-methods/oauth-sso' },
+      { title: 'Kubernetes', href: '/auth-methods/kubernetes' },
+    ],
+  },
+  {
     title: 'Security',
     links: [
       { title: 'Overview', href: '/security' },
