@@ -144,8 +144,34 @@ You may:
 
 2. **Install Docker & Docker Compose**:
 
+   First, download the official Docker installation script:
+
    ```fish
-   sudo apt update && sudo apt upgrade -y && sudo apt install -y docker-compose
+   curl https://get.docker.com > install.sh && chmod +x install.sh
+   ```
+
+   We recommend reviewing the script before executing it on your system.
+
+   Install Docker and Docker Compose:
+
+   ```fish
+   sh install.sh
+   ```
+
+   Add your user to the Docker group:
+
+   ```fish
+   sudo usermod -aG docker $USER
+   ```
+
+   <Note>
+   You will need to log out and log back in for the group changes to take effect. You may use `Ctrl + D` to log out and then SSH back in.
+   </Note>
+
+   Verify that Docker is running:
+
+   ```fish
+   docker ps
    ```
 
 3. **Download required configurations**:
@@ -183,7 +209,7 @@ You may:
 6. **Start services**:
 
    ```fish
-   docker-compose -f docker-compose.yml up -d
+   docker compose up -d
    ```
 
 7. You should now be able to access the Phase console at `https://your-vm-public-ip`.
