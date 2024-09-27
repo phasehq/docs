@@ -13,9 +13,9 @@ Phase supports third-party authentication systems for access control. You can de
 
 ## User Authentication
 
-User authentication in Phase is designed for seamless and secure web access to the Phase. Phase supports various Single Sign-On (SSO) providers, allowing organizations to leverage their existing identity management systems. Currently, Phase offers OAuth-based authentication with Google, GitHub, GitLab.com, and GitLab self-managed instances. Users can easily log into Phase using their credentials from these supported [SSO Providers](/auth-methods/oauth-sso).
+User authentication in Phase is designed for seamless and secure web access to Phase. Phase supports various Single Sign-On (SSO) providers, allowing organizations to leverage their existing identity management systems. Currently, Phase offers OAuth-based authentication with Google, GitHub, GitLab.com, and GitLab self-managed instances. Users can easily log into Phase using their credentials from these supported [SSO Providers](/auth-methods/oauth-sso).
 
-We also have plans to extend support to SAML (Security Assertion Markup Language) and OIDC (OpenID Connect), which will allow Phase to integrate with a wider range of identity providers, including many enterprise-grade identity management systems. Furthermore, integration to SCIM (System for Cross-domain Identity Management) system support will enable automatic synchronization of user directories with Phase, allowing for automatic provisioning and deprovisioning of user accounts in Phase, real-time updates of user attributes and group memberships, all based on changes in the organization's primary identity system.
+We also have plans to extend support to SAML (Security Assertion Markup Language) and OIDC (OpenID Connect), which will allow Phase to integrate with a wider range of identity providers, including many enterprise-grade identity management systems. Furthermore, integration with SCIM (System for Cross-domain Identity Management) will enable automatic synchronization of user directories with Phase, allowing for automatic provisioning and deprovisioning of user accounts in Phase, real-time updates of user attributes and group memberships, all based on changes in the organization's primary identity system.
 
 ## Programmatic Authentication
 
@@ -26,7 +26,7 @@ When using third-party authentication systems for programmatic access to Phase, 
 3. Phase internally validates the token or signature using the third-party authentication system's APIs.
 4. Phase validates the identity of the accessor and returns a Phase Service Token in accordance with the RBAC policy.
 5. The accessor can then use the Phase Service Token to access secrets in Phase until expiry.
-6. Upon expiry the process could and will be repeated to gain access to a fresh Phase Service Token.
+6. Upon expiry, the process can and will be repeated to gain access to a fresh Phase Service Token.
 
 ### External Auth Method Considerations
 
