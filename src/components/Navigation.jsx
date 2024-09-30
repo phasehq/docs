@@ -231,11 +231,11 @@ export const navigation = [
     ],
   },
   {
-    title: 'Auth Methods',
+    title: 'Authentication',
     links: [
-      { title: 'Overview', href: '/auth-methods' },
-      { title: 'OAuth SSO', href: '/auth-methods/oauth-sso' },
-      { title: 'Kubernetes', href: '/auth-methods/kubernetes' },
+      { title: 'Overview', href: '/authentication' },
+      { title: 'OAuth SSO', href: '/authentication/oauth-sso' },
+      { title: 'Kubernetes', href: '/authentication/kubernetes' },
     ],
   },
   {
