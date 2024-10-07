@@ -306,7 +306,7 @@ Usage:
 > phase secrets create [KEY] [--env ENVIRONMENT] [--app APP_NAME] [--random TYPE] [--length LENGTH] [--override]
 ```
 
-- `KEY`: (Optional) The key for the new secret. It will be converted to uppercase. If the value is not provided as an argument, it will be read from stdin.
+- `KEY`: (Optional) The key for the new secret. If the value is not provided as an argument, it will be read from stdin.
 - `--env`: (Optional) Specify the environment where the secret will be created.
 - `--path`: (Optional) The path in which you want to create a secret. You can create a directory by simply specifying a path like so: `--path /folder/SECRET`. Default is '/'
 - `--app`: (Optional) Name of your Phase application. Use this to override the `.phase.json` file or when it's not present in your project directory.
