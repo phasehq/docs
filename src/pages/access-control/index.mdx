@@ -1,0 +1,61 @@
+import { Tag } from '@/components/Tag'
+import { HeroPattern } from '@/components/HeroPattern'
+
+export const description =
+  'This guide will explain how to work with the Phase Access Control system.'
+
+<HeroPattern />
+
+# Access Control
+
+Phase employs a Role-Based Access Control (RBAC) system to manage permissions for both human users and programmatic access via Service Accounts. This guide explains how to work with Phase's Access Control system.
+
+## Overview
+
+Phase's access control system is based on roles which define policies that govern the behavior and access of clients, whether they are human Users or Service Accounts. The system allows for fine-grained control over resources at both the organization and application levels.
+
+### Key Concepts
+
+1. **Roles**: Phase offers default managed roles (e.g., `Owner`, `Admin`, `Developer`) with predefined permissions. Users can also create custom roles for more specific access control.
+
+2. **Permissions**: These define the level of access (Create, Read, Update, Delete) for various resources.
+
+3. **Resources**: The entities that can be accessed or modified, categorized into organization-level and app-level resources.
+
+### Permissions to Perform Actions (CRUD)
+
+Phase's RBAC system allows you to define permissions for Create, Read, Update, and Delete (CRUD) operations on various resources. These permissions can be assigned to roles, which are then assigned to users or service accounts.
+
+### Resources Categories
+
+#### **Organization-level permissions**:
+
+| Resource | Description |
+|----------|-------------|
+| **Organisation** | Manage overall access to the organization |
+| **Billing** | Control access to billing & payment information in settings |
+| **Apps** | Manage access to applications within the organization |
+| **Members** | Control user membership and access within the organization |
+| **Service Accounts** | Manage service account permissions |
+| **Roles** | Define and assign roles within the organization |
+| **Integration Credentials** | Manage credentials for third party integrations |
+
+#### **App-level permissions**:
+
+| Resource | Description |
+|----------|-------------|
+| **Environments** | Control access to different secret environments within the app |
+| **Secrets** | Manage access to app secrets |
+| **Lockbox** | Control access to Lockbox secret sharing |
+| **Logs** | Manage access to app and secret audit logs  |
+| **Tokens** | Control creation and management of access tokens |
+| **Members** | Manage user access within the app |
+| **Integrations** | Control setup and management of app integrations |
+| **Encryption Mode**  | Manage encryption settings for the app |
+
+
+## Global Access
+
+Due to the way in which the Phase End-to-End encryption implementation works, encryption keys generated when a new resource such as an App or an Environment inside of an App is created, are automatically and securely shared (by the means of Sealed-box encryption) with users with `Owner` or `Admin` roles. This is to prevent an individual user from being able to create a island resource, an isolated resource inside of a managed organization not visible or manageable by an administrator due to lack of access to cryptographic keys.
+
+Simply put, Global access is a special type of permission that grants users with a "global access" role implicit access to all Apps and Environments across the organization. Currently Global access is only reserved for the Phase managed `Owner` and `Admin` roles.
