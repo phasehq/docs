@@ -10,7 +10,7 @@ Roles in Phase define the level of access and permissions granted to users withi
 
 To assign a role to a user or change a user's role:
 
-1. Navigate to Access Control tab and click on the Members section.
+1. Navigate to the Access Control tab and click on the Members section.
 2. Find the user whose role you want to update.
 3. Click on the user's current role next to their name to open the role selection dropdown.
 4. Choose the desired role from the list of available roles.
@@ -22,7 +22,7 @@ Phase provides managed roles out of the box to every organization.
 
 ### Owner
 
-The organization owner. This role is automatically assigned when a user created a new organization. It is unique to a single user and grants access to all resources and actions.
+The organization owner. This role is automatically assigned when a user creates a new organization. It is unique to a single user and grants access to all resources and actions.
 
 #### Organization-level permissions:
 
@@ -78,6 +78,8 @@ Admin users have access to most resources and permissions, and have global acces
 | **Integrations** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Encryption Mode** | Custom access | ✅ |  | ✅ |  |
 
+The `Owner` and `Admin` roles are global access. Learn more about global access [here](/access-control#global-access).
+
 ### Developer
 
 Developers have limited permissions at the organization level and must be given explicit access to Apps and Environments.
@@ -107,7 +109,6 @@ Developers have limited permissions at the organization level and must be given 
 | **Integrations** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Encryption Mode** | Custom access | ✅ |  | ✅ |  |
 
-
 ## Custom Roles
 
 <Note>
@@ -118,10 +119,10 @@ In addition to the managed roles, Phase allows you to create custom roles tailor
 
 ### Creating Custom Roles
 
-1. Navigate to Access Control tab and click on the Roles section.
+1. Navigate to the Access Control tab and click on the Roles section.
 2. Click on "Create Role".
-3. Provide a name and description for the role. (Role name in mandatory)
-4. Expand the Organisation and the App permissions section by clicking on each of them and select the desired policy permissions by clicking the dropdown for each resource in the Access column and selecting one of the following:
+3. Provide a name and description for the role. (Role name is mandatory)
+4. Expand the Organisation and the App permissions sections by clicking on each of them and select the desired policy permissions by clicking the dropdown for each resource in the Access column and selecting one of the following:
     - 🚫 No access
     - 👁️ Read access
     - ❄️ Full access
@@ -133,7 +134,7 @@ Alternatively, you may provision a custom Access Policy by toggling switches in 
 
 ### Editing Custom Roles
 
-1. Navigate to Access Control tab and click on the Roles section.
-2. Find the custom role you want to edit, hover on it and click ⚙️ Manage.
+1. Navigate to the Access Control tab and click on the Roles section.
+2. Find the custom role you want to edit, hover over it and click ⚙️ Manage.
 3. Modify the role as needed.
 4. Save your changes.
