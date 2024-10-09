@@ -231,6 +231,14 @@ export const navigation = [
     ],
   },
   {
+    title: 'Access Control',
+    links: [
+      { title: 'Overview', href: '/access-control' },
+      { title: 'Roles', href: '/access-control/roles' },
+      { title: 'Permissions', href: '/access-control/permissions' },
+    ],
+  },
+  {
     title: 'Security',
     links: [
       { title: 'Overview', href: '/security' },
