@@ -78,7 +78,7 @@ Admin users have access to most resources and permissions, and have global acces
 | **Integrations** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Encryption Mode** | Custom access | ✅ |  | ✅ |  |
 
-The `Owner` and `Admin` roles are global access. Learn more about global access [here](/access-control#global-access).
+The `Owner` and `Admin` roles have global access. Learn more about global access [here](/access-control#global-access).
 
 ### Developer
 
@@ -138,3 +138,28 @@ Alternatively, you may provision a custom Access Policy by toggling switches in 
 2. Find the custom role you want to edit, hover over it and click ⚙️ Manage.
 3. Modify the role as needed.
 4. Save your changes.
+
+### Permissions Matrix
+
+Some actions require varying degrees of permissions across multiple resources. Below is a list of permissions needed to perform such actions:
+
+- To update the role of a user in your organization: 
+    - `Members:update`
+    - `Roles:read`
+- Adding members to apps / Managing the scope of a members access to environments:
+    - `AppMembers:update`
+    - `Members:read`
+    - `Environments:read`
+- to update the third party integration credentials used for a given integration in an app:
+    - `Integrations:update`
+    - `IntegrationCredentials:read`
+- To create an new third party integration inside of an application:
+    - `Integrations:create`
+    - `Environments:read`
+- To create a new service token:
+    - `Tokens:create`
+    - `Environments:read`
+- To enable / disable SSE (Server-side Encryption):
+    - `EncryptionMode:update`
+    - `Environments:read`
+    - Access to all environments in the App
