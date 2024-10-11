@@ -235,7 +235,6 @@ export const navigation = [
     links: [
       { title: 'Overview', href: '/access-control' },
       { title: 'Roles', href: '/access-control/roles' },
-      { title: 'Permissions', href: '/access-control/permissions' },
     ],
   },
   {
