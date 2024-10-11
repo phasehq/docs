@@ -119,9 +119,17 @@ In addition to the managed roles, Phase allows you to create custom roles tailor
 
 ### Creating Custom Roles
 
+<Warning>
+Please make sure to follow the [Principle of least privilege](https://en.wikipedia.org/wiki/Principle_of_least_privilege) when setting the access policy for roles. Casting a wider scope may inadvertently lead to [Privilege escalation](https://en.wikipedia.org/wiki/Privilege_escalation). 
+</Warning>
+
 1. Navigate to the Access Control tab and click on the Roles section.
+![1-navigate-to-access-control](/assets/images/console/access-control/roles/create-custom-roles/1-navigate-to-access-control.png)
+![2-navigate-to-access-control-roles](/assets/images/console/access-control/roles/create-custom-roles/2-navigate-to-access-control-roles.png)
 2. Click on "Create Role".
+![3-click-create-role.png](/assets/images/console/access-control/roles/create-custom-roles/3-click-create-role.png)
 3. Provide a name and description for the role. (Role name is mandatory)
+![4-create-a-new-roole.png](/assets/images/console/access-control/roles/create-custom-roles/4-create-a-new-roole.png)
 4. Expand the Organisation and the App permissions sections by clicking on each of them and select the desired policy permissions by clicking the dropdown for each resource in the Access column and selecting one of the following:
     - 🚫 No access
     - 👁️ Read access
@@ -132,14 +140,7 @@ Alternatively, you may provision a custom Access Policy by toggling switches in 
 
 5. Save the new role.
 
-### Editing Custom Roles
-
-1. Navigate to the Access Control tab and click on the Roles section.
-2. Find the custom role you want to edit, hover over it and click ⚙️ Manage.
-3. Modify the role as needed.
-4. Save your changes.
-
-### Permissions Matrix
+### Resource Permissions Cheat Sheet
 
 Some actions require varying degrees of permissions across multiple resources. Below is a list of permissions needed to perform such actions:
 
@@ -163,3 +164,10 @@ Some actions require varying degrees of permissions across multiple resources. B
     - `EncryptionMode:update`
     - `Environments:read`
     - Access to all environments in the App
+
+### Editing Custom Roles
+
+1. Navigate to the Access Control tab and click on the Roles section.
+2. Find the custom role you want to edit, hover over it and click ⚙️ Manage.
+3. Modify the role as needed.
+4. Save your changes.
