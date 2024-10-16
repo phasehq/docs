@@ -1,35 +1,39 @@
 import { Tag } from '@/components/Tag'
 
 export const description =
-  'Mange your secrets and environment variables with the Phase CLI'
+  'Manage your secrets and environment variables with the Phase CLI'
 
 <Tag variant="small">CLI</Tag>
 
 # Quickstart {{ className: 'lead' }}
 
-The Phase CLI syncs with the [Phase Console](https://github.com/phasehq/console) to provide **End-to-End** encrypted secret management. It pulls, decrypts, and injects secrets into your applications during runtime. Manage secrets for various environments, like development, staging, production, or custom ones, with ease.
+The Phase CLI syncs with the [Phase Console](https://github.com/phasehq/console) to provide **end-to-end** encrypted secret management. It pulls, decrypts, and injects secrets into your applications during runtime. Manage secrets for various environments, such as development, staging, production, or custom ones, with ease.
 
 ### Prerequisites:
 
-- Sign up for the Phase Console and created an application: [Quickstart](/quickstart)
+- Sign up for the Phase Console and create an application: [Quickstart](/quickstart)
 - [Install the CLI](/cli/install)
 
 ---
 
 ## 1. Login
 
-Authenticate with Phase as a [User](/console/users):
+Authenticate with Phase as a [User](/console/users). This is suitable for installing the Phase CLI on your local development machine, where you can access a web browser to complete the authentication.
 
 ```fish
 phase auth
 ```
 
-This command will give you a drop down selection of all the apps created by you on the [Phase Console](/console/apps). Simply use up / down arrow `↑` and `↓` keys and hit `enter` to select.
+This command will give you a dropdown selection between `☁️ Phase Cloud` and `🛠️ Self Hosted`. Simply use the up/down arrow keys (`↑` and `↓`) and hit `enter` to select and follow the instructions.
 
-Authenticate with Phase via a [Service Token](/console/tokens#service-tokens):
+Authenticate with Phase via a [Service Token](/console/tokens#service-tokens). This is suitable for using the CLI on your server, remote machine, Docker container, etc.
 
 ```fish
 export PHASE_SERVICE_TOKEN=<YOUR_SERVICE_TOKEN>
+```
+
+```fish
+export PHASE_HOST=<YOUR_SELF_HOSTED_INSTANCE>
 ```
 
 <div className="not-prose">
