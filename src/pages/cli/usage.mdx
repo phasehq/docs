@@ -1,4 +1,5 @@
 import { Tag } from '@/components/Tag'
+import CliDemo from '@/components/CliDemo'
 
 export const description =
   'Manage your secrets and environment variables with the Phase CLI'
@@ -49,14 +50,14 @@ export PHASE_HOST=<YOUR_SELF_HOSTED_INSTANCE>
 
 ## 2. Initialize - _optional_
 
-Link the phase cli to your project. This will create a `.phase.json` file in the root of your application's repository. You may skip this step, but you will have to provide application and environment context manually by passing `--app` and `--env` flags on the `phase secrets` and `phase run` commands.
+Link the Phase application to your local project. This will create a `.phase.json` file in the root of your application's repository. You may skip this step, but you will have to provide application and environment context by passing `--app` and `--env` flags on the `phase secrets` and `phase run` commands.
 
 ```fish
-# cd /home/git/to_your_project
+# cd /path/to/your/project
 phase init
 ```
 
-This command will give you a drop down selection of all the apps created by you on the [Phase Console](/console/apps). Simply use up / down arrow `↑` and `↓` keys and hit `enter` to select.
+This command will give you a dropdown selection of all the apps you've created on the [Phase Console](/console/apps). Simply use the up/down arrow keys (`↑` and `↓`) and hit `enter` to select the app and the environment.
 
 <div className="not-prose">
   <Button
@@ -69,7 +70,7 @@ This command will give you a drop down selection of all the apps created by you 
 
 ---
 
-## 3. Import your existing secrets
+## 3. Import your existing secrets - _optional_
 
 Let's say you already have a `.env` file containing your secrets and environment variables for your app.
 
@@ -111,20 +112,13 @@ AWS_SECRET_ACCESS_KEY    | V5y**********************************6W1
 ```fish
 phase run <your_run_command>
 ```
+Lets see it in action 
+<CliDemo castFile="phase-run.cast" terminalFontSize="small" />
 
-Example 1:
-
-```fish
-# Node.js project manged by yarn package manager
-> phase run yarn dev
-$ next dev
-ready - started server on 0.0.0.0:3000, url: http://localhost:3000
-```
-
-Example 2:
+Example:
 
 ```fish
-# Chaining multiple commands together with linux pipes
+# Chaining multiple commands together
 phase run "printenv | grep AWS_ACCESS_KEY_ID"
 AWS_ACCESS_KEY_ID=AKIA2OGYBAH63UA3VNFG
 ```
