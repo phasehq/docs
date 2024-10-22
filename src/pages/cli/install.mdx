@@ -19,7 +19,7 @@ Install the Phase CLI on the platform or operating system of your choice.
 ```
 
 ```fish {{ title: 'Linux' }}
-curl -fsSL https://pkg.phase.dev/install.sh | sh
+curl -fsSL https://pkg.phase.dev/install.sh | bash
 ```
 
 ```powershell {{ title: 'Windows' }}
@@ -32,7 +32,7 @@ scoop install git
 ```
 
 ```fish {{ title: 'Alpine Linux' }}
-apk add --no-cache curl && curl
+apk update && apk add --no-cache curl bash
 ```
 
 ```fish {{ title: 'Python pip' }}
@@ -58,11 +58,11 @@ curl -fsSL https://get.docker.com | sh
 ```
 
 ```fish {{ title: 'Raspberry Pi' }}
-curl -fsSL https://pkg.phase.dev/install.sh | sh
+curl -fsSL https://pkg.phase.dev/install.sh | bash
 ```
 
 ```fish {{ title: 'ARM64' }}
-curl -fsSL https://pkg.phase.dev/install.sh | sh
+curl -fsSL https://pkg.phase.dev/install.sh | bash
 ```
 
 </CodeGroup>
@@ -76,7 +76,7 @@ brew install phasehq/cli/phase
 ```
 
 ```fish {{ title: 'Linux' }}
-curl -fsSL https://pkg.phase.dev/install.sh | sh
+curl -fsSL https://pkg.phase.dev/install.sh | bash
 ```
 
 ```fish {{ title: 'Windows' }}
@@ -85,7 +85,7 @@ scoop install phase
 ```
 
 ```fish {{ title: 'Alpine Linux' }}
-apk add --no-cache curl && curl -fsSL https://pkg.phase.dev/install.sh | sh
+curl -fsSL https://pkg.phase.dev/install.sh | bash
 ```
 
 ```fish {{ title: 'Python pip' }}
@@ -100,11 +100,11 @@ docker run phasehq/cli
 ```
 
 ```fish {{ title: 'Raspberry Pi' }}
-curl -fsSL https://pkg.phase.dev/install.sh | sh
+curl -fsSL https://pkg.phase.dev/install.sh | bash
 ```
 
 ```fish {{ title: 'ARM64' }}
-curl -fsSL https://pkg.phase.dev/install.sh | sh
+curl -fsSL https://pkg.phase.dev/install.sh | bash
 ```
 
 </CodeGroup>
@@ -135,7 +135,7 @@ pip3 install --upgrade phase-cli
 
 ```fish {{ title: 'Docker' }}
 # Pull the latest version
-docker pull phasehq/cli
+docker pull phasehq/cli:latest
 
 # Optional: pull a specific version - docker pull phasehq/cli:<version>
 ```
