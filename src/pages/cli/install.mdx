@@ -32,7 +32,7 @@ scoop install git
 ```
 
 ```fish {{ title: 'Alpine Linux' }}
-apk add --no-cache curl && curl
+apk update && apk add --no-cache curl bash
 ```
 
 ```fish {{ title: 'Python pip' }}
@@ -85,7 +85,7 @@ scoop install phase
 ```
 
 ```fish {{ title: 'Alpine Linux' }}
-apk add --no-cache curl && curl -fsSL https://pkg.phase.dev/install.sh | sh
+curl -fsSL https://pkg.phase.dev/install.sh | bash
 ```
 
 ```fish {{ title: 'Python pip' }}
