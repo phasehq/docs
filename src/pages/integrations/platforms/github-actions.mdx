@@ -158,11 +158,17 @@ jobs:
       PHASE_SERVICE_TOKEN: ${{ secrets.PHASE_SERVICE_TOKEN }}
     steps:
       - name: Export environment variables
-        run: phase secrets export --app "my application name" --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN
-
+        id: export
+        run: |
+          # Export secrets
+          eval "$(phase secrets export --app "my application name" --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN)"
+          
+          # Set them in GitHub Actions environment file
+          echo "username=$DOCKERHUB_USERNAME" >> $GITHUB_OUTPUT
+          echo "token=$DOCKERHUB_TOKEN" >> $GITHUB_OUTPUT
     outputs:
-      username: ${{ env.DOCKERHUB_USERNAME }}
-      token: ${{ env.DOCKERHUB_TOKEN }}
+      username: ${{ steps.export.outputs.username }}
+      token: ${{ steps.export.outputs.token }}
 
   build_and_push:
     needs: export_secrets
