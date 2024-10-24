@@ -152,7 +152,8 @@ jobs:
 
     container:
       image: phasehq/cli
-
+    env:
+      PHASE_SERVICE_TOKEN: ${{ secrets.PHASE_SERVICE_TOKEN }}
     steps:
       - name: Export environment variables
         run: phase secrets export --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN
