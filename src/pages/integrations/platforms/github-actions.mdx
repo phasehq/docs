@@ -127,6 +127,8 @@ jobs:
         run: curl -fsSL https://pkg.phase.dev/install.sh | sudo bash
 
       - name: Export and set environment variables
+        env:
+          PHASE_SERVICE_TOKEN: ${{ secrets.PHASE_SERVICE_TOKEN }}
         run: |
           export $(phase secrets export --app "my application name" --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN | xargs)
 
