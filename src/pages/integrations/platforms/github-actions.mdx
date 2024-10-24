@@ -124,7 +124,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install phase-cli
-        run: curl -fsSL https://pkg.phase.dev/install.sh | bash
+        run: curl -fsSL https://pkg.phase.dev/install.sh | sudo bash
 
       - name: Export and set environment variables
         run: |
