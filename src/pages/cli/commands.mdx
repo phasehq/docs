@@ -177,6 +177,7 @@ Usage:
 - `--env`: (Optional) Specify the environment (e.g., `dev`, `staging`, `production`). Supports partial string matching eg. `prod` for `production` Default is `development`
 - `--path`: (Optional) Specific path under which to fetch secrets from and inject into your application. Default is '/'
 - `--app`: (Optional) Name of your Phase application. Use this if you don't have a `.phase.json` file in your project directory or want to override it.
+- `--app-id`: (Optional) ID of your Phase application. Takes precedence over `--app` if both are provided.
 - `--tags`: (Optional) Comma-separated list of tags to filter secrets.
 
 The `run` command executes your specified shell command, setting environment variables to the secrets fetched from Phase. It resolves cross-environment and local references in secrets.
@@ -246,6 +247,7 @@ Usage:
 - `--env`: (Optional) Specify the environment. Default is `development`
 - `--path`: (Optional) The path in which you want to list secrets. Default is '/'
 - `--app`: (Optional) Name of your Phase application. Use this to override the `.phase.json` file or when it's not present in your project directory.
+- `--app-id`: (Optional) ID of your Phase application. Takes precedence over `--app` if both are provided.
 - `--tags`: (Optional) Comma-separated list of tags to filter secrets.
 
 Example:
@@ -274,6 +276,7 @@ Usage:
 - `--env`: (Optional) Specify the environment in which to search for the secret.
 - `--path`: (Optional) The path from which to fetch the secret from. Default is '/'
 - `--app`: (Optional) Name of your Phase application. Use this option to override the `.phase.json` file in your project directory or when it's not present.
+- `--app-id`: (Optional) ID of your Phase application. Takes precedence over `--app` if both are provided.
 - `--tags`: (Optional) Comma-separated list of tags to filter secrets.
 
 Example:
@@ -310,6 +313,7 @@ Usage:
 - `--env`: (Optional) Specify the environment where the secret will be created.
 - `--path`: (Optional) The path in which you want to create a secret. You can create a directory by simply specifying a path like so: `--path /folder/SECRET`. Default is '/'
 - `--app`: (Optional) Name of your Phase application. Use this to override the `.phase.json` file or when it's not present in your project directory.
+- `--app-id`: (Optional) ID of your Phase application. Takes precedence over `--app` if both are provided.
 - `--random`: (Optional) Specify the type of random value to generate. Available types are `hex`, `alphanumeric`, `base64`, `base64url`, `key128`, `key256`. Example: `--random hex`.
 - `--length`: (Optional) Specify the length of the random value, between 1 and 256. Applicable for types other than `key128` and `key256`. Default length is 32. Example: `--length 16`.
 - `--override`: (Optional) Update the personal override value.
@@ -344,6 +348,7 @@ Usage:
 - `--path`: (Optional) The current path of the secret to update. Default is '/'
 - `--updated-path`: (Optional) The new path for the secret, if changing its location. If not provided, the secret's path is not updated. Example usage: --updated-path "/folder/subfolder"
 - `--app`: (Optional) Name of your Phase application. Use this to override the `.phase.json` file or when it's not present in your project directory.
+- `--app-id`: (Optional) ID of your Phase application. Takes precedence over `--app` if both are provided.
 - `--random`: (Optional) Specify the type of random value to generate. Available types are `hex`, `alphanumeric`, `base64`, `base64url`, `key128`, `key256`. Example: `--random hex`.
 - `--length`: (Optional) Specify the length of the random value, between 1 and 256. Applicable for types other than `key128` and `key256`. Default length is 32. Example: `--length 16`.
 - `--override`: (Optional) Update the personal override value.
@@ -372,6 +377,7 @@ Examples:
 
 - `key128` : 16 Byte high entropy base64 encoded symmetric key - suitable for AES-128
 - `key256` : 32 Byte high entropy base64 encoded symmetric key - suitable for use with ChaCha20 or AES-256
+
 ### 🗑️ `secrets delete`
 
 Delete one or more secrets from a specified environment, with an option to specify the application.
@@ -385,6 +391,7 @@ Usage:
 - `KEYS...`: One or more keys of the secrets to be deleted. Separate multiple keys with spaces.
 - `--env`: (Optional) Specify the environment from which the secrets will be deleted.
 - `--app`: (Optional) Name of your Phase application. Use this to override the `.phase.json` file or when it's not present in your project directory.
+- `--app-id`: (Optional) ID of your Phase application. Takes precedence over `--app` if both are provided.
 
 Example:
 
@@ -417,6 +424,7 @@ Usage:
 - `--env`: (Optional) Specify the environment where the secrets will be imported.
 - `--path`: (Optional) The path to which you want to import secret(s). Default is '/'
 - `--app`: (Optional) Name of your Phase application. Use this to override the `.phase.json` file or when it's not present in your project directory.
+- `--app-id`: (Optional) ID of your Phase application. Takes precedence over `--app` if both are provided.
 
 Example:
 
@@ -457,6 +465,7 @@ Usage:
 - `--env`: (Optional) Specify the environment from which the secrets will be exported.
 - `--path`: (Optional) The path from which you want to export secret(s). Default is '/'
 - `--app`: (Optional) Name of your Phase application. Use this to override the `.phase.json` file or when it's not present in your project directory.
+- `--app-id`: (Optional) ID of your Phase application. Takes precedence over `--app` if both are provided.
 - `--tags`: (Optional) Comma-separated list of tags to filter the secrets. Supports partial matching and treats underscores as spaces.
 - `--format`: (Optional) Specify the export format. Supported formats are `dotenv`, `json`, `csv`, `yaml`, `xml`, `toml`, `hcl`, `ini`, `java_properties`. Default format is `dotenv`.
 
