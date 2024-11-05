@@ -84,6 +84,79 @@ Now that you have authenticated with GitHub, you can configure syncs for your ap
    The sync has been set up! Secrets will automatically be Synced from your chosen Phase Environment to the GitHub repository as Secrets that can be used for GitHub Actions.
    You can click on the **Manage** button on the Sync card to view sync logs, pause syncing or update authentication credentials.
 
+
+#### Using synced secrets in GitHub Actions
+
+Once your secrets are synced, you can access them in your workflows using the `secrets` context. Here's an example workflow showing a typical CI/CD pipeline with different environments and their respective secrets:
+
+```yaml
+name: Build and Deploy
+on: [push]
+
+jobs:
+ test:
+   runs-on: ubuntu-latest
+   permissions:
+     contents: read
+   environment:
+     name: test
+   steps:
+     - uses: actions/checkout@v4
+     
+     - name: Run tests
+       env:
+         # 👇 Explicitly mention each secret you want to have provisioned to each job
+         TEST_DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
+         TEST_API_KEY: ${{ secrets.TEST_API_KEY }}
+         STRIPE_TEST_KEY: ${{ secrets.STRIPE_TEST_KEY }}
+       run: |
+         npm install
+         npm test
+
+ build:
+   needs: test
+   runs-on: ubuntu-latest
+   permissions:
+     contents: read
+   environment: 
+     name: build
+   steps:
+     - uses: actions/checkout@v4
+     
+     - name: Build application
+       env:
+         # 👇 Explicitly mention each secret you want to have provisioned to each job
+         VITE_API_URL: ${{ secrets.VITE_API_URL }}
+         VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}
+         NEXT_PUBLIC_ANALYTICS_ID: ${{ secrets.NEXT_PUBLIC_ANALYTICS_ID }}
+       run: |
+         npm install
+         npm run build
+
+ push:
+   needs: build
+   runs-on: ubuntu-latest
+   permissions:
+     contents: read
+     packages: write
+   environment:
+     name: production
+   steps:
+     - uses: actions/checkout@v4
+     
+     - name: Login and push to Docker Hub
+       env:
+         # 👇 Explicitly mention each secret you want to have provisioned to each job
+         DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+         DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+       run: |
+         docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_TOKEN
+         docker build -t myorg/myapp:latest .
+         docker push myorg/myapp:latest
+```
+
+You can find more information on how to use secrets inside of a GitHub Actions workflow [here](https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions#using-secrets-in-a-workflow).
+
 ## Using the Phase CLI
 
 Fetch secrets directly inside your GitHub Actions workflow during runtime without storing them in GitHub.
@@ -121,12 +194,14 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Install phase-cli
-        run: curl -fsSL https://pkg.phase.dev/install.sh | bash
+        run: curl -fsSL https://pkg.phase.dev/install.sh | sudo bash
 
       - name: Export and set environment variables
+        env:
+          PHASE_SERVICE_TOKEN: ${{ secrets.PHASE_SERVICE_TOKEN }}
         run: |
           export $(phase secrets export --app "my application name" --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN | xargs)
 
@@ -139,6 +214,8 @@ jobs:
 
 ## Multi staged using `phasehq/cli` Docker image:
 
+You can find the Phase CLI docker builds and related images [here](https://hub.docker.com/r/phasehq/cli).
+
 ```yaml
 name: CI
 
@@ -150,14 +227,21 @@ jobs:
 
     container:
       image: phasehq/cli
-
+    env:
+      PHASE_SERVICE_TOKEN: ${{ secrets.PHASE_SERVICE_TOKEN }}
     steps:
       - name: Export environment variables
-        run: phase secrets export --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN
-
+        id: export
+        run: |
+          # Export secrets
+          eval "$(phase secrets export --app "my application name" --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN)"
+          
+          # Set them in GitHub Actions environment file
+          echo "username=$DOCKERHUB_USERNAME" >> $GITHUB_OUTPUT
+          echo "token=$DOCKERHUB_TOKEN" >> $GITHUB_OUTPUT
     outputs:
-      username: ${{ env.DOCKERHUB_USERNAME }}
-      token: ${{ env.DOCKERHUB_TOKEN }}
+      username: ${{ steps.export.outputs.username }}
+      token: ${{ steps.export.outputs.token }}
 
   build_and_push:
     needs: export_secrets
@@ -165,7 +249,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Build and Push Docker image
         run: |

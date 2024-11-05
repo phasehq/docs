@@ -34,12 +34,12 @@ Next, install the Phase CLI on the platform or operating system of your choice.
 
 <CodeGroup>
 
-```fish {{ title: 'Pip' }}
-pip install phase-cli
-```
-
 ```fish {{ title: 'MacOS' }}
 brew install phasehq/cli/phase
+```
+
+```fish {{ title: 'Linux' }}
+curl -fsSL https://pkg.phase.dev/install.sh | bash
 ```
 
 ```fish {{ title: 'Windows' }}
@@ -48,19 +48,11 @@ scoop install phase
 ```
 
 ```fish {{ title: 'Alpine Linux' }}
-apk add --no-cache curl && curl -fsSL https://pkg.phase.dev/install.sh | sh
-```
-
-```fish {{ title: 'RedHat/CentOS/Amazon Linux' }}
 curl -fsSL https://pkg.phase.dev/install.sh | bash
 ```
 
-```fish {{ title: 'Ubuntu/Debian' }}
-curl -fsSL https://pkg.phase.dev/install.sh | bash
-```
-
-```fish {{ title: 'Arch Linux' }}
-curl -fsSL https://pkg.phase.dev/install.sh | bash
+```fish {{ title: 'Python pip' }}
+pip3 install phase-cli
 ```
 
 ```fish {{ title: 'Docker' }}
@@ -68,6 +60,14 @@ curl -fsSL https://pkg.phase.dev/install.sh | bash
 docker run phasehq/cli
 
 # Optional: run a specific version - docker run phasehq/cli:<version>
+```
+
+```fish {{ title: 'Raspberry Pi' }}
+curl -fsSL https://pkg.phase.dev/install.sh | bash
+```
+
+```fish {{ title: 'ARM64' }}
+curl -fsSL https://pkg.phase.dev/install.sh | bash
 ```
 
 </CodeGroup>

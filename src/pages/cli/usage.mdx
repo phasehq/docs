@@ -1,35 +1,40 @@
 import { Tag } from '@/components/Tag'
+import CliDemo from '@/components/CliDemo'
 
 export const description =
-  'Mange your secrets and environment variables with the Phase CLI'
+  'Manage your secrets and environment variables with the Phase CLI'
 
 <Tag variant="small">CLI</Tag>
 
 # Quickstart {{ className: 'lead' }}
 
-The Phase CLI syncs with the [Phase Console](https://github.com/phasehq/console) to provide **End-to-End** encrypted secret management. It pulls, decrypts, and injects secrets into your applications during runtime. Manage secrets for various environments, like development, staging, production, or custom ones, with ease.
+The Phase CLI syncs with the [Phase Console](https://github.com/phasehq/console) to provide **end-to-end** encrypted secret management. It pulls, decrypts, and injects secrets into your applications during runtime. Manage secrets for various environments, such as development, staging, production, or custom ones, with ease.
 
 ### Prerequisites:
 
-- Sign up for the Phase Console and created an application: [Quickstart](/quickstart)
+- Sign up for the Phase Console and create an application: [Quickstart](/quickstart)
 - [Install the CLI](/cli/install)
 
 ---
 
 ## 1. Login
 
-Authenticate with Phase as a [User](/console/users):
+Authenticate with Phase as a [User](/console/users). This is suitable for installing the Phase CLI on your local development machine, where you can access a web browser to complete the authentication.
 
 ```fish
 phase auth
 ```
 
-This command will give you a drop down selection of all the apps created by you on the [Phase Console](/console/apps). Simply use up / down arrow `↑` and `↓` keys and hit `enter` to select.
+This command will give you a dropdown selection between `☁️ Phase Cloud` and `🛠️ Self Hosted`. Simply use the up/down arrow keys (`↑` and `↓`) and hit `enter` to select and follow the instructions.
 
-Authenticate with Phase via a [Service Token](/console/tokens#service-tokens):
+Alternatively, authenticate with Phase via a [Service Token](/console/tokens#service-tokens). This is suitable for using the CLI in a headless environment such as on your server, remote machine via SSH, Docker container, etc.
 
 ```fish
 export PHASE_SERVICE_TOKEN=<YOUR_SERVICE_TOKEN>
+```
+
+```fish
+export PHASE_HOST=<YOUR_SELF_HOSTED_INSTANCE>
 ```
 
 <div className="not-prose">
@@ -45,14 +50,14 @@ export PHASE_SERVICE_TOKEN=<YOUR_SERVICE_TOKEN>
 
 ## 2. Initialize - _optional_
 
-Link the phase cli to your project. This will create a `.phase.json` file in the root of your application's repository. You may skip this step, but you will have to provide application and environment context manually by passing `--app` and `--env` flags on the `phase secrets` and `phase run` commands.
+Link the Phase application to your local project. This will create a `.phase.json` file in the root of your application's repository. You may skip this step, but you will have to provide application and environment context by passing `--app` and `--env` flags on the `phase secrets` and `phase run` commands.
 
 ```fish
-# cd /home/git/to_your_project
+# cd /path/to/your/project
 phase init
 ```
 
-This command will give you a drop down selection of all the apps created by you on the [Phase Console](/console/apps). Simply use up / down arrow `↑` and `↓` keys and hit `enter` to select.
+This command will give you a dropdown selection of all the apps you've created on the [Phase Console](/console/apps). Simply use the up/down arrow keys (`↑` and `↓`) and hit `enter` to select the app and the environment.
 
 <div className="not-prose">
   <Button
@@ -65,7 +70,7 @@ This command will give you a drop down selection of all the apps created by you 
 
 ---
 
-## 3. Import your existing secrets
+## 3. Import your existing secrets - _optional_
 
 Let's say you already have a `.env` file containing your secrets and environment variables for your app.
 
@@ -108,19 +113,14 @@ AWS_SECRET_ACCESS_KEY    | V5y**********************************6W1
 phase run <your_run_command>
 ```
 
-Example 1:
+Let's see it in action:
+
+<CliDemo castFile="phase-run.cast" terminalFontSize="small" />
+
+Example:
 
 ```fish
-# Node.js project manged by yarn package manager
-> phase run yarn dev
-$ next dev
-ready - started server on 0.0.0.0:3000, url: http://localhost:3000
-```
-
-Example 2:
-
-```fish
-# Chaining multiple commands together with linux pipes
+# Chaining multiple commands together
 phase run "printenv | grep AWS_ACCESS_KEY_ID"
 AWS_ACCESS_KEY_ID=AKIA2OGYBAH63UA3VNFG
 ```

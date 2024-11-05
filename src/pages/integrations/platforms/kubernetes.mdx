@@ -30,7 +30,7 @@ helm repo add phase https://helm.phase.dev && helm repo update
 Install the Phase Secrets Operator:
 
 ```fish
-helm install phase-secrets-operator phase/phase-kubernetes-operator --set image.tag=v1.2.1
+helm install phase-secrets-operator phase/phase-kubernetes-operator --set image.tag=v1.2.2
 ```
 
 <Note>
@@ -38,6 +38,8 @@ helm install phase-secrets-operator phase/phase-kubernetes-operator --set image.
   unintended upgrades. Find available versions on our [GitHub
   releases](https://github.com/phasehq/kubernetes-secrets-operator/releases).
 </Note>
+
+Too see the full set of configurable Helm chart options, please see: [`values.yaml`](https://github.com/phasehq/kubernetes-secrets-operator/blob/main/phase-kubernetes-operator/values.yaml)
 
 ### 2. Create a Service Token Secret in Kubernetes
 

@@ -231,11 +231,12 @@ export const navigation = [
     ],
   },
   {
-    title: 'Authentication',
+    title: 'Access Control',
     links: [
-      { title: 'Overview', href: '/authentication' },
-      { title: 'OAuth SSO', href: '/authentication/oauth-sso' },
-      { title: 'Kubernetes', href: '/authentication/kubernetes' },
+      { title: 'Overview', href: '/access-control' },
+      { title: 'Authentication', href: '/access-control/authentication' },
+      { title: 'Service Accounts', href: '/access-control/service-accounts' },
+      { title: 'Roles', href: '/access-control/roles' },
     ],
   },
   {
