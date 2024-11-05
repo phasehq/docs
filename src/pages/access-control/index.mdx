@@ -25,7 +25,7 @@ We plan to extend support to SAML (Security Assertion Markup Language) and OIDC 
 
 ## Programmatic Authentication
 
-When using third-party authentication systems for programmatic access to Phase, you delegate the authentication of a particular accessor to a third party. This delegation is used as an assertion to obtain a Phase Service Token with the correct set of permissions, which can then be used to access secrets. The process works as follows:
+When using third-party authentication systems for programmatic access to Phase, you delegate the authentication of a particular accessor to a third party. This delegation serves as an assertion to obtain a Phase Service Token with the correct set of permissions, which can then be used to access secrets. The process works as follows:
 
 1. A service (accessor) attempting to access secrets stored in Phase uses a third-party authentication token (e.g., a JWT service account token for Kubernetes or an AWS IAM v4 Signature for AWS).
 2. The accessor sends this token to Phase.
