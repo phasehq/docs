@@ -31,7 +31,7 @@ When using third-party authentication systems for programmatic access to Phase, 
 2. The accessor sends this token to Phase.
 3. Phase internally validates the token or signature using the third-party authentication system's APIs.
 4. Phase validates the identity of the accessor and returns a Phase Service Token in accordance with the RBAC policy.
-5. The accessor can then use the Phase Service Token to access secrets in Phase until expiry.
+5. The accessor uses the Phase Service Token to access secrets in Phase until expiry.
 6. Upon expiry, the process can and will be repeated to gain access to a fresh Phase Service Token.
 
 
