@@ -23,7 +23,15 @@ We plan to extend support to SAML (Security Assertion Markup Language) and OIDC 
 
 <UserAuthProviders />
 
-## Programmatic Authentication
+## Service Accounts
+
+Programmatic authentication in Phase is facilitated through Service Accounts. A Service Account is a special type of account that represents non-human users, such as applications, automation processes, or CI/CD pipelines, that need to interact with Phase programmatically through the API, SDK, or CLI.
+
+Service Accounts in Phase provide a secure way to manage programmatic access to your resources. Each Service Account:
+
+- Can be assigned specific roles and permissions through Phase's RBAC system
+- Supports fine-grained access control policies at both organization and application levels
+- Can be authenticated using Phase's native authentication or through supported third-party authentication providers  
 
 When using third-party authentication systems for programmatic access to Phase, you delegate the authentication of a particular accessor to a third party. This delegation serves as an assertion to obtain a Phase Service Token with the correct set of permissions, which can then be used to access secrets. The process works as follows:
 
