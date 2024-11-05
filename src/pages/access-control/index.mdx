@@ -34,16 +34,15 @@ When using third-party authentication systems for programmatic access to Phase, 
 5. The accessor uses the Phase Service Token to access secrets in Phase until expiry.
 6. Upon expiry, the process can and will be repeated to gain access to a fresh Phase Service Token.
 
-
-### Access Control - Key Concepts
+## Access Control - Key Concepts
 
 1. **Roles**: Phase offers default managed roles (e.g., `Owner`, `Admin`, `Developer`) with predefined permissions. Users can also create custom roles for more specific access control.
 
 2. **Access**: This defines the level of access (No access, Read access, Full access, Custom access) for various resources.
 
-3. **Actions**: These define the actions that can be performed (Create, Read, Update, Delete) on various resources.
+3. **Actions**: These define the operations that can be performed (Create, Read, Update, Delete) on various resources.
 
-4. **Resources**: The entities that can be accessed or modified, categorized into organization-level and app-level resources.
+4. **Resources**: The entities that can be accessed or modified, categorized into organization-level and application-level resources.
 
 ### Permissions to Perform Actions (CRUD)
 
@@ -51,7 +50,7 @@ Phase's RBAC system allows you to define permissions for Create, Read, Update, a
 
 ### Resource Categories
 
-#### Organization-level permissions:
+#### Organization-level Resources:
 
 | Resource | Description |
 |----------|-------------|
@@ -63,7 +62,7 @@ Phase's RBAC system allows you to define permissions for Create, Read, Update, a
 | **Roles** | Define and assign roles within the organization |
 | **Integration Credentials** | Manage credentials for third-party integrations |
 
-#### App-level permissions:
+#### Application-level Resources:
 
 | Resource | Description |
 |----------|-------------|
@@ -84,5 +83,6 @@ Global access is a special type of permission that grants users with a "global a
 
 ### External Auth Method Considerations
 
-- To use an external auth provider for programmatic authentication with Phase to access sensitive data (e.g., Secrets) via the Phase API, SDKs, or the Kubernetes Operator, you will need to enable Server-side Encryption (SSE) so that Phase can generate a Service Token on the server side with access to a given application(s) or environment(s).
+- To use an external auth provider for programmatic authentication with Phase to access sensitive data (e.g., Secrets) via the Phase API, SDKs, or the Kubernetes Operator, you must enable Server-side Encryption (SSE) so that Phase can generate a Service Token on the server side with access to given application(s) or environment(s).
+
 - When using an external auth method (e.g., Kubernetes), Phase will call the external service at the time of authentication and for subsequent token renewals. If the status of an entity changes in the external system (e.g., an account expires or is disabled), Phase will deny requests to renew tokens associated with that entity. However, any existing tokens remain valid for their original grant period unless explicitly revoked.
