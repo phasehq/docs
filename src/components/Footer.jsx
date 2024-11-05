@@ -358,11 +358,23 @@ function SmallPrint() {
 
 export function Footer() {
   let router = useRouter()
+  const editUrl = `https://github.com/phasehq/docs`
 
   return (
     <footer className="mx-auto max-w-2xl space-y-10 pb-16 lg:max-w-5xl">
       <Feedback key={router.pathname} />
       <PageNavigation />
+      <div className="flex justify-left">
+        <Link
+          href={editUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group inline-flex items-center gap-2 text-sm text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white transition"
+        >
+          <PencilIcon className="h-4 w-4 stroke-zinc-600 group-hover:stroke-zinc-900 dark:stroke-zinc-400 dark:group-hover:stroke-white" />
+          Edit this page
+        </Link>
+      </div>
       <SmallPrint />
     </footer>
   )
