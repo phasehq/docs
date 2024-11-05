@@ -231,7 +231,7 @@ export const navigation = [
     ],
   },
   {
-    title: 'Access Control',
+    title: 'Authentication & Access Control',
     links: [
       { title: 'Overview', href: '/access-control' },
       { title: 'Authentication', href: '/access-control/authentication' },
