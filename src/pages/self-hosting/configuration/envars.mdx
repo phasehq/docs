@@ -20,11 +20,11 @@ Certain environment variables are required, while others are optional based on y
 In order to authenticate with the Phase Console, you must enable **at least one** SSO provider.
 Enabling an SSO provider requires adding the provider to the list of `SSO_PROVIDERS` as well as providing valid credentials.
 
-You can find a complete list of user auth providers [here](/authentication#user-authentication)
+You can find a complete list of user auth providers [here](/access-control/authentication#user-authentication)
 
 ### Google SSO
 
-You can find instructions for setting up SSO with Google OAuth [here](/authentication/oauth-sso#google).
+You can find instructions for setting up SSO with Google OAuth [here](/access-control/authentication/oauth-sso#google).
 
 Set the "redirect URI" for your Google OAuth application as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/google`.
 
@@ -46,7 +46,7 @@ After setting up your credentials on the Google Cloud console, set the Client ID
 
 ### GitHub SSO
 
-You can find instructions for setting up SSO with a GitHub OAuth App [here](/authentication/oauth-sso#git-hub).
+You can find instructions for setting up SSO with a GitHub OAuth App [here](/access-control/authentication/oauth-sso#git-hub).
 
 Set the "Authorization callback URL" for your GitHub OAuth App as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/github`.
 
@@ -68,7 +68,7 @@ After setting up your App on GitHub, set the Client ID and Client secret values 
 
 ### GitLab SSO
 
-You can find instructions for setting up SSO with a GitLab OAuth Application [here](/authentication/oauth-sso#git-lab).
+You can find instructions for setting up SSO with a GitLab OAuth Application [here](/access-control/authentication/oauth-sso#git-lab).
 
 Make sure the application has the `read_user` scope.
 
