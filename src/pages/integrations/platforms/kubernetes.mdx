@@ -71,6 +71,10 @@ Create a custom resource file: `phase-secrets-operator-cr.yaml`
 
 A Basic custom resource to sync all secrets from a `production` environment in an App in the Phase Console to your Kubernetes cluster as `my-application-secret`, type `Opaque`.
 
+You can get the AppID by going to your application settings in the Phase Console, hovering over UUID under the App section and clicking the `Copy` button:
+
+![hello world](/assets/images/console/settings/application-id.png)
+
 ```yaml
 apiVersion: secrets.phase.dev/v1alpha1
 kind: PhaseSecret
@@ -78,7 +82,7 @@ metadata:
   name: example-phase-secret
   namespace: default
 spec:
-  phaseApp: 'your-phase-app' # The name of your Phase application
+  phaseAppId: '00000000-0000-0000-0000-000000000000' # The ID of your Phase application
   phaseAppEnv: 'production' # OPTIONAL - The Phase App Environment to fetch secrets from
   phaseAppEnvPath: '/' # OPTIONAL Path within the Phase application environment to fetch secrets from
   phaseHost: 'https://console.phase.dev' # OPTIONAL - URL of a Phase Console instance
@@ -101,7 +105,7 @@ metadata:
   name: example-phase-secret
   namespace: default
 spec:
-  phaseApp: 'your-phase-app'
+  phaseAppId: '00000000-0000-0000-0000-000000000000' # The ID of your Phase application
   phaseAppEnv: 'production' # OPTIONAL - The Phase App Environment to fetch secrets from
   phaseAppEnvPath: 'certs/' # OPTIONAL Path within the Phase application environment to fetch secrets from
   phaseHost: 'https://console.phase.dev' # OPTIONAL - URL of a Phase Console instance
@@ -222,6 +226,7 @@ metadata:
   name: example-phase-secret
   namespace: default
 spec:
+  phaseAppId: '00000000-0000-0000-0000-000000000000'
   phaseAppEnv: 'prod'
   phaseAppEnvTag: 'certs'
   phaseHost: 'https://console.phase.dev'

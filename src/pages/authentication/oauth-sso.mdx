@@ -1,0 +1,147 @@
+import { Tag } from '@/components/Tag'
+export const description = 'Authenticating via various OAuth Single sign-on providers with Phase.'
+
+<Tag variant="small">AUTHENTICATION</Tag>
+
+# Single sign-on (SSO)
+
+## Google
+
+Follow these steps to set up Google SSO for your Phase application:
+
+1. Go to your [Google Cloud Platform Console](https://console.cloud.google.com/) and click the "Select a project" dropdown.
+
+   ![Select a project](/assets/images/auth/sso/google/1-select-a-project.png)
+
+2. Click "New project". If you already have a project you want to use, select it from the list and skip to step 5.
+
+   ![New project select](/assets/images/auth/sso/google/2-new-project-select.png)
+
+3. Enter a valid Project Name and click "Create".
+
+   ![New project create](/assets/images/auth/sso/google/3-new-project-create.png)
+
+4. Go to your newly created project by clicking "SELECT PROJECT" from the notifications.
+
+   ![Go to new project](/assets/images/auth/sso/google/4-go-to-new-project.png)
+
+5. In your console's search box, type 'Credentials' and click on the result that says "Credentials - APIs & Services".
+
+   ![Search credentials](/assets/images/auth/sso/google/5-search-credentials.png)
+
+6. Click on "+ CREATE CREDENTIALS" and select "OAuth client ID". If this is your first time creating an OAuth credential, you'll need to set up a consent screen. If you've already set up a consent screen, skip to Step 13.
+
+   ![Create OAuth client ID](/assets/images/auth/sso/google/6-create-oauth-client-id.png)
+
+7. When prompted to configure an OAuth consent screen, click the "CONFIGURE CONSENT SCREEN" button.
+
+   ![Configure consent screen](/assets/images/auth/sso/google/7-first-time-consent-screen-config.png)
+
+8. Choose "External" as the User Type for the OAuth consent screen.
+
+   ![Create external consent screen](/assets/images/auth/sso/google/8-create-external-consent-screen.png)
+
+9. Enter details for mandatory fields such as App name, User support email, and Developer contact information. Click "SAVE AND CONTINUE".
+
+   ![Consent screen app information](/assets/images/auth/sso/google/9-consent-screen-app-information.png)
+   ![Consent screen app information save and continue](/assets/images/auth/sso/google/10-consent-screen-app-information-save-continue.png)
+
+10. Continue through the Scopes step by clicking "SAVE AND CONTINUE".
+
+    ![Consent screen scope save and continue](/assets/images/auth/sso/google/11-consent-screen-scope-save-continue.png)
+
+11. Continue through the Test user setup screen by clicking "SAVE AND CONTINUE".
+
+    ![Consent screen test users save and continue](/assets/images/auth/sso/google/12-consent-screen-test-users-save-continue.png)
+
+12. Review the details of your Consent screen app registration and click "BACK TO DASHBOARD".
+
+    ![Consent screen back to dashboard](/assets/images/auth/sso/google/13-consent-screen-back-to-dashboard.png)
+
+13. In the APIs & Services dashboard, click "+ CREATE CREDENTIALS" and select "OAuth client ID" from the dropdown.
+
+    ![Select a project](/assets/images/auth/sso/google/1-select-a-project.png)
+
+14. In the Application type dropdown, select "Web application". Enter a recognizable name in the Name field, add the Authorized redirect URI (e.g., https://[**YOUR_DOMAIN**].com/api/auth/callback/google), and click "CREATE".
+
+    ![Create OAuth client ID config](/assets/images/auth/sso/google/14-create-oauth-client-id-config.png)
+
+15. You will be presented with the OAuth Client ID and Client secret. Copy these by clicking the clipboard icon next to each.
+
+    ![Copy OAuth credentials](/assets/images/auth/sso/google/15-copy-oauth-creds.png)
+
+16. Supply these credentials to your Phase Console deployment as [environment variables](/self-hosting/configuration/envars#google-sso).
+
+You can find detailed official instructions for setting up SSO with a Google OAuth Application [here](https://support.google.com/cloud/answer/6158849?hl=en).
+
+## GitHub
+
+Follow these steps to set up GitHub SSO for your Phase application:
+
+1. Log in to your GitHub account and go to [OAuth Apps](https://github.com/settings/developers) in Developer Settings.
+
+2. Click "New OAuth App".
+
+   ![Create a new GitHub OAuth app](/assets/images/auth/sso/github/1-create-new-oauth-app.png)
+
+3. Fill in the application details:
+   - Application name: "Phase Console"
+   - Homepage URL: Your application's URL (e.g., https://[**YOUR_DOMAIN**].com)
+   - Authorization callback URL: Your callback URL (e.g., https://[**YOUR_DOMAIN**].com/api/auth/callback/github)
+
+   ![Configure and register a new application](/assets/images/auth/sso/github/2-configure-register-application.png)
+
+4. Click "Register application".
+
+5. On the next screen, click "Generate a new client secret".
+
+   ![Generate a new client secret](/assets/images/auth/sso/github/3-generate-client-secret.png)
+
+6. Copy the Client ID and newly generated Client Secret.
+
+   ![Copy the client ID and client secret](/assets/images/auth/sso/github/4-copy-client-id-secret.png)
+
+7. Supply these credentials to your Phase Console deployment as [environment variables](/self-hosting/configuration/envars#git-hub-sso).
+
+
+You can find detailed official instructions for setting up SSO with a Google OAuth Application [here](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app). 
+
+## GitLab
+
+Follow these steps to set up GitLab SSO for your Phase application:
+
+1. Log in to your GitLab account and go to User Preferences > Applications.
+
+   ![Navigate to User Preferences](/assets/images/auth/sso/gitlab/1-personal-preferences.png)
+
+   ![Navigate to User Applications](/assets/images/auth/sso/gitlab/2-applications.png)
+
+2. Click on "Add new application".  
+
+   ![Add new application](/assets/images/auth/sso/gitlab/3-add-new-application.png)
+
+3. Fill in the application details:
+   - Name: "Phase Console SSO"
+   - Redirect URI: Your callback URL (e.g., https://[**YOUR_DOMAIN**].com/api/auth/callback/gitlab)
+   - Confidential: Check this box
+   - Scopes: Select only "read_user"
+
+   ![Configure new application](/assets/images/auth/sso/gitlab/4-application-config-permission.png)
+
+Make sure the application has the `read_user` scope. This grants read-only access to the user's profile through the /user API endpoint, which includes username, public email, and full name.
+
+4. Click "Save application".
+
+    ![Configure new application](/assets/images/auth/sso/gitlab/5-save-application.png)
+
+5. On the next screen, copy the Application ID and Secret.
+
+   ![Copy Application ID and Secret](/assets/images/auth/sso/gitlab/6-copy-application-id-application-secret.png)
+
+6. Supply these credentials to your Phase Console deployment as [environment variables](/self-hosting/configuration/envars#git-lab-sso).
+
+<Note>
+  You can use user-owned or group-owned applications to login to Phase. If you are running a self-hosted instance, you can also use an instance-wide application.
+</Note>
+
+You can find detailed official instructions for setting up SSO with a GitLab OAuth Application [here](https://docs.gitlab.com/ee/integration/oauth_provider.html). 

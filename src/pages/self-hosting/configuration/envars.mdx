@@ -15,36 +15,16 @@ Configure your environment variables when self-hosting Phase. {{ className: 'lea
 Depending on your self-hosted deployment method, you may need to configure various environment variables.
 Certain environment variables are required, while others are optional based on your use case.
 
-All environment variables are defined in a `.env` file.
-
 ## Single sign-on (SSO)
 
 In order to authenticate with the Phase Console, you must enable **at least one** SSO provider.
 Enabling an SSO provider requires adding the provider to the list of `SSO_PROVIDERS` as well as providing valid credentials.
 
-### Providers
-
-<Properties>
-  <Property name="SSO_PROVIDERS" type="string">
-    Comma separated list of SSO providers to enable. Options are:
-    <ul>
-      <li>
-        <code>google</code>
-      </li>
-      <li>
-        <code>github</code>
-      </li>
-      <li>
-        <code>gitlab</code>
-      </li>
-    </ul>
-    Defaults to `google,github,gitlab`
-  </Property>
-</Properties>
+You can find a complete list of user auth providers [here](/authentication#user-authentication)
 
 ### Google SSO
 
-You can find instructions for setting up SSO with Google OAuth [here](https://support.google.com/cloud/answer/6158849?hl=en).
+You can find instructions for setting up SSO with Google OAuth [here](/authentication/oauth-sso#google).
 
 Set the "redirect URI" for your Google OAuth application as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/google`.
 
@@ -66,7 +46,7 @@ After setting up your credentials on the Google Cloud console, set the Client ID
 
 ### GitHub SSO
 
-You can find instructions for setting up SSO with a GitHub OAuth App [here](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app).
+You can find instructions for setting up SSO with a GitHub OAuth App [here](/authentication/oauth-sso#git-hub).
 
 Set the "Authorization callback URL" for your GitHub OAuth App as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/github`.
 
@@ -88,7 +68,7 @@ After setting up your App on GitHub, set the Client ID and Client secret values 
 
 ### GitLab SSO
 
-You can find instructions for setting up SSO with a GitLab OAuth Application [here](https://docs.gitlab.com/ee/integration/oauth_provider.html).
+You can find instructions for setting up SSO with a GitLab OAuth Application [here](/authentication/oauth-sso#git-lab).
 
 Make sure the application has the `read_user` scope.
 
