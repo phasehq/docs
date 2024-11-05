@@ -31,6 +31,23 @@ function FeedbackButton(props) {
   )
 }
 
+function PencilIcon(props) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      {...props}
+    >
+      <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
+    </svg>
+  )
+}
+
 const FeedbackForm = forwardRef(function FeedbackForm({ onSubmit }, ref) {
   return (
     <form
@@ -341,11 +358,23 @@ function SmallPrint() {
 
 export function Footer() {
   let router = useRouter()
+  const editUrl = `https://github.com/phasehq/docs`
 
   return (
     <footer className="mx-auto max-w-2xl space-y-10 pb-16 lg:max-w-5xl">
       <Feedback key={router.pathname} />
       <PageNavigation />
+      <div className="flex justify-left">
+        <Link
+          href={editUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group inline-flex items-center gap-2 text-sm text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white transition"
+        >
+          <PencilIcon className="h-4 w-4 stroke-zinc-600 group-hover:stroke-zinc-900 dark:stroke-zinc-400 dark:group-hover:stroke-white" />
+          Edit this page
+        </Link>
+      </div>
       <SmallPrint />
     </footer>
   )
