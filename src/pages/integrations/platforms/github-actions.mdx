@@ -234,7 +234,7 @@ jobs:
         id: export
         run: |
           # Export secrets
-          eval "$(phase secrets export --app "my application name" --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN)"
+          eval "$(secrets export --app "my application name" --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN)"
           
           # Set them in GitHub Actions environment file
           echo "username=$DOCKERHUB_USERNAME" >> $GITHUB_OUTPUT
