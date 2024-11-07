@@ -81,8 +81,8 @@ pipeline {
             steps {
                 script {
                     withCredentials([string(credentialsId: 'phase-service-token', variable: 'PHASE_SERVICE_TOKEN')]) {
-                        docker.image('phasehq/cli').inside {
-                            sh 'phase secrets export --app "my application name" --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN > envs.txt'
+                        docker.image('phasehq/cli:1.18.5').inside {
+                            sh 'secrets export --app "my application name" --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN > envs.txt'
                         }
                         env.DOCKERHUB_USERNAME = sh(script: "cat envs.txt | grep DOCKERHUB_USERNAME | cut -d '=' -f2", returnStdout: true).trim()
                         env.DOCKERHUB_TOKEN = sh(script: "cat envs.txt | grep DOCKERHUB_TOKEN | cut -d '=' -f2", returnStdout: true).trim()
