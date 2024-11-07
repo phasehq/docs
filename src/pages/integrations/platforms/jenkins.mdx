@@ -39,38 +39,13 @@ For detailed cli install options, please see: [Installation](/cli/install)
 8. Make a note of the secret **ID**
 ![](/assets/images/platform-integrations/jenkins/step-1/7-creadential-created.png)
 
-## Single staged:
+### Step 2: Access secrets inside your pipelines using the `phasehq/cli` image:
 
-```groovy
-pipeline {
-    agent any
+Jenkins, with its Docker Pipeline plugin, supports multi-stage Docker pipelines. Here's an example where we are retrieving and consuming Docker Hub secrets:
 
-    stages {
-        stage('Prepare') {
-            steps {
-                sh 'curl -fsSL https://pkg.phase.dev/install.sh | bash'
-                sh '''
-                   export $(phase secrets export --app "my application name" --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN | xargs)
-                   '''
-            }
-        }
-
-        stage('Build and Push') {
-            steps {
-                sh '''
-                   docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_TOKEN
-                   docker build -t my-image .
-                   docker push my-image:latest
-                   '''
-            }
-        }
-    }
-}
-```
-
-## Multi staged using `phasehq/cli` Docker image:
-
-Jenkins, with its Docker Pipeline plugin, supports multi-stage Docker builds. Here's how you might achieve this:
+<Note>
+Please make sure to set a version tag for the `phsaehq/cli` docker image to avoid breaking changes. You can get the latest tags on [Docker Hub](https://hub.docker.com/r/phasehq/cli/tags).
+</Note>
 
 ```groovy
 pipeline {
