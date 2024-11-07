@@ -75,17 +75,20 @@ Jenkins, with its Docker Pipeline plugin, supports multi-stage Docker builds. He
 ```groovy
 pipeline {
     agent any
-
     stages {
         stage('Prepare') {
             steps {
                 script {
                     withCredentials([string(credentialsId: 'phase-service-token', variable: 'PHASE_SERVICE_TOKEN')]) {
+                        // Store credentials directly in Jenkins credential store
                         docker.image('phasehq/cli:1.18.5').inside {
-                            sh 'secrets export --app "my application name" --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN > envs.txt'
+                            // Export directly to Jenkins credentials store
+                            withCredentials([usernamePassword(credentialsId: 'docker-credentials', 
+                                                           usernameVariable: 'DOCKERHUB_USERNAME', 
+                                                           passwordVariable: 'DOCKERHUB_TOKEN')]) {
+                                sh 'secrets export --app "my application name" --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN'
+                            }
                         }
-                        env.DOCKERHUB_USERNAME = sh(script: "cat envs.txt | grep DOCKERHUB_USERNAME | cut -d '=' -f2", returnStdout: true).trim()
-                        env.DOCKERHUB_TOKEN = sh(script: "cat envs.txt | grep DOCKERHUB_TOKEN | cut -d '=' -f2", returnStdout: true).trim()
                     }
                 }
             }
@@ -93,9 +96,11 @@ pipeline {
         stage('Build and Push') {
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'dockerhub-username', variable: 'DOCKERHUB_USERNAME'), string(credentialsId: 'dockerhub-token', variable: 'DOCKERHUB_TOKEN')]) {
+                    withCredentials([usernamePassword(credentialsId: 'docker-credentials', 
+                                                    usernameVariable: 'DOCKERHUB_USERNAME', 
+                                                    passwordVariable: 'DOCKERHUB_TOKEN')]) {
                         sh '''
-                            docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_TOKEN
+                            echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
                             docker build -t my-image .
                             docker push my-image:latest
                         '''
