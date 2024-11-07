@@ -87,4 +87,4 @@ pipeline {
 }
 ```
 
-This method pulls the `phasehq/cli` Docker image, runs it to retrieve the secrets, and then stores those secrets as Jenkins environment variables. These variables are then accessible in subsequent stages.
+This method pulls the `phasehq/cli` Docker image, runs it to retrieve the secrets, and then stores those secrets in Jenkins credential store. These secrets are then accessible in subsequent stages.
