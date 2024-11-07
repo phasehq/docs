@@ -20,13 +20,24 @@ You can use the Phase CLI to effortlessly inject or expose secret inside your CI
 
 For detailed cli install options, please see: [Installation](/cli/install)
 
-### Setting `PHASE_SERVICE_TOKEN`:
 
-1. Go to Jenkins Dashboard.
-2. Click on `Manage Jenkins`.
-3. Select `Manage Credentials`.
-4. Click on `(global)` domain.
-5. Add `PHASE_SERVICE_TOKEN` as a secret text.
+### Step 1: Set the `PHASE_SERVICE_TOKEN`
+
+1. Go to the Jenkins Dashboard
+2. Click on **Manage Jenkins**
+![Navigate to Jenkins management](/assets/images/platform-integrations/jenkins/step-1/1-nagivate-to-manage-jenkins.png)
+3. Select **Credentials** under the **Security** section
+![Select credentials](/assets/images/platform-integrations/jenkins/step-1/2-go-to-credentials-under-the-security-section.png)
+4. Click on **(global)** dropdown under the 'Stores scoped to Jenkins' **Domain** section
+![Click on global domains](/assets/images/platform-integrations/jenkins/step-1/3-stores-scoped-to-jenkins-click-global.png)
+5. Click **+ Add Credentials**
+![Click add credentials](/assets/images/platform-integrations/jenkins/step-1/4-click-add-credetials.png)
+6. In the New credentials pages **Kind** dropdown select **Secret text**
+![Select secret text from dropdown](/assets/images/platform-integrations/jenkins/step-1/5-choose-secret-text-from-kind-dropdown.png)
+7. Paste the `PHASE_SERVICE_TOKEN` in the **Secret** box, provide a suitable **ID** (to be referenced in our pipelines) along with a **Description** and click **Create**
+![](/assets/images/platform-integrations/jenkins/step-1/6-enter-cred.png)
+8. Make a note of the secret **ID**
+![](/assets/images/platform-integrations/jenkins/step-1/7-creadential-created.png)
 
 ## Single staged:
 
