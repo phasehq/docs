@@ -54,11 +54,12 @@ pipeline {
                     withCredentials([string(credentialsId: 'PHASE_SERVICE_TOKEN', variable: 'PHASE_SERVICE_TOKEN')]) {
                         // Set the credential ID for the phase service token ☝️ you set in step 1
                         docker.image('phasehq/cli:1.18.5').inside {
-                            // Export directly to Jenkins credentials store
+                            // Set the cli version ☝️
                             withCredentials([usernamePassword(credentialsId: 'docker-credentials', 
                                                            usernameVariable: 'DOCKERHUB_USERNAME', 
                                                            passwordVariable: 'DOCKERHUB_TOKEN')]) {
                                 sh 'secrets export --app "my application name" --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN'
+                                // Export and directly store secrets in Jenkins credentials store ☝️
                             }
                         }
                     }
