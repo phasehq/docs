@@ -44,7 +44,7 @@ Alternatively, you may create a token with a narrower scope to a specific team. 
 ![Vercel dashboard account settings token copy](/assets/images/platform-integrations/vercel/4.png)
 
 
-### Save your credentials in Phase
+### Store authentication credentials in Phase
 
 <Note>
   Your credentials are kept secure with robust application-layer encryption.
@@ -61,13 +61,29 @@ Alternatively, you may create a token with a narrower scope to a specific team. 
 
 2. Click on **Vercel**
 
-**ADD VERCEL SCREENSHOT HERE**
+![Select Vercel](/assets/images/platform-integrations/vercel/1-vercel-create-new-service-credential.png)
 
 3. Paste your `Vercel Token` and add a descriptive name for the service credential and click **Save**
 
-**ADD VERCEL SCREENSHOT HERE**
+![Add vercel token as service credential](/assets/images/platform-integrations/vercel/2-vercel-save-new-service-credentials.png)
 
+## Step 2: Set up a secret sync
 
+1. Go to your App in the Phase Console and go to the **Syncing** tab. Select **Vercel** under the 'Create a new Sync' menu.
+
+![Set up an vercel secret sync](/assets/images/platform-integrations/vercel/1-create-new-sync-select-vercel.png)
+
+2. Choose the credentials you added in the previous step as the authentication mode, and click **Next**.
+
+![Select service credentials for the sync](/assets/images/platform-integrations/vercel/2-create-new-sync-select-vercel-service-credentials.png)
+
+3. Next, configure the source and destination for your secrets. Pick an Environment from your App as the source. To configure the destination for the sync, choose a Vercel Project from the list of available Projects, as well as the Target Environment and the Secret Type.
+
+![Set up the sync config](/assets/images/platform-integrations/vercel/3-create-new-sync-choose-secret-config.png)
+
+4. Once set up, your secrets will automatically be synced to the chosen destination project in Vercel. You can manage your sync from the *Syncing* tab of your App, or from the *Integrations* screen.
+
+![Sync status](/assets/images/platform-integrations/vercel/4-create-new-sync-sync-status-success.png)
 
 ## Reserved environment variables keys by Vercel
 
