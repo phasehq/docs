@@ -280,6 +280,7 @@ export const navigation = [
         href: '/integrations/platforms/github-actions',
       },
       { title: 'GitLab CI', href: '/integrations/platforms/gitlab-ci' },
+      { title: 'Vercel', href: '/integrations/platforms/vercel' },
       { title: 'Railway', href: '/integrations/platforms/railway' },
       { title: 'Jenkins', href: '/integrations/platforms/jenkins' },
       { title: 'CircleCI', href: '/integrations/platforms/circleci' },
