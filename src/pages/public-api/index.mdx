@@ -26,14 +26,14 @@ All API requests must be authenticated with a bearer token in the `Authorization
 If you are using Phase Cloud, the API can be accessed at `https://api.phase.dev`:
 
 ```bash {{ title: 'Example request for Phase Cloud' }}
-curl https://api.phase.dev/v1/secrets?app_id=<app_id>&env=development \
+curl https://api.phase.dev/v1/secrets/?app_id=<app_id>&env=development \
   -H "Authorization: Bearer {token}"
 ```
 
 If you are self-hosting Phase, the API is exposed at `${HTTP_PROTOTOCL}${HOST}/service/public`. For example, if you are running Phase at `https://localhost`, the API will be accessible at `https://localhost/service/public`
 
 ```bash {{ title: 'Example request for Phase Self-hosted' }}
-curl https://localhost/service/public/v1/secrets?app_id=<app_id>&env=development \
+curl https://localhost/service/public/v1/secrets/?app_id=<app_id>&env=development \
   -H "Authorization: Bearer {token}"
 ```
 ## Encryption mode
