@@ -16,7 +16,7 @@ You'll need to authenticate your requests to access any of the endpoints in the 
 Both authentication methods are supplied via an `Authorization` header, prefixed by the `Bearer` keyword:
 
 ```bash {{ title: 'Example request' }}
-curl https://api.phase.dev/v1/secrets?app_id=<app_id>&env=development \
+curl https://api.phase.dev/v1/secrets/?app_id=<app_id>&env=development \
   -H "Authorization: Bearer {token}"
 ```
 
