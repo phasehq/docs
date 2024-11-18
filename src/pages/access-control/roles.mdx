@@ -82,6 +82,68 @@ Admin users have access to most resources and permissions, and have global acces
 
 The `Owner` and `Admin` roles have global access. Learn more about global access [here](/access-control#global-access).
 
+### Manager
+
+Management users with broad access to environments, secrets, and service accounts at the organization level. Requires explicit access to Apps and Environments.
+
+#### Organization-level permissions:
+
+| Resource | Access | Read | Create | Update | Delete |
+|----------|--------|------|--------|--------|--------|
+| **Organisation** | Read access | ✅ | ❌ | ❌ | ❌ |
+| **Billing** | No access | ❌ | ❌ | ❌ | ❌ |
+| **Apps** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **Members** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **Service Accounts** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **Service Account Tokens** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **Roles** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **Integration Credentials** | Full access | ✅ | ✅ | ✅ | ✅ |
+
+#### App-level permissions:
+
+| Resource | Access | Read | Create | Update | Delete |
+|----------|--------|------|--------|--------|--------|
+| **Environments** | Custom access | ✅ | ✅ | ✅ | ❌ |
+| **Secrets** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **Lockbox** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **Logs** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **Tokens (Legacy)** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **Members** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **Service Accounts** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **Integrations** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **Encryption Mode** | Custom access | ✅ | ❌ | ✅ | ❌ |
+
+### Service
+
+Default role for Service Accounts, providing programmatic access to secrets without access to other organization or app resources.
+
+#### Organization-level permissions:
+
+| Resource | Access | Read | Create | Update | Delete |
+|----------|--------|------|--------|--------|--------|
+| **Organisation** | No access | ❌ | ❌ | ❌ | ❌ |
+| **Billing** | No access | ❌ | ❌ | ❌ | ❌ |
+| **Apps** | Custom access | ✅ | ✅ | ✅ | ❌ |
+| **Members** | Read access | ✅ | ❌ | ❌ | ❌ |
+| **Service Accounts** | Read access | ✅ | ❌ | ❌ | ❌ |
+| **Service Account Tokens** | Read access | ✅ | ❌ | ❌ | ❌ |
+| **Roles** | Read access | ✅ | ❌ | ❌ | ❌ |
+| **Integration Credentials** | Read access | ✅ | ❌ | ❌ | ❌ |
+
+#### App-level permissions:
+
+| Resource | Access | Read | Create | Update | Delete |
+|----------|--------|------|--------|--------|--------|
+| **Environments** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **Secrets** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **Lockbox** | No access | ❌ | ❌ | ❌ | ❌ |
+| **Logs** | No access | ❌ | ❌ | ❌ | ❌ |
+| **Tokens (Legacy)** | No access | ❌ | ❌ | ❌ | ❌ |
+| **Members** | Read access | ✅ | ❌ | ❌ | ❌ |
+| **Service Accounts** | Read access | ✅ | ❌ | ❌ | ❌ |
+| **Integrations** | Read access | ✅ | ❌ | ❌ | ❌ |
+| **Encryption Mode** | Read access | ✅ | ❌ | ❌ | ❌ |
+
 ### Developer
 
 Developers have limited permissions at the organization level and must be given explicit access to Apps and Environments.
