@@ -20,30 +20,17 @@ Phase's access control system is based on roles that define policies governing t
 
 ## User Authentication
 
-User authentication in Phase is designed for seamless and secure access for human users. Phase supports various Single Sign-On (SSO) providers, allowing organizations to leverage their existing identity management systems. Currently, Phase offers OAuth-based authentication with Google, GitHub, GitLab.com, and GitLab self-managed instances. Users can easily log into Phase using their credentials from supported SSO providers.
+User authentication in Phase is designed for seamless and secure access for human users. Phase supports various Single Sign-On (SSO) providers, allowing organizations to leverage their existing identity management systems.
 
-We plan to extend support to SAML (Security Assertion Markup Language) and OIDC (OpenID Connect), which will allow Phase to integrate with a wider range of identity providers, including enterprise-grade identity management systems. Furthermore, integration with SCIM (System for Cross-domain Identity Management) will enable automatic synchronization of user directories with Phase, allowing for automatic provisioning and deprovisioning of user accounts, real-time updates of user attributes and group memberships, all based on changes in the organization's primary identity system.
-
-<UserAuthProviders />
+[Read more](/access-control/authentication#user-authentication) about how user accounts can authenticate with the Phase platform.
 
 ## Service Accounts
 
-Programmatic authentication in Phase is facilitated through Service Accounts. A Service Account is a special type of account that represents non-human users, such as applications, automation processes, or CI/CD pipelines, that need to interact with Phase programmatically through the API, SDK, or CLI.
+Programmatic access to secrets in Phase is facilitated by Service Accounts. A Service Account is a special type of account that represents non-human users, such as applications, automation processes, or CI/CD pipelines, that need to interact with Phase programmatically through the API, SDK, or CLI.
 
-Service Accounts in Phase provide a secure way to manage programmatic access to your resources. Each Service Account:
+[Read more](/access-control/service-accounts) about how service accounts work.  
 
-- Can be assigned specific roles and permissions through Phase's RBAC system
-- Supports fine-grained access control policies at both organization and application levels
-- Can be authenticated using Phase's native authentication or through supported third-party authentication providers  
 
-When using third-party authentication systems for programmatic access to Phase, you delegate the authentication of a particular accessor to a third party. This delegation serves as an assertion to obtain a Phase Service Token with the correct set of permissions, which can then be used to access secrets. The process works as follows:
-
-1. A service (accessor) attempting to access secrets stored in Phase uses a third-party authentication token (e.g., a JWT service account token for Kubernetes or an AWS IAM v4 Signature for AWS).
-2. The accessor sends this token to Phase.
-3. Phase internally validates the token or signature using the third-party authentication system's APIs.
-4. Phase validates the identity of the accessor and returns a Phase Service Token in accordance with the RBAC policy.
-5. The accessor uses the Phase Service Token to access secrets in Phase until expiry.
-6. Upon expiry, the process can and will be repeated to gain access to a fresh Phase Service Token.
 
 ## Access Control - Key Concepts
 
