@@ -114,13 +114,13 @@ Env(s) required by the following containers:
 
 <Properties>
   <Property name="NEXTAUTH_SECRET" type="string">
-    A random 32 byte hex string. Can be generated with `openssl rand -hex 32`
+    A random 32 byte hex string. Can be generated with `openssl rand -hex 32`. Required by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
   </Property>
   <Property name="SECRET_KEY" type="string">
-    A random 32 byte hex string. Can be generated with `openssl rand -hex 32`
+    A random 32 byte hex string. Can be generated with `openssl rand -hex 32`. Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
   <Property name="SERVER_SECRET" type="string">
-    A random 32 byte hex string. Can be generated with `openssl rand -hex 32`
+    A random 32 byte hex string. Can be generated with `openssl rand -hex 32`. Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
 </Properties>
 
