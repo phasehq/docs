@@ -130,10 +130,10 @@ Env(s) required by the following containers:
 
 <Properties>
   <Property name="HOST" type="string">
-    The hostname where you would like to run Phase. Defaults to `localhost`
+    The hostname where you would like to run Phase. Defaults to `localhost`. Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend), [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
   <Property name="HTTP_PROTOCOL" type="string">
-    The url scheme for your host. Defaults to `https://`
+    The url scheme for your host. Defaults to `https://`. Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) and [`backend`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
   <Property name="USER_EMAIL_DOMAIN_WHITELIST" type="string (Optional)">
     A comma-separated list of domains to restrict logins from. Commented out by default.
@@ -142,6 +142,7 @@ Env(s) required by the following containers:
     USER_EMAIL_DOMAIN_WHITELIST=mydomain.com,subdomain.mydomain.com
     ```
     will only allow users with emails `@mydomain.com` or `@subdomain.mydomain.com` to login.
+    Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
   </Property>
 </Properties>
 
