@@ -186,13 +186,19 @@ Env(s) required by the following containers:
 <Properties>
   <Property name="REDIS_HOST" type="string">
     The Redis server hostname. Defaults to `redis`.
+
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
   <Property name="REDIS_PORT" type="number">
     The Redis server port. Defaults to `6379`.
+
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
   <Property name="REDIS_PASSWORD" type="string">
     The password for the Redis server. It is recommended to set a strong
     password if Redis is accessible externally.
+
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
 </Properties>
 
