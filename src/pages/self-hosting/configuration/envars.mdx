@@ -209,15 +209,23 @@ Env(s) required by the following containers:
 <Properties>
   <Property name="SMTP_SERVER" type="string">
     Your SMTP gateway host. eg. my-email-gatwway-smtp.eu-central-1.amazonaws.com
+
+    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
   <Property name="SMTP_USERNAME" type="string">
     Your SMTP email gateway username.
+
+    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
   <Property name="SMTP_PASSWORD" type="string">
     Your SMTP email gateway password.
+
+    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
   <Property name="DEFAULT_FROM_EMAIL" type="string">
     Email address from which you want to dispatch emails.
+
+    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
 </Properties>
 
