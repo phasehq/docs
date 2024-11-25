@@ -44,6 +44,10 @@ After setting up your credentials on the Google Cloud console, set the Client ID
   </Property>
 </Properties>
 
+Env(s) required by the following containers:
+- [`frontend`](https://hub.docker.com/r/phasehq/frontend)
+- [`backend`](https://hub.docker.com/r/phasehq/backend)
+
 ### GitHub SSO
 
 You can find instructions for setting up SSO with a GitHub OAuth App [here](/access-control/authentication/oauth-sso#git-hub).
@@ -65,6 +69,10 @@ After setting up your App on GitHub, set the Client ID and Client secret values 
     GitHub OAuth Client secret
   </Property>
 </Properties>
+
+Env(s) required by the following containers:
+- [`frontend`](https://hub.docker.com/r/phasehq/frontend)
+- [`backend`](https://hub.docker.com/r/phasehq/backend)
 
 ### GitLab SSO
 
@@ -96,19 +104,23 @@ If you are using a self-hosted GitLab instance, you can optionally set the `GITL
   </Property>
 </Properties>
 
+Env(s) required by the following containers:
+- [`frontend`](https://hub.docker.com/r/phasehq/frontend)
+- [`backend`](https://hub.docker.com/r/phasehq/backend)
+
 ---
 
 ## Application secrets
 
 <Properties>
   <Property name="NEXTAUTH_SECRET" type="string">
-    A random 32 byte hex string. Can be generated with `openssl rand -hex 32`
+    A random 32 byte hex string. Can be generated with `openssl rand -hex 32`. Required by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
   </Property>
   <Property name="SECRET_KEY" type="string">
-    A random 32 byte hex string. Can be generated with `openssl rand -hex 32`
+    A random 32 byte hex string. Can be generated with `openssl rand -hex 32`. Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
   <Property name="SERVER_SECRET" type="string">
-    A random 32 byte hex string. Can be generated with `openssl rand -hex 32`
+    A random 32 byte hex string. Can be generated with `openssl rand -hex 32`. Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
 </Properties>
 
@@ -118,10 +130,10 @@ If you are using a self-hosted GitLab instance, you can optionally set the `GITL
 
 <Properties>
   <Property name="HOST" type="string">
-    The hostname where you would like to run Phase. Defaults to `localhost`
+    The hostname where you would like to run Phase. Defaults to `localhost`. Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend), [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
   <Property name="HTTP_PROTOCOL" type="string">
-    The url scheme for your host. Defaults to `https://`
+    The url scheme for your host. Defaults to `https://`. Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) and [`backend`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
   <Property name="USER_EMAIL_DOMAIN_WHITELIST" type="string (Optional)">
     A comma-separated list of domains to restrict logins from. Commented out by default.
@@ -130,6 +142,7 @@ If you are using a self-hosted GitLab instance, you can optionally set the `GITL
     USER_EMAIL_DOMAIN_WHITELIST=mydomain.com,subdomain.mydomain.com
     ```
     will only allow users with emails `@mydomain.com` or `@subdomain.mydomain.com` to login.
+    Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
   </Property>
 </Properties>
 
@@ -139,20 +152,30 @@ If you are using a self-hosted GitLab instance, you can optionally set the `GITL
 
 <Properties>
   <Property name="DATABASE_HOST" type="string">
-    The database hostname. Defaults to `postgres`.
+    The database hostname. Defaults to `postgres`. 
+    
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
   <Property name="DATABASE_NAME" type="string">
-    Defaults to `postgres-db-name`
+    Defaults to `postgres-db-name`. 
+    
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
   <Property name="DATABASE_USER" type="string">
-    Defaults to `postgres-user`
+    Defaults to `postgres-user`. 
+    
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
   <Property name="DATABASE_PASSWORD" type="string">
     A database password is provided by default, but it is **highly** recommended
-    to change this value.
+    to change this value. 
+    
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
   <Property name="DATABASE_PORT" type="number">
-    Defaults to `5432`
+    Defaults to `5432`.
+
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
 </Properties>
 
@@ -163,13 +186,19 @@ If you are using a self-hosted GitLab instance, you can optionally set the `GITL
 <Properties>
   <Property name="REDIS_HOST" type="string">
     The Redis server hostname. Defaults to `redis`.
+
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
   <Property name="REDIS_PORT" type="number">
     The Redis server port. Defaults to `6379`.
+
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
   <Property name="REDIS_PASSWORD" type="string">
     The password for the Redis server. It is recommended to set a strong
     password if Redis is accessible externally.
+
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
 </Properties>
 
@@ -180,15 +209,23 @@ If you are using a self-hosted GitLab instance, you can optionally set the `GITL
 <Properties>
   <Property name="SMTP_SERVER" type="string">
     Your SMTP gateway host. eg. my-email-gatwway-smtp.eu-central-1.amazonaws.com
+
+    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
   <Property name="SMTP_USERNAME" type="string">
     Your SMTP email gateway username.
+
+    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
   <Property name="SMTP_PASSWORD" type="string">
     Your SMTP email gateway password.
+
+    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
   <Property name="DEFAULT_FROM_EMAIL" type="string">
     Email address from which you want to dispatch emails.
+
+    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
 </Properties>
 
@@ -198,17 +235,26 @@ If you are using a self-hosted GitLab instance, you can optionally set the `GITL
 
 ### GitHub integration:
 
-1. Create a new GitHub Oauth application (This is different from the one you may already have set up for GitHub SSO)
+1. Create a new GitHub Oauth application. Follow instructions [here](/access-control/authentication/oauth-sso#git-hub). (This is different from the one you may already have set up for GitHub SSO)
 2. Set the Authorization callback URL to: `https://[**YOUR_DOMAIN**]/service/oauth/github/callback`
 3. Hit Register application
 4. Supply the following secrets to your Phase Console instance
 
 <Properties>
+  <Property name="NEXT_PUBLIC_GITHUB_INTEGRATION_CLIENT_ID" type="string">
+    GitHub OAuth application Client ID
+
+    Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
+  </Property>
   <Property name="GITHUB_INTEGRATION_CLIENT_ID" type="string">
     GitHub OAuth application Client ID
+
+    Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend), [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
   <Property name="GITHUB_INTEGRATION_CLIENT_SECRET" type="string">
     GitHub OAuth application Client Secret
+
+    Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend), [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
 </Properties>
 
@@ -228,9 +274,15 @@ If you are using a self-hosted GitLab instance, you can optionally set the `GITL
   </Property>
 </Properties>
 
+Env(s) required by the following containers:
+- [`frontend`](https://hub.docker.com/r/phasehq/frontend)
+- [`backend`](https://hub.docker.com/r/phasehq/backend)
+- [`worker`](https://hub.docker.com/r/phasehq/backend)
+
 ---
 
 ## Additional Environment Variables 
+
 These variables are not required if using the suggested [docker-compose template](https://raw.githubusercontent.com/phasehq/console/main/docker-compose.yml). However if you are deploying the Phase Console using a custom docker-compose configuration or without docker-compose, make sure the following variables are correctly set. 
 
 <Properties>
@@ -238,45 +290,63 @@ These variables are not required if using the suggested [docker-compose template
     The base console URL for NextAuth. References `${HTTP_PROTOCOL}${HOST}`
     
     Example: `https://[**YOUR_DOMAIN**]`
+
+    Required by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
   </Property>
   <Property name="OAUTH_REDIRECT_URI" type="string">
     The base console URI, used for OAuth redirection from backend to frontend. References `${HTTP_PROTOCOL}${HOST}`
     
     Example: `https://[**YOUR_DOMAIN**]`
+
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
   <Property name="BACKEND_API_BASE" type="string">
     The base URL for the backend API. This will be accessed privately by the Phase frontend container. You may use a private, non publicly accessible url like `http://backend:8000` to avoid over the internet roundtrip for performance reasons. References `${HTTP_PROTOCOL}${HOST}/service`
     
     Example: `https://[**YOUR_DOMAIN**]/service`
+
+    Required by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
   </Property>
   <Property name="NEXT_PUBLIC_BACKEND_API_BASE" type="string">
     The public base URL for the backend API. This URL will be accessed publicly by the browser running Phase Console. References `${HTTP_PROTOCOL}${HOST}/service`
     
     Example: `https://[**YOUR_DOMAIN**]/service`
+
+    Required by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
   </Property>
   <Property name="NEXT_PUBLIC_NEXTAUTH_PROVIDERS" type="string">
     Comma-separated list of NextAuth providers. References `${SSO_PROVIDERS}`
     
     Example: `google,github,gitlab`
+
+    Required by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
   </Property>
   <Property name="ALLOWED_HOSTS" type="string">
     Comma-separated list of allowed hosts used the backend. Default: `${HOST},backend`
     
     Example: `[**YOUR_DOMAIN**],backend`
+
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
   <Property name="ALLOWED_ORIGINS" type="string">
     Comma-separated list of allowed origins used by the Phase backend. References `${HTTP_PROTOCOL}${HOST}`
     
     Example: `https://[**YOUR_DOMAIN**]`
+
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
   <Property name="SESSION_COOKIE_DOMAIN" type="string">
     Domain for the session cookie used by the Phase backend. References `${HOST}`
     
-    Example: `[**YOUR_DOMAIN**]`
+    Example: `[**YOUR_DOMAIN**]` (example.com)
+
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
   <Property name="NEXT_TELEMETRY_DISABLED" type="string">
     Disable Next.js telemetry. Set to `1` to disable.
     
     Example: `1`
+
+    Required by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
   </Property>
 </Properties>
