@@ -152,20 +152,30 @@ Env(s) required by the following containers:
 
 <Properties>
   <Property name="DATABASE_HOST" type="string">
-    The database hostname. Defaults to `postgres`.
+    The database hostname. Defaults to `postgres`. 
+    
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
   <Property name="DATABASE_NAME" type="string">
-    Defaults to `postgres-db-name`
+    Defaults to `postgres-db-name`. 
+    
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
   <Property name="DATABASE_USER" type="string">
-    Defaults to `postgres-user`
+    Defaults to `postgres-user`. 
+    
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
   <Property name="DATABASE_PASSWORD" type="string">
     A database password is provided by default, but it is **highly** recommended
-    to change this value.
+    to change this value. 
+    
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
   <Property name="DATABASE_PORT" type="number">
-    Defaults to `5432`
+    Defaults to `5432`.
+
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
 </Properties>
 
