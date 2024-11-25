@@ -44,6 +44,10 @@ After setting up your credentials on the Google Cloud console, set the Client ID
   </Property>
 </Properties>
 
+Env(s) required by the following containers:
+- [`frontend`](https://hub.docker.com/r/phasehq/frontend)
+- [`backend`](https://hub.docker.com/r/phasehq/backend)
+
 ### GitHub SSO
 
 You can find instructions for setting up SSO with a GitHub OAuth App [here](/access-control/authentication/oauth-sso#git-hub).
@@ -65,6 +69,10 @@ After setting up your App on GitHub, set the Client ID and Client secret values 
     GitHub OAuth Client secret
   </Property>
 </Properties>
+
+Env(s) required by the following containers:
+- [`frontend`](https://hub.docker.com/r/phasehq/frontend)
+- [`backend`](https://hub.docker.com/r/phasehq/backend)
 
 ### GitLab SSO
 
@@ -95,6 +103,10 @@ If you are using a self-hosted GitLab instance, you can optionally set the `GITL
     GitLab instance host url
   </Property>
 </Properties>
+
+Env(s) required by the following containers:
+- [`frontend`](https://hub.docker.com/r/phasehq/frontend)
+- [`backend`](https://hub.docker.com/r/phasehq/backend)
 
 ---
 
