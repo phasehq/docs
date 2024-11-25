@@ -241,6 +241,11 @@ Env(s) required by the following containers:
 4. Supply the following secrets to your Phase Console instance
 
 <Properties>
+  <Property name="NEXT_PUBLIC_GITHUB_INTEGRATION_CLIENT_ID" type="string">
+    GitHub OAuth application Client ID
+
+    Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
+  </Property>
   <Property name="GITHUB_INTEGRATION_CLIENT_ID" type="string">
     GitHub OAuth application Client ID
   </Property>
