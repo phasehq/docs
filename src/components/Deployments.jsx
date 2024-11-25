@@ -10,6 +10,7 @@ import logoKubernetes from '@/images/logos/kubernetes.svg'
 import logoGCP from '@/images/logos/gcp.svg'
 import logoAzure from '@/images/logos/azure.svg'
 import logoRaspberryPi from '@/images/logos/raspberry.svg'
+import logoRailway from '@/images/logos/railway.svg'
 
 const deployment_methods = [
   {
@@ -55,6 +56,13 @@ const deployment_methods = [
     name: 'Microsoft Azure',
     description: 'Deploy the Phase Console on an Azure Virtual Machine and Azure Database for PostgreSQL.',
     logo: logoAzure,
+    available: true,
+  },
+  {
+    href: '/self-hosting/railway',
+    name: 'Railway',
+    description: 'Deploy the Phase Console on an Azure Virtual Machine and Azure Database for PostgreSQL.',
+    logo: logoRailway,
     available: true,
   },
   {
