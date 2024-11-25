@@ -349,4 +349,11 @@ These variables are not required if using the suggested [docker-compose template
 
     Required by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
   </Property>
+    <Property name="PHASE_LICENSE_OFFLINE" type="string">
+    The environment variable Phase license for self-hosted deployments with egress restrictions.
+    
+    Example: `phase_license:v1:...`
+
+    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  </Property>
 </Properties>
