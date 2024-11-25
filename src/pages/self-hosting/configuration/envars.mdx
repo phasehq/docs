@@ -282,6 +282,7 @@ Env(s) required by the following containers:
 ---
 
 ## Additional Environment Variables 
+
 These variables are not required if using the suggested [docker-compose template](https://raw.githubusercontent.com/phasehq/console/main/docker-compose.yml). However if you are deploying the Phase Console using a custom docker-compose configuration or without docker-compose, make sure the following variables are correctly set. 
 
 <Properties>
@@ -289,45 +290,63 @@ These variables are not required if using the suggested [docker-compose template
     The base console URL for NextAuth. References `${HTTP_PROTOCOL}${HOST}`
     
     Example: `https://[**YOUR_DOMAIN**]`
+
+    Required by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
   </Property>
   <Property name="OAUTH_REDIRECT_URI" type="string">
     The base console URI, used for OAuth redirection from backend to frontend. References `${HTTP_PROTOCOL}${HOST}`
     
     Example: `https://[**YOUR_DOMAIN**]`
+
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
   <Property name="BACKEND_API_BASE" type="string">
     The base URL for the backend API. This will be accessed privately by the Phase frontend container. You may use a private, non publicly accessible url like `http://backend:8000` to avoid over the internet roundtrip for performance reasons. References `${HTTP_PROTOCOL}${HOST}/service`
     
     Example: `https://[**YOUR_DOMAIN**]/service`
+
+    Required by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
   </Property>
   <Property name="NEXT_PUBLIC_BACKEND_API_BASE" type="string">
     The public base URL for the backend API. This URL will be accessed publicly by the browser running Phase Console. References `${HTTP_PROTOCOL}${HOST}/service`
     
     Example: `https://[**YOUR_DOMAIN**]/service`
+
+    Required by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
   </Property>
   <Property name="NEXT_PUBLIC_NEXTAUTH_PROVIDERS" type="string">
     Comma-separated list of NextAuth providers. References `${SSO_PROVIDERS}`
     
     Example: `google,github,gitlab`
+
+    Required by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
   </Property>
   <Property name="ALLOWED_HOSTS" type="string">
     Comma-separated list of allowed hosts used the backend. Default: `${HOST},backend`
     
     Example: `[**YOUR_DOMAIN**],backend`
+
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
   <Property name="ALLOWED_ORIGINS" type="string">
     Comma-separated list of allowed origins used by the Phase backend. References `${HTTP_PROTOCOL}${HOST}`
     
     Example: `https://[**YOUR_DOMAIN**]`
+
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
   <Property name="SESSION_COOKIE_DOMAIN" type="string">
     Domain for the session cookie used by the Phase backend. References `${HOST}`
     
-    Example: `[**YOUR_DOMAIN**]`
+    Example: `[**YOUR_DOMAIN**]` (example.com)
+
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
   <Property name="NEXT_TELEMETRY_DISABLED" type="string">
     Disable Next.js telemetry. Set to `1` to disable.
     
     Example: `1`
+
+    Required by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
   </Property>
 </Properties>
