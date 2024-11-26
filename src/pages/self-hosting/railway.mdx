@@ -1,0 +1,163 @@
+import { Tag } from '@/components/Tag'
+
+export const description =
+  'Deploy the Phase Console Railway template.'
+
+<Tag variant="small">SELF-HOSTING</Tag>
+
+
+# Railway
+
+Deploy the Phase Console Railway template.
+
+### Prerequisites:
+- A Railway account on the [Hobby](https://railway.app/pricing) tier or better
+- A [Google](/access-control/authentication/oauth-sso#google), [GitHub](/access-control/authentication/oauth-sso#git-hub) or [GitLab](/access-control/authentication/oauth-sso#git-lab) Oauth SSO for authentication
+
+### Known issues:
+
+- **Nginx routing issues**: Redeployment of services (frontend, backend, worker) especially due to configuration changes (environment variables, settings, adding custom domains etc.) can cause the nginx routing to time out due to IPv6 changes after deployment. If you every face such issues, please redeploy the `railway-nginx` service. Please make sure to redeploy the nginx service **last** after all changes other services have been finalized and deployed.
+- **Secret references**: To make configuration easier the Phase Console Railway deployment template makes use of numerous secret and variable references. These references are resolved only when a service is deployed for the first time. Future configuration changes to other services may not reflect immediately, but until a redeployment. Please keep this in mind in conjunction with the point.
+
+As an example the Phase backend service is referencing an environment variables from the `railway-nginx` service, if a change occours in the referenced value `${{railway-nginx.RAILWAY_PUBLIC_DOMAIN}}`, let's say because a new custom domain was added the backend service needs to be re-deployed: 
+```fish
+ALLOWED_HOSTS=healthcheck.railway.app,${{RAILWAY_PRIVATE_DOMAIN}},${{railway-nginx.RAILWAY_PUBLIC_DOMAIN}}
+```
+
+## Installation Steps
+
+### 1. Configure the Railway deployment template
+
+First, go to the [Phase Console](https://railway.app/template/FgdM-Z?referralCode=rG9hj-) Railway deployment template page and click **Deploy Now**.
+
+![Railway template click deploy now button](/assets/images/self-hosting/railway/configure/1-railway-template-deploy-now.png)
+
+Click **Configure** on each of the service containers listed, fill out the required Environment variables and click **Save Config**.
+
+![Configure environment variables](/assets/images/self-hosting/railway/configure/2-railway-template-services-configure.png)
+
+Notes:
+- Please read the descriptions for each Environment variables as they contain instructions on how to create / generate them
+- For additional safety and consistency we have made the decision not to autogenerate secrets using the Railway secret function syntax, you will need to generate them manually on your using something like `openssl` like so: `openssl rand -hex 32`
+- You may needs to pass the same Environment variables to multiple services
+- You will have to set-up a Google, GitHub or GitLab OAuth Application and pass their credentials as Environment variables to relevant services. You may choose to do this later after, setting up a custom domain
+
+To see a complete list of all secrets and environment variables and their descriptions, please see the self-hosting [env vars](/self-hosting/configuration/envars) guide.
+
+Optionally, you may also click the **Pre-Configured Environment Variables** drop down under each of the services to simply view or override the pre-set environment variables and secrets to best suite your needs.
+
+![Configure pre-set environment variables](/assets/images/self-hosting/railway/configure/3-railway-tempalte-preset-env.png)
+
+Once done, click **Deploy**.
+
+![Deploy railway template](/assets/images/self-hosting/railway/configure/4-deploy-railway-template.png)
+
+Please wait for the train to arrive.
+
+![Deploying](/assets/images/self-hosting/railway/configure/5-deploying-railway-template.png)
+
+### 2. Deploying the template
+
+Next, we need to set-up a custom domain. Click on the `railway-nginx` service.
+
+![Click railway nginx](/assets/images/self-hosting/railway/deploy/1-click-railway-nginx.png)
+
+Select the **Settings** tab.
+
+![Select settings](/assets/images/self-hosting/railway/deploy/2-select-settings.png)
+
+Scroll down and click **+ Custom Domain** in the Networking section.
+
+![Set-up a custom domain](/assets/images/self-hosting/railway/deploy/3-set-up-custom-domain.png)
+
+Enter your Custom Domain, '... the port your app is listening on' as `80` and click **Add Domain**
+
+![Custom domain and port](/assets/images/self-hosting/railway/deploy/4-configure-custom-domaion.png)
+
+Head on over to your DNS registrar or provider and set up a CNAME as described in the popup and click **Dismiss**. You refer to [Railway Docs](https://docs.railway.com/deploy/exposing-your-app#add-a-custom-domain) for additional context. 
+
+If you are using Cloudflare, please make sure to turn off Proxy status by clicking the orange cloud to avoid double proxying as Railway also uses Cloudflare for their own routing.
+
+![CNAME setup instructions](/assets/images/self-hosting/railway/deploy/5-domain-cname-instructions.png)
+
+This may take up a some time as the DNS record changes have to propagate across the internet for Railway to verify them and issue a valid TLS certificate for your service.
+
+To verify this, please go to the **Deployments** tab and click on the custom domain. This should open the Phase Console in a new tab.
+
+![Custom domain](/assets/images/self-hosting/railway/deploy/6-click-custom-domain.png)
+
+🎉
+
+![Phase Console](/assets/images/self-hosting/railway/deploy/7-phase-console-deployed.png)
+
+Job is not done yet, we still need to configure the OAuth credentials in the `frontend` and `backend` services.
+
+Click on the `frontend` and `backend` services, select **Variables**, click **+ New Variables**, add your OAuth auth provider's CLIENT_ID and CLIENT_SECRET and click **Add**.
+
+Here's what it looks like for the `frontend`:
+![Frontend oauth variables](/assets/images/self-hosting/railway/deploy/8-oauth-credntials-backend.png)
+
+For the `backend`:
+![Backend oauth variables](/assets/images/self-hosting/railway/deploy/9-oauth-credntials-backend.png)
+
+Once done, click **Deploy** on the action bar popped up in the top left.
+
+![Re-deploy services after variable change](/assets/images/self-hosting/railway/deploy/10-deploy-services-after-chnages.png)
+
+After deployment of these changes we need to redeploy our `railway-nginx` service. See [known issues](/self-hosting/railway#known-issues).
+
+To do so, click on the `railway-nginx` service.
+
+![Click railway nginx](/assets/images/self-hosting/railway/deploy/1-click-railway-nginx.png)
+
+From the Deployments tab see the latest **Active** deployment in green, click on the options button right next to View logs and click **Redeploy**.
+
+![Redeploy railway-nginx](/assets/images/self-hosting/railway/deploy/11-select-redeploy.png)
+
+Confirm the re-deployment by clicking **Redeploy**.
+
+![Confirm railway-nginx redeployment](/assets/images/self-hosting/railway/deploy/12-confirm-redeploy.png)
+
+
+## Troubleshooting
+
+Hostname issues after adding custom domains:
+
+Below is an example of a OAuth redirection error when using the GitHub SSO (but not exclusive to GitHub) even when correctly configured happens when the Railway environment variable referenced by the Phase `backend` service from the `railway-nginx` server is outdated after adding a new custom domain and needs to updated by re-deploying.
+
+![Oauth redirection uri error](/assets/images/self-hosting/railway/troubleshooting/1-github-ouath-redirection-error.png)
+
+Similar issues can also popup in other places like during login. If you check the browser console, you may see several errors indicating that a request to a Railway domain has been blocked by the Content Security Policy (CSP). This is a solid indication that one of our services (frontend or backend) are consuming the incorrect or outdated Railway referenced Environment variable, this can be sorted by verifying the referenced variables in the each of the services Environment Variable tab and re-deploying them followed the `railway-nginx` service.
+
+### Redeploying services
+
+You may redeploy a service by clicking on the services you want to re-deploy.
+
+![Click railway nginx](/assets/images/self-hosting/railway/deploy/1-click-railway-nginx.png)
+
+From the Deployments tab see the latest **Active** deployment in green, click on the options button right next to View logs and click **Redeploy**.
+
+![Redeploy railway-nginx](/assets/images/self-hosting/railway/deploy/11-select-redeploy.png)
+
+Confirm the re-deployment by clicking **Redeploy**.
+
+![Confirm railway-nginx redeployment](/assets/images/self-hosting/railway/deploy/12-confirm-redeploy.png)
+
+
+### Viewing logs
+
+To debug issues better you may view logs by clicking on the services you want to see logs from. 
+
+![Click railway nginx](/assets/images/self-hosting/railway/deploy/1-click-railway-nginx.png)
+
+From the Deployments click on the green **View logs** button. 
+
+![View logs from latest deployment](/assets/images/self-hosting/railway/troubleshooting/1-view-logs.png)
+
+Select **Deploy logs** which show you the application level logs from your service.
+
+![View deploy logs from a service](/assets/images/self-hosting/railway/troubleshooting/2-view-deploy-logs.png)
+
+If your service is publicly exposed like in this example the `railway-nginx` service you can click on the **HTTP Logs** tab.
+
+![View http logs from a service](/assets/images/self-hosting/railway/troubleshooting/3-view-http-logs.png)
