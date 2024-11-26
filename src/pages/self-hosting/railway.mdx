@@ -16,7 +16,7 @@ Deploy the Phase Console Railway template.
 
 ## Known Issues
 
-- **Nginx routing issues**: Redeployment of services (frontend, backend, worker), especially due to configuration changes (environment variables, settings, adding custom domains, etc.), can cause the nginx routing to time out due to IPv6 changes after deployment. If you encounter such issues, please redeploy the `frontend`, `backend` and `railway-nginx` services respectively. Make sure to redeploy the nginx service **last** after all other services have been finalized and re-deployed.
+- **Nginx routing issues**: Redeployment of services (frontend, backend, worker), especially due to configuration changes (environment variables, settings, adding custom domains, etc.), can cause the Nginx routing to time out due to IPv6 changes after deployment. If you encounter such issues, please redeploy the `frontend`, `backend` and `railway-nginx` services respectively. Make sure to redeploy the Nginx service **last** after all other services have been finalized and re-deployed.
 
 - **Secret references**: To make configuration easier, the Phase Console Railway deployment template uses numerous secret and variable references. These references are resolved only during a service deployment. Future configuration changes to other services may not reflect immediately until a redeployment is triggered (as mentioned in the previous point).
 
