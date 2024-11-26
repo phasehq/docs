@@ -96,7 +96,7 @@ Note: If using Cloudflare, disable the Proxy status (orange cloud icon) to avoid
    - Select **Variables**
    - Click **+ New Variables**
    - Add your OAuth provider's `CLIENT_ID` and `CLIENT_SECRET`
-   - You may need to set `NEXT_PUBLIC_NEXTAUTH_PROVIDERS` in the `frontend` service if not done previously.
+   - You may need to set `NEXT_PUBLIC_NEXTAUTH_PROVIDERS` in the `frontend` service if not done previously
    - Click **Add**
 
 Here's what it looks like for the `frontend`:
@@ -146,7 +146,7 @@ curl https://demo.railway.phase.dev/service/health/
 
 ### OAuth Redirection Issues
 
-Below is an example of an OAuth redirection error when using GitHub SSO (though not exclusive to GitHub). This can occur even with correct OAuth configuration if the Railway environment variables referenced by the Phase `backend` service from the `railway-nginx` server are outdated after adding a new custom domain. A easy way to spot this in by going through the OAuth redirection URL in your browser address bar and looking for the `redirect_url=...`. In the example below it's set to the Railway provided domain for the `railway-nginx` service and not the custom domain we have set previously.
+Below is an example of an OAuth redirection error when using GitHub SSO (though not exclusive to GitHub). This can occur even with correct OAuth configuration if the Railway environment variables referenced by the Phase `backend` service from the `railway-nginx` server are outdated after adding a new custom domain. An easy way to spot this is by going through the OAuth redirection URL in your browser address bar and looking for the `redirect_url=...`. In the example below it's set to the Railway provided domain for the `railway-nginx` service and not the custom domain we have set previously.
 
 ![Oauth redirection uri error](/assets/images/self-hosting/railway/troubleshooting/1-github-ouath-redirection-error.png)
 
