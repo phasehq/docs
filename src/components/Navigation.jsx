@@ -347,6 +347,7 @@ export const navigation = [
       { title: 'AWS', href: '/self-hosting/aws' },
       { title: 'Google Cloud Platform', href: '/self-hosting/gcp' },
       { title: 'Azure', href: '/self-hosting/azure' },
+      { title: 'Railway', href: '/self-hosting/railway' },
       { title: 'DigitalOcean', href: '/self-hosting/digitalocean' },
       { title: 'RaspberryPi', href: '/self-hosting/raspberrypi' },
       {
