@@ -61,7 +61,7 @@ const deployment_methods = [
   {
     href: '/self-hosting/railway',
     name: 'Railway',
-    description: 'Deploy the Phase Console on an Azure Virtual Machine and Azure Database for PostgreSQL.',
+    description: 'Deploy the Phase Console on Railway.',
     logo: logoRailway,
     available: true,
   },
