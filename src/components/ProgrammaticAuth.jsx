@@ -5,13 +5,13 @@ import { Heading } from '@/components/Heading'
 
 const resources = [
   {
-    href: '/access-control/service-accounts#create-a-new-service-account-token',
+    href: '/access-control/authentication/tokens#service-account-tokens',
     name: 'Service Account Token',
     description: 
       'Access tokens that belong to Service Accounts. These tokens inherit fine-grained access control and role-based permissions from service accounts, making them ideal for automated processes and system integrations.',
   },
   {
-    href: '/access-control/authentication/tokens',
+    href: '/access-control/authentication/tokens#personal-access-tokens-pats',
     name: 'Personal Access Token (PAT)',
     description: 
       'Access tokens that belong to human users, inheriting their permissions and access levels. Ideal for development workflows, testing, and accessing personal secret overrides. These tokens provide the same access as the user who created them.',
