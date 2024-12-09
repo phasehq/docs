@@ -1,47 +1,48 @@
 import { Tag } from '@/components/Tag'
-export const description = 'This guide will explain how Apps work in Phase'
+export const description = 'This guide explains how Apps work in Phase'
 
 <Tag variant="small">CONSOLE</Tag>
 
 # Apps
 
-A Phase App is used to manage [Secrets](/console/secrets) for a single project, repo or application. An App can contain multiple [Environments](/console/environments). Users can be added or removed from an App to manage access.
+A Phase App is used to manage [Secrets](/console/secrets) for a single project, repository, or application. An App can contain multiple [Environments](/console/environments). Users can be added to or removed from an App to manage access.
 
 ## Create an App
 
-Create an App by clicking on the "+" button on the Apps screen. Enter a name for your app, and your `sudo` password if prompted.
-You can also optionally choose to initialize your app with some example secrets. This is automatically selected for your first App.
+Create an App by clicking the "+" button on the Apps screen. Enter a name for your app and your `sudo` password if prompted.
+You can also optionally choose to initialize your app with example secrets. This option is automatically selected for your first App.
 
 ![create app](/assets/images/console/apps/app-create.png)
 
 ## Secrets
 
-This screen shows an overview of all Secrets in this App, across all Environments. You can explore a specific Environment by clicking the Environment name in the column headers.
-You can expand a secret to view its status in each environment. Clicking on an Environment name will take you to this secret in the respective Environment management screen.
+This screen shows an overview of all Secrets in this App across all Environments. You can explore a specific Environment by clicking the Environment name in the column headers.
+You can expand a secret to view its status in each Environment. Clicking an Environment name will take you to this secret in the respective Environment management screen.
 
 ![app secrets](/assets/images/console/apps/app-secrets.png)
 
-## Service Tokens
+## Access
 
-This screen lets you create and manage [Service Tokens](/console/tokens#service-tokens) for this App.
+### Add a service account to an App
 
-![app tokens](/assets/images/console/apps/app-tokens.png)
+You can add a Service Account to any App from the respective App's "Access" tab. 
 
-## Logs
+1. Click "Service accounts" on the left, and then "Add service account"
 
-This screen shows you audit logs for all CRUD events for all Secrets and Environments in this app. You can expand a specific log event to view more information.
+![Add service account to app](/assets/images/console/access-control/service-accounts/manage-account/add-to-app-1.png)
 
-![app logs](/assets/images/console/apps/app-logs.png)
+2. Select the service account from the list of accounts. Next, select the Environments that this account should have access to. Once you have selected the account and scope, click "Add"
 
-## Members
+![Add service account to app](/assets/images/console/access-control/service-accounts/manage-account/add-to-app-2.png)
 
-This screen lets you view and manage member access to this App.
+3. The account will now have access to the Environments you selected. You can always update the Environment scope for this account or remove it from the App entirely. 
 
-![app members](/assets/images/console/apps/app-members.png)
+![Add service account to app](/assets/images/console/access-control/service-accounts/manage-account/add-to-app-3.png)
 
 ### Add a member to an App
 
-To add a member to an App, click on the "Add a member" button. Select an Organization member from the dropdown list, select which Environments to grant them access to, and click "Add"
+You can add a new user to any App from the respective App's "Access" tab. To add a member to an App, click the "+ Add a member" button. Select an Organization member from the dropdown list, select which Environments to grant them access to, and click "Add"
+![app member add](/assets/images/console/apps/app-access-members-tab.png)
 
 ![app member add](/assets/images/console/apps/app-member-add.png)
 
@@ -55,9 +56,9 @@ To update the Environments that a specific user can access, click the "Manage us
 
 To remove a member from an App, click the "Remove member" button.
 
-## Secret Syncing Integrations
+## Syncing
 
-Phase offers the ability to automatically sync secrets to various third-party platforms and services. This feature allows for seamless deployment of secrets to services like GitHub Actions, Railway, AWS Secrets Manager, and Hashicorp Nomad.
+Phase offers the ability to automatically sync secrets to various third-party platforms and services. This feature enables seamless deployment of secrets to services like GitHub Actions, Railway, AWS Secrets Manager, and HashiCorp Nomad.
 
 ### Requirements for Syncing
 
@@ -70,27 +71,31 @@ To set up a new sync:
 
 1. Navigate to the "Syncing" tab in your App.
 2. Click on "Create a new sync" and select the desired service.
-3. Follow the prompts to configure the sync, including selecting the environment and specific secrets to sync.
+3. Follow the prompts to configure the sync, including selecting the Environment and specific secrets to sync.
 
 ![secret syncing](/assets/images/console/apps/app-sync.png)
 
-
 Syncing allows Phase to keep your secrets up-to-date across different platforms automatically. This ensures consistency and reduces manual secret management tasks.
 
+## Logs
+
+This screen shows you audit logs for all CRUD events for all Secrets and Environments in this App. You can expand a specific log event to view more information.
+
+![app logs](/assets/images/console/apps/app-logs.png)
 
 ## Settings
 
-This screen shows you metadata for the App and allows you to perform administrative tasks such as changing the Encryption mode of the App or deleting it permanently.
+This screen shows you metadata for the App and allows you to perform administrative tasks such as changing the encryption mode of the App or deleting it permanently.
 
 ### Encryption
 
 Phase Apps are secured with end-to-end encryption (E2EE) by default. This means only users who are granted access to the App and its Environments can decrypt the secrets that are stored within it.
-However, in order to use certain features of Phase such as third-party integrations or the [public REST API](/public-api), you will need to enable server-side encryption (SSE).
-Enabling SSE will store a copy of each Environment's root key on the server, encrypted with the server's encryption key. This allows the server to decrypt secrets for syncing with third parties, or to make them available over the API.
+However, to use certain features of Phase such as third-party integrations or the [public REST API](/public-api), you will need to enable server-side encryption (SSE).
+Enabling SSE will store a copy of each Environment's root key on the server, encrypted with the server's encryption key. This allows the server to decrypt secrets for syncing with third parties or to make them available over the API.
 
 ### Enabling SSE
 
-To enable SSE for an App, click on the "Enable SSE" button under the "Encryption" section of the App Settings tab.
+To enable SSE for an App, click the "Enable SSE" button under the "Encryption" section of the App Settings tab.
 
 ![enable sse button](/assets/images/console/settings/encryption-section-e2ee.webp)
 
@@ -104,9 +109,9 @@ Once enabled, the settings page will show you the updated Encryption mode:
 
 ### Delete an App
 
-To delete an app, click on the "Delete" button in the Settings tab.
+To delete an app, click the "Delete" button in the Settings tab.
 
 <Warning>
- Deleting an app will permanently delete all Environments, Secrets and Tokens
+ Deleting an app will permanently delete all Environments, Secrets, and Tokens
  associated with it.
 </Warning>

@@ -80,8 +80,8 @@ const resources = [
     },
   },
   {
-    href: '/console/tokens',
-    name: 'Tokens',
+    href: '/access-control/authentication',
+    name: 'Authentication',
     description:
       'Learn about authenticating with the Phase CLI via tokens',
       icon: BoltIcon,

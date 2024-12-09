@@ -199,8 +199,7 @@ export const navigation = [
       { title: 'Users', href: '/console/users' },
       { title: 'Apps', href: '/console/apps' },
       { title: 'Environments', href: '/console/environments' },
-      { title: 'Secrets', href: '/console/secrets' },
-      { title: 'Tokens', href: '/console/tokens' },
+      { title: 'Secrets', href: '/console/secrets' }
     ],
   },
   {
@@ -225,7 +224,6 @@ export const navigation = [
     title: 'API',
     links: [
       { title: 'Overview', href: '/public-api' },
-      { title: 'Authentication', href: '/public-api/authentication' },
       { title: 'Secrets', href: '/public-api/secrets' },
       { title: 'Errors', href: '/public-api/errors' },
     ],
@@ -235,6 +233,7 @@ export const navigation = [
     links: [
       { title: 'Overview', href: '/access-control' },
       { title: 'Authentication', href: '/access-control/authentication' },
+      { title: 'Tokens', href: '/access-control/authentication/tokens' },
       { title: 'Service Accounts', href: '/access-control/service-accounts' },
       { title: 'Roles', href: '/access-control/roles' },
     ],
