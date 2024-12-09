@@ -1,6 +1,7 @@
 import { Tag } from '@/components/Tag'
 import { HeroPattern } from '@/components/HeroPattern'
 import { UserAuthProviders } from '@/components/UserAuthProviders'
+import { ProgrammaticAuth } from '@/components/ProgrammaticAuth'
 
 export const description = 'Authenticating with Phase.'
 
@@ -21,6 +22,12 @@ We also have plans to extend support to SAML (Security Assertion Markup Language
 <UserAuthProviders />
 
 ## Programmatic Authentication
+
+Programmatic authentication enables secure machine-to-machine access to Phase through tokens. This authentication method is essential for automated processes, CI/CD pipelines, and applications that need to interact with Phase programmatically.
+
+<ProgrammaticAuth />
+
+### Third party authentication
 
 When using third-party authentication systems for programmatic access to Phase, you delegate the authentication of a particular accessor to a third party. This delegation is used as an assertion to obtain a Phase Service Token with the correct set of permissions, which can then be used to access secrets. The process works as follows:
 
