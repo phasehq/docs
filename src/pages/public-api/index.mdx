@@ -2,7 +2,7 @@ import { Tag } from '@/components/Tag'
 import { HeroPattern } from '@/components/HeroPattern'
 
 export const description =
-  'This guide will explain how to work with the Phase API.'
+  'This guide will explain how to work with the Phase REST API.'
 
 <HeroPattern />
 
@@ -40,17 +40,17 @@ curl https://acme.com/service/public/v1/secrets/?app_id=<app_id>&env=development
 
 ## Authentication
 
-All API requests must be authenticated with a bearer token in the `Authorization` header of each request, followed by the type of token used and the token. You can find more information about the token types [here](/console/tokens).
+All API requests must be authenticated with a bearer token in the `Authorization` header of each request, followed by the type of token used and the token. You can find more information about the token types [here](/access-control/authentication#programmatic-authentication).
 
 When deciding between authentication token types, you may consider:
-- Service Token: Belongs to a [Service Account](/access-control/service-accounts). Inherits the Access Control policies and Roles from a service account.
-- Personal Access Token (PAT): Belongs to a human user. Inherits the Access Control policies and Roles from a user. Will return any [Personal Secret Overrides](/console/secrets#override-a-secret-personal-secrets) you might have set for a given secret.
+- Service Account Token: Belongs to a [Service Account](/access-control/service-accounts). Inherits the Access Control policies and Roles from a service account.
+- Personal Access Token (PAT): Belongs to a human user. Inherits the Access Control policies and Roles from a user. Has access to all Apps and Environments that a particular user has access to. Will return any [Personal Secret Overrides](/console/secrets#override-a-secret-personal-secrets) you might have set for a given secret.
 
 Example:
 
 <CodeGroup>
 
-```fish {{ title: 'Service Token' }}
+```fish {{ title: 'Service Account Token' }}
 curl https://api.phase.dev/v1/secrets/?app_id=8d8fde43-ceb6-4c92-a776-827433512ff9&env=production \
   -H "Authorization: Bearer ServiceAccount ac671c7556ec51cec52baa15168339dcbe96b360f81575873d0c31607148f378"
 ```
