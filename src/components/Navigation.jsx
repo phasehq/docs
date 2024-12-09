@@ -224,7 +224,6 @@ export const navigation = [
     title: 'API',
     links: [
       { title: 'Overview', href: '/public-api' },
-      { title: 'Authentication', href: '/public-api/authentication' },
       { title: 'Secrets', href: '/public-api/secrets' },
       { title: 'Errors', href: '/public-api/errors' },
     ],
