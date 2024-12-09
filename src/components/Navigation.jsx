@@ -199,8 +199,7 @@ export const navigation = [
       { title: 'Users', href: '/console/users' },
       { title: 'Apps', href: '/console/apps' },
       { title: 'Environments', href: '/console/environments' },
-      { title: 'Secrets', href: '/console/secrets' },
-      { title: 'Tokens', href: '/console/tokens' },
+      { title: 'Secrets', href: '/console/secrets' }
     ],
   },
   {
