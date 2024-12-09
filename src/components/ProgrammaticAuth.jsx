@@ -5,7 +5,7 @@ import { Heading } from '@/components/Heading'
 
 const resources = [
   {
-    href: '/access-control/authentication/tokens',
+    href: '/access-control/service-accounts#create-a-new-service-account-token',
     name: 'Service Account Token',
     description: 
       'Access tokens that belong to Service Accounts. These tokens inherit fine-grained access control and role-based permissions from service accounts, making them ideal for automated processes and system integrations.',
