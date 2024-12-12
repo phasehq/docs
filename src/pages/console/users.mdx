@@ -63,52 +63,27 @@ If you find entering the password frequently inconvenient, you can enable the "R
 
 Remember: Your `sudo` password is a critical security measure. Always use a strong, unique password and be cautious about where you choose to remember it.
 
-## User roles
-
-Users in Phase can have 3 possible roles:
-
-- Owner
-- Admin
-- Developer
-
-### Owner
-
-When you create an Organisation, you are designated as the `Owner`. You will have access to all Apps, Environments and Secrets. Owners have all permissiont to Manage Users in the Organisation including inviting new members, removing members, updating member app accesss and member roles.
-
-### Admin
-
-`Admin` accounts essentially have the same permissions as Owners. They have access to all Apps and Envs, and can manage all administrative functions of the Organisation including adding or removing members and chaning member roles.
-
-### Developer
-
-When a user in invited to an Organisation, they are assigned the `Developer` role by default.
-Developers have limited access to specific Apps and Environments. Developers cannot delete Apps, Environments or Members, but can create, edit and delete Secrets within the Environments they have access to.
 
 ## Add users to an Organisation
 
 You can add a user as an Organistion member by inviting them from the [Organisation members](/console/organisation#members) screen.
 
-To invite a new member, click on the "Add a member" button, enter the email of the user you wish to invite, optionally select which Apps they will have access to, and click "Invite".
+To invite a new member, click on the "Add a member" button, enter the email of the user you wish to invite. An email invite with a link to join your organisation will be sent to their email address. 
+You will also be shown an invite link that can be copied and shared if required.
 
 ![invite user](/assets/images/console/users/users-invite.png)
 
 <Note>
-Note: Invited members will not have access to any Environments after joining your organisation. Once they accept your invite, you may assign them a role and grant them access to specific Environments from the App Members screen.
+Note: Invited members will not have access to any Apps or Environments after joining your organisation. Once they accept your invite, you can grant them access to specific Apps and Environments from the App Members screen.
 
 </Note>
-
-## Update member roles
-
-If you are an `Owner` or `Admin`, you can update a member's role from the [Organisation members](/console/organisation#members) screen.
-
-### Upgrade a User to `Admin`
-
-When you upgrade a `Developer` account to `Admin`, they will be given access to all Apps, Environments and Secrets in the Organisation.
-
-### Downgrade a User to `Developer`
-
-When you downgrade an `Admin` account to `Developer`, they will retain access to all Apps, Environments and Secrets in the Organisation. You can limit their access to specific Apps or Environments by vising the respective App Members screen.
 
 ## Remove a member from an Organisation
 
 You can permanently remove a member from an Organsation from the [Organisation members](/console/organisation#members) screen. To remove a member, click on the "Remove member" button beside their name.
+
+## User Roles
+
+Users in Phase must be given a role. By default, user's are given the managed "Developer" role when they join an Organisation. This role can be changed once they join. 
+
+[Learn about about how roles work](/access-control/roles).
