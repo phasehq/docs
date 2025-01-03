@@ -6,7 +6,7 @@ export const description = 'Integrate Phase with Docker Compose'
 
 # Docker Compose
 
-You can use Phase run to inject secrets to your application process during runtime. There's no need for you to change any code or add a dependency.
+You can use Phase Run to inject secrets to your application process during runtime. There's no need for you to change any code or add a dependency.
 
 ## Prerequisites
 
@@ -18,7 +18,7 @@ You can use Phase run to inject secrets to your application process during runti
   `PHASE_HOST` environment variable with your URL (`https://<HOST>`).
 </Note>
 
-## Using Phase run
+## Using Phase Run
 
 This method uses the Phase CLI to inject secrets into your `docker compose` services without requiring any change in your docker file.
 
@@ -31,8 +31,6 @@ This method uses the Phase CLI to inject secrets into your `docker compose` serv
 </Note>
 
 ```yaml
-version: '3'
-
 services:
   web:
     build: .
@@ -84,7 +82,60 @@ volumes:
 2. Inject secrets into `docker compose`:
 
 ```fish
-phase run --app "my application name" docker compose up
+phase run --app "my application name" docker compose up -d
+```
+
+## Using Docker Compose secrets with Phase Run
+
+This method combines Phase Run's secret injection with Docker Compose's native secrets feature, without writing any secrets on disk for enhanced security. Environment variables are often available to all processes; it can be difficult to track access. They can also be printed in logs when debugging errors without your knowledge. Using secrets mitigates these risks. Instead of passing sensitive data as environment variables, secrets are mounted as files inside the container. More information over at Docker Compose [docs](https://docs.docker.com/compose/how-tos/use-secrets).
+
+<Note>
+  This approach requires your application to be configured to read secrets from files
+  rather than environment variables.
+</Note>
+
+1. Reference the required secrets directly in your `docker-compose.yml` using the top-level `secrets` element along with the services which require access to each secret using the `secrets` attribute:
+
+```yaml
+services:
+  api:
+    build: .
+    image: example-service
+    environment:
+      # Non-sensitive configuration
+      - API_PORT=3000
+    secrets:
+      # 👇 Secrets will be mounted under /run/secrets/*
+      - api_key
+      - db_password
+    command: ["./wait-for-secrets.sh", "node", "server.js"]
+
+  db:
+    image: postgres:latest
+    environment:
+      # 👇 So postgresql knows where to find the password file
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+    secrets:
+      - db_password
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+secrets:
+  api_key:
+    # 👇 This key must be the same as your secret in Phase
+    environment: 'API_KEY'
+  db_password:
+    # 👇 This key must be the same as your secret in Phase
+    environment: 'POSTGRES_PASSWORD'
+
+volumes:
+  pgdata:
+```
+
+2. Inject secrets into `docker compose`:
+
+```fish
+phase run --app "my application name" docker compose up -d
 ```
 
 ## Using Docker `CMD`
@@ -140,17 +191,16 @@ FROM your-base-image
 CMD ["sh", "-c", "phase run \"python manage.py migrate && python manage.py runserver payments-api:8000\""]
 ```
 
-2. Set `PHASE_SERVICE_TOKEN` as an environment variable.
+3. Set `PHASE_SERVICE_TOKEN` as an environment variable.
 
 ```fish
 export PHASE_SERVICE_TOKEN_FOR_WEB=<YOUR_PHASE_SERVICE_TOKEN_FOR_WEB>
 export PHASE_SERVICE_TOKEN_FOR_API=<YOUR_PHASE_SERVICE_TOKEN_FOR_API>
 ```
 
-3. Create or edit your `docker-compose.yml`:
+4. Create or edit your `docker-compose.yml`:
 
 ```yaml
-version: '3'
 services:
   web:
     build: .
@@ -176,7 +226,7 @@ services:
 
 ## Using `eval`
 
-This method let's you export all secrets stored in Phase as environment variable on the host system which can be used by `docker compose`.
+This method lets you export all secrets stored in Phase as environment variable on the host system which can be used by `docker compose`.
 
 1. Export secrets as environment variables in your shell.
 
@@ -187,8 +237,6 @@ eval $(phase secrets export --app "my application name" --env development)
 2. Reference these environment variables directly in your `docker-compose.yml`:
 
 ```yaml
-version: '3'
-
 services:
   web:
     build: .
@@ -246,9 +294,9 @@ volumes:
   />
 </div>
 
-## Using Phase export
+## Using Phase Export
 
-This method let's you export all secrets stored in Phase to a file on disk and supply them to `docker compose` via `env_file:`.
+This method lets you export all secrets stored in Phase to a file on disk and supply them to `docker compose` via `env_file:`.
 
 1. Export secrets as environment variables in your shell.
 
@@ -259,8 +307,6 @@ phase secrets export --app "my application name" --env development > secrets.env
 2. Reference these environment variables directly in your `docker-compose.yml`:
 
 ```yaml
-version: '3'
-
 services:
   web:
     build: .
