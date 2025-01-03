@@ -350,7 +350,7 @@ export const navigation = [
       { title: 'DigitalOcean', href: '/self-hosting/digitalocean' },
       { title: 'RaspberryPi', href: '/self-hosting/raspberrypi' },
       {
-        title: 'Config - Environment Variables',
+        title: 'Deployment configuration',
         href: '/self-hosting/configuration/envars',
       },
     ],
