@@ -6,7 +6,7 @@ export const description = 'Integrate Phase with Docker Compose'
 
 # Docker Compose
 
-You can use Phase run to inject secrets to your application process during runtime. There's no need for you to change any code or add a dependency.
+You can use Phase Run to inject secrets to your application process during runtime. There's no need for you to change any code or add a dependency.
 
 ## Prerequisites
 
@@ -18,7 +18,7 @@ You can use Phase run to inject secrets to your application process during runti
   `PHASE_HOST` environment variable with your URL (`https://<HOST>`).
 </Note>
 
-## Using Phase run
+## Using Phase Run
 
 This method uses the Phase CLI to inject secrets into your `docker compose` services without requiring any change in your docker file.
 
@@ -85,9 +85,9 @@ volumes:
 phase run --app "my application name" docker compose up -d
 ```
 
-## Using Docker Compose secrets with Phase run
+## Using Docker Compose secrets with Phase Run
 
-This method combines Phase's runtime secret injection with Docker Compose's native secrets feature, without writing any secrets on disk for enhanced security. Environment variables are often available to all processes, and it can be difficult to track access. They can also be printed in logs when debugging errors without your knowledge. Using secrets mitigates these risks. Instead of passing sensitive data as environment variables, secrets are mounted as files inside the container. More information over at Docker Compose [docs](https://docs.docker.com/compose/how-tos/use-secrets).
+This method combines Phase Run's secret injection with Docker Compose's native secrets feature, without writing any secrets on disk for enhanced security. Environment variables are often available to all processes; it can be difficult to track access. They can also be printed in logs when debugging errors without your knowledge. Using secrets mitigates these risks. Instead of passing sensitive data as environment variables, secrets are mounted as files inside the container. More information over at Docker Compose [docs](https://docs.docker.com/compose/how-tos/use-secrets).
 
 <Note>
   This approach requires your application to be configured to read secrets from files
@@ -123,10 +123,10 @@ services:
 secrets:
   api_key:
     # 👇 This key must be the same as your secret in Phase
-    environment: "API_KEY"
+    environment: 'API_KEY'
   db_password:
     # 👇 This key must be the same as your secret in Phase
-    environment: "POSTGRES_PASSWORD"
+    environment: 'POSTGRES_PASSWORD'
 
 volumes:
   pgdata:
@@ -191,14 +191,14 @@ FROM your-base-image
 CMD ["sh", "-c", "phase run \"python manage.py migrate && python manage.py runserver payments-api:8000\""]
 ```
 
-2. Set `PHASE_SERVICE_TOKEN` as an environment variable.
+3. Set `PHASE_SERVICE_TOKEN` as an environment variable.
 
 ```fish
 export PHASE_SERVICE_TOKEN_FOR_WEB=<YOUR_PHASE_SERVICE_TOKEN_FOR_WEB>
 export PHASE_SERVICE_TOKEN_FOR_API=<YOUR_PHASE_SERVICE_TOKEN_FOR_API>
 ```
 
-3. Create or edit your `docker-compose.yml`:
+4. Create or edit your `docker-compose.yml`:
 
 ```yaml
 services:
@@ -226,7 +226,7 @@ services:
 
 ## Using `eval`
 
-This method let's you export all secrets stored in Phase as environment variable on the host system which can be used by `docker compose`.
+This method lets you export all secrets stored in Phase as environment variable on the host system which can be used by `docker compose`.
 
 1. Export secrets as environment variables in your shell.
 
@@ -294,9 +294,9 @@ volumes:
   />
 </div>
 
-## Using Phase export
+## Using Phase Export
 
-This method let's you export all secrets stored in Phase to a file on disk and supply them to `docker compose` via `env_file:`.
+This method lets you export all secrets stored in Phase to a file on disk and supply them to `docker compose` via `env_file:`.
 
 1. Export secrets as environment variables in your shell.
 
