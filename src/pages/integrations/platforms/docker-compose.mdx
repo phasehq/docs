@@ -82,7 +82,60 @@ volumes:
 2. Inject secrets into `docker compose`:
 
 ```fish
-phase run --app "my application name" docker compose up
+phase run --app "my application name" docker compose up -d
+```
+
+## Using Docker Compose secrets with Phase run
+
+This method combines Phase's runtime secret injection with Docker Compose's native secrets feature, without writing any secrets on disk for enhanced security. Environment variables are often available to all processes, and it can be difficult to track access. They can also be printed in logs when debugging errors without your knowledge. Using secrets mitigates these risks. Instead of passing sensitive data as environment variables, secrets are mounted as files inside the container. More information over at Docker Compose [docs](https://docs.docker.com/compose/how-tos/use-secrets).
+
+<Note>
+  This approach requires your application to be configured to read secrets from files
+  rather than environment variables.
+</Note>
+
+1. Reference the required secrets directly in your `docker-compose.yml` using the top-level `secrets` element along with the services which require access to each secret using the `secrets` attribute:
+
+```yaml
+services:
+  api:
+    build: .
+    image: example-service
+    environment:
+      # Non-sensitive configuration
+      - API_PORT=3000
+    secrets:
+      # 👇 Secrets will be mounted under /run/secrets/*
+      - api_key
+      - db_password
+    command: ["./wait-for-secrets.sh", "node", "server.js"]
+
+  db:
+    image: postgres:latest
+    environment:
+      # 👇 So postgresql knows where to find the password file
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+    secrets:
+      - db_password
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+secrets:
+  api_key:
+    # 👇 This key must be the same as your secret in Phase
+    environment: "API_KEY"
+  db_password:
+    # 👇 This key must be the same as your secret in Phase
+    environment: "POSTGRES_PASSWORD"
+
+volumes:
+  pgdata:
+```
+
+2. Inject secrets into `docker compose`:
+
+```fish
+phase run --app "my application name" docker compose up -d
 ```
 
 ## Using Docker `CMD`
