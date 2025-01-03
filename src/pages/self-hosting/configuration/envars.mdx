@@ -2,25 +2,30 @@ import { Tag } from '@/components/Tag'
 import { HeroPattern } from '@/components/HeroPattern'
 
 export const description =
-  'Overview of Phase Console deployment environment variables'
+  'Overview of Phase Console deployment configuration options'
 
 <HeroPattern />
 
 <Tag variant="small">SELF-HOSTING</Tag>
 
-# Environment variables
+# Secrets and deployment configuration
 
-Configure your environment variables when self-hosting Phase. {{ className: 'lead' }}
+Configure your secrets and environment variables when self-hosting Phase. {{ className: 'lead' }}
 
 Depending on your self-hosted deployment method, you may need to configure various environment variables.
 Certain environment variables are required, while others are optional based on your use case.
+
+<Note>
+For enhanced security, Phase services support mounting secrets from files. To use this feature, specify the mount location (e.g., `/run/secrets/secret_key`) using the `_FILE` suffix naming convention (e.g., `SECRET_KEY_FILE`).
+When a file-based secret is present, services will prioritize it over any corresponding environment variable. You can enable debug mode by setting `DEBUG=True` to view logs indicating the source of each loaded secret.
+</Note>
 
 ## Single sign-on (SSO)
 
 In order to authenticate with the Phase Console, you must enable **at least one** SSO provider.
 Enabling an SSO provider requires adding the provider to the list of `SSO_PROVIDERS` as well as providing valid credentials.
 
-You can find a complete list of user auth providers [here](/access-control/authentication#user-authentication)
+You can find a complete list of user auth providers [here](/access-control/authentication#user-authentication).
 
 ### Google SSO
 
