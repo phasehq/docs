@@ -31,8 +31,6 @@ This method uses the Phase CLI to inject secrets into your `docker compose` serv
 </Note>
 
 ```yaml
-version: '3'
-
 services:
   web:
     build: .
@@ -150,7 +148,6 @@ export PHASE_SERVICE_TOKEN_FOR_API=<YOUR_PHASE_SERVICE_TOKEN_FOR_API>
 3. Create or edit your `docker-compose.yml`:
 
 ```yaml
-version: '3'
 services:
   web:
     build: .
@@ -187,8 +184,6 @@ eval $(phase secrets export --app "my application name" --env development)
 2. Reference these environment variables directly in your `docker-compose.yml`:
 
 ```yaml
-version: '3'
-
 services:
   web:
     build: .
@@ -259,8 +254,6 @@ phase secrets export --app "my application name" --env development > secrets.env
 2. Reference these environment variables directly in your `docker-compose.yml`:
 
 ```yaml
-version: '3'
-
 services:
   web:
     build: .
