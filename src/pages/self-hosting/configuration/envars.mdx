@@ -342,14 +342,7 @@ These variables are not required if using the suggested [docker-compose template
 
     Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
-  <Property name="NEXT_TELEMETRY_DISABLED" type="string">
-    Disable Next.js telemetry. Set to `1` to disable.
-    
-    Example: `1`
-
-    Required by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
-  </Property>
-    <Property name="PHASE_LICENSE_OFFLINE" type="string">
+  <Property name="PHASE_LICENSE_OFFLINE" type="string">
     The environment variable Phase license for self-hosted deployments with egress restrictions.
     
     Example: `phase_license:v1:...`
