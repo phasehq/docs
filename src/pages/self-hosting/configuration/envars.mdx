@@ -177,6 +177,11 @@ Env(s) required by the following containers:
 
     Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
+  <Property name="EXTERNAL_MIGRATION" type="string">
+    Defaults to `false`. This is ued to control weather the backend container will run database migrations. In a standalone (monolith) deployment setup, you may set this to `false` or use the default value to automatically run the database migrations. In high availability systems (such as Kubernetes, Docker Swarm, Nomad) where multiple replicas of the service is bring run concurrently, please set it to `true` and handle the migrations in an a dedicated job for a safe and reliable migration setup. 
+
+    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) containers.
+  </Property>
 </Properties>
 
 ---
