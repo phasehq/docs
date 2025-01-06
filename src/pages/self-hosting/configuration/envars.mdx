@@ -2,25 +2,30 @@ import { Tag } from '@/components/Tag'
 import { HeroPattern } from '@/components/HeroPattern'
 
 export const description =
-  'Overview of Phase Console deployment environment variables'
+  'Overview of Phase Console deployment configuration options'
 
 <HeroPattern />
 
 <Tag variant="small">SELF-HOSTING</Tag>
 
-# Environment variables
+# Secrets and deployment configuration
 
-Configure your environment variables when self-hosting Phase. {{ className: 'lead' }}
+Configure your secrets and environment variables when self-hosting Phase. {{ className: 'lead' }}
 
 Depending on your self-hosted deployment method, you may need to configure various environment variables.
 Certain environment variables are required, while others are optional based on your use case.
+
+<Note>
+For enhanced security, Phase services support mounting secrets from files. To use this feature, specify the mount location (e.g., `/run/secrets/secret_key`) using the `_FILE` suffix naming convention (e.g., `SECRET_KEY_FILE`).
+When a file-based secret is present, services will prioritize it over any corresponding environment variable. You can enable debug mode by setting `DEBUG=True` to view logs indicating the source of each loaded secret.
+</Note>
 
 ## Single sign-on (SSO)
 
 In order to authenticate with the Phase Console, you must enable **at least one** SSO provider.
 Enabling an SSO provider requires adding the provider to the list of `SSO_PROVIDERS` as well as providing valid credentials.
 
-You can find a complete list of user auth providers [here](/access-control/authentication#user-authentication)
+You can find a complete list of user auth providers [here](/access-control/authentication#user-authentication).
 
 ### Google SSO
 
@@ -33,14 +38,14 @@ Example:
 https://[**YOUR_DOMAIN**]/api/auth/callback/google
 ```
 
-After setting up your credentials on the Google Cloud console, set the Client ID and Client secret values in your `.env` file:
+After setting up your credentials on the Google Cloud console, set the Client ID and Client secret values:
 
 <Properties>
   <Property name="GOOGLE_CLIENT_ID" type="string">
     Google OAuth Client ID
   </Property>
   <Property name="GOOGLE_CLIENT_SECRET" type="string">
-    Google OAuth Client secret
+    Google OAuth Client secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
   </Property>
 </Properties>
 
@@ -59,14 +64,14 @@ Example:
 https://[**YOUR_DOMAIN**]/api/auth/callback/github
 ```
 
-After setting up your App on GitHub, set the Client ID and Client secret values in your `.env` file:
+After setting up your App on GitHub, set the Client ID and Client secret values:
 
 <Properties>
   <Property name="GITHUB_CLIENT_ID" type="string">
     GitHub OAuth Client ID
   </Property>
   <Property name="GITHUB_CLIENT_SECRET" type="string">
-    GitHub OAuth Client secret
+    GitHub OAuth Client secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
   </Property>
 </Properties>
 
@@ -89,7 +94,8 @@ Example:
 https://[**YOUR_DOMAIN**]/api/auth/callback/gitlab
 ```
 
-After setting up your Application on GitLab, set the Client ID and Client secret values in your `.env` file.
+After setting up your Application on GitLab, set the Client ID and Client secret values.
+
 If you are using a self-hosted GitLab instance, you can optionally set the `GITLAB_AUTH_URL` env var.
 
 <Properties>
@@ -97,7 +103,7 @@ If you are using a self-hosted GitLab instance, you can optionally set the `GITL
     GitLab OAuth Client ID
   </Property>
   <Property name="GITLAB_CLIENT_SECRET" type="string">
-    GitLab OAuth Client secret
+    GitLab OAuth Client secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
   </Property>
   <Property name="GITLAB_AUTH_URL" type="string (Optional)">
     GitLab instance host url
@@ -117,10 +123,10 @@ Env(s) required by the following containers:
     A random 32 byte hex string. Can be generated with `openssl rand -hex 32`. Required by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
   </Property>
   <Property name="SECRET_KEY" type="string">
-    A random 32 byte hex string. Can be generated with `openssl rand -hex 32`. Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
+    A random 32 byte hex string. Can be generated with `openssl rand -hex 32`. Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) container. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
   </Property>
   <Property name="SERVER_SECRET" type="string">
-    A random 32 byte hex string. Can be generated with `openssl rand -hex 32`. Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+    A random 32 byte hex string. Can be generated with `openssl rand -hex 32`. Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
   </Property>
 </Properties>
 
@@ -168,7 +174,7 @@ Env(s) required by the following containers:
   </Property>
   <Property name="DATABASE_PASSWORD" type="string">
     A database password is provided by default, but it is **highly** recommended
-    to change this value. 
+    to change this value. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
     
     Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
@@ -195,8 +201,7 @@ Env(s) required by the following containers:
     Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
   <Property name="REDIS_PASSWORD" type="string">
-    The password for the Redis server. It is recommended to set a strong
-    password if Redis is accessible externally.
+    The password for the Redis server. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
 
     Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
@@ -208,7 +213,7 @@ Env(s) required by the following containers:
 
 <Properties>
   <Property name="SMTP_SERVER" type="string">
-    Your SMTP gateway host. eg. my-email-gatwway-smtp.eu-central-1.amazonaws.com
+    Your SMTP gateway host. eg. `my-email-gatwway-smtp.eu-central-1.amazonaws.com`
 
     Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
@@ -218,7 +223,7 @@ Env(s) required by the following containers:
     Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
   <Property name="SMTP_PASSWORD" type="string">
-    Your SMTP email gateway password.
+    Your SMTP email gateway password. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
 
     Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
@@ -252,7 +257,7 @@ Env(s) required by the following containers:
     Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend), [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
   <Property name="GITHUB_INTEGRATION_CLIENT_SECRET" type="string">
-    GitHub OAuth application Client Secret
+    GitHub OAuth application Client Secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
 
     Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend), [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
@@ -350,7 +355,7 @@ These variables are not required if using the suggested [docker-compose template
     Required by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
   </Property>
     <Property name="PHASE_LICENSE_OFFLINE" type="string">
-    The environment variable Phase license for self-hosted deployments with egress restrictions.
+    The environment variable Phase license for self-hosted deployments with egress restrictions. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
     
     Example: `phase_license:v1:...`
 
