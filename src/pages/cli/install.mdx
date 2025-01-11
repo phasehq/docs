@@ -35,6 +35,10 @@ scoop install git
 apk update && apk add --no-cache curl bash
 ```
 
+```fish {{ title: 'NixOS' }}
+nix-channel --update
+```
+
 ```fish {{ title: 'Python pip' }}
 # Install python pip: https://pip.pypa.io/en/stable/installation/
 
@@ -88,8 +92,12 @@ scoop install phase
 curl -fsSL https://pkg.phase.dev/install.sh | bash
 ```
 
+```fish {{ title: 'NixOS' }}
+nix-shell -p phase-cli
+```
+
 ```fish {{ title: 'Python pip' }}
-pip3 install phase-cli
+pip install phase-cli
 ```
 
 ```fish {{ title: 'Docker' }}
@@ -129,8 +137,12 @@ scoop update phase
 phase update
 ```
 
+```fish {{ title: 'NixOS' }}
+nix-channel --update && nix-shell -p phase-cli
+```
+
 ```fish {{ title: 'Python pip' }}
-pip3 install --upgrade phase-cli
+pip install --upgrade phase-cli
 ```
 
 ```fish {{ title: 'Docker' }}
