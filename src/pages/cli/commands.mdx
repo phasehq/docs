@@ -532,6 +532,40 @@ Usage:
 
 This command displays information about the currently logged-in user in the Phase CLI.
 
+Example:
+
+```fish
+> phase users whoami
+✉️ Email: rohan@spacex.com
+🙋 User ID: c9324ace-4605-4017-9425-0632524f4750
+🏢 Organization: spacex
+☁️ Host: https://console.phase.dev
+```
+
+---
+
+### 🪄 `users switch`
+
+Switch contexts between Phase users, orgs and hosts.
+
+Usage:
+
+```bash
+> phase users switch
+```
+
+This command displays a list of user accounts that the Phase CLI is authenticated to, across orgs and instances. Simply use the up/down arrow keys (`↑` and `↓`) and hit `enter` to switch the account context.
+
+Example:
+
+```fish
+> phase users switch
+? Choose a user to switch to: (Use arrow keys)
+   🏢 Organization, ✉️ Email, ☁️ Phase Host, 🆔 User ID
+ » spacex, rohan@spacex.com, https://console.phase.dev, g9624ace
+   phasehq, rohan@phase.dev, https://console.internal.tailscale.phase.dev, f6s34az1
+```
+
 ---
 
 ### 🏃 `users logout`
