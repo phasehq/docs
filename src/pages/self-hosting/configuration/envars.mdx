@@ -183,6 +183,11 @@ Env(s) required by the following containers:
 
     Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
+  <Property name="EXTERNAL_MIGRATION" type="string">
+    Defaults to `false`. This is used to control whether the backend container will run database migrations. In a standalone (monolith) deployment setup, you may set this to `false` or use the default value to automatically run the database migrations. In high availability systems (such as Kubernetes, Docker Swarm, Nomad) where multiple replicas of the service is bring run concurrently, please set it to `true` and handle the migrations in an a dedicated job for a safe and reliable migration setup. 
+
+    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
+  </Property>
 </Properties>
 
 ---
@@ -347,15 +352,8 @@ These variables are not required if using the suggested [docker-compose template
 
     Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
-  <Property name="NEXT_TELEMETRY_DISABLED" type="string">
-    Disable Next.js telemetry. Set to `1` to disable.
-    
-    Example: `1`
-
-    Required by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
-  </Property>
-    <Property name="PHASE_LICENSE_OFFLINE" type="string">
-    The environment variable Phase license for self-hosted deployments with egress restrictions. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
+  <Property name="PHASE_LICENSE_OFFLINE" type="string">
+    The Phase license for self-hosted deployments with egress restrictions.
     
     Example: `phase_license:v1:...`
 
