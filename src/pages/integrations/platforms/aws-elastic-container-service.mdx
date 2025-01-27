@@ -1,0 +1,161 @@
+import { Tag } from '@/components/Tag'
+
+export const description = 'Integrate Phase with AWS Elastic Container Service'
+
+<Tag variant="small">INTEGRATE</Tag>
+
+# AWS Elastic Container Service
+
+You can use Phase to supply secrets to your AWS Elastic Container Service Tasks.
+
+The below instructions will serve as a rough guide for using the Phase CLI in an ECS tak to fetch as a sidecar container to fetch secrets and make them available to our application by the means of a readonly ephemeral volume.
+
+### Prerequisites
+
+- An AWS account with full access to Elastic Container Service, IAM, CloudWatch, EC2 Services
+- Optional: Cloudwatch log group named `/ecs/phase-ecs-secrets-example-logs` & `ecsTaskExecutionRole` policy that includes the `logs:CreateLogGroup` permission.
+
+AWS ECS can be fairly opaque to with. We recommend that you set up a AWS Cloudwatch log group where the view the task logs to get visibility into your deployments.
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ecr:GetAuthorizationToken",
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage",
+                "logs:CreateLogStream",
+                "logs:CreateLogGroup", // 👈
+                "logs:PutLogEvents"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+```
+
+Task 
+```json
+{
+    "family": "phase-ecs-secrets-example",
+    "containerDefinitions": [
+        {
+            "name": "secret-sidecar",
+            "image": "phasehq/cli:1.18.6", // 👈 Specify Phase CLI version
+            "cpu": 0,
+            "essential": false,
+            "entryPoint": [
+                "/bin/sh", 
+                "-c"
+            ],
+            "command": [
+                "phase secrets export --app-id 00000000-0000-0000-0000-000000000000 --env production > /tmp/secrets"
+                // Specify your Phase application ID ☝️ 
+            ],
+            "environment": [
+                {
+                    "name": "PHASE_HOST", // Optional - Specify PHASE_HOST URL for self-hosted instances
+                    "value": "https://console.phase.dev"
+                },
+                                {
+                    "name": "PHASE_SERVICE_TOKEN", // Your Phase Service Account Token
+                    "value": "pss_service:v2:..."
+                }
+            ],
+            "mountPoints": [
+                {
+                    "sourceVolume": "secrets-store",
+                    "containerPath": "/tmp",
+                    "readOnly": false
+                }
+            ],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/phase-ecs-secrets-example-logs",
+                    "awslogs-region": "ap-south-1",
+                    "awslogs-stream-prefix": "secrets-init"
+                }
+            }
+        },
+        {
+            "name": "app",
+            "image": "mendhak/http-https-echo:35",
+            "cpu": 0,
+            "portMappings": [
+                {
+                    "containerPort": 8080,
+                    "hostPort": 8080,
+                    "protocol": "tcp"
+                },
+                {
+                    "containerPort": 8443,
+                    "hostPort": 8443,
+                    "protocol": "tcp"
+                }
+            ],
+            "essential": true,
+            "entryPoint": [
+                "/bin/sh",
+                "-c"
+            ],
+            "command": [
+                "export $(cat /tmp/secrets | xargs) && docker-entrypoint.sh node ./index.js"
+                // Read secrets from the file and set them as environment variable & start the app
+            ],
+            "environment": [
+                {
+                    "name": "ECHO_INCLUDE_ENV_VARS",
+                    "value": "1"
+                }
+            ],
+            "mountPoints": [
+                {
+                    "sourceVolume": "secrets-store",
+                    "containerPath": "/tmp",
+                    "readOnly": true
+                }
+            ],
+            "dependsOn": [
+                {
+                    "containerName": "secret-sidecar",
+                    "condition": "COMPLETE"
+                }
+            ],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/phase-ecs-secrets-example-logs",
+                    "awslogs-region": "ap-south-1",
+                    "awslogs-stream-prefix": "app"
+                }
+            }
+        }
+    ],
+    "executionRoleArn": "arn:aws:iam::012345678910:role/ecsTaskExecutionRole",
+    "networkMode": "awsvpc",
+    "volumes": [
+        {
+            "name": "secrets-store"
+        }
+    ],
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "cpu": "1024",
+    "memory": "3072",
+    "ephemeralStorage": {
+        "sizeInGiB": 21
+    }
+}
+```
+
+One notable downside of this approach is that certain special characters in the secret key and values could break the secret setting process. Example:
+
+```
+/bin/sh: export: line 0: SECRET_KEY?: bad variable name
+```
