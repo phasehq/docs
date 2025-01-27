@@ -34,10 +34,10 @@ const SDKs = [
     available: true,
   },
   {
-    href: '/integrations/platforms/aws-secrets-manager',
-    name: 'AWS Secrets Manager',
+    href: '/integrations/platforms/integrations/platforms/aws-elastic-container-service',
+    name: 'AWS Elastic Container Service',
     description:
-      'Deploy secrets to your AWS deployments via the AWS Secrets Manager.',
+      'Deploy secrets to your ECS tasks.',
     logo: logoAws,
     available: true,
   },
