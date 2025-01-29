@@ -6,55 +6,52 @@ export const description = 'Integrate Phase with AWS Elastic Container Service'
 
 # AWS Elastic Container Service
 
-You can use Phase to supply secrets to your AWS Elastic Container Service Tasks.
+You can use Phase to securely supply secrets to your AWS Elastic Container Service (ECS) Tasks.
 
-The below instructions will serve as a rough guide for using the Phase CLI in an ECS tak to fetch as a sidecar container to fetch secrets and make them available to our application by the means of a readonly ephemeral volume.
+## Prerequisites
 
-### Prerequisites
+- An AWS account with full access to:
+  - Elastic Container Service (ECS)
+  - Identity and Access Management (IAM)
+  - EC2 Services
+- Sign up for the [Phase Console](/quickstart) and [create an App](/console/apps#create-an-app).
+- Obtain a [`PHASE_SERVICE_TOKEN`](/access-control/authentication/tokens#creating-a-service-account-token) for your application, that has access to the environment you are trying to fetch secrets from.
+- Fetch your Phase Application ID (--app-id) by going to your application settings in the Phase Console, hovering over UUID under the App section
 
-- An AWS account with full access to Elastic Container Service, IAM, CloudWatch, EC2 Services
-- Optional: Cloudwatch log group named `/ecs/phase-ecs-secrets-example-logs` & `ecsTaskExecutionRole` policy that includes the `logs:CreateLogGroup` permission.
+## Init Container
 
-AWS ECS can be fairly opaque to with. We recommend that you set up a AWS Cloudwatch log group where the view the task logs to get visibility into your deployments.
+This approach uses the Phase CLI Docker image as an init container in your ECS task. The init container fetches secrets and makes them available to your application container through a a secret file on the shared ephemeral volume.
 
-```json
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": [
-                "ecr:GetAuthorizationToken",
-                "ecr:BatchCheckLayerAvailability",
-                "ecr:GetDownloadUrlForLayer",
-                "ecr:BatchGetImage",
-                "logs:CreateLogStream",
-                "logs:CreateLogGroup", // 👈
-                "logs:PutLogEvents"
-            ],
-            "Resource": "*"
-        }
-    ]
-}
-```
+If your application only supports reading of secrets though environment variables, you run `export $(cat /tmp/secrets | xargs)` in your application container before the CMD to read secrets from the filesystem and set them as environment variables before starting your application. Although, we recommend setting up your application for reading of secrets from file-system for it's security benefits.
 
-Task 
+### How It Works
+
+1. ECS pulls and runs the `phasehq/cli` container
+2. The Phase CLI authenticates using your provided credentials (`PHASE_HOST` and `PHASE_SERVICE_TOKEN`)
+3. The CLI fetches secrets from your specified Phase application and environment
+4. Secrets are written to a shared volume as key-value pairs
+5. Your application container reads and loads the secrets
+
+### Task Definition
+
+Here's a complete ECS task definition that implements this approach:
+
 ```json
 {
     "family": "phase-ecs-secrets-example",
     "containerDefinitions": [
         {
-            "name": "secret-sidecar",
+            "name": "secrets-init",
             "image": "phasehq/cli:1.18.6", // 👈 Specify Phase CLI version
             "cpu": 0,
-            "essential": false,
+            "essential": true,
             "entryPoint": [
                 "/bin/sh", 
                 "-c"
             ],
             "command": [
                 "phase secrets export --app-id 00000000-0000-0000-0000-000000000000 --env production > /tmp/secrets"
-                // Specify your Phase application ID ☝️ 
+                // Specify your Phase application ID ☝️, environment and where to pipe secrets to on the file system
             ],
             "environment": [
                 {
@@ -72,15 +69,7 @@ Task
                     "containerPath": "/tmp",
                     "readOnly": false
                 }
-            ],
-            "logConfiguration": {
-                "logDriver": "awslogs",
-                "options": {
-                    "awslogs-group": "/ecs/phase-ecs-secrets-example-logs",
-                    "awslogs-region": "ap-south-1",
-                    "awslogs-stream-prefix": "secrets-init"
-                }
-            }
+            ]
         },
         {
             "name": "app",
@@ -105,7 +94,7 @@ Task
             ],
             "command": [
                 "export $(cat /tmp/secrets | xargs) && docker-entrypoint.sh node ./index.js"
-                // Read secrets from the file and set them as environment variable & start the app
+                // ☝️ Read secrets from the file and set them as environment variable & start the app
             ],
             "environment": [
                 {
@@ -122,21 +111,14 @@ Task
             ],
             "dependsOn": [
                 {
-                    "containerName": "secret-sidecar",
+                    "containerName": "secrets-init",
                     "condition": "COMPLETE"
                 }
-            ],
-            "logConfiguration": {
-                "logDriver": "awslogs",
-                "options": {
-                    "awslogs-group": "/ecs/phase-ecs-secrets-example-logs",
-                    "awslogs-region": "ap-south-1",
-                    "awslogs-stream-prefix": "app"
-                }
-            }
+            ]
         }
     ],
     "executionRoleArn": "arn:aws:iam::012345678910:role/ecsTaskExecutionRole",
+    // ☝️ Replace with your ECS task execution ARN
     "networkMode": "awsvpc",
     "volumes": [
         {
@@ -154,8 +136,35 @@ Task
 }
 ```
 
-One notable downside of this approach is that certain special characters in the secret key and values could break the secret setting process. Example:
+### Properties
 
-```
+<Properties>
+  <Property name="--app-id" type="required">
+    Your Phase application ID. Replace `00000000-0000-0000-0000-000000000000` with your actual application ID from the Phase console.
+  </Property>
+  <Property name="--env" type="optional">
+    Your Phase application secrets environment. Replace `production` with your actual application environment you are trying to deploy secrets from. Defaults to `development`.
+  </Property>
+  <Property name="--format" type="optional">
+    The format in which to return secrets in. Phase application secrets environment. You may choose between `json`, `csv`, `yaml`, `xml`, `toml`, `hcl`, `ini`, `java_properties`. Defaults to `dotenv`.
+  </Property>
+  <Property name="PHASE_SERVICE_TOKEN" type="required">
+    Your Phase service token. Update the `PHASE_SERVICE_TOKEN` environment variable with a valid service token from your Phase account.
+  </Property>
+  <Property name="PHASE_HOST" type="optional">
+    The Phase host URL. Only modify the `PHASE_HOST` if you're using a self-hosted Phase instance. Defaults to `https://console.phase.dev`.
+  </Property>
+  <Property name="executionRoleArn" type="required">
+    AWS IAM execution role ARN. Update the `executionRoleArn` to match your ECS execution role.
+  </Property>
+</Properties>
+
+### Considerations
+
+1. **Service Token Management**: Currently, you need to supply your Phase Account Service Token in the task definition. Service tokens require manual provisioning and rotation to maintain security best practices. This will be addressed very soon by adding AWS IAM authentication as a native authentication method for Phase, which will eliminate the need for manual token management.
+
+2. **Special Characters**: Certain special characters in secret keys or values can cause the export process to fail. For example:
+
+```fish
 /bin/sh: export: line 0: SECRET_KEY?: bad variable name
 ```
