@@ -257,6 +257,10 @@ export const navigation = [
       },
       { title: 'Kubernetes', href: '/integrations/platforms/kubernetes' },
       {
+        title: 'AWS Elastic Container Service',
+        href: '/integrations/platforms/aws-elastic-container-service',
+      },
+      {
         title: 'AWS Secrets Manager',
         href: '/integrations/platforms/aws-secrets-manager',
       },
