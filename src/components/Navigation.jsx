@@ -257,7 +257,7 @@ export const navigation = [
       },
       { title: 'Kubernetes', href: '/integrations/platforms/kubernetes' },
       {
-        title: 'AWS ECS',
+        title: 'AWS Elastic Container Service',
         href: '/integrations/platforms/aws-elastic-container-service',
       },
       {
