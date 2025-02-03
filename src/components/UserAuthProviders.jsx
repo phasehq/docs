@@ -12,20 +12,20 @@ import clsx from 'clsx'
 const Providers = [
   {
     href: '/access-control/authentication/oauth-sso#google',
-    name: 'Google SSO',
-    description: 'Inject secrets inside your Docker containers.',
+    name: 'Google OAuth SSO',
+    description: 'Use Google OAuth App SSO to Authenticate with Phase.',
     logo: logoGoogle,
   },
   {
     href: '/access-control/authentication/oauth-sso#git-hub',
-    name: 'GitHub SSO',
+    name: 'GitHub OAuth SSO',
     description:
       'Use GitHub OAuth App SSO to Authenticate with Phase.',
     logo: logoGitHub,
   },
   {
     href: '/access-control/authentication/oauth-sso#git-lab',
-    name: 'GitLab SSO',
+    name: 'GitLab OAuth SSO',
     description: 'Use GitLab.com or self-managed GitLab instance to Authenticate with Phase.',
     logo: logoGitLab, 
   }
