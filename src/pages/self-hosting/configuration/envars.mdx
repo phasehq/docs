@@ -25,11 +25,18 @@ When a file-based secret is present, services will prioritize it over any corres
 In order to authenticate with the Phase Console, you must enable **at least one** SSO provider.
 Enabling an SSO provider requires adding the provider to the list of `SSO_PROVIDERS` as well as providing valid credentials.
 
+The following providers are available:
+- `google` - Google OAuth 2.0
+- `github` - GitHub OAuth 2.0
+- `gitlab` - GitLab OAuth 2.0
+- `google-oidc` - Google OIDC
+- `jumpcloud-oidc` - JumpCloud OIDC
+
 You can find a complete list of user auth providers [here](/access-control/authentication#user-authentication).
 
-### Google SSO
+### Google OAuth 2.0
 
-You can find instructions for setting up SSO with Google OAuth [here](/access-control/authentication/oauth-sso#google).
+You can find instructions for setting up SSO with Google OAuth 2.0 [here](/access-control/authentication/oauth-sso#google).
 
 Set the "redirect URI" for your Google OAuth application as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/google`.
 
@@ -53,9 +60,9 @@ Env(s) required by the following containers:
 - [`frontend`](https://hub.docker.com/r/phasehq/frontend)
 - [`backend`](https://hub.docker.com/r/phasehq/backend)
 
-### GitHub SSO
+### GitHub OAuth 2.0
 
-You can find instructions for setting up SSO with a GitHub OAuth App [here](/access-control/authentication/oauth-sso#git-hub).
+You can find instructions for setting up SSO with a GitHub OAuth 2.0 App [here](/access-control/authentication/oauth-sso#git-hub).
 
 Set the "Authorization callback URL" for your GitHub OAuth App as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/github`.
 
@@ -79,9 +86,9 @@ Env(s) required by the following containers:
 - [`frontend`](https://hub.docker.com/r/phasehq/frontend)
 - [`backend`](https://hub.docker.com/r/phasehq/backend)
 
-### GitLab SSO
+### GitLab OAuth 2.0
 
-You can find instructions for setting up SSO with a GitLab OAuth Application [here](/access-control/authentication/oauth-sso#git-lab).
+You can find instructions for setting up SSO with a GitLab OAuth 2.0 Application [here](/access-control/authentication/oauth-sso#git-lab).
 
 Make sure the application has the `read_user` scope.
 
@@ -107,6 +114,36 @@ If you are using a self-hosted GitLab instance, you can optionally set the `GITL
   </Property>
   <Property name="GITLAB_AUTH_URL" type="string (Optional)">
     GitLab instance host url
+  </Property>
+</Properties>
+
+Env(s) required by the following containers:
+- [`frontend`](https://hub.docker.com/r/phasehq/frontend)
+- [`backend`](https://hub.docker.com/r/phasehq/backend)
+
+### Google OIDC
+
+<Properties>
+  <Property name="GOOGLE_OIDC_CLIENT_ID" type="string">
+    Google OIDC Client ID
+  </Property>
+  <Property name="GOOGLE_OIDC_CLIENT_SECRET" type="string">
+    Google OIDC Client secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
+  </Property>
+</Properties>
+
+Env(s) required by the following containers:
+- [`frontend`](https://hub.docker.com/r/phasehq/frontend)
+- [`backend`](https://hub.docker.com/r/phasehq/backend)
+
+### JumpCloud OIDC
+
+<Properties>
+  <Property name="JUMPCLOUD_OIDC_CLIENT_ID" type="string">
+    JumpCloud OIDC Client ID
+  </Property>
+  <Property name="JUMPCLOUD_OIDC_CLIENT_SECRET" type="string">
+    JumpCloud OIDC Client secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
   </Property>
 </Properties>
 
@@ -346,13 +383,6 @@ These variables are not required if using the suggested [docker-compose template
     Example: `[**YOUR_DOMAIN**]` (example.com)
 
     Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
-  </Property>
-  <Property name="NEXT_TELEMETRY_DISABLED" type="string">
-    Disable Next.js telemetry. Set to `1` to disable.
-    
-    Example: `1`
-
-    Required by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
   </Property>
     <Property name="PHASE_LICENSE_OFFLINE" type="string">
     The environment variable Phase license for self-hosted deployments with egress restrictions. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
