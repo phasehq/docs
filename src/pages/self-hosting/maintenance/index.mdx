@@ -1,0 +1,77 @@
+import { Tag } from '@/components/Tag'
+
+export const description =
+  'Run Phase on your own amazon web services infrastructure.'
+
+<Tag variant="small">SELF-HOSTING</Tag>
+
+# Audit Log Management
+
+Phase keeps detailed audit logs of secret access, particularly read events. These logs can accumulate quickly, especially in environments with frequent secret polling. To manage database size and performance, you can periodically clean up old audit logs. In future releases we will provide a simpler way to manage this directly from the Phase Console.
+
+## Purging Old Audit Logs
+
+You can use the `purge_app_logs` utility command to safely remove old audit logs. Execute this command from within the `backend` container:
+
+<Note>
+Secret creation logs will not be deleted as they are required for the functioning of other features like secret history and point in time recovery.
+</Note>
+
+```fish
+python manage.py purge_app_logs -h
+usage: manage.py purge_app_logs [-h] [--retain RETAIN] [--app-id APP_ID] [--version] [-v {0,1,2,3}] [--settings SETTINGS] [--pythonpath PYTHONPATH] [--traceback] [--no-color] [--force-color] [--skip-checks] org_name
+
+Purge logs older than a specified number of days for a specific organisation or app.
+
+positional arguments:
+  org_name              Name of the organisation
+
+options:
+  -h, --help            show this help message and exit
+  --retain RETAIN       Number of days of logs to retain (default: 30, 0 to delete all)
+  --app-id APP_ID       ID of a specific app to delete logs for (optional)
+  --version             Show program's version number and exit.
+  -v {0,1,2,3}, --verbosity {0,1,2,3}
+                        Verbosity level; 0=minimal output, 1=normal output, 2=verbose output, 3=very verbose output
+  --settings SETTINGS   The Python path to a settings module, e.g. "myproject.settings.main". If this isn't provided, the DJANGO_SETTINGS_MODULE environment variable will be used.
+  --pythonpath PYTHONPATH
+                        A directory to add to the Python path, e.g. "/home/djangoprojects/myproject".
+  --traceback           Raise on CommandError exceptions.
+  --no-color            Don't colorize the command output.
+  --force-color         Force colorization of the command output.
+  --skip-checks         Skip system checks.
+```
+
+```fish
+# Basic usage - purges logs older than 30 days
+python manage.py purge_app_logs <organisation_name>
+
+# Purge logs older than 60 days
+python manage.py purge_app_logs <organisation_name> --retain 60
+
+# Purge logs for a specific app only
+python manage.py purge_app_logs <organisation_name> --app-id <app-id>
+
+# Combine retention period and app-specific purging
+python manage.py purge_app_logs <organisation_name> --retain 60 --app-id <app-id>
+```
+
+This utility is available on the `backend` and `worker` service containers. You may use the docker command to shell into the container and run the command.
+
+Examples:
+```fish
+# Via Docker 
+docker exec -it <container_id> python manage.py purge_app_logs SpaceX --retain 90
+
+# Via Docker compose
+docker compose exec worker python manage.py purge_app_logs SpaceX --retain 90
+
+# Via Kubernetes
+kubectl exec -it <pod_name> python manage.py purge_app_logs SpaceX --retain 90
+```
+
+### Performance considerations
+
+The performance impact of log purging depends on your database instance specifications. For Phase instances with a large number of audit-log events (100+ million), we recommend running the `purge_app_logs` command for the first time during off-peak hours to avoid performance degradation. In our testing, it took about 2.5 minutes to delete 1 million read events on a modest AWS RDS `db.t3.micro` instance.
+
+![Graph showing log deletion performance on AWS RDS](/assets/images/self-hosting/maintenance/rds-log-delete-graph.png)
