@@ -72,6 +72,6 @@ kubectl exec -it <pod_name> python manage.py purge_app_logs SpaceX --retain 90
 
 ### Performance considerations
 
-The performance impact on your Phase deployments and related assets depends entirely on the size the specifications of your database instance. For Phase instances with large number of audit-log events (100 million+), we recommend running the `purge_app_logs` command for the first time during off-peak hours new logs to avoid performance degradation. In our testing, it took about 2.5 minutes to delete 1 million read events on an AWS RDS `db.t3.micro` instance.
+The performance impact of log purging depends on your database instance specifications. For Phase instances with a large number of audit-log events (100+ million), we recommend running the `purge_app_logs` command for the first time during off-peak hours to avoid performance degradation. In our testing, it took about 2.5 minutes to delete 1 million read events on a modest AWS RDS `db.t3.micro` instance.
 
-![AWS RDS](/assets/images/self-hosting/maintenance/rds-log-delete-graph.png)
+![Graph showing log deletion performance on AWS RDS](/assets/images/self-hosting/maintenance/rds-log-delete-graph.png)
