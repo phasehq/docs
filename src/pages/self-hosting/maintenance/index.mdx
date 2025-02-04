@@ -7,11 +7,11 @@ export const description =
 
 # Audit Log Management
 
-Phase keeps detailed audit logs of secret access, particularly read events. These logs can accumulate quickly, especially in environments with frequent secret polling. To manage database size and performance, you can periodically clean up old audit logs. In future releases we will provider a simpler way manage this directly from the Phase Console.
+Phase keeps detailed audit logs of secret access, particularly read events. These logs can accumulate quickly, especially in environments with frequent secret polling. To manage database size and performance, you can periodically clean up old audit logs. In future releases we will provide a simpler way to manage this directly from the Phase Console.
 
 ## Purging Old Audit Logs
 
-You can use the `purge_app_logs` utility command to safely remove old audit Logs. Execute this command from within the `backend` container:
+You can use the `purge_app_logs` utility command to safely remove old audit logs. Execute this command from within the `backend` container:
 
 <Note>
 Secret creation logs will not be deleted as they are required for the functioning of other features like secret history and point in time recovery.
@@ -56,7 +56,7 @@ python manage.py purge_app_logs <organisation_name> --app-id <app-id>
 python manage.py purge_app_logs <organisation_name> --retain 60 --app-id <app-id>
 ```
 
-This utility is available on the `backend` the the `worker` service containers. You may use the docker command to shell into the container and run the command.
+This utility is available on the `backend` and `worker` service containers. You may use the docker command to shell into the container and run the command.
 
 Examples:
 ```fish
@@ -72,6 +72,6 @@ kubectl exec -it <pod_name> python manage.py purge_app_logs SpaceX --retain 90
 
 ### Performance considerations
 
-For Phase instances with 100+ Million of audit-log events or more, we recommend running the `purge_app_logs` command during off-peak hours to avoid performance degradation. In our testing it took about 2.5 minutes to delete 1 Million read events on a AWS RDS `db.t3.micro` instance.
+The performance impact on your Phase deployments and related assets depends entirely on the size the specifications of your database instance. For Phase instances with large number of audit-log events (100 million+), we recommend running the `purge_app_logs` command for the first time during off-peak hours new logs to avoid performance degradation. In our testing, it took about 2.5 minutes to delete 1 million read events on an AWS RDS `db.t3.micro` instance.
 
-![](/assets/images/self-hosting/maintenance/rds-log-delete-graph.png)
+![AWS RDS](/assets/images/self-hosting/maintenance/rds-log-delete-graph.png)
