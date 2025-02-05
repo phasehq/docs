@@ -71,7 +71,13 @@ Follow these steps to set up Google SSO for your Phase application:
 
     ![Select a project](/assets/images/auth/sso/google/1-select-a-project.png)
 
-14. In the Application type dropdown, select "Web application". Enter a recognizable name in the Name field, add the Authorized redirect URI (e.g., https://[**YOUR_DOMAIN**].com/api/auth/callback/google), and click "CREATE".
+14. In the Application type dropdown, select "Web application". Enter a recognizable name in the Name field, add the Authorized redirect URI (e.g., https://[**YOUR_DOMAIN**].com/api/auth/sso/oidc/callback/google), and click "CREATE".
+
+   You can copy the following path, please make sure to pre-fix it with scheme + your domain.
+
+   ```
+   /api/auth/sso/oidc/callback/google
+   ```
 
     ![Create OAuth client ID config](/assets/images/auth/sso/google/14-create-oauth-client-id-config.png)
 
@@ -79,9 +85,80 @@ Follow these steps to set up Google SSO for your Phase application:
 
     ![Copy OAuth credentials](/assets/images/auth/sso/google/15-copy-oauth-creds.png)
 
-16. Supply these credentials to your Phase Console deployment as [environment variables](/self-hosting/configuration/envars#google-sso).
+16. Supply these credentials to your Phase Console deployment as [environment variables](/self-hosting/configuration/envars#google-oidc).
 
 You can find detailed official instructions for setting up SSO with a Google OAuth Application [here](https://support.google.com/cloud/answer/6158849?hl=en).
 
 
 ## JumpCloud
+
+You can use JumpCloud as an OIDC provider to set up SSO for your Phase application. Follow these steps to set up a JumpCloud SSO Application for Phase:
+
+1. Log in to your [JumpCloud Admin Console](https://console.jumpcloud.com/login/admin) and click "SSO Applications" from the sidebar. 
+
+   ![Access JumpCloud SSO Applications](/assets/images/auth/sso/oidc/jumpcloud/1-click-SSO-applications-sidebar.png)
+
+2. In the SSO Applications section, click "Get Started" if you haven't configured any apps before, or "+ Add New Application" if you already have existing applications.
+
+   ![Add New Application](/assets/images/auth/sso/oidc/jumpcloud/2-click-get-started-if-no-apps-click-add-new-if-app-exists.png)
+
+3. Select "Custom Application" from the available options (located at the bottom right).
+
+   ![Select Custom Application](/assets/images/auth/sso/oidc/jumpcloud/3-select-custom-application-bottom-right-tile.png)
+
+4. On the custom application screen, click "Next" to proceed.
+
+   ![Proceed with Custom Application](/assets/images/auth/sso/oidc/jumpcloud/4-custom-application-click-next.png)
+
+5. Choose "Configure SSO with OIDC" as your authentication method and click "Next".
+
+   ![Configure SSO with OIDC](/assets/images/auth/sso/oidc/jumpcloud/5-select-configure-SSO-with-OIDC-click-next.png)
+
+6. Fill in the general information for your application, including the "Display Label" and "Description", then click "Next".
+
+   ![Enter General Information](/assets/images/auth/sso/oidc/jumpcloud/6-enter-general-info-click-next.png)
+
+7. Review your configuration settings and click "Configure Application".
+
+   ![Review Configuration](/assets/images/auth/sso/oidc/jumpcloud/7-review-config-click-configure-application.png)
+
+8. Add your Phase application's redirect URI (e.g., https://[**YOUR_DOMAIN**].com/api/auth/sso/oidc/callback/jumpcloud) and login URL.
+
+   You can copy the following path, please make sure to pre-fix it with scheme + your domain.
+
+   ```
+   /api/auth/sso/oidc/callback/jumpcloud
+   ```
+
+   ![Add Redirect URIs](/assets/images/auth/sso/oidc/jumpcloud/8-add-redirect-uris-login-url.png)
+
+9. Under the Standard Scopes section, ensure "Email" and "Profile" are selected. (This information is required for user provisioning.)
+
+   ![Select Standard Scopes](/assets/images/auth/sso/oidc/jumpcloud/9-select-email-profile-from-standard-scope.png)
+
+10. Click the "Activate" button at the bottom right of screen to enable the application.
+
+    ![Activate Application](/assets/images/auth/sso/oidc/jumpcloud/10-click-activate.png)
+
+11. Please copy the Client ID and Client Secret provided. You'll need to supply these as environment variables to your Phase instance. Please see [deployment configuration](/self-hosting/configuration/envars#jump-cloud-oidc).
+
+    ![Copy Credentials](/assets/images/auth/sso/oidc/jumpcloud/11-copy-client-id-client-secret.png)
+
+12. Next, we need to provision user access to your JumpCloud application. Please navigate to the "User Groups" tab to manage access.
+
+    ![Access User Groups](/assets/images/auth/sso/oidc/jumpcloud/12-click-user-groups-tab.png)
+
+13. Select the user groups that should have access to Phase by clicking the checkbox.
+
+    ![Select User Groups](/assets/images/auth/sso/oidc/jumpcloud/13-select-the-group-provision-access.png)
+
+14. Click "Save" to provision access.
+
+    ![Save Group Settings](/assets/images/auth/sso/oidc/jumpcloud/14-click-save.png)
+
+Your JumpCloud SSO integration is now configured! Users can access Phase through their JumpCloud application launchpad.
+
+![JumpCloud Application Launchpad](/assets/images/auth/sso/oidc/jumpcloud/jumpcloud-application-launchpad.png)
+
+For more detailed information about JumpCloud SSO configuration, you can refer to the [official JumpCloud documentation](https://support.jumpcloud.com/s/article/Single-Sign-On-SSO-with-OIDC).
+
