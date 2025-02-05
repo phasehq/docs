@@ -40,7 +40,7 @@ const OIDCProviders = [
     logo: logoGoogle,
   },
   {
-    href: '/access-control/authentication/oidc-sso#jumpcloud',
+    href: '/access-control/authentication/oidc-sso#jump-cloud',
     name: 'JumpCloud OIDC SSO',
     description: 'Use JumpCloud OIDC SSO to Authenticate with Phase.',
     logo: logoJumpCloud,
