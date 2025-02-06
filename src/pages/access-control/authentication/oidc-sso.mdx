@@ -71,12 +71,12 @@ Follow these steps to set up Google SSO for your Phase application:
 
     ![Select a project](/assets/images/auth/sso/google/1-select-a-project.png)
 
-14. In the Application type dropdown, select "Web application". Enter a recognizable name in the Name field, add the Authorized redirect URI (e.g., https://[**YOUR_DOMAIN**].com/api/auth/sso/oidc/callback/google), and click "CREATE".
+14. In the Application type dropdown, select "Web application". Enter a recognizable name in the Name field, add the Authorized redirect URI (e.g., https://[**YOUR_DOMAIN**].com/api/auth/callback/google-oidc), and click "CREATE".
 
    You can copy the following path, please make sure to pre-fix it with scheme + your domain.
 
    ```
-   /api/auth/sso/oidc/callback/google
+   /api/auth/callback/google-oidc
    ```
 
     ![Create OAuth client ID config](/assets/images/auth/sso/google/14-create-oauth-client-id-config.png)
@@ -122,12 +122,12 @@ You can use JumpCloud as an OIDC provider to set up SSO for your Phase instance.
 
    ![Review Configuration](/assets/images/auth/sso/oidc/jumpcloud/7-review-config-click-configure-application.png)
 
-8. Add your Phase application's redirect URI (e.g., https://[**YOUR_DOMAIN**].com/api/auth/sso/oidc/callback/jumpcloud) and login URL.
+8. Add your Phase application's redirect URI (e.g., https://[**YOUR_DOMAIN**].com/api/auth/callback/jumpcloud-oidc) and login URL.
 
    You can copy the following path, please make sure to pre-fix it with scheme + your domain.
 
    ```
-   /api/auth/sso/oidc/callback/jumpcloud
+   /api/auth/callback/jumpcloud-oidc
    ```
 
    ![Add Redirect URIs](/assets/images/auth/sso/oidc/jumpcloud/8-add-redirect-uris-login-url.png)
