@@ -123,6 +123,16 @@ Env(s) required by the following containers:
 
 ### Google OIDC
 
+You can find instructions for setting up SSO with a Google OIDC Application [here](/access-control/authentication/oidc-sso#google).
+
+Set the "callback URL" for your Google OIDC App as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/google-oidc`.
+
+Example:
+```bash
+https://[**YOUR_DOMAIN**]/api/auth/callback/google-oidc
+```
+
+After setting up your Application on Google Cloud, set the Client ID and Client secret values:
 <Properties>
   <Property name="GOOGLE_OIDC_CLIENT_ID" type="string">
     Google OIDC Client ID
@@ -137,6 +147,17 @@ Env(s) required by the following containers:
 - [`backend`](https://hub.docker.com/r/phasehq/backend)
 
 ### JumpCloud OIDC
+
+You can find instructions for setting up SSO with a JumpCloud OIDC Application [here](/access-control/authentication/oidc-sso#jump-cloud).
+
+Set the "callback URL" for your JumpCloud OIDC App as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/jumpcloud-oidc`.
+
+Example:
+```bash
+https://[**YOUR_DOMAIN**]/api/auth/callback/jumpcloud-oidc
+``` 
+
+After setting up your Application on JumpCloud, set the Client ID and Client secret values:
 
 <Properties>
   <Property name="JUMPCLOUD_OIDC_CLIENT_ID" type="string">
