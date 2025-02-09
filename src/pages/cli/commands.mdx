@@ -176,7 +176,7 @@ Usage:
 
 - `command_to_run`: The command you wish to run, such as `yarn dev`. You can also chain multiple command together by wrapping them in double quotes, example: `phase run "printenv | grep secret"`
 - `--env`: (Optional) Specify the environment (e.g., `dev`, `staging`, `production`). Supports partial string matching eg. `prod` for `production` Default is `development`
-- `--path`: (Optional) Specific path under which to fetch secrets from and inject into your application. Default is '/'
+- `--path`: (Optional) Specific path under which to fetch secrets from and inject into your application. Default is '/'. Pass an empty string `""` to fetch secrets from all paths.
 - `--app`: (Optional) Name of your Phase application. Use this if you don't have a `.phase.json` file in your project directory or want to override it.
 - `--app-id`: (Optional) ID of your Phase application. Takes precedence over `--app` if both are provided.
 - `--tags`: (Optional) Comma-separated list of tags to filter secrets.
@@ -246,7 +246,7 @@ Usage:
 
 - `--show`: Display secrets uncensored.
 - `--env`: (Optional) Specify the environment. Default is `development`
-- `--path`: (Optional) The path in which you want to list secrets. Default is '/'
+- `--path`: (Optional) The path in which you want to list secrets. Default is '/'. Pass an empty string `""` to list secrets from all paths.
 - `--app`: (Optional) Name of your Phase application. Use this to override the `.phase.json` file or when it's not present in your project directory.
 - `--app-id`: (Optional) ID of your Phase application. Takes precedence over `--app` if both are provided.
 - `--tags`: (Optional) Comma-separated list of tags to filter secrets.
@@ -464,7 +464,7 @@ Usage:
 
 - `KEYS...`: (Optional) List of keys to export, separated by space.
 - `--env`: (Optional) Specify the environment from which the secrets will be exported.
-- `--path`: (Optional) The path from which you want to export secret(s). Default is '/'
+- `--path`: (Optional) The path from which you want to export secret(s). Default is '/'. Pass an empty string `""` to export secrets from all paths.
 - `--app`: (Optional) Name of your Phase application. Use this to override the `.phase.json` file or when it's not present in your project directory.
 - `--app-id`: (Optional) ID of your Phase application. Takes precedence over `--app` if both are provided.
 - `--tags`: (Optional) Comma-separated list of tags to filter the secrets. Supports partial matching and treats underscores as spaces.
@@ -771,9 +771,4 @@ Note: Disable TLS certificate verification is dangerous and can expose you to ri
 
 Example:
 
-```fish
-> export PHASE_VERIFY_SSL=True
-
-> phase secrets export
-...
 ```
