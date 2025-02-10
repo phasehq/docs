@@ -95,7 +95,7 @@ get_options = GetAllSecretsOptions(
     env_name="Development",
     app_name="Your App Name",
     tag="api",  # Optional: filter by tag
-    secret_path="/api"  # Optional: specify path
+    secret_path="/api"  # Optional: specify the path. Use a blank string e.g., "" to fetch all secrets in your environment across all paths
 )
 secrets = phase.get_all_secrets(get_options)
 for secret in secrets:

@@ -233,6 +233,8 @@ export const navigation = [
     links: [
       { title: 'Overview', href: '/access-control' },
       { title: 'Authentication', href: '/access-control/authentication' },
+      { title: 'OAuth 2.0', href: '/access-control/authentication/oauth-sso' },
+      { title: 'OpenID Connect (OIDC)', href: '/access-control/authentication/oidc-sso' },
       { title: 'Tokens', href: '/access-control/authentication/tokens' },
       { title: 'Service Accounts', href: '/access-control/service-accounts' },
       { title: 'Roles', href: '/access-control/roles' },
@@ -256,6 +258,10 @@ export const navigation = [
         href: '/integrations/platforms/docker-compose',
       },
       { title: 'Kubernetes', href: '/integrations/platforms/kubernetes' },
+      {
+        title: 'AWS Elastic Container Service',
+        href: '/integrations/platforms/aws-elastic-container-service',
+      },
       {
         title: 'AWS Secrets Manager',
         href: '/integrations/platforms/aws-secrets-manager',

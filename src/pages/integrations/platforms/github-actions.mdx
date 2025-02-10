@@ -10,30 +10,30 @@ You can use Phase to sync secrets to GitHub Actions.
 
 ## Using Phase Console secret syncing
 
-Automatically sync secrets to GitHub Actions form your Phase apps `dev`, `staging`, `prod` environment.
+Automatically sync secrets to GitHub Actions from your Phase apps' `development`, `staging`, and `production` environments.
 
 <Warning>
   When secret syncing is enabled, secrets stored inside Phase will be treated as
-  a source of truth. Any secrets on target service will be overwritten /
-  deleted. Please import your secrets in Phase before continuing.
+  the source of truth. Any secrets on the target service will be overwritten or
+  deleted. Please import your secrets into Phase before continuing.
 </Warning>
 
 ### Prerequisites
 
-- Sign up for the [Phase Console](/quickstart) and [create an App](/console/apps#create-an-app).
-- Enable Server-side Encryption (SSE) for the App from the [Settings](/console/apps#settings) tab.
+- Sign up for the [Phase Console](/quickstart) and [create an App](/console/apps#create-an-app)
+- Enable Server-side Encryption (SSE) for the App from the [Settings](/console/apps#settings) tab
 
 <Note>
-  If you are using a Self-Hosted instance of the Phase Console, you will need to
-  set up a new GitHub Oauth Application and supply the
+  If you are using a self-hosted instance of the Phase Console, you will need to
+  set up a new GitHub OAuth Application and supply the
   `GITHUB_INTEGRATION_CLIENT_ID` and `GITHUB_INTEGRATION_CLIENT_SECRET`
   environment variables. [More
   info](/self-hosting/configuration/envars#third-party-integrations-configuration)
 </Note>
 
-Phase will encrypt your secrets via libsodiums `SealedBox` using your GitHub
-repository's public key before sending it to GitHub. You wu For more
-information read: [GitHub
+Phase will encrypt your secrets via libsodium's `SealedBox` using your GitHub
+repository's public key before sending them to GitHub. For more information,
+please see: [GitHub
 Docs](https://docs.github.com/en/rest/guides/encrypting-secrets-for-the-rest-api?apiVersion=2022-11-28#example-encrypting-a-secret-using-python)
 
 ### Step 1: Authenticate with GitHub
@@ -48,7 +48,7 @@ Docs](https://docs.github.com/en/rest/guides/encrypting-secrets-for-the-rest-api
 
 ![Click on GitHub](/assets/images/platform-integrations/github/select-github-credentials.png)
 
-3. You will be redirected to GitHub to authorize Phase Integration. **Make sure to grant access to any organisations that you wish to with integrate Phase with**. Click Authorize to continue.
+3. You will be redirected to GitHub to authorize Phase Integration. **Make sure to grant access to any organisations that you wish to integrate Phase with**. Click Authorize to continue.
 
 ![Authorize GitHub Phase Integration](/assets/images/platform-integrations/github/github-oauth-consent.png)
 
@@ -65,7 +65,7 @@ Docs](https://docs.github.com/en/rest/guides/encrypting-secrets-for-the-rest-api
 
 ### Step 2: Configure Sync
 
-Now that you have authenticated with GitHub, you can configure syncs for your app
+Now that you have authenticated with GitHub, you can configure syncs for your app:
 
 1. Go to your App in the Phase Console and go to the **Syncing** tab. Select **GitHub Actions** under the 'Create a new Sync' menu.
 
@@ -81,11 +81,10 @@ Now that you have authenticated with GitHub, you can configure syncs for your ap
 ![Configure sync](/assets/images/platform-integrations/github/gh-actions-configure-sync.png)
 
 4. Once you have selected your desired source and destination, click **Create**.
-   The sync has been set up! Secrets will automatically be Synced from your chosen Phase Environment to the GitHub repository as Secrets that can be used for GitHub Actions.
-   You can click on the **Manage** button on the Sync card to view sync logs, pause syncing or update authentication credentials.
+   The sync has been set up! Secrets will automatically be synced from your chosen Phase Environment to the GitHub repository as Secrets that can be used for GitHub Actions.
+   You can click on the **Manage** button on the Sync card to view sync logs, pause syncing, or update authentication credentials.
 
-
-#### Using synced secrets in GitHub Actions
+#### Accessing the secrets in GitHub Actions
 
 Once your secrets are synced, you can access them in your workflows using the `secrets` context. Here's an example workflow showing a typical CI/CD pipeline with different environments and their respective secrets:
 
@@ -94,65 +93,65 @@ name: Build and Deploy
 on: [push]
 
 jobs:
- test:
-   runs-on: ubuntu-latest
-   permissions:
-     contents: read
-   environment:
-     name: test
-   steps:
-     - uses: actions/checkout@v4
-     
-     - name: Run tests
-       env:
-         # 👇 Explicitly mention each secret you want to have provisioned to each job
-         TEST_DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
-         TEST_API_KEY: ${{ secrets.TEST_API_KEY }}
-         STRIPE_TEST_KEY: ${{ secrets.STRIPE_TEST_KEY }}
-       run: |
-         npm install
-         npm test
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    environment:
+      name: test
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Run tests
+        env:
+          # 👇 Explicitly mention each secret you want to have access to in each job
+          TEST_DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
+          TEST_API_KEY: ${{ secrets.TEST_API_KEY }}
+          STRIPE_TEST_KEY: ${{ secrets.STRIPE_TEST_KEY }}
+        run: |
+          npm install
+          npm test
 
- build:
-   needs: test
-   runs-on: ubuntu-latest
-   permissions:
-     contents: read
-   environment: 
-     name: build
-   steps:
-     - uses: actions/checkout@v4
-     
-     - name: Build application
-       env:
-         # 👇 Explicitly mention each secret you want to have provisioned to each job
-         VITE_API_URL: ${{ secrets.VITE_API_URL }}
-         VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}
-         NEXT_PUBLIC_ANALYTICS_ID: ${{ secrets.NEXT_PUBLIC_ANALYTICS_ID }}
-       run: |
-         npm install
-         npm run build
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    environment: 
+      name: build
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Build application
+        env:
+          # 👇 Explicitly mention each secret you want to have access to in each job
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+          VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}
+          NEXT_PUBLIC_ANALYTICS_ID: ${{ secrets.NEXT_PUBLIC_ANALYTICS_ID }}
+        run: |
+          npm install
+          npm run build
 
- push:
-   needs: build
-   runs-on: ubuntu-latest
-   permissions:
-     contents: read
-     packages: write
-   environment:
-     name: production
-   steps:
-     - uses: actions/checkout@v4
-     
-     - name: Login and push to Docker Hub
-       env:
-         # 👇 Explicitly mention each secret you want to have provisioned to each job
-         DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-         DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-       run: |
-         docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_TOKEN
-         docker build -t myorg/myapp:latest .
-         docker push myorg/myapp:latest
+  push:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    environment:
+      name: production
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Login and push to Docker Hub
+        env:
+          # 👇 Explicitly mention each secret you want to have access to in each job
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        run: |
+          docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_TOKEN
+          docker build -t myorg/myapp:latest .
+          docker push myorg/myapp:latest
 ```
 
 You can find more information on how to use secrets inside of a GitHub Actions workflow [here](https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions#using-secrets-in-a-workflow).
@@ -163,25 +162,25 @@ Fetch secrets directly inside your GitHub Actions workflow during runtime withou
 
 ### Prerequisites
 
-- Sign up for the [Phase Console](/quickstart) and [create an App](/console/apps#create-an-app).
+- Sign up for the [Phase Console](/quickstart) and [create an App](/console/apps#create-an-app)
 - `PHASE_SERVICE_TOKEN`
 
 <Note>
-  If you are using a Self-Hosted instance of the Phase Console, you may supply
-  `PHASE_HOST` environment variable with your URL (`https://<HOST>`).
+  If you are using a self-hosted instance of the Phase Console, you may supply
+  the `PHASE_HOST` environment variable with your URL (`https://<HOST>`).
 </Note>
 
-For detailed cli install options, please see: [Installation](/cli/install)
+For detailed CLI installation options, please see: [Installation](/cli/install)
 
-### Setting `PHASE_SERVICE_TOKEN`:
+### Setting `PHASE_SERVICE_TOKEN`
 
-1. Go to your GitHub Repository.
-2. Click on the `Settings` tab.
-3. Select `Secrets` from the left sidebar.
-4. Click on `New repository secret`.
-5. Name it `PHASE_SERVICE_TOKEN` and provide its value.
+1. Go to your GitHub Repository
+2. Click on the `Settings` tab
+3. Select `Secrets` from the left sidebar
+4. Click on `New repository secret`
+5. Name it `PHASE_SERVICE_TOKEN` and provide its value
 
-## Single staged:
+### Single stage
 
 ```yaml
 name: CI
@@ -212,7 +211,7 @@ jobs:
           docker push my-image:latest
 ```
 
-## Multi staged using `phasehq/cli` Docker image:
+### Multi-stage using `phasehq/cli` Docker image
 
 You can find the Phase CLI docker builds and related images [here](https://hub.docker.com/r/phasehq/cli).
 

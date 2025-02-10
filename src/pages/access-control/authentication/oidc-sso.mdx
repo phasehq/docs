@@ -1,0 +1,164 @@
+import { Tag } from '@/components/Tag'
+
+export const description = 'Authenticating via various OIDC Single sign-on providers with Phase.'
+
+<Tag variant="small">AUTHENTICATION</Tag>
+
+# OpenID Connect (OIDC) Single Sign-On (SSO)
+
+OpenID Connect (OIDC) is an identity layer built on top of OAuth 2.0 that allows applications to verify user identities. It enables secure authentication through trusted identity providers while eliminating the need for separate credentials. Phase supports OIDC-based SSO integration with major providers like Google, allowing seamless and secure access to your applications. Currently, OIDC authentication can be set up only for a Self-hosted Phase deployment.
+
+<Note>
+ OIDC SSO as an authentication method is only available for organizations with an `Enterprise` tier subscription. See [Pricing](https://phase.dev/pricing).
+</Note>
+
+## Google
+
+Google's OAuth 2.0 APIs are compatible with OpenID Connect (OIDC) and can be used to set up SSO. In fact, you can use your existing Google OAuth 2.0 credentials for OIDC authentication as long as you set the 'Authorized redirect URIs' correctly.
+
+Follow these steps to set up Google SSO for your Phase application:
+
+1. Go to your [Google Cloud Platform Console](https://console.cloud.google.com/) and click the "Select a project" dropdown.
+
+   ![Select a project](/assets/images/auth/sso/google/1-select-a-project.png)
+
+2. Click "New project". If you already have a project you want to use, select it from the list and skip to step 5.
+
+   ![New project select](/assets/images/auth/sso/google/2-new-project-select.png)
+
+3. Enter a valid Project Name and click "Create".
+
+   ![New project create](/assets/images/auth/sso/google/3-new-project-create.png)
+
+4. Go to your newly created project by clicking "SELECT PROJECT" from the notifications.
+
+   ![Go to new project](/assets/images/auth/sso/google/4-go-to-new-project.png)
+
+5. In your console's search box, type 'Credentials' and click on the result that says "Credentials - APIs & Services".
+
+   ![Search credentials](/assets/images/auth/sso/google/5-search-credentials.png)
+
+6. Click on "+ CREATE CREDENTIALS" and select "OAuth client ID". If this is your first time creating an OAuth credential, you'll need to set up a consent screen. If you've already set up a consent screen, skip to Step 13.
+
+   ![Create OAuth client ID](/assets/images/auth/sso/google/6-create-oauth-client-id.png)
+
+7. When prompted to configure an OAuth consent screen, click the "CONFIGURE CONSENT SCREEN" button.
+
+   ![Configure consent screen](/assets/images/auth/sso/google/7-first-time-consent-screen-config.png)
+
+8. Choose "External" as the User Type for the OAuth consent screen.
+
+   ![Create external consent screen](/assets/images/auth/sso/google/8-create-external-consent-screen.png)
+
+9. Enter details for mandatory fields such as App name, User support email, and Developer contact information. Click "SAVE AND CONTINUE".
+
+   ![Consent screen app information](/assets/images/auth/sso/google/9-consent-screen-app-information.png)
+   ![Consent screen app information save and continue](/assets/images/auth/sso/google/10-consent-screen-app-information-save-continue.png)
+
+10. Continue through the Scopes step by clicking "SAVE AND CONTINUE".
+
+    ![Consent screen scope save and continue](/assets/images/auth/sso/google/11-consent-screen-scope-save-continue.png)
+
+11. Continue through the Test user setup screen by clicking "SAVE AND CONTINUE".
+
+    ![Consent screen test users save and continue](/assets/images/auth/sso/google/12-consent-screen-test-users-save-continue.png)
+
+12. Review the details of your Consent screen app registration and click "BACK TO DASHBOARD".
+
+    ![Consent screen back to dashboard](/assets/images/auth/sso/google/13-consent-screen-back-to-dashboard.png)
+
+13. In the APIs & Services dashboard, click "+ CREATE CREDENTIALS" and select "OAuth client ID" from the dropdown.
+
+    ![Select a project](/assets/images/auth/sso/google/13-5-create-oauth-app.png)
+
+14. In the Application type dropdown, select "Web application". Enter a recognizable name in the Name field, add the Authorized redirect URI (e.g., https://[**YOUR_DOMAIN**].com/api/auth/callback/google-oidc), and click "CREATE".
+
+   You can copy the following path, please make sure to pre-fix it with scheme + your domain.
+
+   ```
+   /api/auth/callback/google-oidc
+   ```
+
+    ![Create OAuth client ID config](/assets/images/auth/sso/oidc/google/14-create-oauth-client-id-config.png)
+
+15. You will be presented with the OAuth Client ID and Client secret. Copy these by clicking the clipboard icon next to each.
+
+    ![Copy OAuth credentials](/assets/images/auth/sso/google/15-copy-oauth-creds.png)
+
+16. Supply these credentials to your Phase Console deployment as [environment variables](/self-hosting/configuration/envars#google-oidc).
+
+You can find detailed official instructions for setting up SSO with a Google OAuth Application [here](https://support.google.com/cloud/answer/6158849?hl=en).
+
+
+## JumpCloud
+
+You can use JumpCloud as an OIDC provider to set up SSO for your Phase instance. Follow these steps to set up a JumpCloud SSO application for Phase:
+
+1. Log in to your [JumpCloud Admin Console](https://console.jumpcloud.com/login/admin) and click "SSO Applications" from the sidebar. 
+
+   ![Access JumpCloud SSO Applications](/assets/images/auth/sso/oidc/jumpcloud/1-click-SSO-applications-sidebar.png)
+
+2. In the SSO Applications section, click "Get Started" if you haven't configured any apps before, or "+ Add New Application" if you already have existing applications.
+
+   ![Add New Application](/assets/images/auth/sso/oidc/jumpcloud/2-click-get-started-if-no-apps-click-add-new-if-app-exists.png)
+
+3. Select "Custom Application" from the available options (located at the bottom right).
+
+   ![Select Custom Application](/assets/images/auth/sso/oidc/jumpcloud/3-select-custom-application-bottom-right-tile.png)
+
+4. On the custom application screen, click "Next" to proceed.
+
+   ![Proceed with Custom Application](/assets/images/auth/sso/oidc/jumpcloud/4-custom-application-click-next.png)
+
+5. Choose "Configure SSO with OIDC" as your authentication method and click "Next".
+
+   ![Configure SSO with OIDC](/assets/images/auth/sso/oidc/jumpcloud/5-select-configure-SSO-with-OIDC-click-next.png)
+
+6. Fill in the general information for your application, including the "Display Label" and "Description", then click "Next".
+
+   ![Enter General Information](/assets/images/auth/sso/oidc/jumpcloud/6-enter-general-info-click-next.png)
+
+7. Review your configuration settings and click "Configure Application".
+
+   ![Review Configuration](/assets/images/auth/sso/oidc/jumpcloud/7-review-config-click-configure-application.png)
+
+8. Add your Phase application's redirect URI (e.g., https://[**YOUR_DOMAIN**].com/api/auth/callback/jumpcloud-oidc) and login URL.
+
+   You can copy the following path, please make sure to pre-fix it with scheme + your domain.
+
+   ```
+   /api/auth/callback/jumpcloud-oidc
+   ```
+
+   ![Add Redirect URIs](/assets/images/auth/sso/oidc/jumpcloud/8-add-redirect-uris-login-url.png)
+
+9. Under the Standard Scopes section, ensure "Email" and "Profile" are selected. (This information is required for user provisioning.)
+
+   ![Select Standard Scopes](/assets/images/auth/sso/oidc/jumpcloud/9-select-email-profile-from-standard-scope.png)
+
+10. Click the "Activate" button at the bottom right of screen to enable the application.
+
+    ![Activate Application](/assets/images/auth/sso/oidc/jumpcloud/10-click-activate.png)
+
+11. Please copy the Client ID and Client Secret provided. You'll need to supply these as environment variables to your Phase instance. Please see [deployment configuration](/self-hosting/configuration/envars#jump-cloud-oidc).
+
+    ![Copy Credentials](/assets/images/auth/sso/oidc/jumpcloud/11-copy-client-id-client-secret.png)
+
+12. Next, we need to provision user access to your JumpCloud application. Please navigate to the "User Groups" tab to manage access.
+
+    ![Access User Groups](/assets/images/auth/sso/oidc/jumpcloud/12-click-user-groups-tab.png)
+
+13. Select the user groups that should have access to Phase by clicking the checkbox.
+
+    ![Select User Groups](/assets/images/auth/sso/oidc/jumpcloud/13-select-the-group-provision-access.png)
+
+14. Click "Save" to provision access.
+
+    ![Save Group Settings](/assets/images/auth/sso/oidc/jumpcloud/14-click-save.png)
+
+Your JumpCloud SSO integration is now configured! Users can access Phase through their JumpCloud application launchpad.
+
+![JumpCloud Application Launchpad](/assets/images/auth/sso/oidc/jumpcloud/jumpcloud-application-launchpad.png)
+
+For more detailed information about JumpCloud SSO configuration, refer to the [official JumpCloud documentation](https://support.jumpcloud.com/s/article/Single-Sign-On-SSO-with-OIDC).
+
