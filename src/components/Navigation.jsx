@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
@@ -29,9 +29,28 @@ function TopLevelNavItem({ href, children }) {
 }
 
 function NavLink({ href, tag, active, isAnchorLink = false, children }) {
+  
+  const linkRef = useRef(null)
+
+  useEffect(() => {
+    if (active && linkRef.current) {
+      const link = linkRef.current;
+      const linkRect = link.getBoundingClientRect();
+
+      // Check if link is fully visible in the viewport
+      const isOutOfView =
+        linkRect.top < 0 || linkRect.bottom > window.innerHeight;
+
+      if (isOutOfView) {
+        link.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      }
+    }
+  }, [active]);
+  
   return (
     <Link
       href={href}
+      ref={linkRef}
       aria-current={active ? 'page' : undefined}
       className={clsx(
         'flex justify-between gap-2 py-1 pr-3 text-sm transition',
