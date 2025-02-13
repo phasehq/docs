@@ -25,7 +25,7 @@ For detailed cli install options, please see: [Installation](/cli/install)
 1. In your repository on Drone CI, navigate to `Settings`.
 2. Under `Secrets`, click `Add Secret` and set the name as `PHASE_SERVICE_TOKEN` and input its value.
 
-## Single staged:
+## Single staged
 
 ```yaml
 kind: pipeline
@@ -54,7 +54,7 @@ volumes:
       path: /var/run
 ```
 
-## Multi staged:
+## Multi staged
 
 Drone CI supports multi-stage builds where one step's outputs can be used in another. Here's an example:
 
