@@ -298,6 +298,10 @@ export const navigation = [
         href: '/integrations/platforms/hashicorp-nomad',
       },
       {
+        title: 'Cloudflare Workers',
+        href: '/integrations/platforms/cloudflare-workers',
+      },
+      {
         title: 'Cloudflare Pages',
         href: '/integrations/platforms/cloudflare-pages',
       },
