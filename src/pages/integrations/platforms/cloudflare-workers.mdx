@@ -48,11 +48,11 @@ You can use Phase to sync secrets with your Cloudflare Workers.
 
 ![Create token button](/assets/images/platform-integrations/cloudflare-pages/3.png)
 
-2. In the Create API Tokens, create a **Custom Token** by clicking on **Get started** in the **Custom token** section.
+2. In the Create API Tokens page, create a **Custom Token** by clicking on **Get started** in the **Custom token** section.
 
 ![Select custom token](/assets/images/platform-integrations/cloudflare-pages/4.png)
 
-3. Give your token a descriptive name and give it **Edit** access to **Cloudflare Pages** like in the screen below:
+3. Give your token a descriptive name and give it **Edit** access to **Worker Scripts ** like in the screen below:
 
 ![Token name and permissions](/assets/images/platform-integrations/cloudflare-workers/5.png)
 
@@ -86,20 +86,21 @@ Now that you have set up your Cloudflare account with Phase, you can start creat
   screen if needed.
 </Note>
 
-3. Choose the source and destination to sync secrets. Select an Environment as the source for secrets along with the path if you have a specific folder you want to sync from.
-   Next, select your Cloudflare Pages project from the 'Cloudflare project' field, and select either the 'Preview' or 'Production' environment. Once you have selected your desired source and destination, click **Create**.
+3. Choose the source and destination to sync secrets. Select an Environment as the source for secrets along with the Path if you have a specific folder you want to sync from.
+   Next, select your Cloudflare Worker from the dropdown. Once you have selected your desired source and destination, click **Create**.
 
 ![Choose sync source and destination](/assets/images/platform-integrations/cloudflare-workers/create-sync-source-destination.png)
 
-The sync has been set up! Secrets will automatically be Synced from your chosen Phase Environment to the Cloudflare pages project. You can click on the **Manage** button on the Sync card to view sync logs, pause syncing or update authentication credentials.
+The sync has been set up! Secrets will automatically be synced from your chosen Phase Environment to the Cloudflare Worker instance. You can click on the **Manage** button on the Sync card to view sync logs, pause syncing or update authentication credentials.
 
 ![Sync created](/assets/images/platform-integrations/cloudflare-workers/sync-created.png)
 
 <Note>
-Each time Phase syncs a secret to Cloudflare Worker, a new deployment is triggered. You will see several deployments in the Cloudflare Workers version history tab, with the source being labeled as `API`.
+Each time Phase syncs a secret to Cloudflare Worker, a new deployment is triggered. You will see several deployments in the Cloudflare Workers version history tab depending on the number of secrets synced, with the source being labeled as `API`.
 </Note>
 
-You can use the following Cloudflare Worker API example to verify that the secrets are being synced correctly:
+You can use the following Cloudflare Worker API example to quickly access your secrets:
+
 ```js
 /**
  * Test worker to verify environment secrets
@@ -148,3 +149,5 @@ export default {
   },
 }; 
 ```
+
+This may be useful for verifying the values of the example secrets synced to Cloudflare Workers as they are not visible in the Cloudflare Workers dashboard. Please note this is for testing purposes only. 
