@@ -468,7 +468,7 @@ Usage:
 - `--app`: (Optional) Name of your Phase application. Use this to override the `.phase.json` file or when it's not present in your project directory.
 - `--app-id`: (Optional) ID of your Phase application. Takes precedence over `--app` if both are provided.
 - `--tags`: (Optional) Comma-separated list of tags to filter the secrets. Supports partial matching and treats underscores as spaces.
-- `--format`: (Optional) Specify the export format. Supported formats are `dotenv`, `json`, `csv`, `yaml`, `xml`, `toml`, `hcl`, `ini`, `java_properties`. Default format is `dotenv`.
+- `--format`: (Optional) Specify the export format. Supported formats are `dotenv`, `kv`, `json`, `csv`, `yaml`, `xml`, `toml`, `hcl`, `ini`, `java_properties`. Default format is `dotenv`.
 
 Examples:
 
@@ -510,7 +510,17 @@ PROD_AWS_SECRET_ACCESS_KEY=""
 
 **Notes**:
 
-- The `export` command allows you to export secrets in various formats, making it flexible for different use cases.
+- The `export` command allows you to export secrets in various formats:
+  - `dotenv` (.env): Key-value pairs in a simple text format with values wrapped in double quotes
+  - `kv`: Simple key-value pairs with uppercase keys and raw values
+  - `json`: JavaScript Object Notation, useful for integration with various tools and languages
+  - `csv`: Comma-Separated Values, a simple text format for tabular data
+  - `yaml`: Human-readable data serialization format, often used for configuration files
+  - `xml`: Extensible Markup Language, suitable for complex data structures
+  - `toml`: Tom's Obvious, Minimal Language, a readable configuration file format
+  - `hcl`: HashiCorp Configuration Language, used in HashiCorp tools like Terraform
+  - `ini`: A simple format often used for configuration files
+  - `java_properties`: Key-value pair format commonly used in Java applications
 - Use the `--tags` option to filter secrets by tags, which supports partial matching and considers underscores as spaces.
 - If an `.phase.json` file exists in your project directory, it will determine the default application. The `--app` option can be used to override this behavior.
 
