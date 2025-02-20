@@ -7,7 +7,7 @@ export const description =
 
 # Quickstart
 
-Setup your account and start using Phase to manage your application secrets in just a few minutes. This guide will walk you through the following:
+Set up your account and start using Phase to manage your application secrets in just a few minutes. This guide will walk you through the following:
 
 - Create a new account on the [Phase Console](https://console.phase.dev)
 - Create an [App](/console/apps)
@@ -24,7 +24,7 @@ You can login to the <a href="https://console.phase.dev" target="_blank"> Phase 
 
 In order to use Phase with your application, you'll need to [create an App](/console/apps#create-an-app).
 
-Enter a name for your like 'TestApp' and turn off the 'Create example secrets' switch. Click "Create"
+Enter a suitable name for your App, such as  Click "Create".
 
 ![create an app](/assets/images/console/quickstart/quickstart-create-app.png)
 
@@ -102,7 +102,7 @@ This will open the Phase Console in a new tab. Enter your `sudo` password when p
 
 ![webauth password](/assets/images/console/quickstart/webauth-password.png)
 
-Once complete, you should see the success screen:
+Once completed, you should see the success screen:
 
 ![webauth success](/assets/images/console/quickstart/webauth-success.png)
 
@@ -140,7 +140,7 @@ Lastly, run `phase init` and select 'TestApp' or the name of the App you created
 
 ## 2.3 Import your secrets into Phase - **_Optional_**
 
-Next, import your secrets from `.env` file.
+Next, import your secrets from the `.env` file.
 
 ```fish
 cat .env
@@ -174,13 +174,13 @@ Successfully imported and encrypted 23 secrets.
 To view them please run: phase secrets list
 ```
 
-Once done, get rid of your `.env` file now, its best practice not to leave secrets in plain text on disk:
+Once done, remove your `.env` file, as it is best practice not to leave secrets in plain text on disk:
 
 ```fish
 rm .env
 ```
 
-Alternatively, you can import your secrets by dragging and dropping your `.env` file into the Phase Console. This may be more suitable if you want to quickly import things like secrets and comments denoted by `#` from your `.env` file across many environments.
+Alternatively, you can import your secrets by dragging and dropping your `.env` file into the App's environment in the Phase Console. This may be more suitable if you want to quickly import secrets and comments denoted by `#` from your `.env` file across multiple environments.
 
 <div className="video-container">
   <video controls>
