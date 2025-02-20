@@ -95,11 +95,32 @@ The sync has been set up! Secrets will automatically be synced from your chosen 
 
 ![Sync created](/assets/images/platform-integrations/cloudflare-workers/sync-created.png)
 
-<Note>
 Each time Phase syncs a secret to Cloudflare Worker, a new deployment is triggered. You will see several deployments in the Cloudflare Workers version history tab depending on the number of secrets synced, with the source being labeled as `API`.
-</Note>
 
-You can use the following Cloudflare Worker API example to quickly access your secrets:
+Additionally, Phase will not overwrite or delete existing plain text environment variables. If a variable with the same name already exists on the destination service, the sync will fail with an error message:
+
+```json
+{
+  "message": "Error syncing secret PLAIN_TEXT_ENVIRONMENT_VARIABLE: {
+    "result": null,
+    "success": false,
+    "errors": [
+      {
+        "code": 10053,
+        "message": "Binding name 'PLAIN_TEXT_ENVIRONMENT_VARIABLE' already in use. Please use a different name and try again."
+      }
+    ],
+    "messages": []
+  }",
+  "response_code": 400
+}
+```
+
+To resolve this, either:
+- Delete the existing environment variable from your Cloudflare Workers service, or
+- Use a different name for your secret in Phase
+
+You can use the following Cloudflare Worker API example to quickly verify access to your secrets:
 
 ```js
 /**
