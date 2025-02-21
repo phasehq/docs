@@ -7,7 +7,7 @@ export const description =
 
 # Quickstart
 
-Setup your account and start using Phase to manage your application secrets in just a few minutes. This guide will walk you through the following:
+Set up your account and start using Phase to manage your application secrets in just a few minutes. This guide will walk you through the following:
 
 - Create a new account on the [Phase Console](https://console.phase.dev)
 - Create an [App](/console/apps)
@@ -24,7 +24,7 @@ You can login to the <a href="https://console.phase.dev" target="_blank"> Phase 
 
 In order to use Phase with your application, you'll need to [create an App](/console/apps#create-an-app).
 
-Enter a name for your like 'TestApp' and turn off the 'Create example secrets' switch. Click "Create"
+Enter a suitable name for your App, such as  Click "Create".
 
 ![create an app](/assets/images/console/quickstart/quickstart-create-app.png)
 
@@ -102,7 +102,7 @@ This will open the Phase Console in a new tab. Enter your `sudo` password when p
 
 ![webauth password](/assets/images/console/quickstart/webauth-password.png)
 
-Once complete, you should see the success screen:
+Once completed, you should see the success screen:
 
 ![webauth success](/assets/images/console/quickstart/webauth-success.png)
 
@@ -140,36 +140,54 @@ Lastly, run `phase init` and select 'TestApp' or the name of the App you created
 
 ## 2.3 Import your secrets into Phase - **_Optional_**
 
-Next, import your secrets from `.env` file.
+Next, import your secrets from your `.env` file.
 
 ```fish
 cat .env
 
-DEBUG=yes
-BACKEND_API_URL=https://api.myapp.com
-AWS_ACCESS_KEY_ID=AKIA2OGYBAH6QLWOYDVN
-AWS_SECRET_ACCESS_KEY=6ACbdYki5FISnaiWYZwwyQcAEcnKmNrULTCXw+RQ
+HOST=localhost
+HTTP_PROTOCOL=https://
+# WARNING: Replace these with a cryptographically strong random values. You can use `openssl rand -hex 32` to generate these.
+NEXTAUTH_SECRET=82031b3760ac58352bb2d48fd9f32e9f72a0614343b669038139f18652ed1447
+SECRET_KEY=92d44efc4f9a4c0556cc67d2d033d3217829c263d5ab7d1954cf4b5bfd533e58
+SERVER_SECRET=9e760539415af07b22249b5878593bd4deb9b8961c7dd0570117549f2c4f32a2
+# OAuth providers to enable on sign-in page (remove any that aren't required)
+# Example: SSO_PROVIDERS=google,github,gitlab
+SSO_PROVIDERS=google,github,gitlab
+# Database credentials. Change all these values as required, except DATABASE_HOST
+DATABASE_HOST=postgres # don't change this
+DATABASE_PORT=5432
+DATABASE_NAME=postgres-db-name
+DATABASE_USER=postgres-user
+DATABASE_PASSWORD=a765b221799be364c53c8a32acccf5dd90d5fc832607bdd14fccaaaa0062adfd
+REDIS_HOST=redis
+REDIS_PORT=6379
+REDIS_PASSWORD=
+NEXT_TELEMETRY_DISABLED=1
 ```
 
 Run `phase secrets import .env`
 
 ```
 »  phase secrets import .env
-Successfully imported and encrypted 3 secrets.
+Successfully imported and encrypted 23 secrets.
 To view them please run: phase secrets list
 ```
 
-Once done, get rid of your `.env` file now, its best practice not to leave secrets in plain text on disk:
+Once done, remove your `.env` file, as it is best practice not to leave secrets in plain text on disk:
 
 ```fish
 rm .env
 ```
 
-The environment variables in your `.env` file have now been encrypted and imported into your Phase App. Go back to your App in the Phase Console to view them:
+Alternatively, you can import your secrets by dragging and dropping your `.env` file into the App's *Secrets* tab or a specific environment in the Phase Console. This may be more suitable if you want to quickly import secrets from your `.env` file across multiple environments.
 
-![console secrets](/assets/images/console/quickstart/quickstart-console-secrets.png)
-
-Our environment variables have been imported into the `Development` Environment by default. Now we can edit, manage and deploy these secrets from Phase.
+<div className="video-container">
+  <video controls>
+    <source src="/assets/images/console/secrets/import/single-env-drag-drop-demo.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+</div>
 
 ## 3. Inject secrets
 
