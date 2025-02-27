@@ -129,16 +129,21 @@ Usage:
 > phase init
 ```
 
-During the process, you'll be asked to select an app previously created in the Phase Console:
+During the process, you'll be asked to:
+1. Select an app previously created in the Phase Console
+2. Choose a default environment
+3. Enable monorepo support (optional)
 
 ```fish
 > phase init
 ? Select an App: [use arrow keys]
-
    ferrari
  » keyspace
    inception
    Exit
+
+? Choose a Default Environment: Development
+? 🍱 Monorepo support: Would you like this configuration to apply to subdirectories? (y/N)
 ```
 
 Choosing an app will create a `.phase.json` configuration file in your project's working directory:
@@ -146,6 +151,8 @@ Choosing an app will create a `.phase.json` configuration file in your project's
 ```fish
 > phase init
 ? Select an App: keyspace
+? Choose a Default Environment: Development
+? 🍱 Monorepo support: Would you like this configuration to apply to subdirectories? y
 ✅ Initialization completed successfully.
 
 > cat .phase.json
@@ -154,11 +161,14 @@ Choosing an app will create a `.phase.json` configuration file in your project's
   "phaseApp": "keyspace",
   "appId": "511f26b7-5b56-47f3-920e-a4edb9cdbf3c",
   "defaultEnv": "Development",
-  "envId": "679bf2bc-9353-4fe0-a84f-825f284c8f8d"
+  "envId": "679bf2bc-9353-4fe0-a84f-825f284c8f8d",
+  "monorepoSupport": true
 }
 ```
 
-**Tip**: Modify the `defaultEnv` in `.phase.json` to set the default environment context for the Phase CLI. For example, `"defaultEnv": "production"`.
+**Tips**: 
+- Modify the `defaultEnv` in `.phase.json` to set the default environment context for the Phase CLI. For example, `"defaultEnv": "production"`.
+- When monorepo support is enabled, the CLI will search parent directories for a `.phase.json` config, making it ideal for projects with multiple services or packages.
 
 ---
 
@@ -781,4 +791,24 @@ Note: Disable TLS certificate verification is dangerous and can expose you to ri
 
 Example:
 
+```fish
+> export PHASE_VERIFY_SSL=False
+
+> phase secrets export
+...
+```
+
+### `PHASE_CONFIG_PARENT_DIR_SEARCH_DEPTH`
+
+Type: Integer
+
+Description: Sets the maximum depth for searching parent directories for a `.phase.json` config file when monorepo support is enabled. Default is 8.
+
+Example:
+
+```fish
+> export PHASE_CONFIG_PARENT_DIR_SEARCH_DEPTH=5
+
+> phase secrets export
+...
 ```
