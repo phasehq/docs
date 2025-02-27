@@ -168,7 +168,22 @@ Choosing an app will create a `.phase.json` configuration file in your project's
 
 **Tips**: 
 - Modify the `defaultEnv` in `.phase.json` to set the default environment context for the Phase CLI. For example, `"defaultEnv": "production"`.
-- When monorepo support is enabled, the CLI will search parent directories for a `.phase.json` config, making it ideal for projects with multiple services or packages.
+- When monorepo support is enabled, the CLI will search parent directories for a `.phase.json` config up to a maximum depth of 8 directories (configurable via `PHASE_CONFIG_PARENT_DIR_SEARCH_DEPTH`). This allows you to have a single config at the root of your monorepo that applies to all sub-projects.
+
+Example directory structure:
+```
+monorepo/
+├── .phase.json (with monorepoSupport: true)
+├── service-a/
+│   └── src/
+├── service-b/
+│   └── src/
+└── apps/
+    └── web/
+        └── src/
+```
+
+In this example, running Phase CLI commands from any subdirectory will use the root `.phase.json` config.
 
 ---
 
