@@ -20,6 +20,7 @@ Commands:
     auth             💻 Authenticate with Phase
     init             🔗 Link your project with your Phase app
     run              🚀 Run and inject secrets to your app
+    shell            🐚 Launch a sub-shell with secrets as environment variables (BETA)
     secrets          🗝️ Manage your secrets
     secrets list     📇 List all the secrets
     secrets get      🔍 Get a specific secret by key
@@ -248,6 +249,53 @@ Chaining multiple commands:
 - When specifying tags with `--tags`, only secrets matching these tags will be injected into the environment.
 - Cross-environment and local references in secrets are automatically resolved and injected. Warnings are issued if any references cannot be resolved.
 - Errors during the command execution or secret fetching process will result in an appropriate error message and termination of the process.
+
+---
+
+## 🐚 `shell`
+
+Launch an ephemeral shell with secrets injected as environment variables. 
+
+<Note>
+This feature is currently in BETA.
+</Note>
+
+Usage:
+
+```fish
+> phase shell [--env ENVIRONMENT] [--app APP_NAME] [--shell SHELL_TYPE] [--path PATH] [--tags TAGS]
+```
+
+- `--env`: (Optional) Specify the environment (e.g., `dev`, `staging`, `production`). Default is `development`
+- `--path`: (Optional) Specific path under which to fetch secrets from and inject into your shell. Default is '/'. Pass an empty string `""` to fetch secrets from all paths.
+- `--app`: (Optional) Name of your Phase application. Use this if you don't have a `.phase.json` file in your project directory or want to override it.
+- `--app-id`: (Optional) ID of your Phase application. Takes precedence over `--app` if both are provided.
+- `--shell`: (Optional) Specify the shell to launch. Supported shells: `bash`, `sh`, `fish`, `zsh`. Default is your current shell.
+- `--tags`: (Optional) Comma-separated list of tags to filter secrets.
+
+The `shell` command launches a new shell session with your Phase secrets loaded as environment variables. This is useful for local development workflows where you need to work with multiple commands, scripts, and tools, and running `phase run` for each command may not be practical.
+
+Examples:
+
+```fish
+# Launch a zsh shell with secrets from the development environment
+> phase shell
+[15:32:00] 🐚 Initialized zsh with 15 secrets from Application: example-app, Environment: Development
+           Remember: Secrets are only available in this session. Type exit or press Ctrl+D to exit.
+
+> echo $POSTGRES_CONNECTION_STRING 
+postgresql://postgres:dbc76c4d...@localhost:5432/mydb
+
+# Exit the shell using Ctrl+D or by typing 'exit'
+> exit
+[15:33:29] 🐚 Shell session ended. Phase secrets are no longer available.
+```
+
+**Notes**:
+
+- This feature is currently in BETA and is being tested for performance, usage, and reliability across different platforms.
+- When using zsh with modifications like powerline10k, command suggestions and tab completions might be affected in certain cases. This is not due to the Phase CLI - you can verify this by launching zsh directly.
+- Secrets are only available within the shell session and are automatically cleared when you exit.
 
 ---
 
