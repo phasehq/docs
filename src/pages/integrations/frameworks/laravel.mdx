@@ -1,34 +1,105 @@
 import { Tag } from '@/components/Tag'
+import { Button } from '@/components/Button'
 
 export const description =
-  'Manage your secrets and environment variables in your application with the Phase CLI'
+  'Manage your secrets and environment variables in your Laravel application with Phase'
 
 <Tag variant="small">INTEGRATE</Tag>
 
 # Laravel
 
-You can use Phase run to inject secrets to your application process during runtime. There is no need for you to change any code or add a dependency.
+Phase securely injects secrets into your Laravel application at runtime without requiring code changes or additional dependencies.
 
 ## Prerequisites
 
 - Create an account on the Phase Console
-- [Install the CLI](/cli/install)
+- [Install the Phase CLI](/cli/install)
 
-## Initialize Phase for your [Laravel](https://laravel.com) app
+## Initialize Phase for your Laravel app
 
-In the root of your application's codebase run:
+In the root of your Laravel application, run:
 
-```fish
+```bash
 phase init
 ```
 
-## Start your app with Phase
+This will create the necessary configuration files for Phase.
 
-Example
+## Development Environment
 
-```fish
+For local development, you can use Phase with `artisan serve`:
+
+```bash
 phase run php artisan serve
 ```
+
+## Production Environment
+
+For production environments, Phase integrates with standard Laravel deployment methods:
+
+### Using PHP-FPM with Nginx or Apache
+
+When running Laravel with PHP-FPM behind Nginx or Apache, you can use Phase in your process manager configuration:
+
+```bash
+# Example for systemd service
+ExecStart=/usr/bin/phase run php-fpm
+
+# Example for supervisor
+command=/usr/bin/phase run php-fpm
+```
+
+### Using Laravel Forge
+
+If you're using Laravel Forge, add Phase to your deployment script:
+
+```bash
+# In your deployment script
+phase run your-standard-launch-command
+```
+
+### Using Laravel Vapor
+
+For serverless Laravel deployments with Vapor, include Phase in your `vapor.yml` configuration:
+
+```yaml
+# vapor.yml
+environment:
+    production:
+        build:
+            - 'composer install --no-dev'
+            - 'php artisan event:cache'
+            # Add Phase initialization here
+            - 'phase init'
+```
+
+## Docker Deployments
+
+For containerized deployments, add Phase to your Dockerfile:
+
+```dockerfile
+FROM php:8.2-fpm
+
+# Install dependencies and Phase CLI
+RUN curl -sSL https://get.phase.dev | bash
+
+# Your other Docker setup here...
+
+# Use Phase as the entrypoint
+ENTRYPOINT ["phase", "run"]
+CMD ["php-fpm"]
+```
+
+## How It Works
+
+Phase injects environment variables directly into your application process at runtime. This means your Laravel application can access secrets via the standard `.env` mechanisms:
+
+```php
+// Access secrets normally in your Laravel app
+$apiKey = env('API_SECRET_KEY');
+```
+
+Laravel automatically picks up environment variables injected by Phase, so you don't need to modify your existing code.
 
 <div className="not-prose">
   <Button
