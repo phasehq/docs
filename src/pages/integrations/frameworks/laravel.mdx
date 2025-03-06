@@ -18,7 +18,7 @@ Phase securely injects secrets into your Laravel application at runtime without 
 
 In the root of your Laravel application, run:
 
-```bash
+```fish
 phase init
 ```
 
@@ -28,7 +28,7 @@ This will create the necessary configuration files for Phase.
 
 For local development, you can use Phase with `artisan serve`:
 
-```bash
+```fish
 phase run php artisan serve
 ```
 
@@ -40,7 +40,7 @@ For production environments, Phase integrates with standard Laravel deployment m
 
 When running Laravel with PHP-FPM behind Nginx or Apache, you can use Phase in your process manager configuration:
 
-```bash
+```fish
 # Example for systemd service
 ExecStart=/usr/bin/phase run php-fpm
 
@@ -52,7 +52,7 @@ command=/usr/bin/phase run php-fpm
 
 If you're using Laravel Forge, add Phase to your deployment script:
 
-```bash
+```fish
 # In your deployment script
 phase run your-standard-launch-command
 ```
