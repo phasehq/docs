@@ -162,3 +162,70 @@ Your JumpCloud SSO integration is now configured! Users can access Phase through
 
 For more detailed information about JumpCloud SSO configuration, refer to the [official JumpCloud documentation](https://support.jumpcloud.com/s/article/Single-Sign-On-SSO-with-OIDC).
 
+## Microsoft Entra ID / Azure AD
+
+You can integrate Microsoft Entra ID (formerly Azure Active Directory) as an OIDC provider for your Phase instance. Follow these steps to set up Microsoft Entra ID SSO for Phase:
+
+1. Sign in to the [Azure Portal](https://portal.azure.com) with your Microsoft account.
+
+   ![Sign in to Azure Portal](/assets/images/auth/sso/oidc/microsoft-entra-id/0-signup-login-to-azure-portal.png)
+
+2. Select "Microsoft Entra ID" from the side navigation blade or from Azure services.
+
+   ![Select Microsoft Entra ID](/assets/images/auth/sso/oidc/microsoft-entra-id/1-select-microsoft-entra-id-from-the-side-blade-or-from-azure-services.png)
+
+3. In the Microsoft Entra ID dashboard, select "App registrations" from the Manage section in the sidebar.
+
+   ![Select App registrations](/assets/images/auth/sso/oidc/microsoft-entra-id/2-select-app-registrations-from-under-the-manage-dropdown-in-entra-id-sidebar.png)
+
+4. Click the "New registration" button in the top menu.
+
+   ![Click New registration](/assets/images/auth/sso/oidc/microsoft-entra-id/3-click-new-registration-button-from-the-top-option-bar.png)
+
+5. Provide a name for your application, select the supported account types (who can use this application), and add the redirect URI for your Phase instance (e.g., https://[**YOUR_DOMAIN**].com/api/auth/callback/entra-id-oidc).
+
+   You can copy the following path, please make sure to pre-fix it with scheme + your domain.
+
+   ```
+   /api/auth/callback/entra-id-oidc
+   ```
+
+   Click "Register" to create the application.
+
+   ![Configure application registration](/assets/images/auth/sso/oidc/microsoft-entra-id/4-supply-a-name-select-scope-of-access-add-redirection-uri-click-register.png)
+
+6. Once your application is registered, copy the "Application (client) ID" from the Overview page. This will be used as your `ENTRA_ID_OIDC_CLIENT_ID`.
+
+   ![Copy Application Client ID](/assets/images/auth/sso/oidc/microsoft-entra-id/5-copy-application-client-id.png)
+
+7. Still on the Overview page, copy the "Directory (tenant) ID". This will be used as your `ENTRA_ID_OIDC_TENANT_ID`.
+
+   ![Copy Directory Tenant ID](/assets/images/auth/sso/oidc/microsoft-entra-id/6-copy-directory-tenand-id.png)
+
+8. From the left sidebar, select "Certificates & secrets" under the Manage section.
+
+   ![Select Certificates & secrets](/assets/images/auth/sso/oidc/microsoft-entra-id/7-select-certificates-&-secrets-from-under-the-manage-dropdown-in-the-app-sidebar.png)
+
+9. In the Client secrets tab, click "New client secret".
+
+   ![Create new client secret](/assets/images/auth/sso/oidc/microsoft-entra-id/8-click-new-client-secret-under-the-client-secrets-tab.png)
+
+10. Provide a description for your client secret and select an expiration period, then click "Add".
+
+    ![Configure client secret](/assets/images/auth/sso/oidc/microsoft-entra-id/9-provide-client-secret-description-and-expiry.png)
+
+11. Immediately copy the generated client secret value. This will be used as your `ENTRA_ID_OIDC_CLIENT_SECRET`. Note that you will not be able to view this value again after leaving this page.
+
+    ![Copy client secret value](/assets/images/auth/sso/oidc/microsoft-entra-id/10-copy-the-client-secret-value.png)
+
+12. Supply these credentials to your Phase Console deployment as environment variables:
+    - `ENTRA_ID_OIDC_TENANT_ID`
+    - `ENTRA_ID_OIDC_CLIENT_ID`
+    - `ENTRA_ID_OIDC_CLIENT_SECRET`
+
+    Please see [deployment configuration](/self-hosting/configuration/envars#microsoft-entra-id-oidc) for more details.
+
+Your Microsoft Entra ID SSO integration is now configured! Users can now authenticate to your Phase instance using their Microsoft credentials.
+
+For more detailed information about Microsoft Entra ID application registration and OIDC configuration, refer to the [official Microsoft documentation](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app).
+
