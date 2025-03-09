@@ -170,11 +170,11 @@ You can integrate Microsoft Entra ID (formerly Azure Active Directory) as an OID
 
    ![Sign in to Azure Portal](/assets/images/auth/sso/oidc/microsoft-entra-id/0-signup-login-to-azure-portal.png)
 
-2. Select "Microsoft Entra ID" from the side navigation blade or from Azure services.
+2. Select "Microsoft Entra ID" from the side navigation blade or from Azure services. You can also search for "Microsoft Entra ID" in the search bar.
 
    ![Select Microsoft Entra ID](/assets/images/auth/sso/oidc/microsoft-entra-id/1-select-microsoft-entra-id-from-the-side-blade-or-from-azure-services.png)
 
-3. In the Microsoft Entra ID dashboard, select "App registrations" from the Manage section in the sidebar.
+3. In the Microsoft Entra ID dashboard, select "App registrations" from the Manage dropdown section in the sidebar.
 
    ![Select App registrations](/assets/images/auth/sso/oidc/microsoft-entra-id/2-select-app-registrations-from-under-the-manage-dropdown-in-entra-id-sidebar.png)
 
@@ -182,7 +182,14 @@ You can integrate Microsoft Entra ID (formerly Azure Active Directory) as an OID
 
    ![Click New registration](/assets/images/auth/sso/oidc/microsoft-entra-id/3-click-new-registration-button-from-the-top-option-bar.png)
 
-5. Provide a name for your application, select the supported account types (who can use this application), and add the redirect URI for your Phase instance (e.g., https://[**YOUR_DOMAIN**].com/api/auth/callback/entra-id-oidc).
+5. Provide a name for your application, select the supported account types, you will have a choice between:
+   - Accounts in this organizational directory only (Single tenant)
+   - Accounts in any organizational directory (Any Azure AD directory - Multitenant) 
+   - Accounts in any organizational directory (Any Azure AD directory - Multitenant) and personal Microsoft accounts (Multi-tenant)
+
+   For most users this will be "**Accounts in this organizational directory only - Single tenant**" 
+   
+   In the Redirect URI section, select "Web" and add the appropriate redirect URI for your Phase instance (e.g., https://[**YOUR_DOMAIN**].com/api/auth/callback/entra-id-oidc).
 
    You can copy the following path, please make sure to pre-fix it with scheme + your domain.
 
@@ -202,7 +209,7 @@ You can integrate Microsoft Entra ID (formerly Azure Active Directory) as an OID
 
    ![Copy Directory Tenant ID](/assets/images/auth/sso/oidc/microsoft-entra-id/6-copy-directory-tenand-id.png)
 
-8. From the left sidebar, select "Certificates & secrets" under the Manage section.
+8. Select "Certificates & secrets" under the Manage dropdown section in the sidebar.
 
    ![Select Certificates & secrets](/assets/images/auth/sso/oidc/microsoft-entra-id/7-select-certificates-&-secrets-from-under-the-manage-dropdown-in-the-app-sidebar.png)
 
@@ -210,7 +217,11 @@ You can integrate Microsoft Entra ID (formerly Azure Active Directory) as an OID
 
    ![Create new client secret](/assets/images/auth/sso/oidc/microsoft-entra-id/8-click-new-client-secret-under-the-client-secrets-tab.png)
 
-10. Provide a description for your client secret and select an expiration period, then click "Add".
+10. Provide a description for your client secret and select an appropriate expiration period, we suggest >= 730 days (24 months) then click "Add".
+
+   <Note>
+    Your Entra ID OIDC authentication will stop working, once the client secret expires. To prevent being locked out of your Phase instance unexpectedly, please set a reminder on your calendar to duly renew it.
+   </Note>
 
     ![Configure client secret](/assets/images/auth/sso/oidc/microsoft-entra-id/9-provide-client-secret-description-and-expiry.png)
 
@@ -225,7 +236,6 @@ You can integrate Microsoft Entra ID (formerly Azure Active Directory) as an OID
 
     Please see [deployment configuration](/self-hosting/configuration/envars#microsoft-entra-id-oidc) for more details.
 
-Your Microsoft Entra ID SSO integration is now configured! Users can now authenticate to your Phase instance using their Microsoft credentials.
+Your Microsoft Entra ID SSO application is now configured! You can now provision user access to your Phase instance by adding the application to individual users in your Microsoft Entra ID directory or to groups of users.
 
 For more detailed information about Microsoft Entra ID application registration and OIDC configuration, refer to the [official Microsoft documentation](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app).
-
