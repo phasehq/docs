@@ -31,6 +31,7 @@ The following providers are available:
 - `gitlab` - GitLab OAuth 2.0
 - `google-oidc` - Google OIDC
 - `jumpcloud-oidc` - JumpCloud OIDC
+- `entra-id-oidc` - Microsoft Entra ID OIDC
 
 You can find a complete list of user auth providers [here](/access-control/authentication#user-authentication).
 
@@ -165,6 +166,35 @@ After setting up your Application on JumpCloud, set the Client ID and Client sec
   </Property>
   <Property name="JUMPCLOUD_OIDC_CLIENT_SECRET" type="string">
     JumpCloud OIDC Client secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
+  </Property>
+</Properties>
+
+Env(s) required by the following containers:
+- [`frontend`](https://hub.docker.com/r/phasehq/frontend)
+- [`backend`](https://hub.docker.com/r/phasehq/backend)
+
+### Microsoft Entra ID OIDC
+
+You can find instructions for setting up SSO with a Microsoft Entra ID OIDC Application [here](/access-control/authentication/oidc-sso#microsoft-entra-id-azure-ad).
+
+Set the "callback URL" for your Microsoft Entra ID OIDC App as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/entra-id-oidc`.
+
+Example:
+```bash
+https://[**YOUR_DOMAIN**]/api/auth/callback/entra-id-oidc
+``` 
+
+After setting up your Application on Microsoft Entra ID, set the Tenant ID, Client ID and Client secret values:
+
+<Properties>
+  <Property name="ENTRA_ID_OIDC_TENANT_ID" type="string">
+    Microsoft Entra ID Directory (tenant) ID
+  </Property>
+  <Property name="ENTRA_ID_OIDC_CLIENT_ID" type="string">
+    Microsoft Entra ID Application (client) ID
+  </Property>
+  <Property name="ENTRA_ID_OIDC_CLIENT_SECRET" type="string">
+    Microsoft Entra ID Client secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
   </Property>
 </Properties>
 
