@@ -236,6 +236,22 @@ You can integrate Microsoft Entra ID (formerly Azure Active Directory) as an OID
 
     Please see [deployment configuration](/self-hosting/configuration/envars#microsoft-entra-id-oidc) for more details.
 
+13. (Optional) Configure additional application properties by navigating to Entra ID > Enterprise Applications > All applications > select the app you just created (Phase Console) > under the "Manage" dropdown in the left sidebar, select "Properties". These settings help customize the appearance and access controls for your application.
+
+    ![Application Properties Options](/assets/images/auth/sso/oidc/microsoft-entra-id/11-optional-visibility-assignment-options.png)
+
+    You can configure:
+    
+    - **Homepage URL**: Set this to your Phase application's homepage (e.g., https://acme.com)
+    
+    - **Logo**: Upload a custom logo for your application that will appear in the Microsoft Entra ID portal and user sign-in experiences
+    
+    - **Assignment required**: This important setting controls access to your application:
+      - If set to **Yes**: Users or groups must be explicitly assigned to the application before they can access it
+      - If set to **No**: All users or groups in your directory can access the application without assignment
+    
+    - **Visibility options**: These settings control whether the application appears in user portals (e.g., https://myapplications.microsoft.com)
+
 Your Microsoft Entra ID SSO application is now configured! You can now provision user access to your Phase instance by adding the application to individual users in your Microsoft Entra ID directory or to groups of users.
 
 For more detailed information about Microsoft Entra ID application registration and OIDC configuration, refer to the [official Microsoft documentation](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app).
