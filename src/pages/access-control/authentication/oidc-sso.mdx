@@ -255,3 +255,50 @@ You can integrate Microsoft Entra ID (formerly Azure Active Directory) as an OID
 Your Microsoft Entra ID SSO application is now configured! You can now provision user access to your Phase instance by adding the application to individual users in your Microsoft Entra ID directory or to groups of users.
 
 For more detailed information about Microsoft Entra ID application registration and OIDC configuration, refer to the [official Microsoft documentation](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app).
+
+### Troubleshooting: Microsoft Entra ID
+
+#### Issue: Need Admin Approval
+
+If users encounter a "Need admin approval" screen while trying to log into the Phase Console, asking them to either sign in with an admin account or return to the application without granting consent:
+
+![Need Admin Approval Screen](/assets/images/auth/sso/oidc/microsoft-entra-id/need-admin-approval-error.png)
+
+To resolve this:
+
+1. Log into the Azure Portal as an administrator
+2. Navigate to Entra ID > Enterprise Applications
+3. Select the application you have set up (Phase Console)
+4. Under the "Security" dropdown in the left sidebar, select "Permissions"
+5. Click "Grant admin consent for \<Your Organization\>" as shown in the screenshot below
+
+![Granting Admin Consent](/assets/images/auth/sso/oidc/microsoft-entra-id/grant-admin-consent-security-permission.png)
+
+After granting admin consent, users should be able to log in without seeing the 'Need admin approval' message on the consent screen.
+
+#### Issue: User Email Missing
+
+If a user is unable to log in to the Phase Console and upon reviewing the frontend logs you see the following error:
+
+```fish
+phase-frontend-dev | message: 'User does not have a valid email'.
+```
+
+This error suggests that the Phase Console was unable to fetch the user's email during authentication. This is most common for users that have been created in Entra ID manually by an administrator without an email address.
+
+<Note>
+A valid email address is a requirement to sign up or log in to the Phase Console.
+</Note>
+
+To resolve this:
+
+1. Log into the Azure Portal as an administrator
+2. Navigate to Entra ID
+3. Select "Users" under the Manage dropdown
+4. Select the user who is having trouble logging in
+5. Click "Edit properties"
+6. Click "Contact information" 
+7. Add the user's email address
+8. Click "Save"
+
+After adding the email address to the user's profile, they should be able to log in successfully.
