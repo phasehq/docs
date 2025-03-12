@@ -18,60 +18,60 @@ Google's OAuth 2.0 APIs are compatible with OpenID Connect (OIDC) and can be use
 
 Follow these steps to set up Google SSO for your Phase application:
 
-1. Go to your [Google Cloud Platform Console](https://console.cloud.google.com/) and click the "Select a project" dropdown.
+1. Go to your [Google Cloud Platform Console](https://console.cloud.google.com/) and click the **Select a project** dropdown.
 
    ![Select a project](/assets/images/auth/sso/google/1-select-a-project.png)
 
-2. Click "New project". If you already have a project you want to use, select it from the list and skip to step 5.
+2. Click **New project**. If you already have a project you want to use, select it from the list and skip to step 5.
 
    ![New project select](/assets/images/auth/sso/google/2-new-project-select.png)
 
-3. Enter a valid Project Name and click "Create".
+3. Enter a valid Project Name and click **Create**.
 
    ![New project create](/assets/images/auth/sso/google/3-new-project-create.png)
 
-4. Go to your newly created project by clicking "SELECT PROJECT" from the notifications.
+4. Go to your newly created project by clicking **SELECT PROJECT** from the notifications.
 
    ![Go to new project](/assets/images/auth/sso/google/4-go-to-new-project.png)
 
-5. In your console's search box, type 'Credentials' and click on the result that says "Credentials - APIs & Services".
+5. In your console's search box, type "Credentials" and click on the result that says **Credentials - APIs & Services**.
 
    ![Search credentials](/assets/images/auth/sso/google/5-search-credentials.png)
 
-6. Click on "+ CREATE CREDENTIALS" and select "OAuth client ID". If this is your first time creating an OAuth credential, you'll need to set up a consent screen. If you've already set up a consent screen, skip to Step 13.
+6. Click on **+ CREATE CREDENTIALS** and select **OAuth client ID**. If this is your first time creating an OAuth credential, you'll need to set up a consent screen. If you've already set up a consent screen, skip to Step 13.
 
    ![Create OAuth client ID](/assets/images/auth/sso/google/6-create-oauth-client-id.png)
 
-7. When prompted to configure an OAuth consent screen, click the "CONFIGURE CONSENT SCREEN" button.
+7. When prompted to configure an OAuth consent screen, click the **CONFIGURE CONSENT SCREEN** button.
 
    ![Configure consent screen](/assets/images/auth/sso/google/7-first-time-consent-screen-config.png)
 
-8. Choose "External" as the User Type for the OAuth consent screen.
+8. Choose **External** as the User Type for the OAuth consent screen.
 
    ![Create external consent screen](/assets/images/auth/sso/google/8-create-external-consent-screen.png)
 
-9. Enter details for mandatory fields such as App name, User support email, and Developer contact information. Click "SAVE AND CONTINUE".
+9. Enter details for mandatory fields such as **App name**, **User support email**, and **Developer contact information**. Click **SAVE AND CONTINUE**.
 
    ![Consent screen app information](/assets/images/auth/sso/google/9-consent-screen-app-information.png)
    ![Consent screen app information save and continue](/assets/images/auth/sso/google/10-consent-screen-app-information-save-continue.png)
 
-10. Continue through the Scopes step by clicking "SAVE AND CONTINUE".
+10. Continue through the Scopes step by clicking **SAVE AND CONTINUE**.
 
     ![Consent screen scope save and continue](/assets/images/auth/sso/google/11-consent-screen-scope-save-continue.png)
 
-11. Continue through the Test user setup screen by clicking "SAVE AND CONTINUE".
+11. Continue through the Test user setup screen by clicking **SAVE AND CONTINUE**.
 
     ![Consent screen test users save and continue](/assets/images/auth/sso/google/12-consent-screen-test-users-save-continue.png)
 
-12. Review the details of your Consent screen app registration and click "BACK TO DASHBOARD".
+12. Review the details of your Consent screen app registration and click **BACK TO DASHBOARD**.
 
     ![Consent screen back to dashboard](/assets/images/auth/sso/google/13-consent-screen-back-to-dashboard.png)
 
-13. In the APIs & Services dashboard, click "+ CREATE CREDENTIALS" and select "OAuth client ID" from the dropdown.
+13. In the APIs & Services dashboard, click **+ CREATE CREDENTIALS** and select **OAuth client ID** from the dropdown.
 
     ![Select a project](/assets/images/auth/sso/google/13-5-create-oauth-app.png)
 
-14. In the Application type dropdown, select "Web application". Enter a recognizable name in the Name field, add the Authorized redirect URI (e.g., https://[**YOUR_DOMAIN**].com/api/auth/callback/google-oidc), and click "CREATE".
+14. In the Application type dropdown, select **Web application**. Enter a recognizable name in the **Name** field, add the **Authorized redirect URI** (e.g., https://[**YOUR_DOMAIN**].com/api/auth/callback/google-oidc), and click **CREATE**.
 
    You can copy the following path, please make sure to pre-fix it with scheme + your domain.
 
@@ -81,7 +81,7 @@ Follow these steps to set up Google SSO for your Phase application:
 
     ![Create OAuth client ID config](/assets/images/auth/sso/oidc/google/14-create-oauth-client-id-config.png)
 
-15. You will be presented with the OAuth Client ID and Client secret. Copy these by clicking the clipboard icon next to each.
+15. You will be presented with the **OAuth Client ID** and **Client secret**. Copy these by clicking the clipboard icon next to each.
 
     ![Copy OAuth credentials](/assets/images/auth/sso/google/15-copy-oauth-creds.png)
 
@@ -94,35 +94,35 @@ You can find detailed official instructions for setting up SSO with a Google OAu
 
 You can use JumpCloud as an OIDC provider to set up SSO for your Phase instance. Follow these steps to set up a JumpCloud SSO application for Phase:
 
-1. Log in to your [JumpCloud Admin Console](https://console.jumpcloud.com/login/admin) and click "SSO Applications" from the sidebar. 
+1. Log in to your [JumpCloud Admin Console](https://console.jumpcloud.com/login/admin) and click **SSO Applications** from the sidebar. 
 
    ![Access JumpCloud SSO Applications](/assets/images/auth/sso/oidc/jumpcloud/1-click-SSO-applications-sidebar.png)
 
-2. In the SSO Applications section, click "Get Started" if you haven't configured any apps before, or "+ Add New Application" if you already have existing applications.
+2. In the SSO Applications section, click **Get Started** if you haven't configured any apps before, or **+ Add New Application** if you already have existing applications.
 
    ![Add New Application](/assets/images/auth/sso/oidc/jumpcloud/2-click-get-started-if-no-apps-click-add-new-if-app-exists.png)
 
-3. Select "Custom Application" from the available options (located at the bottom right).
+3. Select **Custom Application** from the available options (located at the bottom right).
 
    ![Select Custom Application](/assets/images/auth/sso/oidc/jumpcloud/3-select-custom-application-bottom-right-tile.png)
 
-4. On the custom application screen, click "Next" to proceed.
+4. On the custom application screen, click **Next** to proceed.
 
    ![Proceed with Custom Application](/assets/images/auth/sso/oidc/jumpcloud/4-custom-application-click-next.png)
 
-5. Choose "Configure SSO with OIDC" as your authentication method and click "Next".
+5. Choose **Configure SSO with OIDC** as your authentication method and click **Next**.
 
    ![Configure SSO with OIDC](/assets/images/auth/sso/oidc/jumpcloud/5-select-configure-SSO-with-OIDC-click-next.png)
 
-6. Fill in the general information for your application, including the "Display Label" and "Description", then click "Next".
+6. Fill in the general information for your application, including the **Display Label** and **Description**, then click **Next**.
 
    ![Enter General Information](/assets/images/auth/sso/oidc/jumpcloud/6-enter-general-info-click-next.png)
 
-7. Review your configuration settings and click "Configure Application".
+7. Review your configuration settings and click **Configure Application**.
 
    ![Review Configuration](/assets/images/auth/sso/oidc/jumpcloud/7-review-config-click-configure-application.png)
 
-8. Add your Phase application's redirect URI (e.g., https://[**YOUR_DOMAIN**].com/api/auth/callback/jumpcloud-oidc) and login URL.
+8. Add your Phase application's **Redirect URI** (e.g., https://[**YOUR_DOMAIN**].com/api/auth/callback/jumpcloud-oidc) and **Login URL**.
 
    You can copy the following path, please make sure to pre-fix it with scheme + your domain.
 
@@ -132,19 +132,19 @@ You can use JumpCloud as an OIDC provider to set up SSO for your Phase instance.
 
    ![Add Redirect URIs](/assets/images/auth/sso/oidc/jumpcloud/8-add-redirect-uris-login-url.png)
 
-9. Under the Standard Scopes section, ensure "Email" and "Profile" are selected. (This information is required for user provisioning.)
+9. Under the Standard Scopes section, ensure **Email** and **Profile** are selected. (This information is required for user provisioning.)
 
    ![Select Standard Scopes](/assets/images/auth/sso/oidc/jumpcloud/9-select-email-profile-from-standard-scope.png)
 
-10. Click the "Activate" button at the bottom right of screen to enable the application.
+10. Click the **Activate** button at the bottom right of screen to enable the application.
 
     ![Activate Application](/assets/images/auth/sso/oidc/jumpcloud/10-click-activate.png)
 
-11. Please copy the Client ID and Client Secret provided. You'll need to supply these as environment variables to your Phase instance. Please see [deployment configuration](/self-hosting/configuration/envars#jump-cloud-oidc).
+11. Please copy the **Client ID** and **Client Secret** provided. You'll need to supply these as environment variables to your Phase instance. Please see [deployment configuration](/self-hosting/configuration/envars#jump-cloud-oidc).
 
     ![Copy Credentials](/assets/images/auth/sso/oidc/jumpcloud/11-copy-client-id-client-secret.png)
 
-12. Next, we need to provision user access to your JumpCloud application. Please navigate to the "User Groups" tab to manage access.
+12. Next, we need to provision user access to your JumpCloud application. Please navigate to the **User Groups** tab to manage access.
 
     ![Access User Groups](/assets/images/auth/sso/oidc/jumpcloud/12-click-user-groups-tab.png)
 
@@ -152,7 +152,7 @@ You can use JumpCloud as an OIDC provider to set up SSO for your Phase instance.
 
     ![Select User Groups](/assets/images/auth/sso/oidc/jumpcloud/13-select-the-group-provision-access.png)
 
-14. Click "Save" to provision access.
+14. Click **Save** to provision access.
 
     ![Save Group Settings](/assets/images/auth/sso/oidc/jumpcloud/14-click-save.png)
 
@@ -162,3 +162,144 @@ Your JumpCloud SSO integration is now configured! Users can access Phase through
 
 For more detailed information about JumpCloud SSO configuration, refer to the [official JumpCloud documentation](https://support.jumpcloud.com/s/article/Single-Sign-On-SSO-with-OIDC).
 
+## Microsoft Entra ID / Azure AD
+
+You can integrate Microsoft Entra ID (formerly Azure Active Directory) as an OIDC provider for your Phase instance. Follow these steps to set up Microsoft Entra ID SSO for Phase:
+
+1. Sign in to the [Azure Portal](https://portal.azure.com) with your Microsoft account.
+
+   ![Sign in to Azure Portal](/assets/images/auth/sso/oidc/microsoft-entra-id/0-signup-login-to-azure-portal.png)
+
+2. Select **Microsoft Entra ID** from the side navigation blade or from Azure services. You can also search for **Microsoft Entra ID** in the search bar.
+
+   ![Select Microsoft Entra ID](/assets/images/auth/sso/oidc/microsoft-entra-id/1-select-microsoft-entra-id-from-the-side-blade-or-from-azure-services.png)
+
+3. In the Microsoft Entra ID dashboard, select **App registrations** from the Manage dropdown section in the sidebar.
+
+   ![Select App registrations](/assets/images/auth/sso/oidc/microsoft-entra-id/2-select-app-registrations-from-under-the-manage-dropdown-in-entra-id-sidebar.png)
+
+4. Click the **New registration** button in the top menu.
+
+   ![Click New registration](/assets/images/auth/sso/oidc/microsoft-entra-id/3-click-new-registration-button-from-the-top-option-bar.png)
+
+5. Provide a name for your application, select the supported account types, you will have a choice between:
+   1. Accounts in this organizational directory only (Single tenant)
+   2. Accounts in any organizational directory (Any Azure AD directory - Multitenant) 
+   3. Accounts in any organizational directory (Any Azure AD directory - Multitenant) and personal Microsoft accounts (Multi-tenant)
+
+   For most users this will be Option 1: **Accounts in this organizational directory only - Single tenant** 
+   
+   In the Redirect URI section, select **Web** and add the appropriate redirect URI for your Phase instance. This will be the hostname of your instance, followed by:
+   
+   ```
+   /api/auth/callback/entra-id-oidc
+   ```
+   
+   (e.g., `https://[YOUR_PHASE_HOST]/api/auth/callback/entra-id-oidc`).
+
+
+   Click **Register** to create the application.
+
+   ![Configure application registration](/assets/images/auth/sso/oidc/microsoft-entra-id/4-supply-a-name-select-scope-of-access-add-redirection-uri-click-register.png)
+
+6. Once your application is registered, copy the **Application (client) ID** from the Overview page. This will be used as your `ENTRA_ID_OIDC_CLIENT_ID`.
+
+   ![Copy Application Client ID](/assets/images/auth/sso/oidc/microsoft-entra-id/5-copy-application-client-id.png)
+
+7. Still on the Overview page, copy the **Directory (tenant) ID**. This will be used as your `ENTRA_ID_OIDC_TENANT_ID`.
+
+   ![Copy Directory Tenant ID](/assets/images/auth/sso/oidc/microsoft-entra-id/6-copy-directory-tenand-id.png)
+
+8. Select **Certificates & secrets** under the *Manage* dropdown section in the sidebar.
+
+   ![Select Certificates & secrets](/assets/images/auth/sso/oidc/microsoft-entra-id/7-select-certificates-&-secrets-from-under-the-manage-dropdown-in-the-app-sidebar.png)
+
+9. In the *Client secrets* tab, click **New client secret**.
+
+   ![Create new client secret](/assets/images/auth/sso/oidc/microsoft-entra-id/8-click-new-client-secret-under-the-client-secrets-tab.png)
+
+10. Provide a description for your client secret and select an appropriate expiration period, we suggest >= 730 days (24 months) then click **Add**.
+
+   <Note>
+    Your Entra ID OIDC authentication will stop working, once the client secret expires. To prevent being locked out of your Phase instance unexpectedly, please set a reminder on your calendar to duly renew it.
+   </Note>
+
+    ![Configure client secret](/assets/images/auth/sso/oidc/microsoft-entra-id/9-provide-client-secret-description-and-expiry.png)
+
+11. Immediately copy the generated client secret value. This will be used as your `ENTRA_ID_OIDC_CLIENT_SECRET`. Note that you will not be able to view this value again after leaving this page.
+
+    ![Copy client secret value](/assets/images/auth/sso/oidc/microsoft-entra-id/10-copy-the-client-secret-value.png)
+
+12. Supply these credentials to your Phase Console deployment as environment variables:
+    - `ENTRA_ID_OIDC_TENANT_ID`
+    - `ENTRA_ID_OIDC_CLIENT_ID`
+    - `ENTRA_ID_OIDC_CLIENT_SECRET`
+
+    Please see [deployment configuration](/self-hosting/configuration/envars#microsoft-entra-id-oidc) for more details.
+
+13. (Optional) Configure additional application properties by navigating to **Entra ID** > **Enterprise Applications** > **All applications** > select the app you just created (Phase Console) > under the *Manage* dropdown in the left sidebar, select **Properties**. These settings help customize the appearance and access controls for your application.
+
+    ![Application Properties Options](/assets/images/auth/sso/oidc/microsoft-entra-id/11-optional-visibility-assignment-options.png)
+
+    You can configure:
+    
+    - **Homepage URL**: Set this to your Phase application's homepage (e.g., https://acme.com)
+    
+    - **Logo**: Upload a custom logo for your application that will appear in the Microsoft Entra ID portal and user sign-in experiences
+    
+    - **Assignment required**: This important setting controls access to your application:
+      - If set to **Yes**: Users or groups must be explicitly assigned to the application before they can access it
+      - If set to **No**: All users or groups in your directory can access the application without assignment
+    
+    - **Visibility options**: These settings control whether the application appears in user portals (e.g., https://myapplications.microsoft.com)
+
+Your Microsoft Entra ID SSO application is now configured! You can now provision user access to your Phase instance by adding the application to individual users in your Microsoft Entra ID directory or to groups of users.
+
+For more detailed information about Microsoft Entra ID application registration and OIDC configuration, refer to the [official Microsoft documentation](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app).
+
+### Troubleshooting: Microsoft Entra ID
+
+#### Issue: Need Admin Approval
+
+If users encounter a "Need admin approval" screen while trying to log into the Phase Console, asking them to either sign in with an admin account or return to the application without granting consent:
+
+![Need Admin Approval Screen](/assets/images/auth/sso/oidc/microsoft-entra-id/need-admin-approval-error.png)
+
+Resolve this by following these steps:
+
+1. Log into the Azure Portal as an administrator
+2. Navigate to **Entra ID** > **Enterprise Applications**
+3. Select the application you have set up (Phase Console)
+4. Under the *Security* dropdown in the left sidebar, select **Permissions**
+5. Click **Grant admin consent for \<Your Organization\>** as shown in the screenshot below
+
+![Granting Admin Consent](/assets/images/auth/sso/oidc/microsoft-entra-id/grant-admin-consent-security-permission.png)
+
+After granting admin consent, users should be able to log in without seeing the "Need admin approval" message on the consent screen.
+
+#### Issue: User Email Missing
+
+If a user is unable to log in to the Phase Console and upon reviewing the frontend logs you see the following error:
+
+```fish
+phase-frontend-dev | message: 'User does not have a valid email'.
+```
+
+This error suggests that the Phase Console was unable to fetch the user's email during authentication. This is most common for users that have been created in Entra ID manually by an administrator without an email address.
+
+<Note>
+A valid email address is a requirement to sign up or log in to the Phase Console.
+</Note>
+
+To resolve this:
+
+1. Log into the Azure Portal as an Administrator
+2. Navigate to **Entra ID**
+3. Select **Users** under the *Manage* dropdown
+4. Select the user who is having trouble logging in
+5. Click **Edit properties**
+6. Click **Contact information**
+7. Add the user's email address
+8. Click **Save**
+
+After adding the email address to the user's profile, they should be able to log in successfully.
