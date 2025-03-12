@@ -170,54 +170,55 @@ You can integrate Microsoft Entra ID (formerly Azure Active Directory) as an OID
 
    ![Sign in to Azure Portal](/assets/images/auth/sso/oidc/microsoft-entra-id/0-signup-login-to-azure-portal.png)
 
-2. Select "Microsoft Entra ID" from the side navigation blade or from Azure services. You can also search for "Microsoft Entra ID" in the search bar.
+2. Select **Microsoft Entra ID** from the side navigation blade or from Azure services. You can also search for **Microsoft Entra ID** in the search bar.
 
    ![Select Microsoft Entra ID](/assets/images/auth/sso/oidc/microsoft-entra-id/1-select-microsoft-entra-id-from-the-side-blade-or-from-azure-services.png)
 
-3. In the Microsoft Entra ID dashboard, select "App registrations" from the Manage dropdown section in the sidebar.
+3. In the Microsoft Entra ID dashboard, select **App registrations** from the Manage dropdown section in the sidebar.
 
    ![Select App registrations](/assets/images/auth/sso/oidc/microsoft-entra-id/2-select-app-registrations-from-under-the-manage-dropdown-in-entra-id-sidebar.png)
 
-4. Click the "New registration" button in the top menu.
+4. Click the **New registration** button in the top menu.
 
    ![Click New registration](/assets/images/auth/sso/oidc/microsoft-entra-id/3-click-new-registration-button-from-the-top-option-bar.png)
 
 5. Provide a name for your application, select the supported account types, you will have a choice between:
-   - Accounts in this organizational directory only (Single tenant)
-   - Accounts in any organizational directory (Any Azure AD directory - Multitenant) 
-   - Accounts in any organizational directory (Any Azure AD directory - Multitenant) and personal Microsoft accounts (Multi-tenant)
+   1. Accounts in this organizational directory only (Single tenant)
+   2. Accounts in any organizational directory (Any Azure AD directory - Multitenant) 
+   3. Accounts in any organizational directory (Any Azure AD directory - Multitenant) and personal Microsoft accounts (Multi-tenant)
 
-   For most users this will be "**Accounts in this organizational directory only - Single tenant**" 
+   For most users this will be Option 1: **Accounts in this organizational directory only - Single tenant** 
    
-   In the Redirect URI section, select "Web" and add the appropriate redirect URI for your Phase instance (e.g., https://[**YOUR_DOMAIN**].com/api/auth/callback/entra-id-oidc).
-
-   You can copy the following path, please make sure to pre-fix it with scheme + your domain.
-
+   In the Redirect URI section, select **Web** and add the appropriate redirect URI for your Phase instance. This will be the hostname of your instance, followed by:
+   
    ```
    /api/auth/callback/entra-id-oidc
    ```
+   
+   (e.g., `https://[YOUR_PHASE_HOST]/api/auth/callback/entra-id-oidc`).
 
-   Click "Register" to create the application.
+
+   Click **Register** to create the application.
 
    ![Configure application registration](/assets/images/auth/sso/oidc/microsoft-entra-id/4-supply-a-name-select-scope-of-access-add-redirection-uri-click-register.png)
 
-6. Once your application is registered, copy the "Application (client) ID" from the Overview page. This will be used as your `ENTRA_ID_OIDC_CLIENT_ID`.
+6. Once your application is registered, copy the **Application (client) ID** from the Overview page. This will be used as your `ENTRA_ID_OIDC_CLIENT_ID`.
 
    ![Copy Application Client ID](/assets/images/auth/sso/oidc/microsoft-entra-id/5-copy-application-client-id.png)
 
-7. Still on the Overview page, copy the "Directory (tenant) ID". This will be used as your `ENTRA_ID_OIDC_TENANT_ID`.
+7. Still on the Overview page, copy the **Directory (tenant) ID**. This will be used as your `ENTRA_ID_OIDC_TENANT_ID`.
 
    ![Copy Directory Tenant ID](/assets/images/auth/sso/oidc/microsoft-entra-id/6-copy-directory-tenand-id.png)
 
-8. Select "Certificates & secrets" under the Manage dropdown section in the sidebar.
+8. Select **Certificates & secrets** under the *Manage* dropdown section in the sidebar.
 
    ![Select Certificates & secrets](/assets/images/auth/sso/oidc/microsoft-entra-id/7-select-certificates-&-secrets-from-under-the-manage-dropdown-in-the-app-sidebar.png)
 
-9. In the Client secrets tab, click "New client secret".
+9. In the *Client secrets* tab, click **New client secret**.
 
    ![Create new client secret](/assets/images/auth/sso/oidc/microsoft-entra-id/8-click-new-client-secret-under-the-client-secrets-tab.png)
 
-10. Provide a description for your client secret and select an appropriate expiration period, we suggest >= 730 days (24 months) then click "Add".
+10. Provide a description for your client secret and select an appropriate expiration period, we suggest >= 730 days (24 months) then click **Add**.
 
    <Note>
     Your Entra ID OIDC authentication will stop working, once the client secret expires. To prevent being locked out of your Phase instance unexpectedly, please set a reminder on your calendar to duly renew it.
@@ -236,7 +237,7 @@ You can integrate Microsoft Entra ID (formerly Azure Active Directory) as an OID
 
     Please see [deployment configuration](/self-hosting/configuration/envars#microsoft-entra-id-oidc) for more details.
 
-13. (Optional) Configure additional application properties by navigating to Entra ID > Enterprise Applications > All applications > select the app you just created (Phase Console) > under the "Manage" dropdown in the left sidebar, select "Properties". These settings help customize the appearance and access controls for your application.
+13. (Optional) Configure additional application properties by navigating to **Entra ID** > **Enterprise Applications** > **All applications** > select the app you just created (Phase Console) > under the *Manage* dropdown in the left sidebar, select **Properties**. These settings help customize the appearance and access controls for your application.
 
     ![Application Properties Options](/assets/images/auth/sso/oidc/microsoft-entra-id/11-optional-visibility-assignment-options.png)
 
@@ -264,17 +265,17 @@ If users encounter a "Need admin approval" screen while trying to log into the P
 
 ![Need Admin Approval Screen](/assets/images/auth/sso/oidc/microsoft-entra-id/need-admin-approval-error.png)
 
-To resolve this:
+Resolve this by following these steps:
 
 1. Log into the Azure Portal as an administrator
-2. Navigate to Entra ID > Enterprise Applications
+2. Navigate to **Entra ID** > **Enterprise Applications**
 3. Select the application you have set up (Phase Console)
-4. Under the "Security" dropdown in the left sidebar, select "Permissions"
-5. Click "Grant admin consent for \<Your Organization\>" as shown in the screenshot below
+4. Under the *Security* dropdown in the left sidebar, select **Permissions**
+5. Click **Grant admin consent for \<Your Organization\>** as shown in the screenshot below
 
 ![Granting Admin Consent](/assets/images/auth/sso/oidc/microsoft-entra-id/grant-admin-consent-security-permission.png)
 
-After granting admin consent, users should be able to log in without seeing the 'Need admin approval' message on the consent screen.
+After granting admin consent, users should be able to log in without seeing the "Need admin approval" message on the consent screen.
 
 #### Issue: User Email Missing
 
@@ -292,13 +293,13 @@ A valid email address is a requirement to sign up or log in to the Phase Console
 
 To resolve this:
 
-1. Log into the Azure Portal as an administrator
-2. Navigate to Entra ID
-3. Select "Users" under the Manage dropdown
+1. Log into the Azure Portal as an Administrator
+2. Navigate to **Entra ID**
+3. Select **Users** under the *Manage* dropdown
 4. Select the user who is having trouble logging in
-5. Click "Edit properties"
-6. Click "Contact information" 
+5. Click **Edit properties**
+6. Click **Contact information**
 7. Add the user's email address
-8. Click "Save"
+8. Click **Save**
 
 After adding the email address to the user's profile, they should be able to log in successfully.
