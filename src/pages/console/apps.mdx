@@ -1,5 +1,5 @@
 import { Tag } from '@/components/Tag'
-export const description = 'This guide explains how Apps work in Phase'
+export const description = 'This guide explains how Apps work in Phase.'
 
 <Tag variant="small">CONSOLE</Tag>
 
@@ -9,21 +9,21 @@ A Phase App is used to manage [Secrets](/console/secrets) for a single project, 
 
 ## Create an App
 
-Create an App by clicking the "+" button on the Apps screen. Enter a name for your app and your `sudo` password if prompted.
-You can also optionally choose to initialize your app with example secrets. This option is automatically selected for your first App.
+Create an App by clicking the "+" button on the Apps screen. Enter a name for your App and your `sudo` password if prompted.
+You can also optionally choose to initialize your App with example secrets. This option is automatically selected for your first App.
 
 ![create app](/assets/images/console/apps/app-create.png)
 
 ## Secrets
 
 This screen shows an overview of all Secrets in this App across all Environments. You can explore a specific Environment by clicking the Environment name in the column headers.
-You can expand a secret to view its status in each Environment. Clicking an Environment name will take you to this secret in the respective Environment management screen.
+You can expand a Secret to view its status in each Environment. Clicking an Environment name will take you to this Secret in the respective Environment management screen.
 
 ![app secrets](/assets/images/console/apps/app-secrets.png)
 
 ### One-click secret access
 
-The Phase Console has a "One-click access" menu in the top right of the screen when inside of an App. Open this menu and click to copy a one-liner for either the CLI or REST API to fetch secrets from the current environment and path based on the context (this defaults to the first environment and the root / path if in the app home). The ability to access secrets over the REST API requires a SSE (Server-Side Encryption) enabled App.
+The Phase Console has a "One-click access" menu in the top right of the screen when inside of an App. Open this menu and click to copy a one-liner for either the CLI or REST API to fetch secrets from the current environment and path based on the context (this defaults to the first environment and the root / path if in the App home). The ability to access secrets over the REST API requires an SSE (Server-Side Encryption) enabled App.
 
 Here's a quick demo of how it works:
 
@@ -31,7 +31,7 @@ Here's a quick demo of how it works:
 
 A temporary Personal Access Token (PAT) is automatically generated and copied to your clipboard to authenticate the request. This is ideal for quickly fetching secrets either in your dev environment or in a shell session on a remote machine.
 
-You may modify the one-liners to best suit your needs, by injecting, exporting, parsing the secrets via the CLI or over the REST API with curl. You may also run follow up commands as the oneliners set the Personal Access Token as the `PHASE_TOKEN` environment variable and the token is valid for 5 minutes.
+You may modify the one-liners to best suit your needs by injecting, exporting, or parsing the secrets via the CLI or over the REST API with curl. You may also run follow-up commands as the one-liners set the Personal Access Token as the `PHASE_TOKEN` environment variable, and the token is valid for 5 minutes.
 
 ## Access
 
@@ -53,14 +53,14 @@ You can add a Service Account to any App from the respective App's "Access" tab.
 
 ### Add a member to an App
 
-You can add a new user to any App from the respective App's "Access" tab. To add a member to an App, click the "+ Add a member" button. Select an Organization member from the dropdown list, select which Environments to grant them access to, and click "Add"
+You can add a new user to any App from the respective App's "Access" tab. To add a member to an App, click the "+ Add a member" button. Select an Organization member from the dropdown list, select which Environments to grant them access to, and click "Add".
 ![app member add](/assets/images/console/apps/app-access-members-tab.png)
 
 ![app member add](/assets/images/console/apps/app-member-add.png)
 
 ### Update Environment access for a member
 
-To update the Environments that a specific user can access, click the "Manage user access" button. Update the Environment selection and click "Save"
+To update the Environments that a specific user can access, click the "Manage user access" button. Update the Environment selection and click "Save".
 
 ![app member manage access](/assets/images/console/apps/app-member-manage.png)
 
@@ -121,9 +121,9 @@ Once enabled, the settings page will show you the updated Encryption mode:
 
 ### Delete an App
 
-To delete an app, click the "Delete" button in the Settings tab.
+To delete an App, click the "Delete" button in the Settings tab.
 
 <Warning>
- Deleting an app will permanently delete all Environments, Secrets, and Tokens
+ Deleting an App will permanently delete all Environments, Secrets, and Tokens
  associated with it.
 </Warning>
