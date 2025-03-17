@@ -21,6 +21,18 @@ You can expand a secret to view its status in each Environment. Clicking an Envi
 
 ![app secrets](/assets/images/console/apps/app-secrets.png)
 
+### One-click secret access
+
+The Phase Console has a "One-click access" menu in the top right of the screen when inside of an App. Open this menu and click to copy a one-liner for either the CLI or REST API to fetch secrets from the current environment and path based on the context (this defaults to the first environment and the root / path if in the app home). The ability to access secrets over the REST API requires a SSE (Server-Side Encryption) enabled App.
+
+Here's a quick demo of how it works:
+
+<video controls autoPlay="true" muted loop><source src="/assets/images/console/apps/one-click-access.mp4" /></video>
+
+A temporary Personal Access Token (PAT) is automatically generated and copied to your clipboard to authenticate the request. This is ideal for quickly fetching secrets either in your dev environment or in a shell session on a remote machine.
+
+You may modify the one-liners to best suit your needs, by injecting, exporting, parsing the secrets via the CLI or over the REST API with curl. You may also run follow up commands as the oneliners set the Personal Access Token as the `PHASE_TOKEN` environment variable and the token is valid for 5 minutes.
+
 ## Access
 
 ### Add a service account to an App
