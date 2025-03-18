@@ -310,6 +310,11 @@ Env(s) required by the following containers:
 
     Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
+  <Property name="SMTP_PORT" type="number">
+    The port for your SMTP server. Defaults to `587`, if not specified.
+
+    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
+  </Property>
   <Property name="SMTP_USERNAME" type="string">
     Your SMTP email gateway username.
 
