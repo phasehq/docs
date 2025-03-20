@@ -1,9 +1,51 @@
 import { Tag } from '@/components/Tag'
 
 export const description =
-  'Run Phase on your own amazon web services infrastructure.'
+  'Maintaining your Phase instance.'
 
 <Tag variant="small">SELF-HOSTING</Tag>
+
+# Database Migrations when Upgrading Phase
+
+Certain versions of Phase may require migrations to the database schema. Understanding how migrations work is crucial for maintaining a healthy Phase instance, especially when upgrading to a new version.
+
+## Migration Requirements
+
+When a new Phase version is released that requires database migrations, it will be clearly mentioned in the [release notes](https://github.com/phasehq/console/releases) with an "Important" notice:
+
+> **Important:** This release includes database migrations that must be run when upgrading to this version.
+
+Always check the release notes before upgrading to ensure you're aware of any migration requirements.
+
+## Migration Configuration
+
+By default, the backend container will automatically run migrations upon starting if the `EXTERNAL_MIGRATIONS` environment variable is not set or is set to `false`. For more information on this setting, see the [environment variables documentation](/self-hosting/configuration/envars#database-configuration).
+
+## Automatic Migrations
+
+If you're using the official Phase deployment methods such as:
+- [Docker Compose deployment template](/self-hosting/docker-compose)
+- [Phase Helm chart deployment](/self-hosting/kubernetes)
+
+Migrations will be handled externally by a dedicated job running a standalone version of the backend container. The backend and worker services will depend on this migration job completing successfully before they start. So no additional configuration or action is required on your part.
+
+## Running Migrations Manually
+
+If you've created your own deployment of Phase in a high availability system (i.e., running multiple replicas of the backend/worker services), you'll need to run migrations manually. To do this, create a job that runs the following command in the backend container image, which runs before the backend and worker services start:
+
+```fish
+python manage.py migrate
+```
+
+Ensure that `EXTERNAL_MIGRATIONS` is set to `true` in your backend service's environment variables to prevent redundant migrations from being run.
+
+## One-Way Database Changes
+
+It's important to understand that Phase's database migrations are one-way and permanent. Once a migration has been applied to your database, reverting to an older version of Phase (prior to that migration) is not recommended and will likely cause problems. This is because migrations permanently change the database schema.
+
+## Database Backups
+
+Before running any migration, we strongly recommend taking a snapshot or backup of your database instance. This ensures that if you need to revert to an older version of Phase for any reason, you can restore from the backup rather than trying to roll back migrations directly. Having a database system with point in time recovery also can help reduce the burden of manual backups and ensure reliable migrations.
 
 # Audit Log Management
 
