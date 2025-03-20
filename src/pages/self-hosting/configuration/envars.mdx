@@ -335,17 +335,21 @@ Env(s) required by the following containers:
 
     Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
-  <Property name="SMTP_USER_TLS" type="boolean">
-    Enables or disables TLS (Transport Layer Security) for SMTP connections. Defaults to `True`, if not specified.
+  <Property name="SMTP_USE_TLS" type="boolean">
+    Enables or disables TLS (Transport Layer Security) for SMTP connections. Defaults to `True`. 
     
-    Note: Only one of `SMTP_USER_TLS` or `SMTP_USER_SSL` should be enabled.
+    The value is considered `True` if the environment variable is set to `"true"` or `"1"` (case-insensitive).
+    
+    Note: Only one of `SMTP_USE_TLS` or `SMTP_USE_SSL` should be enabled.
 
     Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
-  <Property name="SMTP_USER_SSL" type="boolean">
-    Enables or disables SSL (Secure Sockets Layer) for SMTP connections. Defaults to `False`, if not specified.
+  <Property name="SMTP_USE_SSL" type="boolean">
+    Enables or disables SSL (Secure Sockets Layer) for SMTP connections. Defaults to `False`.
     
-    Note: Only one of `SMTP_USER_TLS` or `SMTP_USER_SSL` should be enabled.
+    The value is considered `True` if the environment variable is set to `"true"` or `"1"` (case-insensitive).
+    
+    Note: Only one of `SMTP_USE_TLS` or `SMTP_USE_SSL` should be enabled.
 
     Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
