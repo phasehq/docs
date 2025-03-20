@@ -335,7 +335,31 @@ Env(s) required by the following containers:
 
     Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
+  <Property name="SMTP_USER_TLS" type="boolean">
+    Enables or disables TLS (Transport Layer Security) for SMTP connections. Defaults to `True`, if not specified.
+    
+    Note: Only one of `SMTP_USER_TLS` or `SMTP_USER_SSL` should be enabled.
+
+    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
+  </Property>
+  <Property name="SMTP_USER_SSL" type="boolean">
+    Enables or disables SSL (Secure Sockets Layer) for SMTP connections. Defaults to `False`, if not specified.
+    
+    Note: Only one of `SMTP_USER_TLS` or `SMTP_USER_SSL` should be enabled.
+
+    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
+  </Property>
 </Properties>
+
+### Email Logging
+
+When sending emails, Phase logs the following information:
+
+- **Successful emails**: Debug level logs that include the email subject and recipient list (Please set `DEBUG=True` to see these logs)
+- **SMTP errors**: Error level logs that include the recipient list and detailed SMTP error message e.g. 535 Authentication credentials invalid
+- **Unexpected errors**: Error level logs that include the recipient list and error message e.g. SMTP timeouts, connection errors, etc.
+
+These logs can be useful for troubleshooting email delivery issues when self-hosting.
 
 ---
 
