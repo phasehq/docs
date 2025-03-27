@@ -28,7 +28,7 @@ To create a new environment:
 3. In the popup dialog, you'll see a message: "Create a new Environment in this App". Enter a name for your new environment in the "Environment name" field. For example, you might enter "QA" for a quality assurance environment.
 ![Create a new environment](/assets/images/console/environments/create-new-environment.png)
 
-   Environment names can only contain:
+   Environment names must match the pattern `^[a-zA-Z0-9\-_]+$`. This means they can only contain:
    - Lowercase letters (a-z)
    - Uppercase letters (A-Z)
    - Numbers (0-9)
@@ -57,7 +57,7 @@ To manage an existing environment:
 
 1. Enter the new name in the "Environment name" field.
    
-   Environment names can only contain:
+   Environment names must match the pattern `^[a-zA-Z0-9\-_]+$`. This means they can only contain:
    - Lowercase letters (a-z)
    - Uppercase letters (A-Z)
    - Numbers (0-9)
