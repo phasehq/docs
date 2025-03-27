@@ -22,12 +22,41 @@ In the root of your application's codebase run:
 phase init
 ```
 
-## Start your app with Phase
+## Development Environment
 
-Example
+For local development, you can use Laravel's built-in development server with Phase:
 
 ```fish
 phase run php artisan serve
+```
+
+## Production Environment
+
+In production, Laravel applications typically run using PHP-FPM managed by supervisor. PHP-FPM can read environment variables from the host system when properly configured.
+
+### Configure PHP-FPM
+
+First, ensure your PHP-FPM pool configuration preserves environment variables by setting:
+
+```ini
+; In your PHP-FPM pool configuration (e.g., www.conf)
+clear_env = no
+```
+
+### Configure Supervisor
+
+Then set up supervisor to run PHP-FPM through Phase:
+
+```ini
+[program:laravel]
+process_name=%(program_name)s_%(process_num)02d
+command=phase run php-fpm
+autostart=true
+autorestart=true
+user=www-data
+numprocs=1
+redirect_stderr=true
+stdout_logfile=/var/log/supervisor/laravel.log
 ```
 
 <div className="not-prose">
