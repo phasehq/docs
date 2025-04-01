@@ -109,21 +109,39 @@ helm repo add phase https://helm.phase.dev
 helm repo update
 ```
 
-### 7. Create a values file
+### 7. Create a Kubernetes managed secret containing the Phase Console secrets
+
+Please see the [Phase Console documentation](https://docs.phase.dev/self-hosting/configuration#phase-secrets) for more information on the required secrets. 
+
+Create a secret named `phase-console-secret` with the following content:
+
+```fish
+kubectl create secret generic phase-console-secret \
+  --from-literal=NEXTAUTH_SECRET=your_nextauth_secret \
+  --from-literal=SECRET_KEY=your_secret_key \
+  --from-literal=SERVER_SECRET=your_server_secret \
+  --from-literal=DATABASE_PASSWORD=your_database_password \
+  --from-literal=REDIS_PASSWORD=your_redis_password \
+  # 👇 Assuming you are using Google SSO as the login provider
+  --from-literal=GOOGLE_CLIENT_ID=your_google_client_id \
+  --from-literal=GOOGLE_CLIENT_SECRET=your_google_client_secret
+```
+
+You may use `openssl rand -hex 32` to securely generate random secrets.
+
+### 8. Create a values file
 
 Create a file named `phase-values.yaml` with the following content:
 
 ```yaml
 global:
   host: "phase.your-domain.com" # 👈 Replace with your domain
-  version: "v2.29.11" # 👈 Replace with your preferred version
+  version: "latest" # 👈 Replace with your preferred version https://github.com/phasehq/console/releases
 
 sso:
   providers: "google" # 👈 The login provider you want to use
 
-secrets:
-  googleClientId: "your_google_oauth_client_id"
-  googleClientSecret: "your_google_oauth_client_secret"
+phaseSecrets: phase-console-secret # 👈 The name of the secret you have created previously
 
 ingress:
   enabled: true
@@ -140,6 +158,7 @@ ingress:
     - hosts:
         - phase.your-domain.com # 👈 Replace with your domain
       secretName: phase-tls
+  annotations: {}
 
 certManager:
   enabled: true
@@ -149,13 +168,13 @@ certManager:
 
 You can find the latest version of the Phase Console on the [GitHub release](https://github.com/phasehq/console/releases)
 
-### 8. Install Phase
+### 9. Install Phase
 
 ```fish
 helm install phase-console phase/phase -f phase-values.yaml
 ```
 
-### 9. Verify the deployment
+### 10. Verify the deployment
 
 ```fish
 kubectl get pods
@@ -165,7 +184,7 @@ kubectl get certificate
 
 Ensure all pods are running, the ingress is correctly configured, and the certificate is issued.
 
-### 10. Access Phase Console
+### 11. Access Phase Console
 
 Once DNS propagation is complete and the certificate is issued (which may take a up to tens of minutes), you should be able to access your Phase Console at `https://phase.your-domain.com`.
 
