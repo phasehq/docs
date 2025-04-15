@@ -365,6 +365,10 @@ spec:
 
 To ensure that deployments are automatically redeployed when their associated secrets change, add the `secrets.phase.dev/redeploy` annotation with a value of `"true"` to your deployment. This instructs the Phase Kubernetes Operator to redeploy the application whenever the specified secrets are updated.
 
+<Note>
+  The redeployment annotation will only trigger when secrets have been provisioned to a deployment using `secretRef`.
+</Note>
+
 Here's an example deployment manifest incorporating this approach:
 
 ```yaml
@@ -387,12 +391,9 @@ spec:
       containers:
         - name: my-app
           image: my-app-image
-          env:
-            - name: ANOTHER_SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: my-application-secret
-                  key: ANOTHER_SECRET_KEY
+          envFrom:
+            - secretRef:
+                name: my-application-secret
 ```
 
 ### When Operator Triggers Redeployment
