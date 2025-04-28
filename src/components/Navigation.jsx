@@ -257,6 +257,7 @@ export const navigation = [
       { title: 'Tokens', href: '/access-control/authentication/tokens' },
       { title: 'Service Accounts', href: '/access-control/service-accounts' },
       { title: 'Roles', href: '/access-control/roles' },
+      { title: 'Network', href: '/access-control/network' },
     ],
   },
   {
@@ -270,7 +271,6 @@ export const navigation = [
   {
     title: 'Platform Integration',
     links: [
-      //{ title: 'Overview', href: '/das' },
       { title: 'Docker', href: '/integrations/platforms/docker' },
       {
         title: 'Docker Compose',
