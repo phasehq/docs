@@ -117,3 +117,51 @@ kubectl exec -it <pod_name> python manage.py purge_app_logs SpaceX --retain 90
 The performance impact of log purging depends on your database instance specifications. For Phase instances with a large number of audit-log events (100+ million), we recommend running the `purge_app_logs` command for the first time during off-peak hours to avoid performance degradation. In our testing, it took about 2.5 minutes to delete 1 million read events on a modest AWS RDS `db.t3.micro` instance.
 
 ![Graph showing log deletion performance on AWS RDS](/assets/images/self-hosting/maintenance/rds-log-delete-graph.png)
+
+# Resetting Global Network Access Policies
+
+When using [Network Access Policies](/access-control/network), there's a possibility of accidentally locking yourself out of your Phase instance by enabling a global policy that doesn't include your current IP address. If this happens, you can use the following emergency procedure to reset all global network policies.
+
+## Emergency Global Policy Reset
+
+Follow these steps to reset all global network access policies across **all organizations** on your instance:
+
+1. Gain shell access to the backend container:
+
+```fish
+# Via Docker 
+docker exec -it <container_id> /bin/sh
+
+# Via Docker compose
+docker compose exec backend /bin/sh
+
+# Via Kubernetes
+kubectl exec -it <pod_name> -- /bin/sh
+```
+
+2. Start a Python shell using Django's management command:
+
+```fish
+python manage.py shell
+```
+
+3. Run the following Python code to reset all global policies:
+
+```python
+from api.models import NetworkAccessPolicy
+for policy in NetworkAccessPolicy.objects.all():
+    policy.is_global = False
+    policy.save()
+```
+
+You may have to copy the above code and execute it one line at a time. Given this is Python code, please make sure it's indented correctly when pasting it into the shell.
+
+4. If the command completes without errors, all global network policies have been successfully reset.
+
+5. Exit the Python shell (Ctrl+D or `exit()`) and container shell.
+
+6. You should now be able to log in to your Phase Console and access your organization.
+
+<Note>
+This procedure should only be used in emergency situations when you've been locked out of your Phase instance. After regaining access, review and reconfigure your network access policies appropriately to ensure proper security.
+</Note>
