@@ -38,6 +38,7 @@ The organization owner. This role is automatically assigned when a user creates 
 | **Service Accounts** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Roles** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Integration Credentials** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **Network Access Policies** | Full access | ✅ | ✅ | ✅ | ✅ |
 
 #### App-level permissions:
 
@@ -69,6 +70,7 @@ Admin users have access to most resources and permissions, and have global acces
 | **Service Accounts** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Roles** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Integration Credentials** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **Network Access Policies** | Full access | ✅ | ✅ | ✅ | ✅ |
 
 #### App-level permissions:
 
@@ -103,6 +105,7 @@ Management users with broad access to environments, secrets, and service account
 | **Service Account Tokens** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Roles** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Integration Credentials** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **Network Access Policies** | Full access | ✅ | ✅ | ✅ | ✅ |
 
 #### App-level permissions:
 
@@ -135,6 +138,7 @@ Default role for Service Accounts, providing programmatic access to secrets with
 | **Service Account Tokens** | Read access | ✅ | ❌ | ❌ | ❌ |
 | **Roles** | Read access | ✅ | ❌ | ❌ | ❌ |
 | **Integration Credentials** | Read access | ✅ | ❌ | ❌ | ❌ |
+| **Network Access Policies** | Read access | ✅ | ❌ | ❌ | ❌ |
 
 #### App-level permissions:
 
@@ -166,6 +170,7 @@ Developers have limited permissions at the organization level and must be given 
 | **Service Accounts** | No access | ❌ | ❌ | ❌ | ❌ |
 | **Roles** | Read access | ✅ | ❌ | ❌ | ❌ |
 | **Integration Credentials** | Custom access | ✅ | ✅ | ✅ | ❌ |
+| **Network Access Policies** | Read access | ✅ | ❌ | ❌ | ❌ |
 
 #### App-level permissions:
 
@@ -239,6 +244,12 @@ Some actions require a combination of permissions across multiple resources. Bel
 - To view and delete other users Personal Access Tokens:
     - `MemberPersonalAccessTokens:read`
     - `MemberPersonalAccessTokens:delete`
+- To Manage Network Access Policies of a User or Service Account:
+    - `Members:read`
+    - `Members:update`
+    - `ServiceAccounts:read`
+    - `ServiceAccounts:update`
+    - `NetworkAccessPolicies:read`
 
 ### Editing Custom Roles
 
