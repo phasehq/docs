@@ -29,7 +29,10 @@ Here is a list of the different categories of status codes returned by the Proto
     A 400 status code indicates a bad request. This is typically due to a request that's missing some data requried to process the request, such as missing `id` fields.
   </Property>
   <Property name="403">
-    A 403 status code indicates an authentication error. Check your [authentication](/public-api#authentication) credentials if you see this error, and make sure the token you're using has the approriate scope for the App and Environment you're trying to access.
+    A 403 status code indicates an authentication or access error. Check your [authentication](/public-api#authentication) credentials if you see this error, and make sure the token you're using has the approriate scope for the App and Environment you're trying to access.
+
+    This error may also occur due to a [Network Access Policy](/access-control/network#network-access-policies) that restricts access from your IP address. 
+    [Read more](https://docs.phase.dev/access-control/network#access-denied-exceptions) about Network Access Policy exceptions.
   </Property>
   <Property name="409">
     A 409 status code indicates that the requested operation will create a conflict in your secret configuration. This is generally due to attempting to set the `key` of a secret at a given path where this key already exists. 
