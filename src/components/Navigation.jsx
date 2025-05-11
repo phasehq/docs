@@ -372,7 +372,7 @@ export const navigation = [
       { title: 'Overview', href: '/self-hosting' },
       { title: 'Docker Compose', href: '/self-hosting/docker-compose' },
       { title: 'Kubernetes', href: '/self-hosting/kubernetes' },
-      { title: 'AWS EKS', href: '/self-hosting/aws-eks' },
+      { title: 'AWS Elastic Kubernetes Service', href: '/self-hosting/aws-eks' },
       { title: 'AWS', href: '/self-hosting/aws' },
       { title: 'Google Cloud Platform', href: '/self-hosting/gcp' },
       { title: 'Azure', href: '/self-hosting/azure' },
