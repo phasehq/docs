@@ -34,23 +34,16 @@ By default, this guide sets up Phase Console with in-cluster databases and an NG
 
 ### 1. Install cert-manager
 
-First, add the cert-manager repository:
+Install cert-manager (replace `v1.17.2` with the latest version from https://github.com/cert-manager/cert-manager/releases):
 
 ```fish
-helm repo add jetstack https://charts.jetstack.io
-helm repo update
-```
-
-Install cert-manager (replace `v1.15.2` with the latest version from https://github.com/cert-manager/cert-manager/releases):
-
-```fish
-kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.2/cert-manager.yaml
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.17.2/cert-manager.yaml
 ```
 
 Wait for cert-manager to be fully deployed:
 
 ```fish
-kubectl wait --for=condition=Ready pods -l app.kubernetes.io/instance=cert-manager -n cert-manager
+kubectl wait --for=condition=Ready pods -l app.kubernetes.io/instance=cert-manager -n cert-manager --timeout=60s
 ```
 
 ### 2. Configure ClusterIssuer
@@ -111,23 +104,24 @@ helm repo update
 
 ### 7. Create a Kubernetes managed secret containing the Phase Console secrets
 
-Please see the [Secret and deployment configuration](/self-hosting/configuration/envars) for more information on the required secrets. 
-
-Create a secret named `phase-console-secret` with the following content:
+Create a secret named `phase-console-secret` with the following necessary secrets:
 
 ```fish
 kubectl create secret generic phase-console-secret \
-  --from-literal=NEXTAUTH_SECRET=your_nextauth_secret \
-  --from-literal=SECRET_KEY=your_secret_key \
-  --from-literal=SERVER_SECRET=your_server_secret \
-  --from-literal=DATABASE_PASSWORD=your_database_password \
-  --from-literal=REDIS_PASSWORD=your_redis_password \
-  # 👇 Assuming you are using Google SSO as the login provider
+  --from-literal=NEXTAUTH_SECRET=$(openssl rand -hex 32) \
+  --from-literal=SECRET_KEY=$(openssl rand -hex 32) \
+  --from-literal=SERVER_SECRET=$(openssl rand -hex 32) \
+  --from-literal=DATABASE_PASSWORD=$(openssl rand -hex 32) \
+  --from-literal=REDIS_PASSWORD=$(openssl rand -hex 32) \
   --from-literal=GOOGLE_CLIENT_ID=your_google_client_id \
   --from-literal=GOOGLE_CLIENT_SECRET=your_google_client_secret
 ```
 
-You may use `openssl rand -hex 32` to securely generate random secrets.
+<Note>
+☝️ Please make sure to replace the `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` secret keys and values with your preferred SSO login provider's client ID and secret (Eg. GitHub, GitLab, Microsoft Entra ID, etc).
+</Note>
+
+Please see the [Secret and deployment configuration](/self-hosting/configuration/envars) for more information on the required secrets. 
 
 ### 8. Create a values file
 
