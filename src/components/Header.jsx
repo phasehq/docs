@@ -58,7 +58,7 @@ export const Header = forwardRef(function Header({ className }, ref) {
             'bg-zinc-900/7.5 dark:bg-white/7.5'
         )}
       />
-      <div className="hidden md:block"></div>
+      <div className="hidden lg:block"></div>
         <Search />
       
       <div className="flex items-center gap-5 lg:hidden">
