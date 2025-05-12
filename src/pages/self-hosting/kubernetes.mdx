@@ -16,7 +16,7 @@ This guide will walk you through installing the Phase Console on a Kubernetes cl
 - NGINX ingress controller
 - Let's Encrypt certificate for TLS
 
-By default, this guide sets up Phase Console with in-cluster databases and an NGINX ingress using a self-signed certificate. However, you have the flexibility to use external databases if preferred. If you're using your own ingress controller and TLS certificates, you can skip steps 1 to 5 of the deployment process.
+By default, this guide sets up Phase Console with in-cluster databases and an NGINX ingress. However, you have the flexibility to use external databases if preferred. If you're using your own ingress controller and TLS certificates, you can skip steps 1 to 5 of the deployment process.
 
 ## Prerequisites
 
@@ -205,16 +205,27 @@ helm uninstall phase-console
 
 ## Troubleshooting
 
-1. Check your DNS records and make sure it't pointing to your load balancer public IP address.
+If you encounter issues during or after deployment:
+
+1. Check your DNS records and make sure they're pointing to your load balancer public IP address:
 
 ```fish
 dig A phase.your-domain.com
 ```
 
-2. If you visit your domain and still see a self-signed certificate, check the logs of the `cm-acme-http-solver` pod:
+2. If you visit your domain and see a self-signed certificate or errors after DNS propagation:
+   - Check the cert-manager pod logs in the `cert-manager` namespace
+   - Check the logs of the `cm-acme-http-solver` pod:
+   ```fish
+   kubectl logs -l acme.cert-manager.io/http01-solver=true -n your-phase-namespace # Replace with the namespace phase is installed in
+   ```
+   Note that this pod briefly appears to host the Let's Encrypt challenge and terminates itself after completion. If you don't see the pod, the certificate issuance might not be triggering correctly.
+
+3. Describe the Certificate resource to check its status and events:
 
 ```fish
-kubectl logs -l acme.cert-manager.io/http01-solver=true
+kubectl describe certificate phase-tls -n your-phase-namespace # Replace with the namespace phase is installed in
 ```
 
-Note that this pod briefly appears to host the Let's Encrypt challenge and terminates itself after completion. If you don't see the pod, you may need to trigger the certificate issuance process again.
+4. Check NGINX Ingress controller logs in the `ingress-nginx` namespace.
+
