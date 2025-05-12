@@ -21,9 +21,9 @@ This guide assumes you are setting up Phase Console with in-cluster databases. F
 ## Prerequisites
 
 - An active AWS Account with necessary permissions to create EKS clusters, IAM roles, and related resources.
-- [AWS CLI](https://aws.amazon.com/cli/) installed and configured.
-- [eksctl](https://eksctl.io/installation/) installed.
-- [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl) installed & configured.
+- [awscli](https://aws.amazon.com/cli/) installed and configured. Please ensure you have the necessary permissions to create EKS clusters, IAM roles, and related resources.
+- [eksctl](https://eksctl.io/installation/) installed. Used to create the EKS cluster.
+- [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl) installed.
 - [Helm](https://helm.sh/docs/intro/install/) installed.
 
 ## Minimum Requirements
@@ -34,6 +34,8 @@ This guide assumes you are setting up Phase Console with in-cluster databases. F
 
 ## Deployment
 
+You may skip steps 1 and 2 if you already have an EKS cluster and `kubectl` configured.
+
 ### 1. Create an EKS Cluster
 
 First, create a cluster configuration file named `cluster-config.yaml`:
@@ -43,8 +45,8 @@ apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 
 metadata:
-  name: phase-eks-cluster # You can change the cluster name if you like
-  region: ap-south-1 # 👈 Choose your desired AWS region
+  name: phase-eks-cluster # 👈 The name of your EKS cluster
+  region: eu-central-1 # 👈 Your desired AWS region
 
 autoModeConfig:
   enabled: true
@@ -63,7 +65,7 @@ eksctl create cluster -f cluster-config.yaml
 
 ### 2. Verify `kubectl` Configuration
 
-After the cluster creation is complete, verify that `kubectl` is configured correctly:
+After the cluster creation is complete, verify that `kubectl` is configured correctly to interact with your new EKS cluster:
 
 ```fish
 kubectl get svc
@@ -73,17 +75,10 @@ You should see a list of services, including the Kubernetes service itself.
 
 ### 3. Install cert-manager
 
-Add the cert-manager repository:
+Install cert-manager (replace `v1.17.2` with the latest version from https://github.com/cert-manager/cert-manager/releases):
 
 ```fish
-helm repo add jetstack https://charts.jetstack.io
-helm repo update
-```
-
-Install cert-manager (replace `v1.15.2` with the latest version from https://github.com/cert-manager/cert-manager/releases):
-
-```fish
-kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.2/cert-manager.yaml
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.17.2/cert-manager.yaml
 ```
 
 Wait for cert-manager to be fully deployed:
