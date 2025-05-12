@@ -205,7 +205,13 @@ helm uninstall phase-console
 
 ## Troubleshooting
 
-If you visit your domain and still see a self-signed certificate, check the logs of the `cm-acme-http-solver` pod:
+1. Check your DNS records and make sure it't pointing to your load balancer public IP address.
+
+```fish
+dig A phase.your-domain.com
+```
+
+2. If you visit your domain and still see a self-signed certificate, check the logs of the `cm-acme-http-solver` pod:
 
 ```fish
 kubectl logs -l acme.cert-manager.io/http01-solver=true
