@@ -16,13 +16,13 @@ This guide will walk you through installing the Phase Console on an AWS EKS clus
 - NGINX ingress controller (exposed via AWS Load Balancer)
 - Let's Encrypt certificate for TLS via cert-manager
 
-This guide assumes you are setting up Phase Console with in-cluster databases. For external databases, you will need to adjust the Helm chart values accordingly. We will install cert-manager and an NGINX ingress controller. If you have these already set up in your EKS cluster, you may be able to adapt or skip some steps.
+This guide assumes you are setting up Phase Console with in-cluster databases. For external databases, you will need to adjust the Helm chart [values](https://github.com/phasehq/kubernetes-secrets-operator/blob/main/phase-console/values.yaml) accordingly. This entire guide can be completed in a CloudShell in the AWS Console.
 
 ## Prerequisites
 
-- An active AWS Account with necessary permissions to create EKS clusters, IAM roles, and related resources.
+- An AWS Account with necessary permissions to create EKS clusters, IAM roles, and related resources.
 - [awscli](https://aws.amazon.com/cli/) installed and configured. Please ensure you have the necessary permissions to create EKS clusters, IAM roles, and related resources.
-- [eksctl](https://eksctl.io/installation/) installed. Used to create the EKS cluster.
+- [eksctl](https://eksctl.io/installation/) installed. Used to create the EKS cluster and related resources.
 - [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl) installed.
 - [Helm](https://helm.sh/docs/intro/install/) installed.
 
@@ -184,7 +184,7 @@ Point your desired domain (e.g., `phase.your-domain.com`) to the LoadBalancer `E
 
 ### 9. Deploy Phase Console
 
-With the EKS cluster, cert-manager, default StorageClass, and NGINX Ingress Controller configured, you are now ready to install Phase Console.
+With the EKS cluster, cert-manager, StorageClass, and NGINX Ingress Controller configured, you are now ready to install Phase Console.
 
 Please follow **Steps 6 through 11** from our general [Kubernetes Helm Deployment guide](/self-hosting/kubernetes#6-add-the-phase-helm-repository) to complete the installation. These steps cover:
 
@@ -211,23 +211,7 @@ To uninstall Phase Console from your EKS cluster:
 ```fish
 helm uninstall phase-console
 ```
-You may also need to manually delete related resources like PersistentVolumeClaims if they are not automatically removed, and clean up DNS records.
 
-## Troubleshooting
-
-If you encounter issues, particularly with TLS certificates:
-
-If you visit your domain and see a self-signed certificate or errors after DNS propagation:
-1.  Check the cert-manager pod logs in the `cert-manager` namespace.
-2.  Check the logs of the `cm-acme-http-solver` pod that briefly appears to solve the Let's Encrypt challenge:
-    ```fish
-    kubectl logs -l acme.cert-manager.io/http01-solver=true -n your-phase-namespace # Replace with the namespace phase is installed in
-    ```
-    Note that this pod is short-lived. If you don't see it, the certificate issuance might not be triggering correctly.
-3.  Describe the Certificate resource to check its status and events:
-    ```fish
-    kubectl describe certificate phase-tls -n your-phase-namespace # Replace with the namespace phase is installed in
-    ```
-4.  Check NGINX Ingress controller logs in the `ingress-nginx` namespace.
-
-Ensure your domain's DNS records are correctly pointing to the NGINX LoadBalancer IP/hostname and that security groups or NACLs are not blocking traffic on ports 80/443 to the Load Balancer. 
+<Note>
+You may also need to manually delete related resources like PersistentVolumeClaims (EBS volumes) if they are not automatically removed, and clean up DNS records.
+</Note>
