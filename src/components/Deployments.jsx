@@ -5,6 +5,7 @@ import clsx from 'clsx'
 
 import logoDcoker from '@/images/logos/docker.svg'
 import logoAmazonaws from '@/images/logos/aws.svg'
+import logoAmazonawsEks from '@/images/logos/aws-eks.svg'
 import logoDigitalOcean from '@/images/logos/digitalocean.svg'
 import logoKubernetes from '@/images/logos/kubernetes.svg'
 import logoGCP from '@/images/logos/gcp.svg'
@@ -30,8 +31,16 @@ const deployment_methods = [
     available: true,
   },
   {
+    href: '/self-hosting/aws-eks',
+    name: 'AWS EKS',
+    description:
+      'Deploy Phase via Helm on your AWS Elastic Kubernetes Service (EKS) cluster.',
+    logo: logoAmazonawsEks,
+    available: true,
+  },
+  {
     href: '/self-hosting/aws',
-    name: 'AWS',
+    name: 'AWS EC2 & RDS',
     description: 'Deploy the Phase Console on AWS EC2 and RDS PostgreSQL instance.',
     logo: logoAmazonaws,
     available: true,

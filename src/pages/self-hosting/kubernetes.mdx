@@ -16,7 +16,7 @@ This guide will walk you through installing the Phase Console on a Kubernetes cl
 - NGINX ingress controller
 - Let's Encrypt certificate for TLS
 
-By default, this guide sets up Phase Console with in-cluster databases and an NGINX ingress using a self-signed certificate. However, you have the flexibility to use external databases if preferred. If you're using your own ingress controller and TLS certificates, you can skip steps 1 to 5 of the deployment process.
+By default, this guide sets up Phase Console with in-cluster databases and an NGINX ingress. However, you have the flexibility to use external databases if preferred. If you're using your own ingress controller and TLS certificates, you can skip steps 1 to 5 of the deployment process.
 
 ## Prerequisites
 
@@ -34,23 +34,16 @@ By default, this guide sets up Phase Console with in-cluster databases and an NG
 
 ### 1. Install cert-manager
 
-First, add the cert-manager repository:
+Install cert-manager (replace `v1.17.2` with the latest version from https://github.com/cert-manager/cert-manager/releases):
 
 ```fish
-helm repo add jetstack https://charts.jetstack.io
-helm repo update
-```
-
-Install cert-manager (replace `v1.15.2` with the latest version from https://github.com/cert-manager/cert-manager/releases):
-
-```fish
-kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.2/cert-manager.yaml
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.17.2/cert-manager.yaml
 ```
 
 Wait for cert-manager to be fully deployed:
 
 ```fish
-kubectl wait --for=condition=Ready pods -l app.kubernetes.io/instance=cert-manager -n cert-manager
+kubectl wait --for=condition=Ready pods -l app.kubernetes.io/instance=cert-manager -n cert-manager --timeout=60s
 ```
 
 ### 2. Configure ClusterIssuer
@@ -111,27 +104,28 @@ helm repo update
 
 ### 7. Create a Kubernetes managed secret containing the Phase Console secrets
 
-Please see the [Secret and deployment configuration](/self-hosting/configuration/envars) for more information on the required secrets. 
-
-Create a secret named `phase-console-secret` with the following content:
+Create a secret named `phase-console-secret` with the following necessary secrets:
 
 ```fish
 kubectl create secret generic phase-console-secret \
-  --from-literal=NEXTAUTH_SECRET=your_nextauth_secret \
-  --from-literal=SECRET_KEY=your_secret_key \
-  --from-literal=SERVER_SECRET=your_server_secret \
-  --from-literal=DATABASE_PASSWORD=your_database_password \
-  --from-literal=REDIS_PASSWORD=your_redis_password \
-  # 👇 Assuming you are using Google SSO as the login provider
+  --from-literal=NEXTAUTH_SECRET=$(openssl rand -hex 32) \
+  --from-literal=SECRET_KEY=$(openssl rand -hex 32) \
+  --from-literal=SERVER_SECRET=$(openssl rand -hex 32) \
+  --from-literal=DATABASE_PASSWORD=$(openssl rand -hex 32) \
+  --from-literal=REDIS_PASSWORD=$(openssl rand -hex 32) \
   --from-literal=GOOGLE_CLIENT_ID=your_google_client_id \
   --from-literal=GOOGLE_CLIENT_SECRET=your_google_client_secret
 ```
 
-You may use `openssl rand -hex 32` to securely generate random secrets.
+<Note>
+☝️ Please make sure to replace the `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` secret keys and values with your preferred SSO login provider's client ID and secret (Eg. GitHub, GitLab, Microsoft Entra ID, etc).
+</Note>
+
+Please see the [Secret and deployment configuration](/self-hosting/configuration/envars) for more information on the required secrets. 
 
 ### 8. Create a values file
 
-Create a file named `phase-values.yaml` with the following content:
+Create a file named `phase-values.yaml` with the following config:
 
 ```yaml
 global:
@@ -139,7 +133,7 @@ global:
   version: "latest" # 👈 Replace with your preferred version https://github.com/phasehq/console/releases
 
 sso:
-  providers: "google" # 👈 The login provider you want to use
+  providers: "google" # 👈 The SSO login provider you want to use
 
 phaseSecrets: phase-console-secret # 👈 The name of the secret you have created previously
 
@@ -166,6 +160,8 @@ certManager:
   issuerKind: "ClusterIssuer"
 ```
 
+You can find additional configuration options in the [`values.yaml`](https://github.com/phasehq/kubernetes-secrets-operator/blob/main/phase-console/values.yaml) file.
+
 You can find the latest version of the Phase Console on the [GitHub release](https://github.com/phasehq/console/releases)
 
 ### 9. Install Phase
@@ -182,7 +178,9 @@ kubectl get ingress
 kubectl get certificate
 ```
 
-Ensure all pods are running, the ingress is correctly configured, and the certificate is issued.
+<Note>
+This process may take up to 10 minutes to complete. You may run `watch kubectl get pods` and keep an eye out for the `cert-manager` pod to exit successfully. This would mean that the certificate is issued and the ingress is ready to use.
+</Note>
 
 ### 11. Access Phase Console
 
@@ -207,10 +205,27 @@ helm uninstall phase-console
 
 ## Troubleshooting
 
-If you visit your domain and still see a self-signed certificate, check the logs of the `cm-acme-http-solver` pod:
+If you encounter issues during or after deployment:
+
+1. Check your DNS records and make sure they're pointing to your load balancer public IP address:
 
 ```fish
-kubectl logs -l acme.cert-manager.io/http01-solver=true
+dig A phase.your-domain.com
 ```
 
-Note that this pod briefly appears to host the Let's Encrypt challenge and terminates itself after completion. If you don't see the pod, you may need to trigger the certificate issuance process again.
+2. If you visit your domain and see a self-signed certificate or errors after DNS propagation:
+   - Check the cert-manager pod logs in the `cert-manager` namespace
+   - Check the logs of the `cm-acme-http-solver` pod:
+   ```fish
+   kubectl logs -l acme.cert-manager.io/http01-solver=true -n your-phase-namespace # Replace with the namespace phase is installed in
+   ```
+   Note that this pod briefly appears to host the Let's Encrypt challenge and terminates itself after completion. If you don't see the pod, the certificate issuance might not be triggering correctly.
+
+3. Describe the Certificate resource to check its status and events:
+
+```fish
+kubectl describe certificate phase-tls -n your-phase-namespace # Replace with the namespace phase is installed in
+```
+
+4. Check NGINX Ingress controller logs in the `ingress-nginx` namespace.
+
