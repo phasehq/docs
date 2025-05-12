@@ -40,7 +40,7 @@ const deployment_methods = [
   },
   {
     href: '/self-hosting/aws',
-    name: 'AWS',
+    name: 'AWS EC2 & RDS',
     description: 'Deploy the Phase Console on AWS EC2 and RDS PostgreSQL instance.',
     logo: logoAmazonaws,
     available: true,
