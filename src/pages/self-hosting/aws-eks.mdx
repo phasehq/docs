@@ -84,7 +84,7 @@ kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/
 Wait for cert-manager to be fully deployed:
 
 ```fish
-kubectl wait --for=condition=Ready pods -l app.kubernetes.io/instance=cert-manager -n cert-manager
+kubectl wait --for=condition=Ready pods -l app.kubernetes.io/instance=cert-manager -n cert-manager --timeout=60s
 ```
 
 ### 4. Configure ClusterIssuer
