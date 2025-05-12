@@ -125,7 +125,7 @@ Please see the [Secret and deployment configuration](/self-hosting/configuration
 
 ### 8. Create a values file
 
-Create a file named `phase-values.yaml` with the following content:
+Create a file named `phase-values.yaml` with the following config:
 
 ```yaml
 global:
@@ -133,7 +133,7 @@ global:
   version: "latest" # 👈 Replace with your preferred version https://github.com/phasehq/console/releases
 
 sso:
-  providers: "google" # 👈 The login provider you want to use
+  providers: "google" # 👈 The SSO login provider you want to use
 
 phaseSecrets: phase-console-secret # 👈 The name of the secret you have created previously
 
@@ -160,6 +160,8 @@ certManager:
   issuerKind: "ClusterIssuer"
 ```
 
+You can find additional configuration options in the [`values.yaml`](https://github.com/phasehq/kubernetes-secrets-operator/blob/main/phase-console/values.yaml) file.
+
 You can find the latest version of the Phase Console on the [GitHub release](https://github.com/phasehq/console/releases)
 
 ### 9. Install Phase
@@ -176,7 +178,9 @@ kubectl get ingress
 kubectl get certificate
 ```
 
-Ensure all pods are running, the ingress is correctly configured, and the certificate is issued.
+<Note>
+This process may take up to 10 minutes to complete. Please keep run `watch kubectl get pods` and keep an eye out for the `cert-manager` pod to exit successfully.
+</Note>
 
 ### 11. Access Phase Console
 
