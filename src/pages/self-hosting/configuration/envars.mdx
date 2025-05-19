@@ -29,6 +29,7 @@ The following providers are available:
 - `google` - Google OAuth 2.0
 - `github` - GitHub OAuth 2.0
 - `gitlab` - GitLab OAuth 2.0
+- `github-enterprise` - GitHub Enterprise OAuth 2.0
 - `google-oidc` - Google OIDC
 - `jumpcloud-oidc` - JumpCloud OIDC
 - `entra-id-oidc` - Microsoft Entra ID OIDC
@@ -80,6 +81,38 @@ After setting up your App on GitHub, set the Client ID and Client secret values:
   </Property>
   <Property name="GITHUB_CLIENT_SECRET" type="string">
     GitHub OAuth Client secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
+  </Property>
+</Properties>
+
+Env(s) required by the following containers:
+- [`frontend`](https://hub.docker.com/r/phasehq/frontend)
+- [`backend`](https://hub.docker.com/r/phasehq/backend)
+
+### GitHub Enterprise OAuth 2.0
+
+You can find instructions for setting up SSO with a GitHub Enterprise OAuth 2.0 App using the same steps as [GitHub OAuth](/access-control/authentication/oauth-sso#git-hub), but with your enterprise instance.
+
+Set the "Authorization callback URL" for your GitHub Enterprise OAuth App as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/github-enterprise`.
+
+Example:
+```bash
+https://[**YOUR_DOMAIN**]/api/auth/callback/github-enterprise
+```
+
+After setting up your App on GitHub Enterprise, set the base URL, API URL, Client ID and Client secret values:
+
+<Properties>
+  <Property name="GITHUB_ENTERPRISE_BASE_URL" type="string">
+    The URL of your GitHub Enterprise instance. Example: `https://github.yourdomain.com`
+  </Property>
+  <Property name="GITHUB_ENTERPRISE_API_URL" type="string">
+    The API URL of your GitHub Enterprise instance. This is usually GITHUB_ENTERPRISE_BASE_URL + /api. Example: `https://github.yourdomain.com/api`. Phase will reference the environment variable and construct the API URL of your instance as follows: `GITHUB_ENTERPRISE_API_URL/v3/user`.
+  </Property>
+  <Property name="GITHUB_ENTERPRISE_CLIENT_ID" type="string">
+    GitHub Enterprise OAuth Client ID
+  </Property>
+  <Property name="GITHUB_ENTERPRISE_CLIENT_SECRET" type="string">
+    GitHub Enterprise OAuth Client secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
   </Property>
 </Properties>
 
