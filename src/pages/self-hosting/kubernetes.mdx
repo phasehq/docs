@@ -229,3 +229,21 @@ kubectl describe certificate phase-tls -n your-phase-namespace # Replace with th
 
 4. Check NGINX Ingress controller logs in the `ingress-nginx` namespace.
 
+5. Understanding the routing structure:
+   - `https://phase.your-domain.com/*` routes to `http://frontend:3000`
+   - `https://phase.your-domain.com/service/*` routes to `http://backend:8000` (path is stripped)
+
+   The default ingress configuration handles this routing using regex and path rewriting. You can see the implementation in the [NGINX ingress template](https://github.com/phasehq/kubernetes-secrets-operator/blob/main/phase-console/templates/ingress.yaml#L34) of the Helm chart. If you are using a custom ingress (Traefik, etc), please make sure to replicate the same routing configuration.
+
+6. Check application health endpoints:
+   - Frontend health check:
+   ```fish
+   curl -v https://phase.your-domain.com/api/health
+   # Expected response: {"status":"alive"}
+   ```
+   - Backend health check:
+   ```fish
+   curl -v https://phase.your-domain.com/service/health/
+   # Expected response: {"status": "alive", "version": "x.x.x"}
+   ```
+
