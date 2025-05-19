@@ -62,7 +62,21 @@ Follow these steps to set up Google SSO for your Phase application:
 
     ![Select a project](/assets/images/auth/sso/google/13-5-create-oauth-app.png)
 
-14. In the Application type dropdown, select "Web application". Enter a recognizable name in the Name field, add the Authorized redirect URI (e.g., https://[**YOUR_DOMAIN**].com/api/auth/callback/google), and click "CREATE".
+14. Fill in the application details:
+
+    <Properties>
+      <Property name="Application type" type="string">
+        Web application
+      </Property>
+      <Property name="Name" type="string">
+        Phase Console
+      </Property>
+      <Property name="Authorised redirect URI" type="string">
+        `https://[**YOUR_DOMAIN**]/api/auth/callback/google`
+      </Property>
+    </Properties>
+
+    Then click "CREATE".
 
     ![Create OAuth client ID config](/assets/images/auth/sso/google/14-create-oauth-client-id-config.png)
 
@@ -78,6 +92,12 @@ You can find detailed official instructions for setting up SSO with a Google OAu
 
 Follow these steps to set up GitHub SSO for your Phase application:
 
+If you are using GitHub Enterprise (self-hosted) instance, you may follow the steps below to set up GitHub SSO for your Phase application as the instructions are nearly identical. The only exception being the Authorization callback URL.
+
+<Note>
+   GitHub Enterprise (self-hosted) instance for OAuth SSO is only available for organizations with an `Enterprise` tier subscription. See [Pricing](https://phase.dev/pricing).
+</Note>
+
 1. Log in to your GitHub account and go to [OAuth Apps](https://github.com/settings/developers) in Developer Settings.
 
 2. Click "New OAuth App".
@@ -85,9 +105,19 @@ Follow these steps to set up GitHub SSO for your Phase application:
    ![Create a new GitHub OAuth app](/assets/images/auth/sso/github/1-create-new-oauth-app.png)
 
 3. Fill in the application details:
-   - Application name: "Phase Console"
-   - Homepage URL: Your application's URL (e.g., https://[**YOUR_DOMAIN**].com)
-   - Authorization callback URL: Your callback URL (e.g., https://[**YOUR_DOMAIN**].com/api/auth/callback/github)
+
+   <Properties>
+     <Property name="Application name" type="string">
+       Phase Console
+     </Property>
+     <Property name="Homepage URL" type="string">
+       `https://[**YOUR_DOMAIN**]`
+     </Property>
+     <Property name="Authorization callback URL" type="string">
+       For GitHub.com: `https://[**YOUR_DOMAIN**]/api/auth/callback/github`<br/>
+       For GitHub Enterprise: `https://[**YOUR_DOMAIN**]/api/auth/callback/github-enterprise`
+     </Property>
+   </Properties>
 
    ![Configure and register a new application](/assets/images/auth/sso/github/2-configure-register-application.png)
 
@@ -101,10 +131,9 @@ Follow these steps to set up GitHub SSO for your Phase application:
 
    ![Copy the client ID and client secret](/assets/images/auth/sso/github/4-copy-client-id-secret.png)
 
-7. Supply these credentials to your Phase Console deployment as [environment variables](/self-hosting/configuration/envars#git-hub-sso).
+7. Supply these credentials to your Phase Console deployment as [environment variables](/self-hosting/configuration/envars#git-hub-o-auth-2-0). If you are using GitHub Enterprise (self-hosted), supply the following configurations as [environment variables](/self-hosting/configuration/envars#git-hub-enterprise-o-auth-2-0).
 
-
-You can find detailed official instructions for setting up SSO with a Google OAuth Application [here](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app). 
+You can find detailed official instructions for setting up SSO with a GitHub OAuth Application [here](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app). 
 
 ## GitLab
 
@@ -121,10 +150,21 @@ Follow these steps to set up GitLab SSO for your Phase application:
    ![Add new application](/assets/images/auth/sso/gitlab/3-add-new-application.png)
 
 3. Fill in the application details:
-   - Name: "Phase Console SSO"
-   - Redirect URI: Your callback URL (e.g., https://[**YOUR_DOMAIN**].com/api/auth/callback/gitlab)
-   - Confidential: Check this box
-   - Scopes: Select only "read_user"
+
+   <Properties>
+     <Property name="Name" type="string">
+       Phase Console SSO
+     </Property>
+     <Property name="Redirect URI" type="string">
+       `https://[**YOUR_DOMAIN**]/api/auth/callback/gitlab`
+     </Property>
+     <Property name="Confidential" type="boolean">
+       ✓ (Check this box)
+     </Property>
+     <Property name="Scopes" type="string">
+       `read_user` (The only scope required)
+     </Property>
+   </Properties>
 
    ![Configure new application](/assets/images/auth/sso/gitlab/4-application-config-permission.png)
 
