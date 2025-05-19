@@ -404,17 +404,12 @@ These logs can be useful for troubleshooting email delivery issues when self-hos
 
 ### GitHub integration:
 
-1. Create a new GitHub Oauth application. Follow instructions [here](/access-control/authentication/oauth-sso#git-hub). (This is different from the one you may already have set up for GitHub SSO)
+1. Create a new GitHub Oauth application. Follow instructions [here](/access-control/authentication/oauth-sso#git-hub). (Note: This is different from the one you may already have set up for GitHub SSO)
 2. Set the Authorization callback URL to: `https://[**YOUR_DOMAIN**]/service/oauth/github/callback`
 3. Hit Register application
 4. Supply the following secrets to your Phase Console instance
 
 <Properties>
-  <Property name="NEXT_PUBLIC_GITHUB_INTEGRATION_CLIENT_ID" type="string">
-    GitHub OAuth application Client ID
-
-    Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
-  </Property>
   <Property name="GITHUB_INTEGRATION_CLIENT_ID" type="string">
     GitHub OAuth application Client ID
 
@@ -422,6 +417,26 @@ These logs can be useful for troubleshooting email delivery issues when self-hos
   </Property>
   <Property name="GITHUB_INTEGRATION_CLIENT_SECRET" type="string">
     GitHub OAuth application Client Secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
+
+    Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend), [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  </Property>
+</Properties>
+
+### GitHub Enterprise (self-hosted) integration:
+
+1. Create a new GitHub Enterprise Oauth application. Follow instructions [here](/access-control/authentication/oauth-sso#git-hub). (Note: This is different from the one you may already have set up for GitHub SSO)
+2. Set the Authorization callback URL to: `https://[**YOUR_DOMAIN**]/service/oauth/github/callback`
+3. Hit Register application
+4. Supply the following secrets to your Phase Console instance
+
+<Properties>
+  <Property name="GITHUB_ENTERPRISE_INTEGRATION_CLIENT_ID" type="string">
+    GitHub Enterprise OAuth application Client ID
+
+    Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend), [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  </Property>
+  <Property name="GITHUB_ENTERPRISE_INTEGRATION_CLIENT_SECRET" type="string">
+    GitHub Enterprise OAuth application Client Secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
 
     Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend), [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
