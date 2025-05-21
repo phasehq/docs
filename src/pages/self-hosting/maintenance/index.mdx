@@ -217,7 +217,9 @@ After vacuuming, the `n_dead_tup` count should be significantly reduced or zero.
 7. **Optional**: For more aggressive space reclamation, you can use `VACUUM FULL`:
 
 <Warning>
-`VACUUM FULL` will lock your table, preventing writes to the `api_secretevent` table and significantly degrading read performance. During this period you will not be able to create secrets in Phase Console, CLI, SDKs or the API. Only run this command during maintenance windows when minimal activity is expected.
+`VACUUM FULL` will place an `ACCESS EXCLUSIVE` lock on your table, preventing reads and writes to the `api_secretevent` table. Only run this command during maintenance windows as you will not be able to access, create or update secrets when this is running.
+
+This method also requires extra disk space, since it writes a new copy of the table and doesn't release the old copy until the operation is complete.
 </Warning>
 
 ```sql
