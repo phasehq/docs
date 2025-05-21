@@ -189,7 +189,7 @@ Example output:
 VACUUM VERBOSE api_secretevent;
 ```
 
-This will remove the dead rows and reclaim the space for future use. Depending on your table size, this operation can take anywhere from a few seconds to several minutes.
+This will remove the dead tuples and reclaim the space for future use within postgres. Depending on your table size, this operation can take anywhere from a few seconds to several minutes, but is safe to run in parallel with regular operation.
 
 6. Verify the space has been reclaimed:
 
