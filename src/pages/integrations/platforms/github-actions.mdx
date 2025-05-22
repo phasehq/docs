@@ -38,30 +38,37 @@ Docs](https://docs.github.com/en/rest/guides/encrypting-secrets-for-the-rest-api
 
 ### Step 1: Authenticate with GitHub
 
-1. Go to **Integrations** from the sidebar and click on **Add credentials** in the 'Service credentials' section
+1. Go to **Integrations** from the sidebar and click on **Third-party credentials** in the integrations tab.
 
 ![Go to integrations](/assets/images/platform-integrations/integrations-sidebar.png)
-
-![Add a credential](/assets/images/platform-integrations/add-credential-button.png)
 
 2. Click on **GitHub**
 
 ![Click on GitHub](/assets/images/platform-integrations/github/select-github-credentials.png)
 
-3. You will be redirected to GitHub to authorize Phase Integration. **Make sure to grant access to any organisations that you wish to integrate Phase with**. Click Authorize to continue.
+3. Choose between GitHub.com or GitHub Enterprise Server (self-hosted). Select the type of GitHub credentials you wish to add and give it a descriptive name. You will later select this credential when setting up a sync.
+
+![Add GitHub.com credentials](/assets/images/platform-integrations/github/add-github-com-credentials.png)
+
+If you want to add GitHub Enterprise Server (self-hosted) OAuth credentials, you will need to provide the following information:
+
+**GitHub Host** (for example `github.yourdomain.com`) and **GitHub API URL** (this is typically a path on the GitHub host, for example `https://github.yourdomain.com/api`. This can also be a subdomain, for example `api.github.yourdomain.com`. If you are unsure, please contact your GitHub Enterprise Server administrator).
+
+<Note>
+This is only for users who want to integrate their self-managed GitHub Enterprise Server with Phase. If you are using GitHub.com cloud with the enterprise tier, you can simply set up GitHub.com credentials.
+</Note>
+
+![Add GitHub Enterprise Server credentials](/assets/images/platform-integrations/github/add-github-enterprise-server-creds.png)
+
+If you are self-hosting Phase, you will have to supply GitHub integration OAuth credentials for GitHub.com and GitHub Enterprise Server (self-hosted) separately. Please see [Third-party integrations configuration options](/self-hosting/configuration/envars#third-party-integrations-configuration) for more information.
+
+4. You will be redirected to GitHub to authorize Phase. **Make sure to grant access to any organizations whose repositories that you wish to integrate Phase with**. Click **Authorize** to continue.
 
 ![Authorize GitHub Phase Integration](/assets/images/platform-integrations/github/github-oauth-consent.png)
 
-4. You will be redirected back to the Phase Console, and your new credentials should be visible under the "Service Credentials" section
+5. You will be redirected back to the Integrations page, and your new credentials should be visible under the "Credentials" section:
 
 ![GitHub credentials stored](/assets/images/platform-integrations/github/github-credentials-created.png)
-
-<Note>
-  Your credentials are kept secure with robust application-layer encryption.
-  Phase encrypts your credentials directly in the browser and only decrypts them
-  in memory to perform sync operations. Your credentials are never stored in
-  plaintext.
-</Note>
 
 ### Step 2: Configure Sync
 
@@ -178,7 +185,7 @@ For detailed CLI installation options, please see: [Installation](/cli/install)
 2. Click on the `Settings` tab
 3. Select `Secrets` from the left sidebar
 4. Click on `New repository secret`
-5. Name it `PHASE_SERVICE_TOKEN` and provide its value
+5. Name it `PHASE_SERVICE_TOKEN` and provide its value.
 
 ### Single stage
 
@@ -233,7 +240,7 @@ jobs:
         id: export
         run: |
           # Export secrets
-          eval "$(secrets export --app "my application name" --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN)"
+          eval "$(phase secrets export --app "my application name" --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN)"
           
           # Set them in GitHub Actions environment file
           echo "username=$DOCKERHUB_USERNAME" >> $GITHUB_OUTPUT

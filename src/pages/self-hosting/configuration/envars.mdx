@@ -29,7 +29,7 @@ The following providers are available:
 - `google` - Google OAuth 2.0
 - `github` - GitHub OAuth 2.0
 - `gitlab` - GitLab OAuth 2.0
-- `github-enterprise` - GitHub Enterprise OAuth 2.0
+- `github-enterprise` - GitHub Enterprise Server OAuth 2.0
 - `google-oidc` - Google OIDC
 - `jumpcloud-oidc` - JumpCloud OIDC
 - `entra-id-oidc` - Microsoft Entra ID OIDC
@@ -88,31 +88,31 @@ Env(s) required by the following containers:
 - [`frontend`](https://hub.docker.com/r/phasehq/frontend)
 - [`backend`](https://hub.docker.com/r/phasehq/backend)
 
-### GitHub Enterprise OAuth 2.0
+### GitHub Enterprise Server (self-hosted) OAuth 2.0
 
-You can find instructions for setting up SSO with a GitHub Enterprise OAuth 2.0 App using the same steps as [GitHub OAuth](/access-control/authentication/oauth-sso#git-hub), but with your enterprise instance.
+You can find instructions for setting up SSO with a GitHub Enterprise Server OAuth 2.0 App using the same steps as [GitHub OAuth](/access-control/authentication/oauth-sso#git-hub), but with your enterprise instance.
 
-Set the "Authorization callback URL" for your GitHub Enterprise OAuth App as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/github-enterprise`.
+Set the "Authorization callback URL" for your GitHub Enterprise Server OAuth App as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/github-enterprise`.
 
 Example:
 ```bash
 https://[**YOUR_DOMAIN**]/api/auth/callback/github-enterprise
 ```
 
-After setting up your App on GitHub Enterprise, set the base URL, API URL, Client ID and Client secret values:
+After setting up your App on GitHub Enterprise Server, set the base URL, API URL, Client ID and Client secret values:
 
 <Properties>
   <Property name="GITHUB_ENTERPRISE_BASE_URL" type="string">
-    The URL of your GitHub Enterprise instance. Example: `https://github.yourdomain.com`
+    The URL of your GitHub Enterprise Server instance. Example: `https://github.yourdomain.com`
   </Property>
   <Property name="GITHUB_ENTERPRISE_API_URL" type="string">
-    The API URL of your GitHub Enterprise instance. This is usually GITHUB_ENTERPRISE_BASE_URL + /api. Example: `https://github.yourdomain.com/api`. Phase will reference the environment variable and construct the API URL of your instance as follows: `GITHUB_ENTERPRISE_API_URL/v3/user`.
+    The API URL of your GitHub Enterprise Server instance. This is usually GITHUB_ENTERPRISE_BASE_URL + /api. Example: `https://github.yourdomain.com/api`. Phase will reference the environment variable and construct the API URL of your instance as follows: `GITHUB_ENTERPRISE_API_URL/v3/user`.
   </Property>
   <Property name="GITHUB_ENTERPRISE_CLIENT_ID" type="string">
-    GitHub Enterprise OAuth Client ID
+    GitHub Enterprise Server OAuth Client ID
   </Property>
   <Property name="GITHUB_ENTERPRISE_CLIENT_SECRET" type="string">
-    GitHub Enterprise OAuth Client secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
+    GitHub Enterprise Server OAuth Client secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
   </Property>
 </Properties>
 
@@ -404,17 +404,12 @@ These logs can be useful for troubleshooting email delivery issues when self-hos
 
 ### GitHub integration:
 
-1. Create a new GitHub Oauth application. Follow instructions [here](/access-control/authentication/oauth-sso#git-hub). (This is different from the one you may already have set up for GitHub SSO)
+1. Create a new GitHub OAuth application. You may follow the instructions [here](/access-control/authentication/oauth-sso#git-hub). Please note that this is different from the one you may already have set up for GitHub SSO, which is used for authentication.
 2. Set the Authorization callback URL to: `https://[**YOUR_DOMAIN**]/service/oauth/github/callback`
 3. Hit Register application
 4. Supply the following secrets to your Phase Console instance
 
 <Properties>
-  <Property name="NEXT_PUBLIC_GITHUB_INTEGRATION_CLIENT_ID" type="string">
-    GitHub OAuth application Client ID
-
-    Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
-  </Property>
   <Property name="GITHUB_INTEGRATION_CLIENT_ID" type="string">
     GitHub OAuth application Client ID
 
@@ -424,6 +419,26 @@ These logs can be useful for troubleshooting email delivery issues when self-hos
     GitHub OAuth application Client Secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
 
     Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend), [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  </Property>
+</Properties>
+
+### GitHub Enterprise Server (self-hosted) integration:
+
+1. Create a new GitHub Enterprise Server OAuth application. You may follow the instructions [here](/access-control/authentication/oauth-sso#git-hub). Please note that this is different from the one you may already have set up for GitHub SSO, which is used for authentication.
+2. Set the Authorization callback URL to: `https://[**YOUR_DOMAIN**]/service/oauth/github/callback`
+3. Click "Register application"
+4. Supply the following secrets to your Phase Console instance
+
+<Properties>
+  <Property name="GITHUB_ENTERPRISE_INTEGRATION_CLIENT_ID" type="string">
+    GitHub Enterprise Server OAuth application Client ID
+
+    Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend), [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  </Property>
+  <Property name="GITHUB_ENTERPRISE_INTEGRATION_CLIENT_SECRET" type="string">
+    GitHub Enterprise Server OAuth application Client Secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
+
+    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
 </Properties>
 

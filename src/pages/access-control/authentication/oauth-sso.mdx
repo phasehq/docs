@@ -92,10 +92,10 @@ You can find detailed official instructions for setting up SSO with a Google OAu
 
 Follow these steps to set up GitHub SSO for your Phase application:
 
-If you are using GitHub Enterprise (self-hosted) instance, you may follow the steps below to set up GitHub SSO for your Phase application as the instructions are nearly identical. The only exception being the Authorization callback URL.
+If you are using GitHub Enterprise Server (self-hosted) instance, you may follow the steps below to set up GitHub SSO for your Phase application as the instructions are nearly identical. The only exception being the Authorization callback URL.
 
 <Note>
-   GitHub Enterprise (self-hosted) instance for OAuth SSO is only available for organizations with an `Enterprise` tier subscription. See [Pricing](https://phase.dev/pricing).
+   GitHub Enterprise Server (self-hosted) instance for OAuth SSO is only available for organizations with an `Enterprise` tier subscription. See [Pricing](https://phase.dev/pricing).
 </Note>
 
 1. Log in to your GitHub account and go to [OAuth Apps](https://github.com/settings/developers) in Developer Settings.
@@ -115,7 +115,7 @@ If you are using GitHub Enterprise (self-hosted) instance, you may follow the st
      </Property>
      <Property name="Authorization callback URL" type="string">
        For GitHub.com: `https://[**YOUR_DOMAIN**]/api/auth/callback/github`<br/>
-       For GitHub Enterprise: `https://[**YOUR_DOMAIN**]/api/auth/callback/github-enterprise`
+       For GitHub Enterprise Server: `https://[**YOUR_DOMAIN**]/api/auth/callback/github-enterprise`
      </Property>
    </Properties>
 
