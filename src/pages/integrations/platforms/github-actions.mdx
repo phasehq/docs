@@ -185,7 +185,7 @@ For detailed CLI installation options, please see: [Installation](/cli/install)
 2. Click on the `Settings` tab
 3. Select `Secrets` from the left sidebar
 4. Click on `New repository secret`
-5. Name it `PHASE_SERVICE_TOKEN` and provide its value
+5. Name it `PHASE_SERVICE_TOKEN` and provide its value.
 
 ### Single stage
 
@@ -240,7 +240,7 @@ jobs:
         id: export
         run: |
           # Export secrets
-          eval "$(secrets export --app "my application name" --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN)"
+          eval "$(phase secrets export --app "my application name" --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN)"
           
           # Set them in GitHub Actions environment file
           echo "username=$DOCKERHUB_USERNAME" >> $GITHUB_OUTPUT
