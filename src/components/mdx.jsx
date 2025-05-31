@@ -7,6 +7,7 @@ import ZoomableImage from './ZoomableImage'
 export const a = Link
 export { Button } from '@/components/Button'
 export { CodeGroup, Code as code, Pre as pre } from '@/components/Code'
+export { TabGroup, TabPanel } from '@/components/TabGroup'
 
 export const h2 = function H2(props) {
   return <Heading level={2} {...props} />
@@ -112,8 +113,6 @@ export function Property({ name, type, children }) {
     </li>
   )
 }
-
-
 
 export function MathSymbol({ children }) {
   return (<span className="font-serif font-semibold italic">{children}</span>)
