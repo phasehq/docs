@@ -628,7 +628,7 @@ This IAM role will be assumed by the Kubernetes service account used by Phase. I
 
 ### Step 3: Configure Kubernetes Service Account
 
-If you are using the Phase Helm chart, you need to configure the service account to use the IAM role created in Step 2. This is done by annotating the service account with the IAM role ARN.
+If you are using the [Phase Helm chart](https://github.com/phasehq/kubernetes-secrets-operator/tree/main/phase-console), you need to configure the service account to use the IAM role created in Step 2. This is done by annotating the service account with the IAM role ARN.
 
 In your `values.yaml` for the Phase Helm chart, ensure the following is configured:
 
