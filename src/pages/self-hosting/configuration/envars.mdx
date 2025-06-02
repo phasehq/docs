@@ -579,7 +579,7 @@ This IAM role will be assumed by the Kubernetes service account used by Phase. I
       ]
     }
     ```
-    *   **Note:** Replace `<YOUR_KUBERNETES_NAMESPACE>` with the Kubernetes namespace where Phase will be deployed (e.g., `default` or `phase-ns`). The service account name is `phase-global-assume-role` by default as per the Helm chart, adjust if you use a custom name.
+    *   **Note:** Replace `<YOUR_KUBERNETES_NAMESPACE>` with the Kubernetes namespace where Phase will be deployed (e.g., `default` or `phase-ns`). The service account name is `phase-global-assume-role` by default as per the Helm chart. Modify this if you are using a custom name.
 
 2.  **Create the IAM Role:**
     Use the AWS CLI to create the role with the trust policy. You can customize `PhaseGlobalAssumeRoleEKS`.
