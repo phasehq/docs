@@ -444,7 +444,11 @@ These logs can be useful for troubleshooting email delivery issues when self-hos
 
 ## AWS Integration
 
-<TabGroup title="Assume Role" subtitle="Choose a method of supplying AWS integration credentials to your Phase instance.">
+### Assume Role
+
+Choose a method of supplying AWS integration credentials to your Phase instance.
+
+<TabGroup>
   <TabPanel title="IMDSv2" slug="imds">
 
 If you are running Phase inside of a container(s) on an AWS EC2 instance, you can use an EC2 instance profile to provision a machine role which Phase will use via the IMDSv2 API to assume other roles to get temporary credentials.

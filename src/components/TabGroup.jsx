@@ -1,5 +1,3 @@
-'use client'
-
 import {
   Children,
   createContext,
@@ -13,34 +11,23 @@ import { useRouter } from 'next/router'
 import clsx from 'clsx'
 import { create } from 'zustand'
 import React from 'react'
+import { Prose } from '@/components/Prose'
 
 function getPanelTitle({ title, slug }) {
   return title ?? slug ?? 'Tab'
 }
 
-function TabGroupHeader({ title, subtitle, children, selectedIndex }) {
+function TabGroupHeader({ children, selectedIndex }) {
   let hasTabs = Children.count(children) > 1
 
-  if (!title && !hasTabs) {
+  if (!hasTabs) {
     return null
   }
 
   return (
-    <div className="flex min-h-[calc(theme(spacing.12)+1px)] flex-col gap-y-2 border-b border-zinc-200 bg-white px-4 py-3 dark:border-zinc-700 dark:bg-zinc-900 sm:flex-row sm:flex-wrap sm:items-start sm:gap-x-4 sm:gap-y-0">
-      <div className="sm:mr-auto sm:pt-0">
-        {title && (
-          <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">
-            {title}
-          </h3>
-        )}
-        {subtitle && (
-          <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400">
-            {subtitle}
-          </p>
-        )}
-      </div>
+    <div className="flex min-h-[calc(theme(spacing.12)+1px)] flex-col gap-y-2 py-3 sm:flex-row sm:flex-wrap sm:items-start sm:gap-x-4 sm:gap-y-0">
       {hasTabs && (
-        <Tab.List className="-mb-3 flex gap-3 overflow-x-auto text-xs font-medium sm:-mb-px sm:gap-4">
+        <Tab.List className="-mb-3 flex w-full gap-3 overflow-x-auto border-b border-zinc-200 text-xs font-medium dark:border-zinc-700 sm:-mb-px sm:gap-4">
           {Children.map(children, (child, childIndex) => {
             const { title, slug, icon: Icon } = child.props
             return (
@@ -67,7 +54,7 @@ function TabGroupHeader({ title, subtitle, children, selectedIndex }) {
 
 function TabGroupPanel({ children }) {
   return (
-    <div className="prose prose-zinc max-w-none p-6 dark:prose-invert">
+    <div className="py-6" as="article">
       {children}
     </div>
   )
@@ -131,23 +118,26 @@ function useTabGroupProps(availableTabSlugs, groupSlug) {
   const router = useRouter()
   const { preferredTabs, setPreferredTab } = usePreferredTabStore()
   const [selectedIndex, setSelectedIndex] = useState(0)
-  
+
   // Get tab from URL query string
   const urlTab = router.query.tab
-  
+
   // Determine the active tab based on URL query, preferred tab, or default
   let activeTab = null
   if (urlTab && availableTabSlugs.includes(urlTab)) {
     activeTab = urlTab
-  } else if (preferredTabs[groupSlug] && availableTabSlugs.includes(preferredTabs[groupSlug])) {
+  } else if (
+    preferredTabs[groupSlug] &&
+    availableTabSlugs.includes(preferredTabs[groupSlug])
+  ) {
     activeTab = preferredTabs[groupSlug]
   } else {
     activeTab = availableTabSlugs[0]
   }
-  
+
   const tabIndex = availableTabSlugs.indexOf(activeTab)
   const newSelectedIndex = tabIndex === -1 ? 0 : tabIndex
-  
+
   if (newSelectedIndex !== selectedIndex) {
     setSelectedIndex(newSelectedIndex)
   }
@@ -162,17 +152,29 @@ function useTabGroupProps(availableTabSlugs, groupSlug) {
       preventLayoutShift(() => {
         const newTabSlug = availableTabSlugs[newSelectedIndex]
         setPreferredTab(groupSlug, newTabSlug)
-        
-        // Update URL query string
+
         const newQuery = { ...router.query, tab: newTabSlug }
-        router.push(
-          {
-            pathname: router.pathname,
-            query: newQuery,
-          },
-          undefined,
-          { shallow: true }
-        )
+        const newUrl = `${router.pathname}?tab=${newTabSlug}${window.location.hash}`
+
+        router
+          .push(
+            {
+              pathname: router.pathname,
+              query: newQuery,
+            },
+            newUrl,
+            { shallow: true }
+          )
+          .then(() => {
+            // Defer to next tick to ensure DOM is ready
+            if (window.location.hash) {
+              const id = window.location.hash.substring(1)
+              const el = document.getElementById(id)
+              if (el) {
+                el.scrollIntoView({ behavior: 'smooth' }) // Or { block: 'start' } if you prefer
+              }
+            }
+          })
       })
     },
   }
@@ -180,9 +182,15 @@ function useTabGroupProps(availableTabSlugs, groupSlug) {
 
 const TabGroupContext = createContext(false)
 
-export function TabGroup({ children, title, subtitle, slug, ...props }) {
-  const tabSlugs = Children.map(children, (child) => child.props.slug || child.props.title || `tab-${Children.toArray(children).indexOf(child)}`)
-  const groupSlug = slug || title?.toLowerCase().replace(/\s+/g, '-') || 'tab-group'
+export function TabGroup({ children, slug, ...props }) {
+  const tabSlugs = Children.map(
+    children,
+    (child) =>
+      child.props.slug ||
+      child.props.title ||
+      `tab-${Children.toArray(children).indexOf(child)}`
+  )
+  const groupSlug = slug || 'tab-group'
   const tabGroupProps = useTabGroupProps(tabSlugs, groupSlug)
   const hasTabs = Children.count(children) > 1
   const Container = hasTabs ? Tab.Group : 'div'
@@ -195,18 +203,16 @@ export function TabGroup({ children, title, subtitle, slug, ...props }) {
     <TabGroupContext.Provider value={true}>
       <Container
         {...containerProps}
-        className="not-prose my-6 overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-zinc-200 dark:bg-zinc-900 dark:ring-zinc-700"
+        className="my-6 overflow-hidden"
       >
-        <TabGroupHeader title={title} subtitle={subtitle} {...headerProps}>
-          {children}
-        </TabGroupHeader>
+        <TabGroupHeader {...headerProps}>{children}</TabGroupHeader>
         <TabGroupPanels {...props}>{children}</TabGroupPanels>
       </Container>
     </TabGroupContext.Provider>
   )
 }
 
-export function TabPanel({ children, title, slug, subtitle, icon, ...props }) {
+export function TabPanel({ children, slug, subtitle, icon, ...props }) {
   const isGrouped = useContext(TabGroupContext)
 
   if (isGrouped) {
@@ -215,25 +221,10 @@ export function TabPanel({ children, title, slug, subtitle, icon, ...props }) {
 
   // If not grouped, render as a standalone section
   return (
-    <div className="not-prose my-6 overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-zinc-200 dark:bg-zinc-900 dark:ring-zinc-700">
-      {(title || subtitle) && (
-        <div className="border-b border-zinc-200 bg-white px-6 py-4 dark:border-zinc-700 dark:bg-zinc-900">
-          {title && (
-            <h3 className="text-sm font-semibold text-zinc-900 dark:text-white flex items-center gap-2">
-              {icon && React.createElement(icon, { className: "h-4 w-4" })}
-              {title}
-            </h3>
-          )}
-          {subtitle && (
-            <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400">
-              {subtitle}
-            </p>
-          )}
-        </div>
-      )}
-      <div className="prose prose-zinc max-w-none p-6 dark:prose-invert">
+    <div className="overflow-hidden">
+      <Prose className="max-w-none p-6" as="article">
         {children}
-      </div>
+      </Prose>
     </div>
   )
-} 
+}
