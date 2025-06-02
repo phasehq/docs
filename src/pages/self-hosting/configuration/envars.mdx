@@ -503,7 +503,7 @@ aws iam add-role-to-instance-profile --instance-profile-name PhaseEC2InstanceRol
 Make sure this instance profile is attached to the EC2 instance(s) that will be used to run Phase.
 
 <Note>
-Please make sure the instance metadata service is enabled and IMDSv2 is enabled and reachable from within the containers.
+Please make sure that the instance metadata service is enabled, and IMDSv2 is enabled and reachable from within the containers.
 </Note>
 
 Depending on how you first created the EC2 instance, you may have to enable IMDSv2 manually and set the metadata response hop limit to 2. This is the default when creating an EC2 from the AWS Console launch wizard. You can use the following command to set the metadata response hop limit to 2, make sure that you have the `ec2:ModifyInstanceMetadataOptions` permission before running it:
