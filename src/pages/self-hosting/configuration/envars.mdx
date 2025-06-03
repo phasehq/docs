@@ -702,7 +702,7 @@ This user will be used by your self-hosted Phase instance to interact with AWS.
 aws iam create-user --user-name phase-integration-user
 ```
 
-2.  After the user is created, AWS will return its details.
+2.  After the user is created, AWS will return the user details. **Make a note of the User ARN** (e.g., `arn:aws:iam::YOUR_ACCOUNT_ID:user/phase-integration-user`). Other users or roles will need to trust this user to assume roles.
 
 ### Step 3: Attach the AssumeRole Policy to the User
 
