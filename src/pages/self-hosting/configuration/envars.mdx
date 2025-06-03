@@ -442,6 +442,308 @@ These logs can be useful for troubleshooting email delivery issues when self-hos
   </Property>
 </Properties>
 
+## AWS Integration
+
+### Assume Role
+
+Choose a method of supplying AWS integration credentials to your Phase instance.
+
+<TabGroup>
+  <TabPanel title="IMDSv2" slug="imds">
+
+If you are running Phase inside of a container(s) on an AWS EC2 instance, you can use an EC2 instance profile to provision a machine role which Phase will use via the IMDSv2 API to assume other roles to get temporary credentials.
+
+### Step 1: Create IAM Policy
+
+Create an IAM policy:
+
+```fish
+aws iam create-policy --policy-name PhaseGlobalAssumeRolePolicy --policy-document '{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowAssumeAnyRole",
+      "Effect": "Allow",
+      "Action": "sts:AssumeRole",
+      "Resource": "arn:aws:iam::*:role/*"
+    }
+  ]
+}'
+```
+
+### Step 2: Create IAM role
+
+```fish
+aws iam create-role --role-name PhaseEC2InstanceRole --assume-role-policy-document '{
+  "Version":"2012-10-17",
+  "Statement":[
+    {
+      "Effect":"Allow",
+      "Principal":{"Service":"ec2.amazonaws.com"},
+      "Action":"sts:AssumeRole"
+    }
+  ]
+}'
+```
+
+### Step 3: Attach the policy to the role
+
+```fish
+aws iam attach-role-policy --role-name PhaseEC2InstanceRole --policy-arn <POLICY_ARN>
+```
+
+### Step 4: Create an IAM instance profile
+
+```fish
+aws iam create-instance-profile --instance-profile-name PhaseEC2InstanceRole
+```
+
+### Step 5: Add the role to the instance profile
+
+```fish
+aws iam add-role-to-instance-profile --instance-profile-name PhaseEC2InstanceRole --role-name PhaseEC2InstanceRole
+```
+
+Make sure this instance profile is attached to the EC2 instance(s) that will be used to run Phase.
+
+<Note>
+Please make sure that the instance metadata service is enabled, and IMDSv2 is enabled and reachable from within the containers.
+</Note>
+
+Depending on how you first created the EC2 instance, you may have to enable IMDSv2 manually and set the metadata response hop limit to 2. This is the default when creating an EC2 from the AWS Console launch wizard. You can use the following command to set the metadata response hop limit to 2. Make sure that you have the `ec2:ModifyInstanceMetadataOptions` permission before running it:
+
+```fish
+aws ec2 modify-instance-metadata-options --instance-id YOUR_INSTANCE_ID --http-put-response-hop-limit 2 --http-endpoint enabled --region YOUR_AWS_REGION_IF_NEEDED
+```
+
+Sample output:
+
+```json
+{
+    "InstanceId": "i-12f345f5d7890fb11",
+    "InstanceMetadataOptions": {
+        "State": "pending",
+        "HttpTokens": "optional",
+        "HttpPutResponseHopLimit": 2,
+        "HttpEndpoint": "enabled",
+        "HttpProtocolIpv6": "disabled",
+        "InstanceMetadataTags": "disabled"
+    }
+}  
+```
+  </TabPanel>
+
+  <TabPanel title="Kubernetes IRSA" slug="irsa">
+
+If you are running Phase on an AWS EKS cluster, you can use an IAM role for service accounts to provision a machine role which Phase will use via the IRSA API to assume other roles to get temporary credentials. More information about this can be found [here](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html).
+
+### Step 1: Enable IAM OIDC provider for your EKS cluster
+
+If you haven't already, you need to enable the IAM OIDC provider for your EKS cluster. You can do this with the following `eksctl` command:
+
+```fish
+eksctl utils associate-iam-oidc-provider --region <YOUR_AWS_REGION> --cluster <YOUR_CLUSTER_NAME> --approve
+```
+
+To get the OIDC issuer URL for your cluster (which includes the OIDC ID), use the following command:
+
+```fish
+aws eks describe-cluster --name <YOUR_CLUSTER_NAME> --region <YOUR_AWS_REGION> --query "cluster.identity.oidc.issuer" --output text
+```
+This will output a URL like `https://oidc.eks.<YOUR_AWS_REGION>.amazonaws.com/id/<YOUR_OIDC_ID>`. The last part of this URL is your OIDC ID.
+You can then construct your OIDC provider ARN, which will look like: `arn:aws:iam::<YOUR_AWS_ACCOUNT_ID>:oidc-provider/oidc.eks.<YOUR_AWS_REGION>.amazonaws.com/id/<YOUR_OIDC_ID>`
+
+For example, if your cluster is `my-cluster` in `us-west-2` and your account ID is `111122223333`, and the `describe-cluster` command output `https://oidc.eks.us-west-2.amazonaws.com/id/EXAMPLED5AB5C991A547448B880E7A3225F`, then your OIDC ID is `EXAMPLED5AB5C991A547448B880E7A3225F` and your OIDC Provider ARN is `arn:aws:iam::111122223333:oidc-provider/oidc.eks.us-west-2.amazonaws.com/id/EXAMPLED5AB5C991A547448B880E7A3225F`.
+
+
+### Step 2: Create IAM Role and Policy
+
+This IAM role will be assumed by the Kubernetes service account used by Phase. It needs a trust policy that allows the OIDC provider to assume it, and an IAM policy granting necessary permissions.
+
+1.  **Create the Trust Relationship JSON file:**
+    Save the following content as `phase-irsa-trust-policy.json`. Replace `<YOUR_AWS_ACCOUNT_ID>`, `<YOUR_AWS_REGION>`, and `<YOUR_OIDC_ID>` with the values obtained in Step 1.
+
+    ```json
+    {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Principal": {
+            "Federated": "arn:aws:iam::<YOUR_AWS_ACCOUNT_ID>:oidc-provider/oidc.eks.<YOUR_AWS_REGION>.amazonaws.com/id/<YOUR_OIDC_ID>"
+          },
+          "Action": "sts:AssumeRoleWithWebIdentity",
+          "Condition": {
+            "StringEquals": {
+              "oidc.eks.<YOUR_AWS_REGION>.amazonaws.com/id/<YOUR_OIDC_ID>:sub": "system:serviceaccount:<YOUR_KUBERNETES_NAMESPACE>:phase-global-assume-role",
+              "oidc.eks.<YOUR_AWS_REGION>.amazonaws.com/id/<YOUR_OIDC_ID>:aud": "sts.amazonaws.com"
+            }
+          }
+        }
+      ]
+    }
+    ```
+    *   **Note:** Replace `<YOUR_KUBERNETES_NAMESPACE>` with the Kubernetes namespace where Phase will be deployed (e.g., `default` or `phase-ns`). The service account name is `phase-global-assume-role` by default as per the Helm chart. Modify this if you are using a custom name.
+
+2.  **Create the IAM Role:**
+    Use the AWS CLI to create the role with the trust policy. You can customize `PhaseGlobalAssumeRoleEKS`.
+
+    ```fish
+    aws iam create-role \
+      --role-name PhaseGlobalAssumeRoleEKS \
+      --assume-role-policy-document file://phase-irsa-trust-policy.json \
+      --description "IAM role for Phase to assume roles via EKS IRSA"
+    ```
+    Make a note of the `Arn` of the created role from the output. It will be something like `arn:aws:iam::<YOUR_AWS_ACCOUNT_ID>:role/PhaseGlobalAssumeRoleEKS`.
+
+3.  **Create the IAM Policy JSON file:**
+    This policy allows Phase to assume any other role in the account. Save the following as `phase-assume-any-role-policy.json`.
+
+    ```json
+    {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "AllowAssumeAnyRole",
+          "Effect": "Allow",
+          "Action": "sts:AssumeRole",
+          "Resource": "arn:aws:iam::*:role/*"
+        }
+      ]
+    }
+    ```
+
+4.  **Create and Attach the IAM Policy:**
+    Create the policy and attach it to the role created in the previous step. You can customize `PhaseGlobalAssumeRolePolicyEKS`.
+
+    ```fish
+    aws iam create-policy \
+      --policy-name PhaseGlobalAssumeRolePolicyEKS \
+      --policy-document file://phase-assume-any-role-policy.json
+    ```
+    Make a note of the `Arn` of the created policy from the output.
+
+    Then, attach this policy to the `PhaseGlobalAssumeRoleEKS` role (replace `<YOUR_POLICY_ARN>` with the ARN from the `create-policy` output):
+    ```fish
+    aws iam attach-role-policy \
+      --role-name PhaseGlobalAssumeRoleEKS \
+      --policy-arn <YOUR_POLICY_ARN>
+    ```
+
+### Step 3: Configure Kubernetes Service Account
+
+If you are using the [Phase Helm chart](https://github.com/phasehq/kubernetes-secrets-operator/tree/main/phase-console), you need to configure the service account to use the IAM role created in Step 2. This is done by annotating the service account with the IAM role ARN.
+
+In your `values.yaml` for the Phase Helm chart, ensure the following is configured:
+
+```yaml
+# values.yaml
+
+# ...
+
+# Service Account configuration
+# Tell the deployments to use your existing 'phase-backend-sa'
+# which is already configured for IRSA.
+serviceAccount:
+  create: true  # Set to false because phase-global-assume-role already exists and is IRSA-configured
+  name: "phase-global-assume-role" # The name of your existing, IRSA-enabled service account
+  annotations:
+    # This annotation is for documentation or if you set create: true in the future.
+    # The serviceaccount.yaml template only applies these if create: true.
+    "eks.amazonaws.com/role-arn": "arn:aws:iam::<YOUR_AWS_ACCOUNT_ID>:role/<YOUR_ROLE_NAME>"
+
+```
+
+*   Replace `<YOUR_AWS_ACCOUNT_ID>` with your AWS Account ID.
+*   Replace `<YOUR_ROLE_NAME>` with the name of the IAM role you created (e.g., `PhaseGlobalAssumeRoleEKS`).
+*   Ensure `name` under `serviceAccount` matches the service account name specified in the trust policy condition (`system:serviceaccount:<YOUR_KUBERNETES_NAMESPACE>:phase-global-assume-role`).
+*   If `serviceAccount.create` is `false`, you'll need to ensure the `phase-global-assume-role` service account exists in the target namespace and manually add the `eks.amazonaws.com/role-arn` annotation to it.
+
+After updating your `values.yaml`, apply the changes using Helm:
+
+```fish
+helm upgrade --install <RELEASE_NAME> phase/phase-console -f values.yaml -n <YOUR_KUBERNETES_NAMESPACE>
+```
+
+</TabPanel>
+
+<TabPanel title="Access Keys" slug="access-keys">
+
+If you are self-hosting Phase outside of an AWS environment (e.g., on-premise, or with another cloud provider) or running it on an AWS compute service like Lightsail that does not support instance profiles, you will need to create an IAM user with an access key and secret key that Phase can use to assume roles in your AWS account(s) for integrating with services like AWS Secrets Manager.
+
+### Step 1: Create IAM Policy for Assuming Roles
+
+This policy allows the Phase integration user to assume any role. This is necessary because Phase will need to assume specific roles that have permissions to access services like Secrets Manager in your various AWS accounts or for different purposes.
+
+1.  **Run the following AWS CLI command** in your terminal to create the policy. You can customize the policy name (e.g., `PhaseGlobalAssumeRolePolicy`):
+
+```fish
+aws iam create-policy --policy-name PhaseGlobalAssumeRolePolicy --policy-document '{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "sts:AssumeRole",
+      "Resource": "arn:aws:iam::*:role/*"
+    }
+  ]
+}'
+```
+
+2.  After running the command, AWS will return the policy details. **Make a note of the Policy ARN** (e.g., `arn:aws:iam::YOUR_ACCOUNT_ID:policy/PhaseGlobalAssumeRolePolicy`). You will need this ARN in Step 3.
+
+### Step 2: Create IAM User for Phase Integration
+
+This user will be used by your self-hosted Phase instance to interact with AWS.
+
+1.  **Run the following AWS CLI command** to create the IAM user. You can customize the user name (e.g., `phase-integration-user`):
+
+```fish
+aws iam create-user --user-name phase-integration-user
+```
+
+2.  After the user is created, AWS will return the user details. **Make a note of the User ARN** (e.g., `arn:aws:iam::YOUR_ACCOUNT_ID:user/phase-integration-user`). Other users or roles will need to trust this user to assume roles.
+
+### Step 3: Attach the AssumeRole Policy to the User
+
+Attach the `PhaseGlobalAssumeRolePolicy` (created in Step 1) to the `phase-integration-user`.
+
+*   Replace `phase-integration-user` with your chosen user name if different.
+*   Replace `YOUR_POLICY_ARN_FROM_STEP_1` with the Policy ARN you noted earlier.
+
+```fish
+aws iam attach-user-policy --user-name phase-integration-user --policy-arn YOUR_POLICY_ARN_FROM_STEP_1
+```
+
+### Step 4: Create Access Key for the IAM User
+
+Phase will use these credentials to authenticate with AWS.
+
+1.  **Run the following AWS CLI command** to create an access key for the `phase-integration-user`.
+    *   Replace `phase-integration-user` with your chosen user name if different.
+
+```fish
+aws iam create-access-key --user-name phase-integration-user
+```
+
+2.  AWS will return an `AccessKeyId` and a `SecretAccessKey`. You will need to provide them to your Phase instance as following secrets:
+
+<Properties>
+  <Property name="AWS_INTEGRATION_ACCESS_KEY_ID" type="string">
+    AWS integration access key ID for the integration user
+
+    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  </Property>
+  <Property name="AWS_INTEGRATION_SECRET_ACCESS_KEY" type="string">
+    AWS integration secret access key for the integration user. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
+
+    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  </Property>
+</Properties>
+
+  </TabPanel>
+</TabGroup>
+
 ---
 
 ## Debugging
