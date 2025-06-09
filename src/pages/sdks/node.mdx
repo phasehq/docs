@@ -66,30 +66,25 @@ const Phase = require('@phase.dev/phase-node')
 Initialize the SDK with your `token`
 
 ```typescript
-const token = 'pss_service...'
+const token = 'pss_service...' // or process.env.PHASE_TOKEN
 
 const phase = new Phase(token)
+
+await phase.init()
 ```
 
 <Note>
 If you are self-hosting Phase, you must also provide the protocol and host for your Phase instance:
 
 ```typescript
-const token = 'pss_service...'
+const token = 'pss_service...' // or process.env.PHASE_TOKEN
 const host = 'https://console.phase.dev' // default
 
 const phase = new Phase(token, host)
-```
 
-</Note>
-
-Then run `phase.init()` to initiate a session:
-
-```typescript
 await phase.init()
 ```
-
----
+</Note>
 
 ## Usage
 
