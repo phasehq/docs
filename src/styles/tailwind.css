@@ -12,10 +12,64 @@
 
 .not-prose {
   max-width: inherit;
-  margin-left: calc(50% - min(50%, 33rem))!important;
-  margin-right: calc(50% - min(50%, 33rem))!important;
+  margin-left: calc(50% - min(50%, 33rem)) !important;
+  margin-right: calc(50% - min(50%, 33rem)) !important;
 }
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  /* Apply globally to all scrollable areas */
+  * {
+    scrollbar-width: thin;
+  }
+  /* Default light mode */
+  html:not(.dark),
+  body:not(.dark),
+  :not(.dark) * {
+    scrollbar-color: theme('colors.neutral.300') theme('colors.neutral.100');
+  }
+
+  /* Dark mode */
+  .dark html,
+  .dark body,
+  .dark * {
+    scrollbar-color: theme('colors.zinc.700') theme('colors.zinc.900');
+  }
+
+  *::-webkit-scrollbar {
+    width: 8px;
+    background: theme('colors.neutral.100');
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: theme('colors.neutral.300');
+    border-radius: 4px;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background: theme('colors.neutral.400');
+  }
+
+  *::-webkit-scrollbar-thumb:active {
+    background: theme('colors.neutral.400');
+  }
+
+  .dark *::-webkit-scrollbar {
+    background: theme('colors.zinc.900');
+  }
+
+  .dark *::-webkit-scrollbar-thumb {
+    background: theme('colors.zinc.700');
+  }
+
+  .dark *::-webkit-scrollbar-thumb:hover {
+    background: theme('colors.zinc.600');
+  }
+
+  .dark *::-webkit-scrollbar-thumb:active {
+    background: theme('colors.zinc.500');
+  }
+}
