@@ -312,6 +312,7 @@ export const navigation = [
       { title: 'GitLab CI', href: '/integrations/platforms/gitlab-ci' },
       { title: 'Vercel', href: '/integrations/platforms/vercel' },
       { title: 'Railway', href: '/integrations/platforms/railway' },
+      { title: 'Render', href: '/integrations/platforms/render' },
       { title: 'Jenkins', href: '/integrations/platforms/jenkins' },
       { title: 'CircleCI', href: '/integrations/platforms/circleci' },
       { title: 'AWS CodeBuild', href: '/integrations/platforms/aws-codebuild' },
