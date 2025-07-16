@@ -185,3 +185,86 @@ Make sure the application has the `read_user` scope. This grants read-only acces
 </Note>
 
 You can find detailed official instructions for setting up SSO with a GitLab OAuth Application [here](https://docs.gitlab.com/ee/integration/oauth_provider.html). 
+
+
+## Authentik SSO
+
+You can integrate [Authentik](https://goauthentik.io) as an OIDC provider for your Phase instance. Follow these steps to set up Authentik SSO for Phase:
+
+1. Sign in to your Authentik administrative interface.
+
+
+2. From the left sidebar, click **Applications**.
+
+   ![Click Applications](/assets/images/auth/sso/oidc/authentik/authentik-sidebar-applications.png)
+
+3. Click the **Create with Provider** button. You can also click the **Create** button if you want to create a new application first and configure the provider separately.
+
+   ![Create new Application](/assets/images/auth/sso/oidc/authentik/authentik-create-with-provider-button.png)
+
+4. Provide the following values:
+
+   - **Name**: e.g. `Phase`
+   - **Slug**: e.g. `phase`
+   
+
+   Click **Next** 
+
+   ![Configure new Application](/assets/images/auth/sso/oidc/authentik/authentik-app-step-1.png)
+
+5. Select "OAuth2/OpenID Provider" and click **Next**.
+
+   ![Select Provider](/assets/images/auth/sso/oidc/authentik/authentik-app-step-2.png)
+
+6. Configure the provider:
+
+   - **Name**: e.g. `Provider for Phase`
+   - **Authorization flow**: Select `default-provider-authorization-explicit-consent`
+   - **Signing Key**: Choose an existing key or create a new one
+   - **Client ID**: Make a note of this value, as it will be used later as `AUTHENTIK_CLIENT_ID`
+   - **Client Secret**: Make a note of this value, as it will be used later as `AUTHENTIK_CLIENT_SECRET`
+   - **Redirect URIs**: This will be the hostname of your Phase instance, followed by:
+   
+   ```
+   /api/auth/callback/authentik
+   ```
+   
+   (e.g., `https://[YOUR_PHASE_HOST]/api/auth/callback/authentik`).
+
+   - Click **Next**
+
+
+   ![Configure OIDC Provider](/assets/images/auth/sso/oidc/authentik/authentik-app-step-3.png)
+
+7. Configure Bindings for the application. This will control which users can log in to Phase using this provider. Please see the [authentik docs on application management](https://docs.goauthentik.io/docs/add-secure-apps/applications/manage_apps) for more information on this. In the example below, we are binding the application to the `Phase Users` group.
+
+   ![Configure bindings](/assets/images/auth/sso/oidc/authentik/authentik-app-step-4.png)
+
+8. Click **Next** to review your configuration, then click **Create** to finalize the application setup.
+
+
+9. Supply these credentials to your Phase Console deployment as environment variables:
+
+ - `AUTHENTIK_CLIENT_ID`
+ - `AUTHENTIK_CLIENT_SECRET`
+ - `AUTHENTIK_URL`
+ - `AUTHENTIK_APP_SLUG`
+
+ Please see [deployment configuration](/self-hosting/configuration/envars#authentik) for more details.
+
+Your Authentik SSO application is now configured! You can now provision user access to your Phase instance via Authentik.
+
+For more detailed information about Authentik application and OIDC configuration, refer to the [Authentik documentation](https://goauthentik.io/docs/providers/oidc/).
+
+### Troubleshooting: Authentik SSO
+
+#### Issue: Redirect URI Mismatch
+
+If you receive an error like:
+
+`redirect_uri_mismatch`
+
+
+Ensure that the redirect URI configured in Authentik exactly matches:
+
+`https://[YOUR_PHASE_HOST]/api/auth/callback/authentik`
