@@ -6,6 +6,7 @@ import logoGoogle from '@/images/logos/google.svg'
 import logoGitHub from '@/images/logos/github.svg'
 import logoGitLab from '@/images/logos/gitlab.svg'
 import logoJumpCloud from '@/images/logos/jumpcloud.svg'
+import logoAuthentik from '@/images/logos/authentik.svg'
 
 import clsx from 'clsx'
 
@@ -48,6 +49,12 @@ const OAuthProviders = [
     name: 'GitLab OAuth SSO',
     description: 'Use GitLab.com or self-managed GitLab instance to Authenticate with Phase.',
     logo: logoGitLab, 
+  },
+  {
+    href: '/access-control/authentication/oauth-sso#authentik',
+    name: 'Authentik',
+    description: 'Use Authentik SSO to Authenticate with Phase.',
+    logo: logoAuthentik, 
   },
 ]
 
