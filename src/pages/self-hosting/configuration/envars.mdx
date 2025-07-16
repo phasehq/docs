@@ -235,6 +235,38 @@ Env(s) required by the following containers:
 - [`frontend`](https://hub.docker.com/r/phasehq/frontend)
 - [`backend`](https://hub.docker.com/r/phasehq/backend)
 
+### Authentik
+
+You can find instructions for setting up SSO with a Authentik OAuth/OIDC Application [here](/access-control/authentication/oidc-sso#authentik).
+
+Set the "Redirect URI" for your Authentik OAuth/OIDC App as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/authentik`.
+
+Example:
+```bash
+https://[**YOUR_DOMAIN**]/api/auth/callback/authentik
+``` 
+
+After setting up your Application on Authentik, set the Client ID, Client Secret, Authentik URL, and Authentik App Slug values:
+
+<Properties>
+  <Property name="AUTHENTIK_CLIENT_ID" type="string">
+    Authentik OIDC Client ID
+  </Property>
+  <Property name="AUTHENTIK_CLIENT_SECRET" type="string">
+    Authentik OIDC Client secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
+  </Property>
+  <Property name="AUTHENTIK_URL" type="string">
+    Authentik instance URL
+  </Property>
+  <Property name="AUTHENTIK_APP_SLUG" type="string">
+    Authentik App slug
+  </Property>
+</Properties>
+
+Env(s) required by the following containers:
+- [`frontend`](https://hub.docker.com/r/phasehq/frontend)
+- [`backend`](https://hub.docker.com/r/phasehq/backend)
+
 ---
 
 ## Application secrets
@@ -339,7 +371,7 @@ Env(s) required by the following containers:
 
 <Properties>
   <Property name="SMTP_SERVER" type="string">
-    Your SMTP gateway host. eg. `my-email-gatwway-smtp.eu-central-1.amazonaws.com`
+    Your SMTP gateway host. eg. `my-email-gateway-smtp.eu-central-1.amazonaws.com`
 
     Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
