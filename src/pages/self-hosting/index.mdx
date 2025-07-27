@@ -13,12 +13,50 @@ export const description = 'Run Phase on your own infrastructure'
 
 Explore deployment options for self-hosting Phase. {{ className: 'lead' }}
 
-To meet various compliance requirements or to simply maintain control over your data, you may want to self-host Phase instead of using [Phase Cloud](https://console.phase.dev).
+You may choose to self-host Phase to meet various compliance requirements, to simply maintain control over your data or run Phase behind your firewall.
+
+## System Requirements
+
+| Requirement       | Minimum         | Recommended          |
+| ----------------- | --------------- | -------------------- |
+| **CPU**           | 2 Cores         | 8 Cores              |
+| **Memory**           | 2 GB             | 16 GB                 |
+| **Database Volume** | 1 GB             | 50 GB               |
 
 
-When self hosting Phase services on your own infrastructure, you assume sole responsibility for security, reliability and availability. It is up to you to set up valid **TLS certificates**, **web application firewall**, **database backups** and **replication**, **DDoS protection**, **rate limiting**,**SSOs** etc.
+### Supported Platforms
+
+- **Operating Systems**: Linux, FreeBSD, macOS, and Windows.
+- **CPU Architectures**: `amd64` (x86) and `arm64`.
+
+### Dependencies
+- **Container Runtime**: A container runtime or orchestrator such as Docker, Docker Compose, Nomad, or Kubernetes.
+- **Single Sign-On (SSO)**: You must use an SSO provider. See the [list of supported providers](/access-control/authentication#user-authentication).
+- **TLS Certificate**: You must provision a TLS certificate and access Phase over HTTPS. This can be a self-signed certificate. The default Docker Compose installation will provide a self-signed certificate.
+
+
+## Deployment Options
 
 <Deployments />
+
+### Your Responsibilities
+
+When self-hosting Phase services on your own infrastructure, you assume sole responsibility for security, availability, and reliability. It is up to you to set up the following:
+
+- **Security:**
+    - **Single Sign-On (SSO):** You must configure SSO for user authentication using one of the [supported providers](/access-control/authentication#user-authentication).
+    - **TLS Certificates:** Provision a valid TLS certificate to ensure Phase is accessed securely over HTTPS. Self-signed certificates are supported.
+    - **Web Application Firewall (WAF):** Implement a WAF to protect against common web exploits.
+    - **DDoS Protection & Rate Limiting:** Configure measures to mitigate Distributed Denial of Service attacks and prevent abuse through rate limiting.
+
+
+- **Data & Availability:**
+    - **Database Backups & Replication:** Regularly back up your database and set up replication for high availability and disaster recovery.
+
+- **Maintenance & Updates:**
+    - **Phase Updates:** Keep your Phase instance up-to-date by applying the latest upgrades and running necessary database migrations.
+    - **System & Dependency Updates:** Regularly update the underlying host system and its dependencies to patch security vulnerabilities.
+
 
 ---
 
