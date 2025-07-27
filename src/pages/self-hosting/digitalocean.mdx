@@ -173,6 +173,31 @@ You may:
 
 7. You should now be able to access the Phase console at `https://your-droplet-ip-address`.
 
+## Troubleshooting
+
+### Routing Structure
+
+The `nginx` service acts as a reverse proxy for the `frontend` and `backend` services.
+
+- Requests to `https://your-droplet-ip-address/*` are routed to the `frontend` service at `http://frontend:3000`.
+- Requests to `https://your-droplet-ip-address/service/*` are routed to the `backend` service at `http://backend:8000`, with the `/service` path prefix stripped.
+
+### Health Checks
+
+You can check the health of the services using `curl`. Since a self-signed certificate is used by default, you may need to use the `-k` or `--insecure` flag to bypass certificate validation.
+
+- **Frontend Health Check**:
+  ```fish
+  curl -vk https://your-droplet-ip-address/api/health
+  # Expected response: {"status":"alive"}
+  ```
+
+- **Backend Health Check**:
+  ```fish
+  curl -vk https://your-droplet-ip-address/service/health/
+  # Expected response: {"status": "alive", "version": "x.x.x"}
+  ```
+
 ---
 
 Remember to secure your environment and not expose sensitive data or configurations in production. By default Phase will provision a self-signed TLS certificate using nginx. Please use a valid TLS certificate for your own domain in production.
