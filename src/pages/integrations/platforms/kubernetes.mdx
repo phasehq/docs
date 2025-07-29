@@ -82,7 +82,7 @@ metadata:
   name: example-phase-secret
   namespace: default
 spec:
-  phaseAppId: '00000000-0000-0000-0000-000000000000' # The ID of your Phase application
+  phaseAppName: 'your-application-name' # The name of your Phase application
   phaseAppEnv: 'production' # OPTIONAL - The Phase App Environment to fetch secrets from
   phaseAppEnvPath: '/' # OPTIONAL Path within the Phase application environment to fetch secrets from
   phaseHost: 'https://console.phase.dev' # OPTIONAL - URL of a Phase Console instance
@@ -105,7 +105,7 @@ metadata:
   name: example-phase-secret
   namespace: default
 spec:
-  phaseAppId: '00000000-0000-0000-0000-000000000000' # The ID of your Phase application
+  phaseAppName: 'your-application-name' # The name of your Phase application
   phaseAppEnv: 'production' # OPTIONAL - The Phase App Environment to fetch secrets from
   phaseAppEnvPath: 'certs/' # OPTIONAL Path within the Phase application environment to fetch secrets from
   phaseHost: 'https://console.phase.dev' # OPTIONAL - URL of a Phase Console instance
@@ -226,8 +226,8 @@ metadata:
   name: example-phase-secret
   namespace: default
 spec:
-  phaseAppId: '00000000-0000-0000-0000-000000000000'
-  phaseAppEnv: 'prod'
+  phaseApp: 'your-application-name'
+  phaseAppEnv: 'production'
   phaseAppEnvTag: 'certs'
   phaseHost: 'https://console.phase.dev'
   authentication:
