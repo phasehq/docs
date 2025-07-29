@@ -82,7 +82,7 @@ metadata:
   name: example-phase-secret
   namespace: default
 spec:
-  phaseAppName: 'your-application-name' # The name of your Phase application
+  phaseApp: 'your-application-name' # The name of your Phase application
   phaseAppEnv: 'production' # OPTIONAL - The Phase App Environment to fetch secrets from
   phaseAppEnvPath: '/' # OPTIONAL Path within the Phase application environment to fetch secrets from
   phaseHost: 'https://console.phase.dev' # OPTIONAL - URL of a Phase Console instance
@@ -105,7 +105,7 @@ metadata:
   name: example-phase-secret
   namespace: default
 spec:
-  phaseAppName: 'your-application-name' # The name of your Phase application
+  phaseApp: 'your-application-name' # The name of your Phase application
   phaseAppEnv: 'production' # OPTIONAL - The Phase App Environment to fetch secrets from
   phaseAppEnvPath: 'certs/' # OPTIONAL Path within the Phase application environment to fetch secrets from
   phaseHost: 'https://console.phase.dev' # OPTIONAL - URL of a Phase Console instance
@@ -150,6 +150,9 @@ kubectl get secret my-application-secret -o yaml
 ### Properties
 
 <Properties>
+  <Property name="phaseApp" type="required">
+    The name of the Phase application to fetch secrets from.
+  </Property>
   <Property name="phaseAppEnv" type="optional">
     The Phase App Environment to fetch secrets from (e.g., dev, staging, prod).{' '}
     <b>Default</b>: `production`.
