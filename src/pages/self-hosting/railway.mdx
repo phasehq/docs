@@ -99,7 +99,7 @@ Set up a Google, GitHub or GitLab OAuth application. Please refer to the [docs](
    - Select **Variables**
    - Click **+ New Variables**
    - Add your OAuth provider's `CLIENT_ID` and `CLIENT_SECRET`
-   - You may need to set `NEXT_PUBLIC_NEXTAUTH_PROVIDERS` in the `frontend` service if not done previously
+   - You may need to set `SSO_PROVIDERS` in the `frontend` service if not done previously. (Note: use the legacy `NEXT_PUBLIC_NEXTAUTH_PROVIDERS` variable if using a version of the console older than `v2.50.0`)
    - Click **Add**
 
 Here's what it looks like for the `frontend`:
