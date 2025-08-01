@@ -834,6 +834,15 @@ These variables are not required if using the suggested [docker-compose template
     Required by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
   </Property>
   <Property name="SSO_PROVIDERS" type="string">
+    Comma-separated list of NextAuth providers.
+    
+    Example: `google,github,gitlab`
+
+    Required by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
+  </Property>
+  <Property name="NEXT_PUBLIC_NEXTAUTH_PROVIDERS (Legacy)" type="string">
+    **This is a legacy variable and is not required if you using Console version >= `v2.50.0`**
+
     Comma-separated list of NextAuth providers. References `${SSO_PROVIDERS}`
     
     Example: `google,github,gitlab`
