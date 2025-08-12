@@ -52,6 +52,10 @@ python -m ensurepip --upgrade
 C:> py -m ensurepip --upgrade
 ```
 
+```fish {{ title: 'Arch Linux' }}
+sudo pacman -S jq unzip
+```
+
 ```fish {{ title: 'Docker' }}
 # Install Docker on your system
 
@@ -100,6 +104,10 @@ nix-shell -p phase-cli
 pip install phase-cli
 ```
 
+```fish {{ title: 'Arch Linux' }}
+curl -fsSL https://pkg.phase.dev/install.sh | bash
+```
+
 ```fish {{ title: 'Docker' }}
 # Run the latest version
 docker run phasehq/cli
@@ -143,6 +151,10 @@ nix-channel --update && nix-shell -p phase-cli
 
 ```fish {{ title: 'Python pip' }}
 pip install --upgrade phase-cli
+```
+
+```fish {{ title: 'Arch Linux' }}
+phase update
 ```
 
 ```fish {{ title: 'Docker' }}
