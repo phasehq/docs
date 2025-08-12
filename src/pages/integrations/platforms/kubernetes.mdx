@@ -71,10 +71,6 @@ Create a custom resource file: `phase-secrets-operator-cr.yaml`
 
 A Basic custom resource to sync all secrets from a `production` environment in an App in the Phase Console to your Kubernetes cluster as `my-application-secret`, type `Opaque`.
 
-You can get the AppID by going to your application settings in the Phase Console, hovering over UUID under the App section and clicking the `Copy` button:
-
-![hello world](/assets/images/console/settings/application-id.png)
-
 ```yaml
 apiVersion: secrets.phase.dev/v1alpha1
 kind: PhaseSecret
