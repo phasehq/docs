@@ -406,7 +406,7 @@ Failed to fetch secrets: The environment 'dev' either does not exist or you do n
 
 ### Check Sync Status
 
-The Phase Kubernetes Operator only initiates a secret sync when a change is made in your source environment in Phase. The operator will periodically check for changes and keep track of timestamp of the last sync in the following format `{namespace}:{cr_name}:{cr_uid}` at `/tmp/phase_sync_status.json` location. This file is will persist across operator restarts. You may choose to delete this file to manually force a full sync.
+The Phase Kubernetes Operator only initiates a secret sync when a change is made in your source environment in Phase. The operator will periodically check for changes and store the timestamp of the last sync in the following format `{namespace}:{cr_name}:{cr_uid}` at `/tmp/phase_sync_status.json` location. This file is will persist across operator restarts. You may choose to delete this file to manually force a full sync.
 
 View the sync status to see if the operator is trying to sync secrets that are not present in the Phase Console:
 
