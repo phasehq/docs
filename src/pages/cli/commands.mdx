@@ -739,6 +739,7 @@ You can set a value of a secret to a value of another by simply pointing to it v
 | `${staging.DEBUG}` | `staging` | `/` (root of staging environment) | DEBUG | Cross-environment reference to a secret at the root (/). |
 | `${production./frontend/SECRET_KEY}` | `production` | `/frontend/` | SECRET_KEY | Cross-environment reference to a secret in a specific path. |
 | `${/backend/payments/STRIPE_KEY}` | same environment | `/backend/payments/` | STRIPE_KEY | Local reference with a specified path within the same environment. |
+| `${backend_api::production.SECRET_KEY}` | `production` (in `backend_api` app) | `/` (root of backend_api app) | SECRET_KEY | Cross-application reference to a secret at the root path within another application. |
 | `${backend_api::production./frontend/SECRET_KEY}` | `production` (in `backend_api` app) | `/frontend/` | SECRET_KEY | Cross-application reference to a secret in a specific path within another application. |
 
 For more information see: [Phase Console Secrets](/console/secrets)
