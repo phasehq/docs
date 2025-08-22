@@ -308,6 +308,8 @@ postgresql://postgres:dbc76c4d...@localhost:5432/mydb
 - This feature is currently in BETA and is being tested for performance, usage, and reliability across different platforms.
 - When using zsh with modifications like powerline10k, command suggestions and tab completions might be affected in certain cases. This is not due to the Phase CLI - you can verify this by launching zsh directly.
 - Secrets are only available within the shell session and are automatically cleared when you exit.
+- Inside the shell, `PHASE_ENV` is set to the full environment name from the fetched secrets (e.g., "Development", "Production").
+- Inside the shell, `PHASE_APP` is set to the full application name from the fetched secrets. (e.g., "example-app")
 
 ---
 
