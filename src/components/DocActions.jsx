@@ -112,9 +112,7 @@ export function DocActions() {
             try {
               let response = await fetch(mdUrl)
               let markdown = await response.text()
-              let maxChars = 1500
-              let snippet = markdown.length > maxChars ? markdown.slice(0, maxChars) + '\n\n[...truncated...]' : markdown
-              let prompt = `Summarize and analyze this document. Use the full version if needed at ${mdUrl}.\n\nMarkdown content follows:\n\n${snippet}`
+              let prompt = `This is the official docs for Phase, an open source application secrets manager. Please read and understand it carefully; once done, say you are ready and await user queries.\n\nMarkdown docs content follows:\n\n${markdown}`
               try { await navigator.clipboard.writeText(markdown) } catch {}
               let encoded = encodeURIComponent(prompt)
               window.open(`https://chat.openai.com/?q=${encoded}`, '_blank', 'noopener')
