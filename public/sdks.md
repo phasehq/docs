@@ -1,0 +1,22 @@
+import { Libraries } from '@/components/Libraries'
+import { HeroPattern } from '@/components/HeroPattern'
+import { Tag } from '@/components/Tag'
+
+export const description =
+  'Phase SDKs allow you to securely manage secrets within your applications, providing a seamless integration with the Phase platform.'
+
+
+<HeroPattern />
+
+
+# SDKs
+
+Lightweight, secure, and open-source SDKs for managing secrets in your stack. {{ className: 'lead' }}
+
+- **End-to-End Encryption**: All secrets are securely encrypted and decrypted client-side, ensuring maximum security.
+- **Secret Management**: Perform CRUD operations on secrets and environment variables with ease.
+- **Environment-Specific Configurations**: Manage secrets across different environments (e.g., development, staging, production).
+- **Personal Secret Overrides**: Support for user-specific secret overrides when using user tokens (PAT).
+- **Secret Reference Resolution**: Automatically resolve references between secrets for complex configurations.
+
+<Libraries />

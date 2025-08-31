@@ -1,0 +1,887 @@
+import { Tag } from '@/components/Tag'
+import CliDemo from '@/components/CliDemo'
+
+export const description =
+  'Manage your secrets and environment variables with the Phase CLI'
+
+<Tag variant="small">CLI</Tag>
+
+# Commands and usage
+
+```
+λ phase --help
+Securely manage application secrets and environment variables with Phase.
+
+           /$$
+          | $$
+  /$$$$$$ | $$$$$$$   /$$$$$$   /$$$$$$$  /$$$$$$
+ /$$__  $$| $$__  $$ |____  $$ /$$_____/ /$$__  $$
+| $$  \ $$| $$  \ $$  /$$$$$$$|  $$$$$$ | $$$$$$$$
+| $$  | $$| $$  | $$ /$$__  $$ \____  $$| $$_____/
+| $$$$$$$/| $$  | $$|  $$$$$$$ /$$$$$$$/|  $$$$$$$
+| $$____/ |__/  |__/ \_______/|_______/  \_______/
+| $$
+|__/
+
+options:
+  -h, --help   show this help message and exit
+  --version, -v
+               show program's version number and exit
+Commands:
+
+    auth             💻 Authenticate with Phase
+    init             🔗 Link your project with your Phase app
+    run              🚀 Run and inject secrets to your app
+    shell            🐚 Launch a sub-shell with secrets as environment variables (BETA)
+    secrets          🗝️ Manage your secrets
+    secrets list     📇 List all the secrets
+    secrets get      🔍 Get a specific secret by key
+    secrets create   💳 Create a new secret
+    secrets update   📝 Update an existing secret
+    secrets delete   🗑️ Delete a secret
+    secrets import   📩 Import secrets from a .env file
+    secrets export   🥡 Export secrets in a dotenv format
+    users            👥 Manage users and accounts
+    users whoami     🙋 See details of the current user
+    users switch     🪄 Switch between Phase users, orgs and hosts
+    users logout     🏃 Logout from phase-cli
+    users keyring    🔐 Display information about the Phase keyring
+    docs             📖 Open the Phase CLI Docs in your browser
+    console          🖥️ Open the Phase Console in your browser
+    update           🆙 Update the Phase CLI to the latest version
+```
+
+## Available commands {{ className: 'lead' }}
+
+To use Phase CLI, simply run:
+
+```fish
+> phase [command] [sub-command] [options]
+```
+
+To view all available commands and their descriptions, run:
+
+```fish
+> phase --help
+```
+
+```fish
+> phase secrets -h
+```
+
+---
+
+## 💻 `auth`
+
+Authenticate with Phase using the CLI on your own machine. The `phase auth` command lets you log in to either Phase Cloud or a Self-hosted instance of Phase. You have two authentication methods:
+
+1. **Webauth (Default)**: This automated method opens the Phase Console in your default browser for authentication. You'll simply enter your `sudo` password to authenticate the CLI seamlessly. For Self-Hosted instances, you'll be prompted to enter the host URL.
+
+Note that during this process, an ephemeral X25519 keypair is generated and a crypto sealed box is used for enhanced security and no tokens or private keys are exchanged in plain text.
+
+2. **Token**: A manual method where you create a Personal Access Token in the Phase Console and supply it to the CLI. For Self-Hosted instances, you'll need to provide the host URL along with your email and Phase Personal Access Token.
+
+<Note>
+  If you're running the CLI in a headless environment (e.g., CI/CD, Docker
+  container, bash script), pass the `PHASE_HOST` and `PHASE_SERVICE_TOKEN`
+  environment variables. For more details, see [Environment
+  Variables](commands#environment-variables).
+</Note>
+
+```bash
+> phase auth
+? Choose your Phase instance type: (Use arrow keys)
+ » ☁️ Phase Cloud
+   🛠️ Self Hosted
+```
+
+- `mode`: Choose the mode of authentication (`token`, `webauth`). Default: `webauth`
+
+For `token` mode, provide the following:
+
+- Host URL - _Only for Self-hosted instances_
+- Email
+- Phase Personal Access Token
+
+Obtain a Personal Access Token (PAT) from the [Phase Console](https://console.phase.dev) by going to Access Control -> Authentication -> Personal Access Tokens -> + `Create Token`.
+
+Example:
+
+```bash
+» phase auth
+? Choose your Phase instance type: ☁️ Phase Cloud
+Please authenticate via the Phase Console: https://console.phase.dev/webauth/OTM3MC00ZWViYmI1MGVlMTU3ZTliOWZk...
+```
+
+This opens the Phase Console in a new tab. Enter your `sudo` password when prompted. The CLI securely receives your credentials via encrypted POST requests to finalize authentication. If you are already authenticated, it will display your email address and provide instructions for switching accounts.
+
+Once complete, you should see a success screen. Return to your terminal to find:
+
+```bash
+» phase auth
+? Choose your Phase instance type: ☁️ Phase Cloud
+Please authenticate via the Phase Console: https://console.phase.dev/webauth/OTM3MC00ZWViYmI1MGVlMTU3ZTliOWZkZT...
+
+✅ Authentication successful. Credentials saved in the Phase keyring.
+🎉 Welcome to Phase CLI!
+
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+🙋 Need help?: https://slack.phase.dev
+💻 Bug reports / feature requests: https://github.com/phasehq/cli
+```
+
+---
+
+## 🔗 `init`
+
+Link your local application or project to your Phase app. The `phase init` command creates a `.phase.json` file in the root of your projects which holds important contexts for the `phase` cli, so you don't have to pass arguments repetitively. This file does not contain any sensitive information and can be check into your git repo.
+
+Usage:
+
+```fish
+> phase init
+```
+
+During the process, you'll be asked to:
+1. Select an App previously created in the Phase Console
+2. Choose a default Environment
+3. Enable monorepo support (optional)
+
+```fish
+> phase init
+? Select an App: [use arrow keys]
+   ferrari
+ » keyspace
+   inception
+   Exit
+
+? Choose a Default Environment: Development
+? 🍱 Monorepo support: Would you like this configuration to apply to subdirectories? (y/N)
+```
+
+Choosing an app will create a `.phase.json` configuration file in your project's working directory:
+
+```fish
+> phase init
+? Select an App: keyspace
+? Choose a Default Environment: Development
+? 🍱 Monorepo support: Would you like this configuration to apply to subdirectories? y
+✅ Initialization completed successfully.
+
+> cat .phase.json
+{
+  "version": "1",
+  "phaseApp": "keyspace",
+  "appId": "511f26b7-5b56-47f3-920e-a4edb9cdbf3c",
+  "defaultEnv": "Development",
+  "envId": "679bf2bc-9353-4fe0-a84f-825f284c8f8d",
+  "monorepoSupport": true
+}
+```
+
+**Tips**: 
+- Modify the `defaultEnv` in `.phase.json` to set the default environment context for the Phase CLI. For example, `"defaultEnv": "production"`.
+- When monorepo support is enabled, the CLI will search parent directories for a `.phase.json` config up to a maximum depth of 8 directories (configurable via `PHASE_CONFIG_PARENT_DIR_SEARCH_DEPTH`). This allows you to have a single config at the root of your monorepo that applies to all sub-projects.
+
+Example directory structure:
+```
+monorepo/
+├── .phase.json (with monorepoSupport: true)
+├── service-a/
+│   └── src/
+├── service-b/
+│   └── src/
+└── apps/
+    └── web/
+        └── src/
+```
+
+In this example, running Phase CLI commands from any subdirectory will use the root `.phase.json` config.
+
+---
+
+## 🚀 `run`
+
+Run and inject secrets into your app with the ability to override default settings.
+
+<CliDemo castFile="phase-run.cast" terminalFontSize="small" />
+
+Usage:
+
+```fish
+> phase run [--env ENVIRONMENT] [--app APP_NAME] [--tags TAGS] [command_to_run]
+```
+
+- `command_to_run`: The command you wish to run, such as `yarn dev`. You can also chain multiple command together by wrapping them in double quotes, example: `phase run "printenv | grep secret"`
+- `--env`: (Optional) Specify the environment (e.g., `dev`, `staging`, `production`). Supports partial string matching eg. `prod` for `production` Default is `development`
+- `--path`: (Optional) Specific path under which to fetch secrets from and inject into your application. Default is '/'. Pass an empty string `""` to fetch secrets from all paths.
+- `--app`: (Optional) Name of your Phase application. Use this if you don't have a `.phase.json` file in your project directory or want to override it.
+- `--app-id`: (Optional) ID of your Phase application. Takes precedence over `--app` if both are provided.
+- `--tags`: (Optional) Comma-separated list of tags to filter secrets.
+
+The `run` command executes your specified shell command, setting environment variables to the secrets fetched from Phase. It resolves cross-environment and local references in secrets.
+
+Examples:
+
+```fish
+> phase run yarn dev
+```
+
+```fish
+> phase run --env dev "printenv | grep DJANGO_SECRET_KEY"
+DJANGO_SECRET_KEY=7842cc89c5a703acdf4797e0f063e1851734cea0677ad9382158cfcee26195df
+```
+
+Injecting [Referenced secrets](/cli/commands#secret-referencing):
+
+```fish
+> phase secrets get PROD_AWS_KEY --env dev
+KEY 🗝️                | VALUE ✨
+----------------------------------------------------------------------------------------
+PROD_AWS_KEY         | ⛓️` ${prod.AWS_ACCESS_KEY_ID}
+
+> phase run --env dev "printenv | grep PROD_AWS_KEY"
+PROD_AWS_KEY=AKIA2OGYBAH63UA3VNFG
+
+# In the event a user doesn't have access to prod / production environment
+> phase run --env dev "printenv | grep PROD_AWS_KEY"
+⚠️ Warning: The environment 'prod' for key 'PROD_AWS_KEY' either does not exist or you do not have access to it. Reference AWS_ACCESS_KEY_ID not found. Ignoring...
+PROD_AWS_KEY=
+```
+
+Chaining multiple commands:
+
+```fish
+> phase run --env prod "python manage.py migrate && python manage.py runserver backend:8000"
+```
+
+**Additional Notes**:
+
+- The `phase run` only exposes secrets to your applications runtime and not to the rest of your system for security reasons.
+- When specifying tags with `--tags`, only secrets matching these tags will be injected into the environment.
+- Cross-environment and local references in secrets are automatically resolved and injected. Warnings are issued if any references cannot be resolved.
+- Errors during the command execution or secret fetching process will result in an appropriate error message and termination of the process.
+
+---
+
+## 🐚 `shell`
+
+Launch an ephemeral shell with secrets injected as environment variables. 
+
+<Note>
+This feature is currently in BETA.
+</Note>
+
+Usage:
+
+```fish
+> phase shell [--env ENVIRONMENT] [--app APP_NAME] [--shell SHELL_TYPE] [--path PATH] [--tags TAGS]
+```
+
+- `--env`: (Optional) Specify the environment (e.g., `dev`, `staging`, `production`). Default is `development`
+- `--path`: (Optional) Specific path under which to fetch secrets from and inject into your shell. Default is '/'. Pass an empty string `""` to fetch secrets from all paths.
+- `--app`: (Optional) Name of your Phase application. Use this if you don't have a `.phase.json` file in your project directory or want to override it.
+- `--app-id`: (Optional) ID of your Phase application. Takes precedence over `--app` if both are provided.
+- `--shell`: (Optional) Specify the shell to launch. Supported shells: `bash`, `sh`, `fish`, `zsh`. Default is your current shell.
+- `--tags`: (Optional) Comma-separated list of tags to filter secrets.
+
+The `shell` command launches a new shell session with your Phase secrets loaded as environment variables. This is useful for local development workflows where you need to work with multiple commands, scripts, and tools, and running `phase run` for each command may not be practical.
+
+Examples:
+
+```fish
+# Launch a zsh shell with secrets from the development environment
+> phase shell
+[15:32:00] 🐚 Initialized zsh with 15 secrets from Application: example-app, Environment: Development
+           Remember: Secrets are only available in this session. Type exit or press Ctrl+D to exit.
+
+> echo $POSTGRES_CONNECTION_STRING 
+postgresql://postgres:dbc76c4d...@localhost:5432/mydb
+
+# Exit the shell using Ctrl+D or by typing 'exit'
+> exit
+[15:33:29] 🐚 Shell session ended. Phase secrets are no longer available.
+```
+
+**Notes**:
+
+- This feature is currently in BETA and is being tested for performance, usage, and reliability across different platforms.
+- When using zsh with modifications like powerline10k, command suggestions and tab completions might be affected in certain cases. This is not due to the Phase CLI - you can verify this by launching zsh directly.
+- Secrets are only available within the shell session and are automatically cleared when you exit.
+- Inside the shell, `PHASE_ENV` is set to the full environment name from the fetched secrets (e.g., "Development", "Production").
+- Inside the shell, `PHASE_APP` is set to the full application name from the fetched secrets. (e.g., "example-app")
+
+---
+
+## 🗝️ `secrets`
+
+Manage your secrets with various sub-commands.
+
+### 📇 `secrets list`
+
+List all the secrets in a specified environment, with options to show uncensored secrets, filter by app, and filter by tags.
+
+<CliDemo castFile="phase-secrets-list.cast" terminalFontSize="small" />
+
+Usage:
+
+```fish
+> phase secrets list [--show] [--env ENVIRONMENT] [--app APP_NAME] [--tags TAGS]
+```
+
+- `--show`: Display secrets uncensored.
+- `--env`: (Optional) Specify the environment. Default is `development`
+- `--path`: (Optional) The path in which you want to list secrets. Default is '/'. Pass an empty string `""` to list secrets from all paths.
+- `--app`: (Optional) Name of your Phase application. Use this to override the `.phase.json` file or when it's not present in your project directory.
+- `--app-id`: (Optional) ID of your Phase application. Takes precedence over `--app` if both are provided.
+- `--tags`: (Optional) Comma-separated list of tags to filter secrets.
+
+**Indicators**:
+
+- `🔗`: Indicates a reference to another secret within the same environment.
+- `⛓️`: Indicates a cross-environment reference to a secret in another environment.
+- `🏷️`: Indicates a tag associated with a secret.
+- `💬`: Indicates a comment associated with a secret.
+- `🔏`: Indicates a personal secret, visible only to the user who set it.
+
+### 🔍 `secrets get`
+
+Retrieve detailed information about a specific secret, with the ability to specify the application and filter by tags.
+
+Usage:
+
+```fish
+> phase secrets get KEY [--env ENVIRONMENT] [--app APP_NAME] [--tags TAGS]
+```
+
+- `KEY`: The key associated with the secret you want to fetch.
+- `--env`: (Optional) Specify the environment in which to search for the secret.
+- `--path`: (Optional) The path from which to fetch the secret from. Default is '/'
+- `--app`: (Optional) Name of your Phase application. Use this option to override the `.phase.json` file in your project directory or when it's not present.
+- `--app-id`: (Optional) ID of your Phase application. Takes precedence over `--app` if both are provided.
+- `--tags`: (Optional) Comma-separated list of tags to filter secrets.
+
+Example:
+
+```fish
+> phase secrets get DJANGO_DEBUG
+{
+    "key": "DJANGO_DEBUG",
+    "value": "True",
+    "overridden": true,
+    "tags": [
+        "local-development"
+    ],
+    "comment": "This is only for local development. NOT to be used in production."
+}
+```
+
+**Notes**:
+
+- The `get` command provides a JSON-formatted output including key details such as the secret value, whether it's overridden, tags associated with it, and any comments.
+- Using the `--tags` option allows you to filter the secret based on specific tags.
+
+### 💳 `secrets create`
+
+Create a new secret with options to input the value manually, read from stdin, or generate a random value of specified type and length.
+
+Usage:
+
+```fish
+> phase secrets create [KEY] [--env ENVIRONMENT] [--app APP_NAME] [--random TYPE] [--length LENGTH] [--override]
+```
+
+- `KEY`: (Optional) The key for the new secret. It will be converted to uppercase. If the value is not provided as an argument, it will be read from stdin.
+- `--env`: (Optional) Specify the environment where the secret will be created.
+- `--path`: (Optional) The path in which you want to create a secret. You can create a directory by simply specifying a path like so: `--path /folder/SECRET`. Default is '/'
+- `--app`: (Optional) Name of your Phase application. Use this to override the `.phase.json` file or when it's not present in your project directory.
+- `--app-id`: (Optional) ID of your Phase application. Takes precedence over `--app` if both are provided.
+- `--random`: (Optional) Specify the type of random value to generate. Available types are `hex`, `alphanumeric`, `base64`, `base64url`, `key128`, `key256`. Example: `--random hex`.
+- `--length`: (Optional) Specify the length of the random value, between 1 and 256. Applicable for types other than `key128` and `key256`. Default length is 32. Example: `--length 16`.
+- `--override`: (Optional) Update the personal override value.
+
+Examples:
+
+```fish
+# Create a secret by reading the value from stdin
+> cat ~/.ssh/id_rsa | phase secrets create SSH_PRIVATE_KEY
+
+# Create a secret with a randomly generated hexadecimal value of 32 characters
+> phase secrets create RAND --random hex --length 32
+```
+
+**Notes**:
+
+- `key128` : 16 Byte high entropy base64 encoded symmetric key - suitable for AES-128
+- `key256` : 32 Byte high entropy base64 encoded symmetric key - suitable for use with ChaCha20 or AES-256
+
+### 📝 `secrets update`
+
+Update an existing secret with options to input the new value manually, read from stdin, or generate a random value of specified type and length.
+
+Usage:
+
+```fish
+> phase secrets update KEY [--env ENVIRONMENT] [--app APP_NAME] [--random TYPE] [--length LENGTH] [--override] [--toggle-override]
+```
+
+- `KEY`: The key associated with the secret to update. If the new value is not provided as an argument, it will be read from stdin.
+- `--env`: (Optional) Specify the environment where the secret will be updated.
+- `--path`: (Optional) The current path of the secret to update. Default is '/'
+- `--updated-path`: (Optional) The new path for the secret, if changing its location. If not provided, the secret's path is not updated. Example usage: --updated-path "/folder/subfolder"
+- `--app`: (Optional) Name of your Phase application. Use this to override the `.phase.json` file or when it's not present in your project directory.
+- `--app-id`: (Optional) ID of your Phase application. Takes precedence over `--app` if both are provided.
+- `--random`: (Optional) Specify the type of random value to generate. Available types are `hex`, `alphanumeric`, `base64`, `base64url`, `key128`, `key256`. Example: `--random hex`.
+- `--length`: (Optional) Specify the length of the random value, between 1 and 256. Applicable for types other than `key128` and `key256`. Default length is 32. Example: `--length 16`.
+- `--override`: (Optional) Update the personal override value.
+- `--toggle-override`: (Optional) Toggle the override state between active and inactive.
+
+Examples:
+
+```fish
+# Update a secret by manually entering a new value
+> phase secrets update DEBUG
+
+# Update a secret by piping a value via stdin
+> cat ~/.ssh/id_ed25519 | phase secrets update SSH_PRIVATE_KEY
+
+# Update a secret with a randomly generated hexadecimal value of 32 characters
+> phase secrets update MY_SECRET_KEY --random hex --length 32
+
+# Update a secret with a personal override value
+> phase secrets update POSTGRES_CONNECTION_STRING --override
+
+# Toggle the override state of a secret
+> phase secrets update POSTGRES_CONNECTION_STRING --toggle-override
+```
+
+**Notes**:
+
+- `key128` : 16 Byte high entropy base64 encoded symmetric key - suitable for AES-128
+- `key256` : 32 Byte high entropy base64 encoded symmetric key - suitable for use with ChaCha20 or AES-256
+
+### 🗑️ `secrets delete`
+
+Delete one or more secrets from a specified environment, with an option to specify the application.
+
+Usage:
+
+```fish
+> phase secrets delete KEYS... [--env ENVIRONMENT] [--app APP_NAME]
+```
+
+- `KEYS...`: One or more keys of the secrets to be deleted. Separate multiple keys with spaces.
+- `--env`: (Optional) Specify the environment from which the secrets will be deleted.
+- `--app`: (Optional) Name of your Phase application. Use this to override the `.phase.json` file or when it's not present in your project directory.
+- `--app-id`: (Optional) ID of your Phase application. Takes precedence over `--app` if both are provided.
+
+Example:
+
+```fish
+# Delete a single secret
+> phase secrets delete DEBUG
+Successfully deleted the secret.
+
+# Delete multiple secrets
+> phase secrets delete SECRET1 SECRET2 SECRET3
+Successfully deleted the secrets.
+```
+
+**Notes**:
+
+- The `delete` command can be used to remove a single secret or multiple secrets at once by providing their keys as arguments.
+- If you have an `.phase.json` file in your project directory, it will be used to determine the default application. Use the `--app` option to override this behavior.
+
+### 📩 `secrets import`
+
+Import secrets into your Phase environment from a `.env` file, with an option to specify the application.
+
+Usage:
+
+```fish
+> phase secrets import ENV_FILE [--env ENVIRONMENT] [--app APP_NAME]
+```
+
+- `ENV_FILE`: The path to the `.env` file from which the secrets will be imported.
+- `--env`: (Optional) Specify the environment where the secrets will be imported.
+- `--path`: (Optional) The path to which you want to import secret(s). Default is '/'
+- `--app`: (Optional) Name of your Phase application. Use this to override the `.phase.json` file or when it's not present in your project directory.
+- `--app-id`: (Optional) ID of your Phase application. Takes precedence over `--app` if both are provided.
+
+Example:
+
+```fish
+# View the contents of the .env file
+> cat .env
+AWS_ACCESS_KEY_ID="AKIA2OGYBAH63UA3VNFG"
+AWS_SECRET_ACCESS_KEY="V5yWXDe82Gohf9DYBhpatYZ74a5fiKfJVx8rx6W1"
+
+# Import secrets from the .env file into the 'prod' environment
+> phase secrets import .env --env prod
+Successfully imported and encrypted 2 secrets.
+To view them please run: phase secrets list --env prod
+
+# List imported secrets in the 'prod' environment
+> phase secrets list --env prod
+
+# Optional: Remove the .env file if no longer needed
+> rm .env
+```
+
+**Notes**:
+
+- The `import` command reads key-value pairs from the specified `.env` file and imports them as secrets into the chosen environment.
+- If an `.phase.json` file exists in your project directory, it will determine the default application. The `--app` option can be used to override this behavior.
+
+### 🥡 `secrets export`
+
+Export secrets from your Phase environment, with options to filter by keys, tags, and to specify the export format.
+
+Usage:
+
+```fish
+> phase secrets export [KEYS...] [--env ENVIRONMENT] [--app APP_NAME] [--tags TAGS] [--format FORMAT]
+```
+
+- `KEYS...`: (Optional) List of keys to export, separated by space.
+- `--env`: (Optional) Specify the environment from which the secrets will be exported.
+- `--path`: (Optional) The path from which you want to export secret(s). Default is '/'. Pass an empty string `""` to export secrets from all paths.
+- `--app`: (Optional) Name of your Phase application. Use this to override the `.phase.json` file or when it's not present in your project directory.
+- `--app-id`: (Optional) ID of your Phase application. Takes precedence over `--app` if both are provided.
+- `--tags`: (Optional) Comma-separated list of tags to filter the secrets. Supports partial matching and treats underscores as spaces.
+- `--format`: (Optional) Specify the export format. Supported formats are `dotenv`, `kv`, `json`, `csv`, `yaml`, `xml`, `toml`, `hcl`, `ini`, `java_properties`. Default format is `dotenv`.
+
+Examples:
+
+```fish
+# Export all the secrets in the 'prod' environment to dotenv format
+> phase secrets export --env prod
+AWS_ACCESS_KEY_ID="AKIA2OGYBAH63UA3VNFG"
+AWS_SECRET_ACCESS_KEY="V5yWXDe82Gohf9DYBhpatYZ74a5fiKfJVx8rx6W1"
+```
+
+```
+# Export only specific secrets in the 'prod' environment
+> phase secrets export AWS_SECRET_ACCESS_KEY --env prod
+AWS_SECRET_ACCESS_KEY="V5yWXDe82Gohf9DYBhpatYZ74a5fiKfJVx8rx6W1"
+```
+
+```
+# Export all secrets in the 'dev' environment to a .env file
+> phase secrets export --env dev > .env.example
+```
+
+```fish
+# Export secrets with specific tags in 'dev' environment to JSON format
+> phase secrets export --env dev --tags "tag1,tag2" --format json
+{
+  "AWS_SECRET_ACCESS_KEY": "V5yWXDe82Gohf9DYBhpatYZ74a5fiKfJVx8rx6W1",
+  "DB_NAME": "XP1_LM",
+
+}
+```
+
+```fish
+# In the event a user doesn't have access to a specified environment
+> phase secrets export PROD_AWS_KEY PROD_AWS_SECRET_ACCESS_KEY --env prod
+AWS_ACCESS_KEY_ID="AKIA2OGYBAH63UA3VNFGds"
+# Warning: The environment 'prod' for key 'PROD_AWS_SECRET_ACCESS_KEY' either does not exist or you do not have access to it.
+PROD_AWS_SECRET_ACCESS_KEY=""
+```
+
+**Notes**:
+
+- The `export` command allows you to export secrets in various formats:
+  - `dotenv` (.env): Key-value pairs in a simple text format with values wrapped in double quotes
+  - `kv`: Simple key-value pairs with uppercase keys and raw values
+  - `json`: JavaScript Object Notation, useful for integration with various tools and languages
+  - `csv`: Comma-Separated Values, a simple text format for tabular data
+  - `yaml`: Human-readable data serialization format, often used for configuration files
+  - `xml`: Extensible Markup Language, suitable for complex data structures
+  - `toml`: Tom's Obvious, Minimal Language, a readable configuration file format
+  - `hcl`: HashiCorp Configuration Language, used in HashiCorp tools like Terraform
+  - `ini`: A simple format often used for configuration files
+  - `java_properties`: Key-value pair format commonly used in Java applications
+- Use the `--tags` option to filter secrets by tags, which supports partial matching and considers underscores as spaces.
+- If an `.phase.json` file exists in your project directory, it will determine the default application. The `--app` option can be used to override this behavior.
+
+---
+
+## 👥 `users`
+
+Manage users and accounts in the Phase CLI. This command includes sub-commands for user management.
+
+### 🙋 `users whoami`
+
+See details of the current user.
+
+Usage:
+
+```fish
+> phase users whoami
+```
+
+This command displays information about the currently logged-in user in the Phase CLI.
+
+Example:
+
+```fish
+> phase users whoami
+✉️ Email: rohan@spacex.com
+🙋 User ID: c9324ace-4605-4017-9425-0632524f4750
+🏢 Organization: spacex
+☁️ Host: https://console.phase.dev
+```
+
+---
+
+### 🪄 `users switch`
+
+Switch contexts between Phase users, orgs and hosts.
+
+Usage:
+
+```bash
+> phase users switch
+```
+
+This command displays a list of user accounts that the Phase CLI is authenticated to, across orgs and instances. Simply use the up/down arrow keys (`↑` and `↓`) and hit `enter` to switch the account context.
+
+Example:
+
+```fish
+> phase users switch
+? Choose a user to switch to: (Use arrow keys)
+   🏢 Organization, ✉️ Email, ☁️ Phase Host, 🆔 User ID
+ » spacex, rohan@spacex.com, https://console.phase.dev, g9624ace
+   phasehq, rohan@phase.dev, https://console.internal.tailscale.phase.dev, f6s34az1
+```
+
+---
+
+### 🏃 `users logout`
+
+Logout from the Phase CLI.
+
+Usage:
+
+```fish
+> phase logout [--purge]
+```
+
+- `--purge`: Purge all local data. This option will remove any local configuration and data related to the current user's session.
+
+---
+
+### 🔐 `users keyring`
+
+Display information about the Phase keyring. The Phase keyring holds sensitive credentials such as user tokens.
+
+Usage:
+
+```fish
+> phase users keyring
+```
+
+This command provides insights into the Phase keyring, which is used to securely store user credentials.
+
+---
+
+## 📖 `docs`
+
+Open the Phase Docs in your web browser.
+
+Usage:
+
+```fish
+> phase docs
+```
+
+This command is a shortcut to quickly access the Phase Docs in your default web browser.
+
+---
+
+## 🖥️ `console`
+
+Open the Phase Console in your web browser.
+
+Usage:
+
+```fish
+> phase console
+```
+
+This command is a shortcut to quickly access the Phase Console in your default web browser.
+
+---
+
+## 🆙 `update`
+
+Update the Phase CLI to the latest version. This subcommand is available only on Linux systems when the CLI is installed via the installation script.
+
+Usage:
+
+```fish
+> phase update
+```
+
+This command checks for updates and installs the latest version of the Phase CLI.
+
+---
+
+## 🔗 Secret referencing
+
+You can set a value of a secret to a value of another by simply pointing to it via the following syntax.
+
+### Secret referencing syntax:
+
+| Value reference syntax | Environment | Path | Secret Key Being Referenced | Description |
+| ---------------------- | ----------- | ---- | --------------------------- | ----------- |
+| `${KEY}` | same environment | `/` | KEY | Local reference in the same environment and path root (/). |
+| `${staging.DEBUG}` | `staging` | `/` (root of staging environment) | DEBUG | Cross-environment reference to a secret at the root (/). |
+| `${production./frontend/SECRET_KEY}` | `production` | `/frontend/` | SECRET_KEY | Cross-environment reference to a secret in a specific path. |
+| `${/backend/payments/STRIPE_KEY}` | same environment | `/backend/payments/` | STRIPE_KEY | Local reference with a specified path within the same environment. |
+| `${backend_api::production.SECRET_KEY}` | `production` (in `backend_api` app) | `/` (root of backend_api app) | SECRET_KEY | Cross-application reference to a secret at the root path within another application. |
+| `${backend_api::production./frontend/SECRET_KEY}` | `production` (in `backend_api` app) | `/frontend/` | SECRET_KEY | Cross-application reference to a secret in a specific path within another application. |
+
+For more information see: [Phase Console Secrets](/console/secrets)
+
+Values prefixed with a `🔗` indicate a local secret being referenced, whereas values prefixed with `⛓️` indicate cross environment secret value being referenced ie. development, staging, prod.
+
+**Examples**:
+
+### Local environment secret referencing:
+
+```fish
+> phase secrets list --env prod --show
+KEY 🗝️                   | VALUE ✨
+-------------------------------------------------------------------------------------------------
+DB_NAME                  | XP1_LM
+DB_USER                  | j_mclaren
+DB_PASSWORD              | 6c37810ec6e74ec3228416d2844564fceb99ebd94b29f4334c244db011630b0e
+DB_HOST                  | mc-laren-prod-db.c9ufzjtplsaq.us-west-1.rds.amazonaws.com
+DB_PORT                  | 5432
+DATABASE_URL             | 🔗 postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
+
+> phase run "printenv | grep DATABASE_URL"
+DATABASE_URL=postgresql://j_mclaren:6c37810ec6e74ec3228416d2844564fceb99ebd94b29f4334c244db011630b0e@mc-laren-prod-db.c9ufzjtplsaq.us-west-1.rds.amazonaws.com:5432/XP1_LM
+```
+
+The database connection string `postgresql://` is referencing `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT` and `DB_NAME` from the same environment (dev/development)
+
+### Local environment secret referencing inside a folder:
+
+The following database credentials are inside of `postgres` folder
+
+```fish
+DB_NAME                  | XP1_LM
+DB_USER                  | j_mclaren
+DB_PASSWORD              | 6c37810ec6e74ec3228416d2844564fceb99ebd94b29f4334c244db011630b0e
+DB_HOST                  | mc-laren-prod-db.c9ufzjtplsaq.us-west-1.rds.amazonaws.com
+DB_PORT                  | 5432
+```
+
+```fish
+> phase secrets list --env prod --show
+KEY 🗝️                   | VALUE ✨
+-------------------------------------------------------------------------------------------------
+DATABASE_URL             | 🔗 postgresql://${postgres/DB_USER}:${postgres/DB_PASSWORD}@${postgres/DB_HOST}:${postgres/DB_PORT}/${postgres/DB_NAME}
+
+> phase run "printenv | grep DATABASE_URL"
+DATABASE_URL=postgresql://j_mclaren:6c37810ec6e74ec3228416d2844564fceb99ebd94b29f4334c244db011630b0e@mc-laren-prod-db.c9ufzjtplsaq.us-west-1.rds.amazonaws.com:5432/XP1_LM
+```
+
+The database connection string `postgresql://` is referencing `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT` and `DB_NAME` from the same environment (dev/development)
+
+### Cross environment secret referencing:
+
+```fish
+> phase secrets list --env prod --show
+KEY 🗝️                    | VALUE ✨
+----------------------------------------------------------------------------
+DATABASE_URL              | ⛓️ postgresql://${dev.DB_USER}:${dev.DB_PASSWORD}@${dev.DB_HOST}:${dev.DB_PORT}/${dev.DB_NAME}
+
+> phase run --env prod "printenv | grep DATABASE_URL"
+DATABASE_URL=postgresql://j_mclaren:6c37810ec6e74ec3228416d2844564fceb99ebd94b29f4334c244db011630b0e@mc-laren-prod-db.c9ufzjtplsaq.us-west-1.rds.amazonaws.com:5432/XP1_LM
+```
+
+**Note**: This is assuming an environment named dev/development exists and has a secrets with the keys `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
+
+---
+
+## Environment variables
+
+### `PHASE_DEBUG`
+
+Type: Boolean
+
+Description: Set to true to get full tracebacks for error messages
+
+Example:
+
+```fish
+> PHASE_DEBUG=True phase secrets list
+Exception: 🗿 Network error: Please check your internet connection. Detail: HTTPConnectionPool(host='localhost', port=443): Max retries exceeded with url: /secrets/tokens/ (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f7c2041d7d0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+```
+
+### `PHASE_HOST`
+
+Type: String
+
+Description: A full URL to the REST API of the Phase Service
+
+Example:
+
+```fish
+> export PHASE_HOST=https://phase.internal.company.domain.com
+
+> phase secrets export
+...
+```
+
+### `PHASE_SERVICE_TOKEN`
+
+Type: String
+
+Description: A way to authenticate with the Phase Service via tokens, useful for running the cli in an headless environment like CI/CD, Docker containers etc.
+
+Example:
+
+```fish
+> export PHASE_SERVICE_TOKEN=pss_service...
+
+> phase secrets export
+...
+```
+
+### `PHASE_VERIFY_SSL`
+
+Type: Boolean
+
+Description: A way to temporarily disable TLS certificate verification checks
+
+Note: Disable TLS certificate verification is dangerous and can expose you to risks of [MITM](https://en.wikipedia.org/wiki/Man-in-the-middle_attack) attacks.
+
+Example:
+
+```fish
+> export PHASE_VERIFY_SSL=False
+
+> phase secrets export
+...
+```
+
+### `PHASE_CONFIG_PARENT_DIR_SEARCH_DEPTH`
+
+Type: Integer
+
+Description: Sets the maximum depth for searching parent directories for a `.phase.json` config file when monorepo support is enabled. Default is 8.
+
+Example:
+
+```fish
+> export PHASE_CONFIG_PARENT_DIR_SEARCH_DEPTH=5
+
+> phase secrets export
+...
+```

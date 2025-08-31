@@ -1,0 +1,234 @@
+import { Tag } from '@/components/Tag'
+
+export const description =
+  'Run Phase on your own Amazon Web Services infrastructure.'
+
+<Tag variant="small">SELF-HOSTING</Tag>
+
+# AWS
+
+Learn how to set up the Phase Console using AWS EC2 and managed PostgreSQL RDS via the Docker Compose template. {{ className: 'lead' }}
+
+Keep in mind the steps listed below serve as a rough outline on how to self-hosting Phase Services on your own infrastructure.
+
+You may:
+
+- Choose to run the Phase Console components on managed services (PaaS) or alternative container orchestration tools like Kubernetes instead of Docker Compose.
+- Consider running the Phase Service behind a VPN or a VPC and not to expose it the internet directly.
+- Need to set up things like TLS certificates, web application firewall, database backups and replication, DDoS protection, rate limiting, SSOs etc.
+
+### I. Set Up an EC2 instance
+
+1. **Log in to AWS Management Console**:
+   Navigate to the EC2 dashboard.
+
+2. **Launch a new instance**:
+
+   - Choose the **Ubuntu Server 22.04 LTS** AMI.
+   - Select the **t3.large** instance type.
+   - For storage, select **120GB of GP3 SSD**.
+
+3. **Configure Security Group**:
+
+   - Allow **HTTP** (port 80).
+   - Allow **HTTPS** (port 443).
+   - Allow **SSH** (port 22).
+
+4. **Create a new key pair**:
+
+   - Select **ED25519** as the key type.
+   - Download the key pair and save it securely on your machine.
+
+5. **Launch** the instance.
+
+### II. Set Up an RDS Instance
+
+1. From the RDS dashboard, **launch a new RDS instance**.
+2. Choose the **PostgreSQL** engine and select version **15.3-R2**.
+
+3. **Specify DB details**:
+
+   - Choose **db.m5.large** instance class.
+   - Set initial storage to **30GB of GP3 SSD**.
+
+4. **Settings**:
+
+   - Use an auto-generated master password.
+
+5. **Connectivity**:
+
+   - In the VPC settings, ensure your RDS instance can connect to your EC2 instance.
+
+6. **Launch** the RDS instance.
+
+### III. Set Up an ElastiCache Redis Instance
+
+1. **Log in to AWS Management Console**:
+   Navigate to the ElastiCache dashboard.
+
+2. **Create a new Redis instance**:
+
+   - Choose **Redis** as the cluster engine.
+   - Select the **cache.t3.micro** node type for testing or an appropriate type for production.
+   - Ensure the VPC settings allow the instance to connect to your EC2 instance.
+   - Enable **automatic backups** if desired.
+
+3. **Configure Security Group**:
+
+   - Allow **Redis** (default port 6379) from your EC2 instance.
+
+4. **Launch** the Redis instance.
+
+5. **Note down** the primary endpoint of the Redis instance.
+
+### IV. SSH into EC2 & Setup Database
+
+1. Navigate to the directory containing the downloaded key pair.
+2. **Provide necessary permissions** for the key:
+
+   ```fish
+   chmod 400 your-key-pair-name.pem
+   ```
+
+3. **SSH into your EC2 instance**:
+
+   ```fish
+   ssh -i "your-key-pair-name.pem" ubuntu@your-ec2-ip-address
+   ```
+
+4. **Install PostgreSQL client**:
+
+   ```fish
+   sudo apt update
+   sudo apt install postgresql-client
+   ```
+
+5. **Connect to the RDS PostgreSQL instance**:
+
+   ```fish
+   psql -h your-rds-endpoint -U your-username -d postgres
+   ```
+
+6. **Database setup**:
+
+   ```sql
+   CREATE DATABASE phase_db;
+   CREATE USER phase_api WITH PASSWORD 'your-password';
+   GRANT ALL PRIVILEGES ON DATABASE phase_db TO phase_api;
+   ```
+
+7. **Exit** the PostgreSQL session:
+   ```sql
+   \q
+   ```
+
+### V. Prepare for Docker Deployment
+
+1. **Generate a strong database password**:
+
+   ```fish
+   openssl rand -hex 32
+   ```
+
+2. **Install Docker & Docker Compose**:
+
+   First, download the official Docker installation script:
+
+   ```fish
+   curl https://get.docker.com > install.sh && chmod +x install.sh
+   ```
+
+   We recommend reviewing the script before executing it on your system.
+
+   Install Docker and Docker Compose:
+
+   ```fish
+   sh install.sh
+   ```
+
+   Add your user to the Docker group:
+
+   ```fish
+   sudo usermod -aG docker $USER
+   ```
+
+   <Note>
+   You will need to log out and log back in for the group changes to take effect. You may use `Ctrl + D` to log out and then SSH back in.
+   </Note>
+
+   Verify that Docker is running:
+
+   ```fish
+   docker ps
+   ```
+
+3. **Download required configurations**:
+
+   - **.env** template:
+
+     ```fish
+     wget -O .env https://raw.githubusercontent.com/phasehq/console/main/.env.example
+     ```
+
+   - **Docker Compose** template:
+
+     You can review the docker compose configuration 👉 [here](https://github.com/phasehq/console/blob/main/docker-compose.yml).
+
+     ```fish
+     wget -O docker-compose.yml https://raw.githubusercontent.com/phasehq/console/main/docker-compose.yml
+     ```
+
+   - **Nginx** config & Dockerfile:
+     ```fish
+     mkdir nginx && wget -O ./nginx/default.conf https://raw.githubusercontent.com/phasehq/console/main/nginx/default.conf
+     wget -O ./nginx/Dockerfile  https://raw.githubusercontent.com/phasehq/console/main/nginx/Dockerfile
+     ```
+
+4. **Edit `.env` file**:
+
+   - Replace **DATABASE_HOST** with your RDS endpoint.
+   - Update **DATABASE_NAME**, **DATABASE_USER**, and **DATABASE_PASSWORD** with your desired credentials.
+   - Add **REDIS_HOST**, **REDIS_PORT**, **REDIS_PASSWORD** and set it to your ElastiCache Redis primary endpoint.
+   - Modify other environment variables as needed.
+
+5. **Edit `docker-compose.yml`**:
+
+   - Comment out the PostgreSQL service.
+   - Comment out the Redis service.
+
+6. **Start services**:
+
+   ```fish
+   docker compose up -d
+   ```
+
+7. You should now be able to access the Phase console at `https://your-ec2-ip-address`.
+
+## Troubleshooting
+
+### Routing Structure
+
+The `nginx` service acts as a reverse proxy for the `frontend` and `backend` services.
+
+- Requests to `https://your-ec2-ip-address/*` are routed to the `frontend` service at `http://frontend:3000`.
+- Requests to `https://your-ec2-ip-address/service/*` are routed to the `backend` service at `http://backend:8000`, with the `/service` path prefix stripped.
+
+### Health Checks
+
+You can check the health of the services using `curl`. Since a self-signed certificate is used by default, you may need to use the `-k` or `--insecure` flag to bypass certificate validation.
+
+- **Frontend Health Check**:
+  ```fish
+  curl -vk https://your-ec2-ip-address/api/health
+  # Expected response: {"status":"alive"}
+  ```
+
+- **Backend Health Check**:
+  ```fish
+  curl -vk https://your-ec2-ip-address/service/health/
+  # Expected response: {"status": "alive", "version": "x.x.x"}
+  ```
+
+---
+
+Remember to secure your environment and not expose sensitive data or configurations in production. By default Phase will provision a self-signed TLS certificate using nginx. Please use a valid TLS certificate for your own domain in production.
