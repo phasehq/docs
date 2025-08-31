@@ -1,4 +1,5 @@
 import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
 
 export const description = 'Integrate Phase with Hashicorp Nomad'
 
@@ -7,6 +8,8 @@ export const description = 'Integrate Phase with Hashicorp Nomad'
 # Hashicorp Nomad
 
 Deploy secrets in Phase to your Nomad cluster as variables.
+
+<DocActions /> 
 
 <Warning>
   When secret syncing is enabled, secrets stored inside Phase will be treated as

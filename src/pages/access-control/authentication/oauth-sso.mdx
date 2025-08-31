@@ -1,9 +1,13 @@
 import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
+
 export const description = 'Authenticating via various OAuth Single sign-on providers with Phase.'
 
 <Tag variant="small">AUTHENTICATION</Tag>
 
 # OAuth 2.0 Single sign-on (SSO)
+
+<DocActions /> 
 
 ## Google
 

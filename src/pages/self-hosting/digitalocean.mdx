@@ -1,4 +1,5 @@
 import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
 
 export const description = 'Run Phase on your own DigitalOcean infrastructure.'
 
@@ -7,6 +8,8 @@ export const description = 'Run Phase on your own DigitalOcean infrastructure.'
 # DigitalOcean
 
 Learn how to set up the Phase Console using DigitalOcean droplet and managed PostgreSQL via the Docker Compose template. {{ className: 'lead' }}
+
+<DocActions /> 
 
 Keep in mind the steps listed below serve as a rough outline on how to self-hosting Phase Services on your own infrastructure.
 
