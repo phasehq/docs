@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "node scripts/export-mdx-to-md.js",
     "build": "NODE_OPTIONS='--max-old-space-size=4096' next build",
-    "postbuild": "next-sitemap",
+    "postbuild": "next-sitemap && node scripts/generate-llms-txt.js",
     "start": "next start",
     "lint": "next lint"
   },
