@@ -73,37 +73,20 @@ To view all available commands and their descriptions, run:
 
 ## 💻 `auth`
 
-Authenticate with Phase using the CLI on your own machine. The `phase auth` command lets you log in to either Phase Cloud or a Self-hosted instance of Phase. You have two authentication methods:
+Authenticate with Phase using the CLI on your own machine. The `phase auth` command lets you log in to either Phase Cloud or a Self-hosted instance of Phase.
+
+<Note>
+Phase CLI will automatically look for `PHASE_HOST` and or `PHASE_SERVICE_TOKEN` environment variables to authenticate with the Phase Service. If any are present, this will override any authentication medum previously chosen.
+For more details, see [Environment Variables](commands#environment-variables).
+</Note>
+
+
+### Auth Methods:
 
 1. **Webauth (Default)**: This automated method opens the Phase Console in your default browser for authentication. You'll simply enter your `sudo` password to authenticate the CLI seamlessly. For Self-Hosted instances, you'll be prompted to enter the host URL.
 
 Note that during this process, an ephemeral X25519 keypair is generated and a crypto sealed box is used for enhanced security and no tokens or private keys are exchanged in plain text.
 
-2. **Token**: A manual method where you create a Personal Access Token in the Phase Console and supply it to the CLI. For Self-Hosted instances, you'll need to provide the host URL along with your email and Phase Personal Access Token.
-
-<Note>
-  If you're running the CLI in a headless environment (e.g., CI/CD, Docker
-  container, bash script), pass the `PHASE_HOST` and `PHASE_SERVICE_TOKEN`
-  environment variables. For more details, see [Environment
-  Variables](commands#environment-variables).
-</Note>
-
-```bash
-> phase auth
-? Choose your Phase instance type: (Use arrow keys)
- » ☁️ Phase Cloud
-   🛠️ Self Hosted
-```
-
-- `mode`: Choose the mode of authentication (`token`, `webauth`). Default: `webauth`
-
-For `token` mode, provide the following:
-
-- Host URL - _Only for Self-hosted instances_
-- Email
-- Phase Personal Access Token
-
-Obtain a Personal Access Token (PAT) from the [Phase Console](https://console.phase.dev) by going to Access Control -> Authentication -> Personal Access Tokens -> + `Create Token`.
 
 Example:
 
@@ -115,21 +98,58 @@ Please authenticate via the Phase Console: https://console.phase.dev/webauth/OTM
 
 This opens the Phase Console in a new tab. Enter your `sudo` password when prompted. The CLI securely receives your credentials via encrypted POST requests to finalize authentication. If you are already authenticated, it will display your email address and provide instructions for switching accounts.
 
-Once complete, you should see a success screen. Return to your terminal to find:
 
-```bash
-» phase auth
-? Choose your Phase instance type: ☁️ Phase Cloud
-Please authenticate via the Phase Console: https://console.phase.dev/webauth/OTM3MC00ZWViYmI1MGVlMTU3ZTliOWZkZT...
+2. **Token**: This allows you to authenticate to Phase directly uisng a Personal Access Token (PAT) or a Service Account Token that you may have manually created in the Phase Console.
 
-✅ Authentication successful. Credentials saved in the Phase keyring.
-🎉 Welcome to Phase CLI!
+For `token` mode, provide the following:
 
-─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-🙋 Need help?: https://slack.phase.dev
-💻 Bug reports / feature requests: https://github.com/phasehq/cli
+- Host URL - _Only for Self-hosted instances_
+- Email
+- Personal Access Token (PAT) or a Service Account Token
+
+Obtain a Personal Access Token (PAT) from the [Phase Console](https://console.phase.dev) by going to Access Control -> Authentication -> Personal Access Tokens -> + `Create Token`.
+
+
+3. **AWS IAM**: Authenticate using your current AWS identity from the standard AWS credential chain (env vars, shared config/credentials, SSO, role assumption, instance profile, etc). Optionally bind the external identity to a Phase Service Account and set a TTL for the issued token. You'll need to have configured an external identity to a service account in the Phase Console first. See [External Identities](/access-control/authentication/external-identities) for more details.
+
+Usage:
+
+```fish
+> phase auth --mode aws-iam [--service-account-id SERVICE_ACCOUNT_ID] [--ttl SECONDS] [--no-login]
 ```
 
+Options:
+
+- `--service-account-id` (Required): Service Account ID to map this external AWS identity to a Phase Service Account.
+- `--ttl` (Optional): Token TTL in seconds for tokens created using external identities. Defaults to the configured Default TTL of the external identity.
+- `--no-login` (Optional): Use external indntity to generate and print a short-lived access token to STDOUT without logging into the CLI.
+
+
+Examples:
+
+```fish
+# Log in using your current AWS identity and persist credentials
+> phase auth --mode aws-iam --service-account-id 0f1a2b3c-4d5e-6789-abcd-ef0123456789
+```
+
+```fish
+phase auth --mode aws-iam --service-account=2115a1fc-0a78-4a7b-ad8c-6fa6cc15f489 --ttl 60 --no-login
+{
+    "authentication": {
+        "tokenType": "ServiceAccount",
+        "token": "pss_service:v2:728a65904a8b66222e6488ee73d8b797391e8e54f0ed42af03a43b96a623b7a2:a7579d80027dddebb934f532ef6977a50d82dfbaa87f1b021cfef72086884605:d2f05a4bf13cea53a41d06fa2aad265ec9068aefa4609446b4c29743e6436e07:b17346b16aef0a2c25e05814a5a0f54555100965f1d6fb41e023989eab99c791",
+        "bearerToken": "ServiceAccount 728a65904a8b66222e6488ee73d8b797391e8e54f0ed42af03a43b96a623b7a2",
+        "TTL": 60,
+        "maxTTL": 86400
+    }
+}
+```
+
+- `mode`: Choose the mode of authentication (`token`, `webauth`, `aws-iam`). Default: `webauth`
+- `service-account-id` (Required for external identities): Bind external identity to a Phase Service Account.
+- `ttl` (Optional): Only applicable for when using external identities for authentication (e.g., `aws-iam` mode). TTL in seconds for the issued token.
+- `no-login` (Optional): Only applicable for when using external identities for authentication (e.g., `aws-iam` mode). Use external indntity to generate and print a short-lived access token to STDOUT without logging into the CLI.
+ 
 ---
 
 ## 🔗 `init`
