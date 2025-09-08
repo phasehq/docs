@@ -125,14 +125,14 @@ Obtain a Personal Access Token (PAT) from the [Phase Console](https://console.ph
 Usage:
 
 ```fish
-> phase auth --mode aws-iam [--service-account-id SERVICE_ACCOUNT_ID] [--ttl SECONDS] [--no-login]
+> phase auth --mode aws-iam [--service-account-id SERVICE_ACCOUNT_ID] [--ttl SECONDS] [--no-store]
 ```
 
 Options:
 
 - `--service-account-id` (Required): Service Account ID to map this external AWS identity to a Phase Service Account.
 - `--ttl` (Optional): Token TTL in seconds for tokens created using external identities. Defaults to the configured Default TTL of the external identity.
-- `--no-login` (Optional): Use external indntity to generate and print a short-lived access token to STDOUT without logging into the CLI.
+- `--no-store` (Optional): Print the authentication token to STDOUT without storing credentials in the keyring.
 
 
 Examples:
@@ -143,7 +143,7 @@ Examples:
 ```
 
 ```fish
-phase auth --mode aws-iam --service-account=2115a1fc-0a78-4a7b-ad8c-6fa6cc15f489 --ttl 60 --no-login
+phase auth --mode aws-iam --service-account=2115a1fc-0a78-4a7b-ad8c-6fa6cc15f489 --ttl 60 --no-store
 {
     "authentication": {
         "tokenType": "ServiceAccount",
@@ -158,7 +158,7 @@ phase auth --mode aws-iam --service-account=2115a1fc-0a78-4a7b-ad8c-6fa6cc15f489
 - `mode`: Choose the mode of authentication (`token`, `webauth`, `aws-iam`). Default: `webauth`
 - `service-account-id` (Required for external identities): Bind external identity to a Phase Service Account.
 - `ttl` (Optional): Only applicable for when using external identities for authentication (e.g., `aws-iam` mode). TTL in seconds for the issued token.
-- `no-login` (Optional): Only applicable for when using external identities for authentication (e.g., `aws-iam` mode). Use external indntity to generate and print a short-lived access token to STDOUT without logging into the CLI.
+- `no-store` (Optional): Only applicable for when using external identities for authentication (e.g., `aws-iam` mode). Print the authentication token response to STDOUT without storing credentials.
  
 ---
 
