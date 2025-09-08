@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { LinkIcon } from '@/components/icons/LinkIcon'
 import { siOpenai, siMarkdown } from 'simple-icons'
 import { Button } from '@/components/Button'
+import { CopyButton } from '@/components/CopyButton'
 
 function OpenAIIcon(props) {
   return (
@@ -19,46 +20,7 @@ function MarkdownIcon(props) {
   )
 }
 
-function CopyButton({ text, label = 'Copy .md link', icon, onCopy }) {
-  let [copyCount, setCopyCount] = useState(0)
-  let copied = copyCount > 0
 
-  useEffect(() => {
-    if (copyCount > 0) {
-      let timeout = setTimeout(() => setCopyCount(0), 1000)
-      return () => {
-        clearTimeout(timeout)
-      }
-    }
-  }, [copyCount])
-
-  return (
-    <Button
-      variant="outline"
-      className="relative !h-7 !py-0 !px-2 text-2xs whitespace-nowrap"
-      onClick={async () => {
-        if (onCopy) {
-          await onCopy()
-          setCopyCount((count) => count + 1)
-          return
-        }
-        if (!text) return
-        window.navigator.clipboard.writeText(text).then(() => {
-          setCopyCount((count) => count + 1)
-        })
-      }}
-      aria-label={label}
-    >
-      <span aria-hidden={copied} className="pointer-events-none flex items-center gap-1 transition-opacity duration-150" style={{opacity: copied ? 0 : 1}}>
-        {icon}
-        {label}
-      </span>
-      <span aria-hidden={!copied} className="pointer-events-none absolute inset-0 grid place-items-center transition-opacity duration-150" style={{opacity: copied ? 1 : 0}}>
-        Copied!
-      </span>
-    </Button>
-  )
-}
 
 export function DocActions() {
   let [origin, setOrigin] = useState('')
@@ -90,20 +52,20 @@ export function DocActions() {
     <div className="not-prose mx-auto mb-2 w-full max-w-[calc(theme(maxWidth.xl)-theme(spacing.8))]">
       <div className="inline-flex flex-nowrap items-center gap-1">
         <CopyButton
-          text={mdUrl}
-          label="Copy .md link"
-          icon={<LinkIcon className="h-4 w-4 stroke-zinc-500" />}
-        />
+          value={mdUrl}
+          title="Copy .md link"
+          
+        ><div className="flex items-center gap-1"><LinkIcon className="h-4 w-4 stroke-zinc-500" />Copy .md link </div></CopyButton>
 
         <CopyButton
-          label="Copy for LLM"
-          icon={<MarkdownIcon className="h-4 w-4 stroke-zinc-500" />}
+          title="Copy for LLM"
+          
           onCopy={async () => {
             let res = await fetch(mdUrl)
             let text = await res.text()
             await navigator.clipboard.writeText(text)
           }}
-        />
+        ><div className="flex items-center gap-1"><MarkdownIcon className="h-4 w-4 stroke-zinc-500" />Copy for LLM </div></CopyButton>
         
         <Button
           variant="outline"
