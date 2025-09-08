@@ -1,4 +1,5 @@
 import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
 
 export const description = 'Integrate Phase with Jenkins'
 
@@ -7,6 +8,8 @@ export const description = 'Integrate Phase with Jenkins'
 # Jenkins
 
 You can use the Phase CLI retrieve secrets inside your Jenkins CI pipelines or jobs.
+
+<DocActions />
 
 ## Prerequisites
 

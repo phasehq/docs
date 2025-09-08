@@ -1,6 +1,7 @@
 import { Tag } from '@/components/Tag'
 import { HeroPattern } from '@/components/HeroPattern'
 import { Deployments } from '@/components/Deployments'
+import { DocActions } from '@/components/DocActions'
 
 export const description = 'Run Phase on your own infrastructure'
 
@@ -12,6 +13,8 @@ export const description = 'Run Phase on your own infrastructure'
 # Self Hosting
 
 Explore deployment options for self-hosting Phase. {{ className: 'lead' }}
+
+<DocActions /> 
 
 You may choose to self-host Phase to meet various compliance requirements, to simply maintain control over your data or run Phase behind your firewall.
 
