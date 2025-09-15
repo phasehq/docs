@@ -1,0 +1,54 @@
+import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
+
+export const description = 'Integrate Phase with AWS IAM to generate dynamic secrets for AWS services.'
+
+<Tag variant="small">INTEGRATE</Tag>
+
+# AWS IAM
+
+You can use Phase to generate dynamic secrets for AWS IAM, allowing you to create temporary AWS credentials that can be used to access AWS services. Each time a credential is generated, a new IAM user is created, and credentials are created for this user. 
+
+<DocActions /> 
+
+## AWS Authentication Setup
+
+Choose your preferred method for authenticating Phase with AWS:
+
+<TabGroup title="Authentication Methods" subtitle="Select an authentication method.">
+  <TabPanel title="Assume Role (Recommended)" slug="assume-role">
+    <p>
+      Use an IAM Role to authenticate Phase with AWS. This is the recommended method as it allows for better security and management of permissions.
+    </p>
+    <ul>
+      <li>Provide the Role ARN and External ID (if applicable).</li>
+      <li>Ensure the role has the necessary permissions to create IAM users and manage policies.</li>
+    </ul>
+  </TabPanel>
+  <TabPanel title="Access Keys" slug="access-keys">
+    <p>
+      Use Access Keys to authenticate Phase with AWS. This method is less secure than using an IAM Role, but may be necessary in some cases.
+    </p>
+    <ul>
+      <li>Provide the Access Key ID and Secret Access Key.</li>
+      <li>Ensure the access keys have the necessary permissions to create IAM users and manage policies.</li>
+    </ul>
+  </TabPanel>
+</TabGroup>
+
+## Create an AWS IAM Dynamic Secret
+
+AWS IAM Dynamic Secrets allow you to create temporary AWS credentials that can be used to access AWS services. Each time a credential is generated, a new IAM user is created, and credentials are created for this user. Usernames are unique and contain a `{{random}}` string with a prefix or suffic that you can define.
+
+To create an AWS IAM Dynamic Secret, you will need to provide the following information:
+
+- **Authentication credentials**: You can choose to authenticate using either an IAM Role or Access Keys.
+  - If you choose **IAM Role**, you will need to provide the Role ARN and External ID (if applicable).
+  - If you choose **Access Keys**, you will need to provide the Access Key ID and Secret Access Key.
+- **IAM User template**: A template string used to create unique IAM usernames. The template must include the `{{random}}` variable, which will be replaced with a random string when the user is created. You can also include a prefix or suffix to make the usernames more identifiable.
+- **AWS IAM Path**: The path for the IAM user. This is optional and defaults to `/phase/<org_name>/<app_name>/<environment_name>/<secret_path>`.
+- **AWS Policy ARNs**: A list of IAM policy ARNs to attach to the user. You can attach multiple policies by separating them with commas.
+- **AWS IAM Groups**: A list of IAM groups to add the user to. You can add the user to multiple groups by separating them with commas.
+- **IAM User Permission Boundary ARN**: An optional ARN of the policy to use as a permission boundary for the user.
+
+![aws iam config](/assets/images/console/dynamic-secrets/aws-iam-config.png)
