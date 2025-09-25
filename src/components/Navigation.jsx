@@ -282,6 +282,10 @@ export const navigation = [
       },
       { title: 'Kubernetes', href: '/integrations/platforms/kubernetes' },
       {
+        title: 'AWS IAM',
+        href: '/integrations/platforms/aws-iam',
+      },
+      {
         title: 'AWS Elastic Container Service',
         href: '/integrations/platforms/aws-elastic-container-service',
       },
