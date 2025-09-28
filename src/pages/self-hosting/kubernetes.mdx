@@ -250,3 +250,10 @@ kubectl describe certificate phase-tls -n your-phase-namespace # Replace with th
    # Expected response: {"status": "alive", "version": "x.x.x"}
    ```
 
+7. If you update any configuration or secrets, you may need to restart the pods to pick up the changes:
+   ```fish
+   kubectl rollout restart deployment/phase-console-frontend
+   kubectl rollout restart deployment/phase-console-backend
+   ```
+   This will gracefully restart the pods and ensure they pick up the new configuration or secret values.
+
