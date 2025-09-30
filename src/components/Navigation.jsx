@@ -29,24 +29,23 @@ function TopLevelNavItem({ href, children }) {
 }
 
 function NavLink({ href, tag, active, isAnchorLink = false, children }) {
-  
   const linkRef = useRef(null)
 
   useEffect(() => {
     if (active && linkRef.current) {
-      const link = linkRef.current;
-      const linkRect = link.getBoundingClientRect();
+      const link = linkRef.current
+      const linkRect = link.getBoundingClientRect()
 
       // Check if link is fully visible in the viewport
       const isOutOfView =
-        linkRect.top < 0 || linkRect.bottom > window.innerHeight;
+        linkRect.top < 0 || linkRect.bottom > window.innerHeight
 
       if (isOutOfView) {
-        link.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        link.scrollIntoView({ block: 'center', behavior: 'smooth' })
       }
     }
-  }, [active]);
-  
+  }, [active])
+
   return (
     <Link
       href={href}
@@ -218,7 +217,8 @@ export const navigation = [
       { title: 'Users', href: '/console/users' },
       { title: 'Apps', href: '/console/apps' },
       { title: 'Environments', href: '/console/environments' },
-      { title: 'Secrets', href: '/console/secrets' }
+      { title: 'Secrets', href: '/console/secrets' },
+      { title: 'Dynamic Secrets', href: '/console/dynamic-secrets' },
     ],
   },
   {
@@ -244,6 +244,7 @@ export const navigation = [
     links: [
       { title: 'Overview', href: '/public-api' },
       { title: 'Secrets', href: '/public-api/secrets' },
+      { title: 'Dynamic Secrets', href: '/public-api/dynamic-secrets' },
       { title: 'Errors', href: '/public-api/errors' },
     ],
   },
@@ -253,7 +254,10 @@ export const navigation = [
       { title: 'Overview', href: '/access-control' },
       { title: 'Authentication', href: '/access-control/authentication' },
       { title: 'OAuth 2.0', href: '/access-control/authentication/oauth-sso' },
-      { title: 'OpenID Connect (OIDC)', href: '/access-control/authentication/oidc-sso' },
+      {
+        title: 'OpenID Connect (OIDC)',
+        href: '/access-control/authentication/oidc-sso',
+      },
       { title: 'Tokens', href: '/access-control/authentication/tokens' },
       { title: 'Service Accounts', href: '/access-control/service-accounts' },
       { title: 'Roles', href: '/access-control/roles' },
@@ -277,6 +281,10 @@ export const navigation = [
         href: '/integrations/platforms/docker-compose',
       },
       { title: 'Kubernetes', href: '/integrations/platforms/kubernetes' },
+      {
+        title: 'AWS IAM',
+        href: '/integrations/platforms/aws-iam',
+      },
       {
         title: 'AWS Elastic Container Service',
         href: '/integrations/platforms/aws-elastic-container-service',
@@ -373,7 +381,10 @@ export const navigation = [
       { title: 'Overview', href: '/self-hosting' },
       { title: 'Docker Compose', href: '/self-hosting/docker-compose' },
       { title: 'Kubernetes', href: '/self-hosting/kubernetes' },
-      { title: 'AWS Elastic Kubernetes Service', href: '/self-hosting/aws-eks' },
+      {
+        title: 'AWS Elastic Kubernetes Service',
+        href: '/self-hosting/aws-eks',
+      },
       { title: 'AWS EC2 & RDS', href: '/self-hosting/aws' },
       { title: 'Google Cloud Platform', href: '/self-hosting/gcp' },
       { title: 'Azure', href: '/self-hosting/azure' },
@@ -386,7 +397,6 @@ export const navigation = [
       },
     ],
   },
-  
 ]
 
 export function Navigation(props) {
