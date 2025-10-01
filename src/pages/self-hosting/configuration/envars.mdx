@@ -307,6 +307,11 @@ Env(s) required by the following containers:
     will only allow users with emails `@mydomain.com` or `@subdomain.mydomain.com` to login.
     Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
   </Property>
+  <Property name="LOGIN_BANNER_TEXT" type="string (Optional)">
+    A custom message to display on the login screen. Can be up to 512 characters long.
+    This allows self-hosting users to display important information, announcements, or notices to users before they log in.
+    Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
+  </Property>
 </Properties>
 
 ---
