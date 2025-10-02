@@ -86,8 +86,12 @@ Now that you have authenticated with GitHub, you can configure syncs for your ap
 
 ![Choose sync authentication credentials](/assets/images/platform-integrations/github/select-gh-credentials.png)
 
-3. Choose the source and destination to sync secrets. Select an Environment as the source for Secrets.
-   Next, choose a GitHub repository from the dropdown as the destination to sync Secrets to.
+3. Choose the source and destination to sync secrets. Select the Phase Environment as the source for Secrets.
+   Next, choose a GitHub repository from the dropdown as the destination to sync Secrets to. You may also optionally choose an GitHub Environment to sync Secrets to. Here's how you can create one - [GitHub Docs](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment).
+
+   <Note>
+   For security reasons, secrets in your source Phase Environment will be synced to your GitHub repository as type Secrets, whether it's at a repository level or an Environment level.
+   </Note>
 
 ![Configure sync](/assets/images/platform-integrations/github/gh-actions-configure-sync.png)
 
