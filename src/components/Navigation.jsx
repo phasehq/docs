@@ -260,6 +260,10 @@ export const navigation = [
       },
       { title: 'Tokens', href: '/access-control/authentication/tokens' },
       { title: 'Service Accounts', href: '/access-control/service-accounts' },
+      {
+        title: 'External Identities',
+        href: '/access-control/external-identities',
+      },
       { title: 'Roles', href: '/access-control/roles' },
       { title: 'Network', href: '/access-control/network' },
     ],

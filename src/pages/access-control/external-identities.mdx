@@ -1,0 +1,81 @@
+import { Tag } from '@/components/Tag'
+
+<Tag variant="small">ACCESS CONTROL</Tag>
+
+# External Identities
+
+External Identities allow you to bind machine or user identities from third-party platforms to [Service Accounts](/service-accounts) in Phase. This enables seamless authentication and authorization for external entities. 
+
+## Supported External Identity Providers
+Phase currently supports the following external identity providers:
+
+- [**AWS IAM**](#aws-iam): Bind an AWS IAM User to a phase Service Account
+
+## Configure an External Identity
+
+To set up an External Identity for use with a Phase Service Account, follow these steps. First, navigate to the **Access Control** page from the sidebar, and select **External Identities**. Then, choose a provider:
+
+![external identities page](/assets/images/console/access-control/external-identities/external-identities.png)
+
+Then, enter the required information to configure the external identity. For all providers, you will need to provide basic information about the identity and how tokens are generated:
+
+<Properties>
+  <Property name="Identity Name" type="string">
+    A name for the external identity.
+  </Property>
+  <Property name="Description" type="string">
+    Optionally, a description for the external identity.
+  </Property>
+  <Property name="Token name" type="string">
+    Optional name for tokens that will be generated for Service Accounts using this external identity. The default is the provider shortcode, e.g. `aws-iam`.
+  </Property>
+  <Property name="Token Default TTL" type="number">
+    The default TTL (in seconds) for tokens generated for Service Accounts using this external identity. Default is 3600 seconds (1 hour).
+  </Property>
+  <Property name="Token Max TTL" type="number">
+    The default TTL (in seconds) for tokens generated for Service Accounts using this external identity. Default is 86400 seconds (24 hours).
+  </Property>
+</Properties>
+
+Additionally, you will need to provide provider-specific information depending on the selected provider.
+
+### AWS IAM
+
+For AWS IAM, you will need to provide the following information:
+
+<Properties>
+  <Property name="Trusted principal ARNs" type="comma-separated-string">
+    The ARN(s) of the AWS IAM User(s) to bind to the Phase Service Account. Separate multiple ARNs with commas.
+  </Property>
+  <Property name="Signature expiry" type="number">
+    The duration (in seconds) for which the signed requests from the AWS IAM User will be valid. Default is 60 seconds.
+  </Property>
+  <Property name="STS endpoint" type="string">
+    Optionally, specify a custom AWS STS endpoint. If not provided, the default AWS STS endpoint will be used (`https://sts.amazonaws.com`).
+  </Property>
+</Properties>
+
+![configure new identity](/assets/images/console/access-control/external-identities/configure-new-identity.png)
+
+
+## Manage External Identities
+
+Once an External Identity is created, it will appear in the list on the **External Identities** page. From here, you can view details, edit configurations, or delete the identity. 
+
+![external identities list](/assets/images/console/access-control/external-identities/external-identities-list.png)
+
+## Bind an External Identity to a Service Account
+
+<Note>
+To use an External Identity, the Service Account must have [Server-side KMS](/access-control/service-accounts#server-side-kms) enabled.
+</Note>
+
+Once you have configured an External Identity, you can bind it to a Phase Service Account. To do this, navigate to the **Service Accounts** page, select the desired Service Account and click **Mange** to open the account detail page. Scroll down to the **External Identities** section and click **Manage External Identities**:
+
+![manage external identities button](/assets/images/console/access-control/external-identities/manage-account-identities-button.png)
+
+From the dialog, select the External Identity you want to bind to this Service Account and enable it using the toggle switch. Click **Save** to apply the changes:
+
+![add external identity to service account](/assets/images/console/access-control/external-identities/manage-account-identities-dialog.png)
+
+
