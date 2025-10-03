@@ -1,4 +1,5 @@
 import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
 
 export const description = 'Integrate Phase with GitHub Actions'
 
@@ -7,6 +8,8 @@ export const description = 'Integrate Phase with GitHub Actions'
 # GitHub Actions
 
 You can use Phase to sync secrets to GitHub Actions.
+
+<DocActions />
 
 ## Using Phase Console secret syncing
 
@@ -66,6 +69,7 @@ If you are self-hosting Phase, you will have to supply GitHub integration OAuth 
 
 ![Authorize GitHub Phase Integration](/assets/images/platform-integrations/github/github-oauth-consent.png)
 
+
 5. You will be redirected back to the Integrations page, and your new credentials should be visible under the "Credentials" section:
 
 ![GitHub credentials stored](/assets/images/platform-integrations/github/github-credentials-created.png)
@@ -90,6 +94,10 @@ Now that you have authenticated with GitHub, you can configure syncs for your ap
 4. Once you have selected your desired source and destination, click **Create**.
    The sync has been set up! Secrets will automatically be synced from your chosen Phase Environment to the GitHub repository as Secrets that can be used for GitHub Actions.
    You can click on the **Manage** button on the Sync card to view sync logs, pause syncing, or update authentication credentials.
+
+#### Troubleshooting
+
+If you are using a self-hosted Phase instance and see a warning message about missing `GITHUB_INTEGRATION_CLIENT_ID` and `GITHUB_INTEGRATION_CLIENT_SECRET` while trying to set up GitHub integration credentials, this means the GitHub integration credentials have not been configured for your self-hosted deployment. Please provision the integration credentials following the [Third-party integrations configuration](/self-hosting/configuration/envars#third-party-integrations-configuration) guide, restart your deployment and then **hard refresh** the page in your browser.
 
 #### Accessing the secrets in GitHub Actions
 

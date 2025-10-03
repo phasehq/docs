@@ -1,4 +1,5 @@
 import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
 
 export const description =
   'Learn about the cryptographic architecture used to generate encryption keys, secure keys for storage / transmission over the network and perform encryption or decryption operations.'
@@ -12,6 +13,8 @@ Phase is built on an end-to-end encryption architecture used to derive encryptio
 Here we provide a detailed description of all the pieces of this architecture, including the processes used to generate root secrets, derive encryption keys, encrypt data, and cryptographically grant or revoke access to secrets. {{ className: 'lead' }}
 
 Phase uses [libsodium](https://doc.libsodium.org/) for all primitive cryptographic operations including encryption, decryption, signatures, hashing and more. {{ className: 'lead' }}
+
+<DocActions /> 
 
 ---
 

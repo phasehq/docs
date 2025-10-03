@@ -1,4 +1,5 @@
 import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
 
 export const metadata = {
   title: 'Secrets API',
@@ -16,6 +17,8 @@ Secrets are key/value pairs used to store application secrets or environment var
 <Note>
 To use the Secrets API to manage secrets in an App, you must enable server-side encryption (SSE) from the [App settings page](/console/apps#settings). 
 </Note>
+
+<DocActions /> 
 
 ## The Secret model
 
@@ -93,6 +96,15 @@ The secret model contains the basic key / value pairs that define your environme
       </Property>
       <Property name="tags" type="string">
         A comma separated list of tags (ex: `aws`, `aws,postgres`). Returns secrets that match ANY of the specified tags.
+      </Property>
+      <Property name="dynamic" type="boolean">
+        Whether to include dynamic secrets in the response. 
+      </Property>
+      <Property name="lease" type="boolean">
+        Whether to generate leases for dynamic secrets in the response. Must be used along with the `dynamic` parameter.
+      </Property>
+      <Property name="lease_ttl" type="boolean">
+        The TTL to use when generating leases for dynamic secrets, in seconds. Must be used along with the `lease` parameter.
       </Property>
     </Properties>
 

@@ -1,4 +1,5 @@
 import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
 
 export const description = 'Integrate Phase with GitLab CI'
 
@@ -7,6 +8,8 @@ export const description = 'Integrate Phase with GitLab CI'
 # GitLab CI
 
 You can use Phase to sync secrets to GitLab CI Variables.
+
+<DocActions />
 
 <Warning>
   When secret syncing is enabled, secrets stored inside Phase will be treated as

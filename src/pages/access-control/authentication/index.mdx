@@ -2,6 +2,7 @@ import { Tag } from '@/components/Tag'
 import { HeroPattern } from '@/components/HeroPattern'
 import { UserAuthProviders } from '@/components/UserAuthProviders'
 import { ProgrammaticAuth } from '@/components/ProgrammaticAuth'
+import { DocActions } from '@/components/DocActions'
 
 export const description = 'Authenticating with Phase.'
 
@@ -12,6 +13,8 @@ export const description = 'Authenticating with Phase.'
 # Authentication Methods
 
 Phase supports third-party authentication systems for access control. You can delegate authentication and administration to external providers such as Google, AWS IAM, GitHub, Kubernetes, GitLab, or Microsoft Azure to best suit your setup. When choosing an authentication provider, consider whether the access to Phase will be programmatic (machine-access) via REST API, SDK, CLI, etc., or user access (human-access).
+
+<DocActions /> 
 
 ## User Authentication
 

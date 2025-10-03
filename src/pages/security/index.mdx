@@ -1,6 +1,7 @@
 import { Tag } from '@/components/Tag'
 import { HeroPattern } from '@/components/HeroPattern'
 import { SecurityCards } from '@/components/SecurityCards'
+import { DocActions } from '@/components/DocActions'
 
 export const description =
   'Phase architecture, threat model, and security implementation.'
@@ -12,6 +13,8 @@ export const description =
 # Security Overview
 
 Security is at the core of Phase's design and operations. As a platform for managing application secrets and configurations, Phase implements comprehensive security measures at every level. This security-first approach encompasses all aspects of the platform, including data encryption, key management, access control, and audit logging. Phase is designed to be secure by default out of the box, prioritizing the protection of secrets at all times without requiring extensive configuration from users.
+
+<DocActions /> 
 
 ## Security Objectives
 

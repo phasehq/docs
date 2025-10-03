@@ -218,6 +218,7 @@ export const navigation = [
       { title: 'Apps', href: '/console/apps' },
       { title: 'Environments', href: '/console/environments' },
       { title: 'Secrets', href: '/console/secrets' },
+      { title: 'Dynamic Secrets', href: '/console/dynamic-secrets' },
     ],
   },
   {
@@ -243,6 +244,7 @@ export const navigation = [
     links: [
       { title: 'Overview', href: '/public-api' },
       { title: 'Secrets', href: '/public-api/secrets' },
+      { title: 'Dynamic Secrets', href: '/public-api/dynamic-secrets' },
       { title: 'Errors', href: '/public-api/errors' },
     ],
   },
@@ -283,6 +285,10 @@ export const navigation = [
         href: '/integrations/platforms/docker-compose',
       },
       { title: 'Kubernetes', href: '/integrations/platforms/kubernetes' },
+      {
+        title: 'AWS IAM',
+        href: '/integrations/platforms/aws-iam',
+      },
       {
         title: 'AWS Elastic Container Service',
         href: '/integrations/platforms/aws-elastic-container-service',
