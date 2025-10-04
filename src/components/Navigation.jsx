@@ -245,6 +245,7 @@ export const navigation = [
       { title: 'Overview', href: '/public-api' },
       { title: 'Secrets', href: '/public-api/secrets' },
       { title: 'Dynamic Secrets', href: '/public-api/dynamic-secrets' },
+      { title: 'External Identities', href: '/public-api/external-identities' },
       { title: 'Errors', href: '/public-api/errors' },
     ],
   },
