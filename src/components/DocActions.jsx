@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { LinkIcon } from '@/components/icons/LinkIcon'
-import { siOpenai, siMarkdown } from 'simple-icons'
+import { siOpenai, siMarkdown, siClaude } from 'simple-icons'
 import { Button } from '@/components/Button'
 import { CopyButton } from '@/components/CopyButton'
 
@@ -8,6 +8,14 @@ function OpenAIIcon(props) {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor" {...props}>
       <path d={siOpenai.path} />
+    </svg>
+  )
+}
+
+function ClaudeIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor" {...props}>
+      <path d={siClaude.path} />
     </svg>
   )
 }
@@ -41,11 +49,18 @@ export function DocActions() {
     return origin ? `${origin}${mdPath}` : ''
   }, [origin, pathname])
 
-  let chatUrl = useMemo(() => {
+  let chatGptUrl = useMemo(() => {
     if (!mdUrl) return ''
-    let query = `Summarize the content of this document: ${mdUrl}`
+    let query = `This is the official docs for Phase, an open source application secrets manager. Please read and understand it carefully; once done, say you are ready and await user queries.\n\n${mdUrl}`
     let encoded = encodeURIComponent(query)
     return `https://chat.openai.com/?q=${encoded}`
+  }, [mdUrl])
+
+  let claudeUrl = useMemo(() => {
+    if (!mdUrl) return ''
+    let query = `This is the official docs for Phase, an open source application secrets manager. Please read and understand it carefully; once done, say you are ready and await user queries.\n\n${mdUrl}`
+    let encoded = encodeURIComponent(query)
+    return `https://claude.ai/new?q=${encoded}`
   }, [mdUrl])
 
   return (
@@ -70,22 +85,26 @@ export function DocActions() {
         <Button
           variant="outline"
           className="!h-7 !py-0 !px-2 text-2xs whitespace-nowrap"
-          onClick={async () => {
-            try {
-              let response = await fetch(mdUrl)
-              let markdown = await response.text()
-              let prompt = `This is the official docs for Phase, an open source application secrets manager. Please read and understand it carefully; once done, say you are ready and await user queries.\n\nMarkdown docs content follows:\n\n${markdown}`
-              try { await navigator.clipboard.writeText(markdown) } catch {}
-              let encoded = encodeURIComponent(prompt)
-              window.open(`https://chat.openai.com/?q=${encoded}`, '_blank', 'noopener')
-            } catch {
-              window.open(chatUrl, '_blank', 'noopener')
-            }
+          onClick={() => {
+            window.open(chatGptUrl, '_blank', 'noopener')
           }}
         >
           <span className="flex items-center gap-1">
             <OpenAIIcon className="h-4 w-4 text-zinc-600 dark:text-zinc-400" />
             <span className="hidden sm:inline">Ask ChatGPT</span>
+          </span>
+        </Button>
+
+        <Button
+          variant="outline"
+          className="!h-7 !py-0 !px-2 text-2xs whitespace-nowrap"
+          onClick={() => {
+            window.open(claudeUrl, '_blank', 'noopener')
+          }}
+        >
+          <span className="flex items-center gap-1">
+            <ClaudeIcon className="h-4 w-4 text-zinc-600 dark:text-zinc-400" />
+            <span className="hidden sm:inline">Ask Claude</span>
           </span>
         </Button>
 
