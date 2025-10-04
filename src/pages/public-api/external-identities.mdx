@@ -1,0 +1,269 @@
+import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
+
+export const metadata = {
+  title: 'External Identities API',
+  description:
+    'Authenticate with Phase using external identity providers (AWS IAM).',
+}
+
+
+<Tag variant="small">API</Tag>
+
+# External Identities (AWS IAM)
+
+Authenticate to Phase using AWS IAM via a SigV4-signed STS GetCallerIdentity request. This flow returns a Phase authentication token scoped to the specified Service Account, with an optional TTL. {{ className: 'lead' }}
+
+<DocActions /> 
+
+---
+
+## Authenticate with AWS IAM {{ tag: 'POST', label: '/identities/external/v1/aws/iam/auth/' }}
+
+<Row>
+  <Col>
+
+    Exchange an AWS STS SigV4-signed GetCallerIdentity request for a Phase token.
+
+    ### JSON Body
+    
+    Supply the Service Account to authenticate and the signed AWS request data.
+    
+    #### **Required fields**
+
+    <Properties>
+      <Property name="account.id" type="string">
+        Service Account ID (UUID) to authenticate.
+      </Property>
+      <Property name="awsIam.httpRequestUrl" type="string">
+        Base64-encoded signed request URL (from SigV4 prepared request).
+      </Property>
+      <Property name="awsIam.httpRequestHeaders" type="string">
+        Base64-encoded JSON of signed request headers.
+      </Property>
+      <Property name="awsIam.httpRequestBody" type="string">
+        Base64-encoded request body used to sign the GetCallerIdentity call.
+      </Property>
+    </Properties>
+
+    #### **Optional fields**
+
+    <Properties>
+      <Property name="account.type" type="string">
+        Defaults to <code>service</code>. Only <code>service</code> is supported currently.
+      </Property>
+      <Property name="awsIam.httpRequestMethod" type="string">
+        HTTP method used when signing. Defaults to <code>POST</code>.
+      </Property>
+      <Property name="tokenRequest.ttl" type="number">
+        Requested token TTL in seconds. If omitted, the default identity TTL is used.
+      </Property>
+    </Properties>
+
+    <Note>
+      To create the signed values, sign an AWS STS <code>GetCallerIdentity</code> request with SigV4 for your region/endpoint. Use the STS Query API body <code>Action=GetCallerIdentity&Version=2011-06-15</code> and header <code>Content-Type: application/x-www-form-urlencoded; charset=utf-8</code>. Then Base64-encode the prepared URL, headers (as JSON), and body.
+    </Note>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="POST" label="/identities/external/v1/aws/iam/auth/">
+
+    ```fish {{ title: 'cURL' }}
+    curl --location 'https://api.phase.dev/identities/external/v1/aws/iam/auth/' \
+    --header 'Content-Type: application/json' \
+    --data '{
+      "account": {
+        "type": "service",
+        "id": "0d9ca4b4-8a89-4420-86e0-cccacd7a4c10"
+      },
+      "awsIam": {
+        "httpRequestMethod": "POST",
+        "httpRequestUrl": "<base64>",
+        "httpRequestHeaders": "<base64>",
+        "httpRequestBody": "<base64>"
+      },
+      "tokenRequest": {
+        "ttl": 3600
+      }
+    }'
+    ```
+
+    ```js
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+
+    const payload = {
+      account: { type: 'service', id: '0d9ca4b4-8a89-4420-86e0-cccacd7a4c10' },
+      awsIam: {
+        httpRequestMethod: 'POST',
+        httpRequestUrl: '<base64>',
+        httpRequestHeaders: '<base64>',
+        httpRequestBody: '<base64>'
+      },
+      tokenRequest: { ttl: 3600 }
+    };
+
+    fetch('https://api.phase.dev/identities/external/v1/aws/iam/auth/', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(payload)
+    })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then((data) => console.log(data));
+    ```
+
+    ```python
+    import requests
+    import json
+
+    url = 'https://api.phase.dev/identities/external/v1/aws/iam/auth/'
+    payload = {
+      "account": {
+        "type": "service",
+        "id": "0d9ca4b4-8a89-4420-86e0-cccacd7a4c10"
+      },
+      "awsIam": {
+        "httpRequestMethod": "POST",
+        "httpRequestUrl": "<base64>",
+        "httpRequestHeaders": "<base64>",
+        "httpRequestBody": "<base64>"
+      },
+      "tokenRequest": {"ttl": 3600}
+    }
+    headers = { 'Content-Type': 'application/json' }
+
+    response = requests.post(url, json=payload, headers=headers)
+    response.raise_for_status()
+    print(response.json())
+    ```
+
+    ```go
+    package main
+
+    import (
+      "fmt"
+      "strings"
+      "net/http"
+      "io/ioutil"
+    )
+
+    func main() {
+
+      url := "https://api.phase.dev/identities/external/v1/aws/iam/auth/"
+      method := "POST"
+
+      payload := strings.NewReader(`{
+        "account": {"type": "service", "id": "0d9ca4b4-8a89-4420-86e0-cccacd7a4c10"},
+        "awsIam": {
+          "httpRequestMethod": "POST",
+          "httpRequestUrl": "<base64>",
+          "httpRequestHeaders": "<base64>",
+          "httpRequestBody": "<base64>"
+        },
+        "tokenRequest": {"ttl": 3600}
+      }`)
+
+      client := &http.Client{}
+      req, err := http.NewRequest(method, url, payload)
+      if err != nil {
+        fmt.Println(err)
+        return
+      }
+      req.Header.Add("Content-Type", "application/json")
+
+      res, err := client.Do(req)
+      if err != nil {
+        fmt.Println(err)
+        return
+      }
+      defer res.Body.Close()
+
+      body, err := ioutil.ReadAll(res.Body)
+      if err != nil {
+        fmt.Println(err)
+        return
+      }
+      fmt.Println(string(body))
+    }
+    ```
+
+    ```ruby
+    require "uri"
+    require "json"
+    require "net/http"
+
+    url = URI("https://api.phase.dev/identities/external/v1/aws/iam/auth/")
+
+    https = Net::HTTP.new(url.host, url.port)
+    https.use_ssl = true
+
+    request = Net::HTTP::Post.new(url)
+    request["Content-Type"] = "application/json"
+    request.body = JSON.dump({
+      "account": {"type": "service", "id": "0d9ca4b4-8a89-4420-86e0-cccacd7a4c10"},
+      "awsIam": {
+        "httpRequestMethod": "POST",
+        "httpRequestUrl": "<base64>",
+        "httpRequestHeaders": "<base64>",
+        "httpRequestBody": "<base64>"
+      },
+      "tokenRequest": {"ttl": 3600}
+    })
+
+    response = https.request(request)
+    puts response.read_body
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+      "authentication": {
+        "tokenType": "ServiceAccount",
+        "token": "pss_service:v2:...",
+        "bearerToken": "ServiceAccount baca69c634d84e5d3d04d31a487eb1c4c5f2a3ef2a6683f77cf965d3ad7633d3",
+        "TTL": 3600,
+        "maxTTL": 86400
+      }
+    }
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Notes on signing the AWS request
+
+<Row>
+  <Col>
+    
+    Use AWS SigV4 to sign an STS <code>GetCallerIdentity</code> request.
+    
+    <Properties>
+      <Property name="Endpoint" type="string">
+        Prefer the regional STS endpoint for your configured AWS region (e.g. <code>https://sts.eu-central-1.amazonaws.com</code>). If no region is found, you may use the legacy global endpoint.
+      </Property>
+      <Property name="Method" type="string">
+        <code>POST</code> (default) or <code>GET</code>. The same method must be used in signing and in <code>awsIam.httpRequestMethod</code>.
+      </Property>
+      <Property name="Body" type="string">
+        STS Query API payload: <code>Action=GetCallerIdentity&Version=2011-06-15</code>.
+      </Property>
+      <Property name="Headers" type="object">
+        Must include <code>Content-Type: application/x-www-form-urlencoded; charset=utf-8</code> and SigV4 headers (e.g. <code>X-Amz-Date</code>, <code>Authorization</code>).
+      </Property>
+    </Properties>
+
+    Base64-encode the prepared URL, headers (as JSON), and body before submitting to Phase.
+
+  </Col>
+</Row>
+
+
