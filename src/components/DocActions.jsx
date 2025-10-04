@@ -50,12 +50,12 @@ export function DocActions() {
 
   return (
     <div className="not-prose mx-auto mb-2 w-full max-w-[calc(theme(maxWidth.xl)-theme(spacing.8))]">
-      <div className="inline-flex flex-nowrap items-center gap-1">
+      <div className="inline-flex flex-wrap items-center gap-1">
         <CopyButton
           value={mdUrl}
           title="Copy .md link"
           
-        ><div className="flex items-center gap-1"><LinkIcon className="h-4 w-4 stroke-zinc-500" />Copy .md link </div></CopyButton>
+        ><div className="flex items-center gap-1"><LinkIcon className="h-4 w-4 stroke-zinc-500" /><span className="hidden sm:inline">Copy .md link</span></div></CopyButton>
 
         <CopyButton
           title="Copy for LLM"
@@ -65,7 +65,7 @@ export function DocActions() {
             let text = await res.text()
             await navigator.clipboard.writeText(text)
           }}
-        ><div className="flex items-center gap-1"><MarkdownIcon className="h-4 w-4 stroke-zinc-500" />Copy for LLM </div></CopyButton>
+        ><div className="flex items-center gap-1"><MarkdownIcon className="h-4 w-4 stroke-zinc-500" /><span className="hidden sm:inline">Copy for LLM</span></div></CopyButton>
         
         <Button
           variant="outline"
@@ -85,7 +85,7 @@ export function DocActions() {
         >
           <span className="flex items-center gap-1">
             <OpenAIIcon className="h-4 w-4 text-zinc-600 dark:text-zinc-400" />
-            Ask ChatGPT
+            <span className="hidden sm:inline">Ask ChatGPT</span>
           </span>
         </Button>
 

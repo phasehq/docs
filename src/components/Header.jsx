@@ -70,7 +70,7 @@ export const Header = forwardRef(function Header({ className }, ref) {
           </div>
         </Link>
       </div>
-      <div className="flex items-center gap-5">
+      <div className="flex items-center gap-2 sm:gap-5">
         <nav className="hidden md:block">
           <ul role="list" className="flex items-center gap-8">
             <TopLevelNavItem href="https://phase.dev" target="_blank">
@@ -85,12 +85,12 @@ export const Header = forwardRef(function Header({ className }, ref) {
           </ul>
         </nav>
         <div className="hidden md:block md:h-5 md:w-px md:bg-zinc-900/10 md:dark:bg-white/15" />
-        <div className="flex gap-4">
+        <div className="flex gap-2 sm:gap-4">
           <MobileSearch />
           <ModeToggle />
         </div>
-        <div className="hidden min-[416px]:contents">
-          <Button href="https://console.phase.dev">Sign in</Button>
+        <div className="hidden min-[480px]:contents">
+          <Button href="https://console.phase.dev" className="whitespace-nowrap">Sign in</Button>
         </div>
       </div>
     </motion.div>
