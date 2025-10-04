@@ -1,10 +1,17 @@
 import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
 
 <Tag variant="small">ACCESS CONTROL</Tag>
+
+export const description =
+  'This guide explains how to use External Identities to authenticate with Phase and manage access with the Access Control system.'
+
 
 # External Identities
 
 External Identities allow you to use third-party platforms and services to serve as identity providers for clients seeking programmatic access to Phase. Instead of manually provisioning access tokens for each client on each machine or an instance on your infrastructure, you can use External Identities to establish a trusted relationship with a principal that will be used to validate the identity of the client and grant access to Phase. This enables dynamic authentication and authorization for clients such as the CLI, SDKs, Kubernetes Operator, or your own applications. 
+
+<DocActions /> 
 
 Example use case: Imagine you have a fleet of EC2 instances in an autoscaling group (ASG) that runs an instance of your application. The Phase CLI is configured to inject secrets into your applications at runtime. Instead of manually provisioning access tokens for each client on each machine, you can use External Identities to establish a trusted relationship with an instance profile attached to the ASG.
 
@@ -65,7 +72,7 @@ For AWS IAM, you will need to provide the following information:
     The ARN(s) of the AWS IAM User(s) to bind to the Phase Service Account. Separate multiple ARNs with commas.
   </Property>
   <Property name="Signature expiry" type="number">
-    The duration (in seconds) for which the signed requests from the AWS IAM User will be valid. Default is 60 seconds. Lower the better.This is to protect against replay attacks.
+    The duration (in seconds) for which the signed requests from the AWS IAM User will be valid. Default is 60 seconds. Lower the better. This is to protect against replay attacks.
   </Property>
   <Property name="STS endpoint" type="string">
     Optionally, specify a custom AWS STS endpoint. If not provided, the default AWS STS endpoint will be used (`https://sts.amazonaws.com`).
