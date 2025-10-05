@@ -17,9 +17,31 @@ Example use case: Imagine you have a fleet of EC2 instances in an autoscaling gr
 
 The authentication flow will be as follows:
 
-1. The Phase CLI gets a signed `get-caller-identity` AWS Sigv4 request from AWS IAM and send it to Phase.
-2. Phase validates the signature with AWS IAM, sees that the requesting clients principal ARN (e.g. `arn:aws:iam::123456789012:instance-profile/PhaseTrustedPrincipal`) has a trusted relationship with the Phase Service Account and returns a short-lived Service Account Token to the CLI.
-3. The CLI uses this Service Account Token to fetch secrets and provision them into your application.
+<Diagram caption="External Identity authentication flow with AWS IAM">
+{`
+sequenceDiagram
+  participant Client as Client
+  participant Phase as Phase
+  participant AWS as AWS STS
+
+  Note over Client,AWS: 1. GetCallerIdentity()
+  Client->>AWS: Fetch GetCallerIdentity from STS
+  AWS-->>Client: Return AWS Sigv4 signed GetCallerIdentity
+
+  Note over Client,Phase: 2. Authenticate
+  Client->>Phase: POST Sigv4 signed GetCallerIdentity to /identities/external/v1/aws/iam/auth/
+
+  Note over Phase,AWS: 3. Validate signature
+  Phase->>AWS: Forward Sigv4 signed GetCallerIdentity
+  AWS-->>Phase: Return IAM user/role metadata
+
+  Note over Phase: 4. Check entity trust relationship - is client a trusted principal?
+  Phase->>Client: Return Access Token with a specified TTL
+
+  Note over Client,Phase: 5. Authenticate to API with Access Token
+  Client->>Phase: Make authenticated requests using the Access Token
+`}
+</Diagram>
 
 Benefits:
 - Automate the creation and provisioning of access tokens for every client on your infrastructure.
