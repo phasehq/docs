@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
-<url><loc>https://docs.phase.dev/access-control</loc><lastmod>2025-08-31T10:39:19.832Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://docs.phase.dev/sdks</loc><lastmod>2025-08-31T10:39:19.832Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://docs.phase.dev/public-api/external-identities</loc><lastmod>2025-10-05T08:54:46.172Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://docs.phase.dev/public-api/secrets</loc><lastmod>2025-10-05T08:54:46.173Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
 <url><loc>https://docs.phase.dev</loc></url>
+<url><loc>https://docs.phase.dev/access-control</loc></url>
 <url><loc>https://docs.phase.dev/access-control/authentication</loc></url>
 <url><loc>https://docs.phase.dev/access-control/authentication/oauth-sso</loc></url>
 <url><loc>https://docs.phase.dev/access-control/authentication/oidc-sso</loc></url>
 <url><loc>https://docs.phase.dev/access-control/authentication/tokens</loc></url>
+<url><loc>https://docs.phase.dev/access-control/external-identities</loc></url>
 <url><loc>https://docs.phase.dev/access-control/network</loc></url>
 <url><loc>https://docs.phase.dev/access-control/roles</loc></url>
 <url><loc>https://docs.phase.dev/access-control/service-accounts</loc></url>
@@ -16,6 +18,7 @@
 <url><loc>https://docs.phase.dev/cli/usage</loc></url>
 <url><loc>https://docs.phase.dev/console</loc></url>
 <url><loc>https://docs.phase.dev/console/apps</loc></url>
+<url><loc>https://docs.phase.dev/console/dynamic-secrets</loc></url>
 <url><loc>https://docs.phase.dev/console/environments</loc></url>
 <url><loc>https://docs.phase.dev/console/organisation</loc></url>
 <url><loc>https://docs.phase.dev/console/secrets</loc></url>
@@ -39,6 +42,7 @@
 <url><loc>https://docs.phase.dev/integrations/frameworks/vue-js</loc></url>
 <url><loc>https://docs.phase.dev/integrations/platforms/aws-codebuild</loc></url>
 <url><loc>https://docs.phase.dev/integrations/platforms/aws-elastic-container-service</loc></url>
+<url><loc>https://docs.phase.dev/integrations/platforms/aws-iam</loc></url>
 <url><loc>https://docs.phase.dev/integrations/platforms/aws-secrets-manager</loc></url>
 <url><loc>https://docs.phase.dev/integrations/platforms/azure-pipelines</loc></url>
 <url><loc>https://docs.phase.dev/integrations/platforms/bitbucket-pipelines</loc></url>
@@ -62,9 +66,10 @@
 <url><loc>https://docs.phase.dev/integrations/platforms/travis-ci</loc></url>
 <url><loc>https://docs.phase.dev/integrations/platforms/vercel</loc></url>
 <url><loc>https://docs.phase.dev/public-api</loc></url>
+<url><loc>https://docs.phase.dev/public-api/dynamic-secrets</loc></url>
 <url><loc>https://docs.phase.dev/public-api/errors</loc></url>
-<url><loc>https://docs.phase.dev/public-api/secrets</loc></url>
 <url><loc>https://docs.phase.dev/quickstart</loc></url>
+<url><loc>https://docs.phase.dev/sdks</loc></url>
 <url><loc>https://docs.phase.dev/sdks/go</loc></url>
 <url><loc>https://docs.phase.dev/sdks/js</loc></url>
 <url><loc>https://docs.phase.dev/sdks/node</loc></url>

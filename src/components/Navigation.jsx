@@ -245,6 +245,7 @@ export const navigation = [
       { title: 'Overview', href: '/public-api' },
       { title: 'Secrets', href: '/public-api/secrets' },
       { title: 'Dynamic Secrets', href: '/public-api/dynamic-secrets' },
+      { title: 'External Identities', href: '/public-api/external-identities' },
       { title: 'Errors', href: '/public-api/errors' },
     ],
   },
@@ -260,6 +261,10 @@ export const navigation = [
       },
       { title: 'Tokens', href: '/access-control/authentication/tokens' },
       { title: 'Service Accounts', href: '/access-control/service-accounts' },
+      {
+        title: 'External Identities',
+        href: '/access-control/external-identities',
+      },
       { title: 'Roles', href: '/access-control/roles' },
       { title: 'Network', href: '/access-control/network' },
     ],
