@@ -75,7 +75,7 @@ Authenticate to Phase using AWS IAM via a SigV4-signed STS GetCallerIdentity req
     --data '{
       "account": {
         "type": "service",
-        "id": "0d9ca4b4-8a89-4420-86e0-cccacd7a4c10"
+        "id": "00000000-0000-0000-0000-000000000000"
       },
       "awsIam": {
         "httpRequestMethod": "POST",
@@ -90,134 +90,186 @@ Authenticate to Phase using AWS IAM via a SigV4-signed STS GetCallerIdentity req
     ```
 
     ```js
-    const headers = new Headers();
-    headers.append('Content-Type', 'application/json');
+    import { SignatureV4 } from '@aws-sdk/signature-v4'
+    import { defaultProvider } from '@aws-sdk/credential-provider-node'
+    import { Sha256 } from '@aws-crypto/sha256-js'
+    import { HttpRequest } from '@aws-sdk/protocol-http'
 
-    const payload = {
-      account: { type: 'service', id: '0d9ca4b4-8a89-4420-86e0-cccacd7a4c10' },
-      awsIam: {
+    const HOST = 'https://api.phase.dev'
+    const SERVICE_ACCOUNT_ID = '00000000-0000-0000-0000-000000000000'
+
+    ;(async () => {
+      const region = process.env.AWS_REGION || process.env.AWS_DEFAULT_REGION || 'us-east-1'
+      const body = 'Action=GetCallerIdentity&Version=2011-06-15'
+
+      const req = new HttpRequest({
+        method: 'POST',
+        protocol: 'https:',
+        hostname: `sts.${region}.amazonaws.com`,
+        path: '/',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8' },
+        body,
+      })
+
+      const signer = new SignatureV4({ service: 'sts', region, credentials: defaultProvider(), sha256: Sha256 })
+      const signed = await signer.sign(req)
+
+      const awsIam = {
         httpRequestMethod: 'POST',
-        httpRequestUrl: '<base64>',
-        httpRequestHeaders: '<base64>',
-        httpRequestBody: '<base64>'
-      },
-      tokenRequest: { ttl: 3600 }
-    };
-
-    fetch('https://api.phase.dev/identities/external/v1/aws/iam/auth/', {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(payload)
-    })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        httpRequestUrl: Buffer.from(`https://sts.${region}.amazonaws.com/`).toString('base64'),
+        httpRequestHeaders: Buffer.from(JSON.stringify(signed.headers)).toString('base64'),
+        httpRequestBody: Buffer.from(body).toString('base64'),
       }
-      return response.json();
-    })
-    .then((data) => console.log(data));
+
+      const payload = { account: { type: 'service', id: SERVICE_ACCOUNT_ID }, awsIam }
+
+      const res = await fetch(`${HOST}/identities/external/v1/aws/iam/auth/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      console.log(await res.json())
+    })()
     ```
 
     ```python
+    import base64, json, os
     import requests
-    import json
+    from botocore.session import Session
+    from botocore.awsrequest import AWSRequest
+    from botocore.auth import SigV4Auth
 
-    url = 'https://api.phase.dev/identities/external/v1/aws/iam/auth/'
+    HOST = "https://api.phase.dev"
+    SERVICE_ACCOUNT_ID = "00000000-0000-0000-0000-000000000000"
+
+    s = Session()
+    region = os.getenv("AWS_REGION") or os.getenv("AWS_DEFAULT_REGION") or s.get_config_variable("region") or "us-east-1"
+    body = "Action=GetCallerIdentity&Version=2011-06-15"
+    req = AWSRequest(method="POST", url=f"https://sts.{region}.amazonaws.com/", data=body, headers={"Content-Type": "application/x-www-form-urlencoded; charset=utf-8"})
+    creds = s.get_credentials()
+    if not creds:
+      raise SystemExit("Missing AWS credentials")
+    SigV4Auth(creds, "sts", region).add_auth(req)
+    p = req.prepare()
     payload = {
-      "account": {
-        "type": "service",
-        "id": "0d9ca4b4-8a89-4420-86e0-cccacd7a4c10"
-      },
+      "account": {"type": "service", "id": SERVICE_ACCOUNT_ID},
       "awsIam": {
         "httpRequestMethod": "POST",
-        "httpRequestUrl": "<base64>",
-        "httpRequestHeaders": "<base64>",
-        "httpRequestBody": "<base64>"
-      },
-      "tokenRequest": {"ttl": 3600}
+        "httpRequestUrl": base64.b64encode(p.url.encode()).decode(),
+        "httpRequestHeaders": base64.b64encode(json.dumps(dict(p.headers)).encode()).decode(),
+        "httpRequestBody": base64.b64encode(body.encode()).decode()
+      }
     }
-    headers = { 'Content-Type': 'application/json' }
-
-    response = requests.post(url, json=payload, headers=headers)
-    response.raise_for_status()
-    print(response.json())
+    r = requests.post(f"{HOST}/identities/external/v1/aws/iam/auth/", json=payload, headers={"Content-Type": "application/json"}, timeout=30)
+    r.raise_for_status()
+    print(r.json())
     ```
 
     ```go
     package main
 
     import (
+      "bytes"
+      "encoding/base64"
+      "encoding/json"
       "fmt"
-      "strings"
+      "io"
       "net/http"
-      "io/ioutil"
+      "os"
+      "time"
+
+      "github.com/aws/aws-sdk-go/aws"
+      "github.com/aws/aws-sdk-go/aws/session"
+      v4 "github.com/aws/aws-sdk-go/aws/signer/v4"
     )
 
     func main() {
+      host := "https://api.phase.dev"
+      serviceAccount := "00000000-0000-0000-0000-000000000000"
 
-      url := "https://api.phase.dev/identities/external/v1/aws/iam/auth/"
-      method := "POST"
+      sess := session.Must(session.NewSession())
+      region := aws.StringValue(sess.Config.Region)
+      if region == "" {
+        region = os.Getenv("AWS_REGION")
+        if region == "" {
+          region = os.Getenv("AWS_DEFAULT_REGION")
+          if region == "" {
+            region = "us-east-1"
+          }
+        }
+      }
 
-      payload := strings.NewReader(`{
-        "account": {"type": "service", "id": "0d9ca4b4-8a89-4420-86e0-cccacd7a4c10"},
-        "awsIam": {
-          "httpRequestMethod": "POST",
-          "httpRequestUrl": "<base64>",
-          "httpRequestHeaders": "<base64>",
-          "httpRequestBody": "<base64>"
+      body := "Action=GetCallerIdentity&Version=2011-06-15"
+      stsURL := fmt.Sprintf("https://sts.%s.amazonaws.com/", region)
+
+      req, _ := http.NewRequest("POST", stsURL, bytes.NewReader([]byte(body)))
+      req.Header.Set("Content-Type", "application/x-www-form-urlencoded; charset=utf-8")
+
+      signer := v4.NewSigner(sess.Config.Credentials)
+      if _, err := signer.Sign(req, bytes.NewReader([]byte(body)), "sts", region, time.Now()); err != nil {
+        panic(err)
+      }
+
+      headersJSON, _ := json.Marshal(req.Header)
+      payload := map[string]any{
+        "account": map[string]string{"type": "service", "id": serviceAccount},
+        "awsIam": map[string]string{
+          "httpRequestMethod":  "POST",
+          "httpRequestUrl":     base64.StdEncoding.EncodeToString([]byte(stsURL)),
+          "httpRequestHeaders": base64.StdEncoding.EncodeToString(headersJSON),
+          "httpRequestBody":    base64.StdEncoding.EncodeToString([]byte(body)),
         },
-        "tokenRequest": {"ttl": 3600}
-      }`)
-
-      client := &http.Client{}
-      req, err := http.NewRequest(method, url, payload)
-      if err != nil {
-        fmt.Println(err)
-        return
       }
-      req.Header.Add("Content-Type", "application/json")
 
-      res, err := client.Do(req)
-      if err != nil {
-        fmt.Println(err)
-        return
-      }
+      b, _ := json.Marshal(payload)
+      res, err := http.Post(host+"/identities/external/v1/aws/iam/auth/", "application/json", bytes.NewReader(b))
+      if err != nil { panic(err) }
       defer res.Body.Close()
-
-      body, err := ioutil.ReadAll(res.Body)
-      if err != nil {
-        fmt.Println(err)
-        return
-      }
-      fmt.Println(string(body))
+      io.Copy(os.Stdout, res.Body)
     }
     ```
 
     ```ruby
-    require "uri"
-    require "json"
-    require "net/http"
+    require 'base64'
+    require 'json'
+    require 'net/http'
+    require 'uri'
+    require 'aws-sigv4'
 
-    url = URI("https://api.phase.dev/identities/external/v1/aws/iam/auth/")
+    HOST = 'https://api.phase.dev'
+    SERVICE_ACCOUNT_ID = '00000000-0000-0000-0000-000000000000'
 
-    https = Net::HTTP.new(url.host, url.port)
-    https.use_ssl = true
+    region = ENV['AWS_REGION'] || ENV['AWS_DEFAULT_REGION'] || 'us-east-1'
+    body = 'Action=GetCallerIdentity&Version=2011-06-15'
+    sts_url = "https://sts.#{region}.amazonaws.com/"
 
-    request = Net::HTTP::Post.new(url)
-    request["Content-Type"] = "application/json"
-    request.body = JSON.dump({
-      "account": {"type": "service", "id": "0d9ca4b4-8a89-4420-86e0-cccacd7a4c10"},
-      "awsIam": {
-        "httpRequestMethod": "POST",
-        "httpRequestUrl": "<base64>",
-        "httpRequestHeaders": "<base64>",
-        "httpRequestBody": "<base64>"
-      },
-      "tokenRequest": {"ttl": 3600}
-    })
+    signer = Aws::Sigv4::Signer.new(service: 'sts', region: region)
+    signed = signer.sign_request(
+      http_method: 'POST',
+      url: sts_url,
+      headers: { 'content-type' => 'application/x-www-form-urlencoded; charset=utf-8' },
+      body: body
+    )
 
-    response = https.request(request)
-    puts response.read_body
+    aws_iam = {
+      httpRequestMethod: 'POST',
+      httpRequestUrl: Base64.strict_encode64(sts_url),
+      httpRequestHeaders: Base64.strict_encode64(signed.headers.to_json),
+      httpRequestBody: Base64.strict_encode64(body)
+    }
+
+    payload = { account: { type: 'service', id: SERVICE_ACCOUNT_ID }, awsIam: aws_iam }
+
+    uri = URI("#{HOST}/identities/external/v1/aws/iam/auth/")
+    req = Net::HTTP::Post.new(uri)
+    req['Content-Type'] = 'application/json'
+    req.body = payload.to_json
+
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true
+    res = http.request(req)
+    puts res.body
     ```
 
     </CodeGroup>
