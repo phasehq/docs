@@ -69,10 +69,8 @@ Authenticate to Phase using AWS IAM via a SigV4-signed STS GetCallerIdentity req
 
     <CodeGroup title="Request" tag="POST" label="/identities/external/v1/aws/iam/auth/">
 
-    ```fish {{ title: 'cURL' }}
-    curl --location 'https://api.phase.dev/identities/external/v1/aws/iam/auth/' \
-    --header 'Content-Type: application/json' \
-    --data '{
+    ```json {{ title: 'JSON body' }}
+    {
       "account": {
         "type": "service",
         "id": "00000000-0000-0000-0000-000000000000"
@@ -86,7 +84,7 @@ Authenticate to Phase using AWS IAM via a SigV4-signed STS GetCallerIdentity req
       "tokenRequest": {
         "ttl": 3600
       }
-    }'
+    }
     ```
 
     ```js
