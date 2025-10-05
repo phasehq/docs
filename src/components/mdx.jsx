@@ -8,6 +8,7 @@ export const a = Link
 export { Button } from '@/components/Button'
 export { CodeGroup, Code as code, Pre as pre } from '@/components/Code'
 export { TabGroup, TabPanel } from '@/components/TabGroup'
+export { Diagram } from '@/components/Diagram'
 
 export const h2 = function H2(props) {
   return <Heading level={2} {...props} />
