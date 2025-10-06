@@ -2,8 +2,11 @@
 
 import { useEffect, useRef, useState } from 'react'
 import mermaid from 'mermaid'
+import resolveConfig from 'tailwindcss/resolveConfig'
+import tailwindConfig from 'tailwind.config'
 
-let mermaidInitialized = false
+const fullConfig = resolveConfig(tailwindConfig)
+const colors = fullConfig.theme.colors
 
 export function Diagram({ children, caption }) {
   const containerRef = useRef(null)
@@ -42,26 +45,26 @@ export function Diagram({ children, caption }) {
           theme: 'base',
           themeVariables: {
             background: 'transparent',
-            primaryColor: '#B3EFBD',
-            primaryTextColor: isDark ? '#e4e4e7' : '#18181b',
-            primaryBorderColor: '#A8DAFF',
-            lineColor: isDark ? '#71717a' : '#52525b',
-            secondaryColor: '#A8DAFF',
-            tertiaryColor: isDark ? '#27272a' : '#f4f4f5',
-            noteBkgColor: isDark ? '#27272a' : '#fafafa',
-            noteTextColor: isDark ? '#e4e4e7' : '#18181b',
-            noteBorderColor: isDark ? '#52525b' : '#d4d4d8',
-            actorTextColor: isDark ? '#18181b' : '#18181b',
-            actorLineColor: '#66D575',
-            signalColor: isDark ? '#e4e4e7' : '#18181b',
-            signalTextColor: isDark ? '#e4e4e7' : '#18181b',
-            labelBoxBkgColor: '#A8DAFF',
-            labelBoxBorderColor: '#A8DAFF',
-            labelTextColor: '#18181b',
-            loopTextColor: isDark ? '#e4e4e7' : '#18181b',
-            activationBorderColor: '#A8DAFF',
-            activationBkgColor: isDark ? '#3f3f46' : '#e4e4e7',
-            sequenceNumberColor: isDark ? '#18181b' : '#fafafa',
+            primaryColor: isDark ? colors.emerald[900] : colors.emerald[200],
+            primaryTextColor: isDark ? colors.zinc[200] : colors.zinc[900],
+            primaryBorderColor: colors.emerald[400],
+            lineColor: isDark ? colors.zinc[500] : colors.zinc[600],
+            secondaryColor: colors.sky[300],
+            tertiaryColor: isDark ? colors.zinc[800] : colors.zinc[100],
+            noteBkgColor: isDark ? colors.zinc[800] : colors.zinc[50],
+            noteTextColor: isDark ? colors.zinc[200] : colors.zinc[900],
+            noteBorderColor: isDark ? colors.zinc[600] : colors.zinc[300],
+            actorTextColor: isDark ? colors.zinc[100] : colors.zinc[900],
+            actorLineColor: colors.emerald[400],
+            signalColor: isDark ? colors.zinc[200] : colors.zinc[900],
+            signalTextColor: isDark ? colors.zinc[200] : colors.zinc[900],
+            labelBoxBkgColor: colors.sky[300],
+            labelBoxBorderColor: colors.sky[300],
+            labelTextColor: colors.zinc[900],
+            loopTextColor: isDark ? colors.zinc[200] : colors.zinc[900],
+            activationBorderColor: colors.sky[300],
+            activationBkgColor: isDark ? colors.zinc[700] : colors.zinc[200],
+            sequenceNumberColor: isDark ? colors.zinc[900] : colors.zinc[50],
           },
           sequence: {
             actorFontSize: 14,
@@ -82,8 +85,6 @@ export function Diagram({ children, caption }) {
           fontFamily: 'ui-sans-serif, system-ui, sans-serif',
         })
 
-        mermaidInitialized = true
-
         // Generate unique ID
         const id = `mermaid-${Math.random().toString(36).substr(2, 9)}`
 
@@ -92,10 +93,10 @@ export function Diagram({ children, caption }) {
 
         // Render diagram
         const { svg } = await mermaid.render(id, children.trim())
-        
+
         if (containerRef.current) {
           containerRef.current.innerHTML = svg
-          
+
           // Make SVG responsive
           const svgElement = containerRef.current.querySelector('svg')
           if (svgElement) {
