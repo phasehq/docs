@@ -14,7 +14,6 @@
   "browserslist": "defaults, not ie <= 11",
   "dependencies": {
     "@algolia/autocomplete-core": "^1.7.3",
-    "@algolia/client-search": "^4.20.0",
     "@headlessui/react": "^1.7.11",
     "@mdx-js/loader": "^2.1.5",
     "@mdx-js/react": "^2.1.5",
@@ -22,7 +21,6 @@
     "@sindresorhus/slugify": "^2.1.1",
     "@tailwindcss/typography": "^0.5.8",
     "acorn": "^8.8.1",
-    "algoliasearch": "^4.20.0",
     "autoprefixer": "^10.4.7",
     "clsx": "^1.2.0",
     "flexsearch": "^0.7.43",
