@@ -1,4 +1,5 @@
 import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
 
 export const description = 'Authenticating via various OIDC Single sign-on providers with Phase.'
 
@@ -7,6 +8,8 @@ export const description = 'Authenticating via various OIDC Single sign-on provi
 # OpenID Connect (OIDC) Single Sign-On (SSO)
 
 OpenID Connect (OIDC) is an identity layer built on top of OAuth 2.0 that allows applications to verify user identities. It enables secure authentication through trusted identity providers while eliminating the need for separate credentials. Phase supports OIDC-based SSO integration with major providers like Google, allowing seamless and secure access to your applications. Currently, OIDC authentication can be set up only for a Self-hosted Phase deployment.
+
+<DocActions /> 
 
 <Note>
  OIDC SSO as an authentication method is only available for organizations with an `Enterprise` tier subscription. See [Pricing](https://phase.dev/pricing).

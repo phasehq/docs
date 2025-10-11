@@ -1,10 +1,13 @@
 import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
 
 <Tag variant="small">CONSOLE</Tag>
 
 # Environments
 
 Environments in Phase allow you to manage your application secrets through various stages of your development process. This guide explains how to create, update, and manage environments in your Phase application.
+
+<DocActions /> 
 
 When you create a new application in Phase, it is automatically initialized with three default environments:
 

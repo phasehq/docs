@@ -1,4 +1,5 @@
 import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
 
 export const description =
   'Run Phase on your Raspberry Pi with docker-compose.'
@@ -9,6 +10,8 @@ export const description =
 # Raspberry Pi
 
 Learn how to set up the Phase Console using the Docker Compose template on your Raspberry Pi. {{ className: 'lead' }}
+
+<DocActions /> 
 
 Keep in mind the steps listed below serve as a rough outline on how to self-hosting Phase Services on your own infrastructure.
 

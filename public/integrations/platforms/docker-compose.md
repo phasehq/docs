@@ -1,4 +1,5 @@
 import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
 
 export const description = 'Integrate Phase with Docker Compose'
 
@@ -7,6 +8,8 @@ export const description = 'Integrate Phase with Docker Compose'
 # Docker Compose
 
 You can use Phase Run to inject secrets to your application process during runtime. There's no need for you to change any code or add a dependency.
+
+<DocActions />
 
 ## Prerequisites
 

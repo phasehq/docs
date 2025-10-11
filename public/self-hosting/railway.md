@@ -1,4 +1,5 @@
 import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
 
 export const description = 'Deploy the Phase Console Railway template.'
 
@@ -6,7 +7,9 @@ export const description = 'Deploy the Phase Console Railway template.'
 
 # Railway
 
-Deploy the Phase Console Railway template.
+Deploy the Phase Console Railway template. {{ className: 'lead' }}
+
+<DocActions /> 
 
 [![Railway deployment template](/assets/images/self-hosting/railway/railway-template.png)](https://railway.app/template/FgdM-Z?referralCode=rG9hj-)
 

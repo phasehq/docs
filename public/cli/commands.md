@@ -1,5 +1,6 @@
 import { Tag } from '@/components/Tag'
 import CliDemo from '@/components/CliDemo'
+import { DocActions } from '@/components/DocActions'
 
 export const description =
   'Manage your secrets and environment variables with the Phase CLI'
@@ -7,6 +8,8 @@ export const description =
 <Tag variant="small">CLI</Tag>
 
 # Commands and usage
+
+<DocActions /> 
 
 ```
 λ phase --help
@@ -29,26 +32,33 @@ options:
                show program's version number and exit
 Commands:
 
-    auth             💻 Authenticate with Phase
-    init             🔗 Link your project with your Phase app
-    run              🚀 Run and inject secrets to your app
-    shell            🐚 Launch a sub-shell with secrets as environment variables (BETA)
-    secrets          🗝️ Manage your secrets
-    secrets list     📇 List all the secrets
-    secrets get      🔍 Get a specific secret by key
-    secrets create   💳 Create a new secret
-    secrets update   📝 Update an existing secret
-    secrets delete   🗑️ Delete a secret
-    secrets import   📩 Import secrets from a .env file
-    secrets export   🥡 Export secrets in a dotenv format
-    users            👥 Manage users and accounts
-    users whoami     🙋 See details of the current user
-    users switch     🪄 Switch between Phase users, orgs and hosts
-    users logout     🏃 Logout from phase-cli
-    users keyring    🔐 Display information about the Phase keyring
-    docs             📖 Open the Phase CLI Docs in your browser
-    console          🖥️ Open the Phase Console in your browser
-    update           🆙 Update the Phase CLI to the latest version
+    auth                             💻 Authenticate with Phase
+    init                             🔗 Link your project with your Phase app
+    run                              🚀 Run and inject secrets to your app
+    shell                            🐚 Launch a sub-shell with secrets as environment variables (BETA)
+    secrets                          🗝️ Manage your secrets
+    secrets list                     📇 List all the secrets
+    secrets get                      🔍 Get a specific secret by key
+    secrets create                   💳 Create a new secret
+    secrets update                   📝 Update an existing secret
+    secrets delete                   🗑️ Delete a secret
+    secrets import                   📩 Import secrets from a .env file
+    secrets export                   🥡 Export secrets in a dotenv format
+    dynamic-secrets                  ⚡️ Manage dynamic secrets
+    dynamic-secrets list             📇 List dynamic secrets & metadata
+    dynamic-secrets lease            📜 Manage dynamic secret leases
+    dynamic-secrets lease get        🔍 Get leases for a dynamic secret
+    dynamic-secrets lease renew      🔁 Renew a lease
+    dynamic-secrets lease revoke     🗑️ Revoke a lease
+    dynamic-secrets lease generate   ✨ Generate a lease (create fresh dynamic secrets)
+    users                            👥 Manage users and accounts
+    users whoami                     🙋 See details of the current user
+    users switch                     🪄 Switch between Phase users, orgs and hosts
+    users logout                     🏃 Logout from phase-cli
+    users keyring                    🔐 Display information about the Phase keyring
+    docs                             📖 Open the Phase CLI Docs in your browser
+    console                          🖥️ Open the Phase Console in your browser
+    update                           🆙 Update the Phase CLI to the latest version
 ```
 
 ## Available commands {{ className: 'lead' }}
@@ -73,37 +83,20 @@ To view all available commands and their descriptions, run:
 
 ## 💻 `auth`
 
-Authenticate with Phase using the CLI on your own machine. The `phase auth` command lets you log in to either Phase Cloud or a Self-hosted instance of Phase. You have two authentication methods:
+Authenticate with Phase using the CLI on your own machine. The `phase auth` command lets you log in to either Phase Cloud or a Self-hosted instance of Phase.
+
+<Note>
+Phase CLI will automatically look for `PHASE_HOST` and or `PHASE_SERVICE_TOKEN` environment variables to authenticate with the Phase Service. If any are present, this will override any authentication medum previously chosen.
+For more details, see [Environment Variables](commands#environment-variables).
+</Note>
+
+
+### Auth Methods:
 
 1. **Webauth (Default)**: This automated method opens the Phase Console in your default browser for authentication. You'll simply enter your `sudo` password to authenticate the CLI seamlessly. For Self-Hosted instances, you'll be prompted to enter the host URL.
 
 Note that during this process, an ephemeral X25519 keypair is generated and a crypto sealed box is used for enhanced security and no tokens or private keys are exchanged in plain text.
 
-2. **Token**: A manual method where you create a Personal Access Token in the Phase Console and supply it to the CLI. For Self-Hosted instances, you'll need to provide the host URL along with your email and Phase Personal Access Token.
-
-<Note>
-  If you're running the CLI in a headless environment (e.g., CI/CD, Docker
-  container, bash script), pass the `PHASE_HOST` and `PHASE_SERVICE_TOKEN`
-  environment variables. For more details, see [Environment
-  Variables](commands#environment-variables).
-</Note>
-
-```bash
-> phase auth
-? Choose your Phase instance type: (Use arrow keys)
- » ☁️ Phase Cloud
-   🛠️ Self Hosted
-```
-
-- `mode`: Choose the mode of authentication (`token`, `webauth`). Default: `webauth`
-
-For `token` mode, provide the following:
-
-- Host URL - _Only for Self-hosted instances_
-- Email
-- Phase Personal Access Token
-
-Obtain a Personal Access Token (PAT) from the [Phase Console](https://console.phase.dev) by going to Access Control -> Authentication -> Personal Access Tokens -> + `Create Token`.
 
 Example:
 
@@ -115,21 +108,60 @@ Please authenticate via the Phase Console: https://console.phase.dev/webauth/OTM
 
 This opens the Phase Console in a new tab. Enter your `sudo` password when prompted. The CLI securely receives your credentials via encrypted POST requests to finalize authentication. If you are already authenticated, it will display your email address and provide instructions for switching accounts.
 
-Once complete, you should see a success screen. Return to your terminal to find:
 
-```bash
-» phase auth
-? Choose your Phase instance type: ☁️ Phase Cloud
-Please authenticate via the Phase Console: https://console.phase.dev/webauth/OTM3MC00ZWViYmI1MGVlMTU3ZTliOWZkZT...
+2. **Token**: This allows you to authenticate to Phase directly uisng a Personal Access Token (PAT) or a Service Account Token that you may have manually created in the Phase Console.
 
-✅ Authentication successful. Credentials saved in the Phase keyring.
-🎉 Welcome to Phase CLI!
+For `token` mode, provide the following:
 
-─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-🙋 Need help?: https://slack.phase.dev
-💻 Bug reports / feature requests: https://github.com/phasehq/cli
+- Host URL - _Only for Self-hosted instances_
+- Email
+- Personal Access Token (PAT) or a Service Account Token
+
+Obtain a Personal Access Token (PAT) from the [Phase Console](https://console.phase.dev) by going to Access Control -> Authentication -> Personal Access Tokens -> + `Create Token`.
+
+
+3. **AWS IAM**: Authenticate using your current AWS identity from the standard AWS credential chain (env vars, shared config/credentials, SSO, role assumption, instance profile, etc). Optionally bind the external identity to a Phase Service Account and set a TTL for the issued token. You'll need to have configured an external identity to a service account in the Phase Console first. 
+
+See [External Identities](/access-control/external-identities) for more details.
+
+Usage:
+
+```fish
+> phase auth --mode aws-iam [--service-account-id SERVICE_ACCOUNT_ID] [--ttl SECONDS] [--no-store]
 ```
 
+Options:
+
+- `--service-account-id` (Required): Service Account ID to map this external AWS identity to a Phase Service Account.
+- `--ttl` (Optional): Token TTL in seconds for tokens created using external identities. Defaults to the configured Default TTL of the external identity.
+- `--no-store` (Optional): Print the authentication token to STDOUT without storing credentials in the keyring.
+
+
+Examples:
+
+```fish
+# Log in using your current AWS identity and persist credentials
+> phase auth --mode aws-iam --service-account-id 0f1a2b3c-4d5e-6789-abcd-ef0123456789
+```
+
+```fish
+phase auth --mode aws-iam --service-account=2115a1fc-0a78-4a7b-ad8c-6fa6cc15f489 --ttl 60 --no-store
+{
+    "authentication": {
+        "tokenType": "ServiceAccount",
+        "token": "pss_service:v2:728a65904a8b66222e6488ee73d8b797391e8e54f0ed42af03a43b96a623b7a2:a7579d80027dddebb934f532ef6977a50d82dfbaa87f1b021cfef72086884605:d2f05a4bf13cea53a41d06fa2aad265ec9068aefa4609446b4c29743e6436e07:b17346b16aef0a2c25e05814a5a0f54555100965f1d6fb41e023989eab99c791",
+        "bearerToken": "ServiceAccount 728a65904a8b66222e6488ee73d8b797391e8e54f0ed42af03a43b96a623b7a2",
+        "TTL": 60,
+        "maxTTL": 86400
+    }
+}
+```
+
+- `mode`: Choose the mode of authentication (`token`, `webauth`, `aws-iam`). Default: `webauth`
+- `service-account-id` (Required for external identities): Bind external identity to a Phase Service Account.
+- `ttl` (Optional): Only applicable for when using external identities for authentication (e.g., `aws-iam` mode). TTL in seconds for the issued token.
+- `no-store` (Optional): Only applicable for when using external identities for authentication (e.g., `aws-iam` mode). Print the authentication token response to STDOUT without storing credentials.
+ 
 ---
 
 ## 🔗 `init`
@@ -218,6 +250,8 @@ Usage:
 - `--app`: (Optional) Name of your Phase application. Use this if you don't have a `.phase.json` file in your project directory or want to override it.
 - `--app-id`: (Optional) ID of your Phase application. Takes precedence over `--app` if both are provided.
 - `--tags`: (Optional) Comma-separated list of tags to filter secrets.
+- `--generate-leases`: (Optional) Whether to generate leases for dynamic secrets (`true`/`false`). Default: `true`.
+- `--lease-ttl`: (Optional) TTL in seconds to use when generating leases.
 
 The `run` command executes your specified shell command, setting environment variables to the secrets fetched from Phase. It resolves cross-environment and local references in secrets.
 
@@ -261,6 +295,7 @@ Chaining multiple commands:
 - When specifying tags with `--tags`, only secrets matching these tags will be injected into the environment.
 - Cross-environment and local references in secrets are automatically resolved and injected. Warnings are issued if any references cannot be resolved.
 - Errors during the command execution or secret fetching process will result in an appropriate error message and termination of the process.
+- When dynamic secrets are configured, the CLI will automatically generate leases and inject the freshly created dynamic secrets along with static secrets. Control this behavior with `--generate-leases` and `--lease-ttl`.
 
 ---
 
@@ -284,6 +319,8 @@ Usage:
 - `--app-id`: (Optional) ID of your Phase application. Takes precedence over `--app` if both are provided.
 - `--shell`: (Optional) Specify the shell to launch. Supported shells: `bash`, `sh`, `fish`, `zsh`. Default is your current shell.
 - `--tags`: (Optional) Comma-separated list of tags to filter secrets.
+- `--generate-leases`: (Optional) Whether to generate leases for dynamic secrets (`true`/`false`). Default: `true`.
+- `--lease-ttl`: (Optional) TTL in seconds to use when generating leases.
 
 The `shell` command launches a new shell session with your Phase secrets loaded as environment variables. This is useful for local development workflows where you need to work with multiple commands, scripts, and tools, and running `phase run` for each command may not be practical.
 
@@ -310,6 +347,7 @@ postgresql://postgres:dbc76c4d...@localhost:5432/mydb
 - Secrets are only available within the shell session and are automatically cleared when you exit.
 - Inside the shell, `PHASE_ENV` is set to the full environment name from the fetched secrets (e.g., "Development", "Production").
 - Inside the shell, `PHASE_APP` is set to the full application name from the fetched secrets. (e.g., "example-app")
+- When dynamic secrets are configured, the CLI can automatically generate leases and provision the freshly created dynamic secrets along with static secrets. Control this behavior with `--generate-leases` and `--lease-ttl`.
 
 ---
 
@@ -329,7 +367,7 @@ Usage:
 > phase secrets list [--show] [--env ENVIRONMENT] [--app APP_NAME] [--tags TAGS]
 ```
 
-- `--show`: Display secrets uncensored.
+- `--show`: Display secrets uncensored. If you have dynamic secrets configured, the CLI will automatically generate leases and display the values of the freshly created dynamic secrets along with static secrets in the table.
 - `--env`: (Optional) Specify the environment. Default is `development`
 - `--path`: (Optional) The path in which you want to list secrets. Default is '/'. Pass an empty string `""` to list secrets from all paths.
 - `--app`: (Optional) Name of your Phase application. Use this to override the `.phase.json` file or when it's not present in your project directory.
@@ -343,6 +381,7 @@ Usage:
 - `🏷️`: Indicates a tag associated with a secret.
 - `💬`: Indicates a comment associated with a secret.
 - `🔏`: Indicates a personal secret, visible only to the user who set it.
+- `⚡️`: Indicates a dynamic secret.
 
 ### 🔍 `secrets get`
 
@@ -360,19 +399,42 @@ Usage:
 - `--app`: (Optional) Name of your Phase application. Use this option to override the `.phase.json` file in your project directory or when it's not present.
 - `--app-id`: (Optional) ID of your Phase application. Takes precedence over `--app` if both are provided.
 - `--tags`: (Optional) Comma-separated list of tags to filter secrets.
+- `--generate-leases`: (Optional) Whether to generate leases for dynamic secrets (`true`/`false`). Default: `true`.
+- `--lease-ttl`: (Optional) TTL in seconds to use when generating leases.
 
 Example:
 
 ```fish
 > phase secrets get DJANGO_DEBUG
+
 {
-    "key": "DJANGO_DEBUG",
+    "key": "DEBUG",
     "value": "True",
-    "overridden": true,
+    "overridden": null,
     "tags": [
         "local-development"
     ],
-    "comment": "This is only for local development. NOT to be used in production."
+    "comment": "This is only for local development. NOT to be used in production.",
+    "path": "/",
+    "application": "example-app",
+    "environment": "Development"
+}
+```
+
+Dynamic secret example:
+```fish
+> phase secrets get AWS_IAM_USERNAME
+{
+    "key": "AWS_IAM_USERNAME",
+    "value": "wwm6hwzpbpnvxs",
+    "overridden": false,
+    "tags": [],
+    "comment": null,
+    "path": "/",
+    "application": "example-app",
+    "environment": "Development",
+    "is_dynamic": true,
+    "dynamic_group": "AWS IAM credentials (aws)"
 }
 ```
 
@@ -380,6 +442,7 @@ Example:
 
 - The `get` command provides a JSON-formatted output including key details such as the secret value, whether it's overridden, tags associated with it, and any comments.
 - Using the `--tags` option allows you to filter the secret based on specific tags.
+- If you have dynamic secrets configured and try to fetch one by key, the CLI will automatically generate a lease and return the value of the freshly created dynamic secret.
 
 ### 💳 `secrets create`
 
@@ -550,6 +613,8 @@ Usage:
 - `--app-id`: (Optional) ID of your Phase application. Takes precedence over `--app` if both are provided.
 - `--tags`: (Optional) Comma-separated list of tags to filter the secrets. Supports partial matching and treats underscores as spaces.
 - `--format`: (Optional) Specify the export format. Supported formats are `dotenv`, `kv`, `json`, `csv`, `yaml`, `xml`, `toml`, `hcl`, `ini`, `java_properties`. Default format is `dotenv`.
+- `--generate-leases`: (Optional) Whether to generate leases for dynamic secrets (`true`/`false`). Default: `true`.
+- `--lease-ttl`: (Optional) TTL in seconds to use when generating leases.
 
 Examples:
 
@@ -604,6 +669,293 @@ PROD_AWS_SECRET_ACCESS_KEY=""
   - `java_properties`: Key-value pair format commonly used in Java applications
 - Use the `--tags` option to filter secrets by tags, which supports partial matching and considers underscores as spaces.
 - If an `.phase.json` file exists in your project directory, it will determine the default application. The `--app` option can be used to override this behavior.
+- If you have dynamic secrets configured, the CLI will automatically generate leases and export the values of the freshly created dynamic secrets along with static secrets.
+
+---
+
+## ⚡️ `dynamic-secrets`
+
+Manage dynamic secrets and their short-lived credentials (leases).
+
+### 📇 `dynamic-secrets list`
+
+List dynamic secret definitions (metadata) available to your app and environment.
+
+Usage:
+
+```fish
+> phase dynamic-secrets list [--env ENVIRONMENT] [--app APP_NAME] [--app-id APP_ID] [--path PATH]
+```
+
+- `--env`: (Optional) Specify the environment. Default is `development`.
+- `--app`: (Optional) Name of your Phase application.
+- `--app-id`: (Optional) ID of your Phase application. Takes precedence over `--app`.
+- `--path`: (Optional) Path to filter dynamic secrets. Default is `/`.
+
+Examples:
+
+```fish
+> phase dynamic-secrets list
+[
+  {
+    "id": "3d07788d-a32a-4d54-8d7d-cc11efdfe424",
+    "name": "AWS IAM credentials - docs example",
+    "type": "dynamic",
+    "description": "",
+    "environment": "febb85cd-561b-4d96-b20a-2cfd799586c1",
+    "folder": null,
+    "path": "/",
+    "defaultTtl": "01:00:00",
+    "maxTtl": "1 00:00:00",
+    "provider": "aws",
+    "keyMap": [
+      {
+        "id": "username",
+        "masked": false,
+        "keyName": "AWS_IAM_USERNAME",
+        "keyDigest": "bff90b6333a7af45e6c78f1c880fa626b3f93545ab5f21489df825bb38fed672"
+      },
+      {
+        "id": "access_key_id",
+        "masked": false,
+        "keyName": "AWS_ACCESS_KEY_ID",
+        "keyDigest": "a2c461ab14cc191f084bd7dda3b566dee65c6a287cf33b29b07f42bf35107c19"
+      },
+      {
+        "id": "secret_access_key",
+        "masked": true,
+        "keyName": "AWS_SECRET_ACCESS_KEY",
+        "keyDigest": "3813f891ac1901d258b20b7aa2b3108949971bcbdce380bf537c9da195b7c166"
+      }
+    ],
+    "createdAt": "2025-09-26T09:48:34.012281Z",
+    "updatedAt": "2025-09-26T09:48:34.012301Z",
+    "deletedAt": null,
+    "lease": null
+  },
+]
+```
+
+### 📜 `dynamic-secrets lease`
+
+Manage leases (ephemeral credentials) for dynamic secrets.
+
+#### 🔍 `dynamic-secrets lease get`
+
+Get active leases for a dynamic secret.
+
+Usage:
+
+```fish
+> phase dynamic-secrets lease get SECRET_ID [--env ENVIRONMENT] [--app APP_NAME] [--app-id APP_ID] [--path PATH]
+```
+
+- `SECRET_ID`: The dynamic secret ID.
+- `--env`, `--app`, `--app-id`: Context flags as above.
+- `--path`: Present for parity; not required for lease operations.
+
+Example:
+
+```fish
+> phase dynamic-secrets lease get 3d07788d-a32a-4d54-8d7d-cc11efdfe424
+[
+    {
+        "id": "dc3e86c5-acb8-42ca-8dfc-cb2c28fc0498",
+        "name": "AWS IAM credentials",
+        "description": "",
+        "secret": "3d07788d-a32a-4d54-8d7d-cc11efdfe424",
+        "ttl": "01:00:00",
+        "status": "expired",
+        "owner": {
+            "type": "organisation_member",
+            "data": {
+                "id": "f1a8ede5-c96b-4514-b4f2-2b88bcce0b2e",
+                "username": "nimish-ks",
+                "fullName": "Nimish",
+                "email": "nimishk@phase.dev",
+                "role": {
+                    "id": "4bc0d6b1-8d3d-4dad-a2b2-cece14bd9ee4",
+                    "name": "Owner"
+                }
+            }
+        },
+        "credentials": [],
+        "createdAt": "2025-09-29T12:31:01.405885Z",
+        "renewedAt": null,
+        "expiresAt": "2025-09-29T13:31:01.405477Z",
+        "revokedAt": "2025-09-29T13:31:28.963104Z",
+        "deletedAt": null
+    },
+    {
+        "id": "09624959-5907-40b8-8ae8-a0ab352b59fc",
+        "name": "AWS IAM credentials",
+        "description": "",
+        "secret": "3d07788d-a32a-4d54-8d7d-cc11efdfe424",
+        "ttl": "01:00:00",
+        "status": "expired",
+        "owner": {
+            "type": "organisation_member",
+            "data": {
+                "id": "f1a8ede5-c96b-4514-b4f2-2b88bcce0b2e",
+                "username": "nimish-ks",
+                "fullName": "Nimish",
+                "email": "nimishk@phase.dev",
+                "role": {
+                    "id": "4bc0d6b1-8d3d-4dad-a2b2-cece14bd9ee4",
+                    "name": "Owner"
+                }
+            }
+        },
+        "credentials": [],
+        "createdAt": "2025-09-29T11:27:56.206673Z",
+        "renewedAt": null,
+        "expiresAt": "2025-09-29T12:27:56.206276Z",
+        "revokedAt": "2025-09-29T12:28:28.911349Z",
+        "deletedAt": null
+    }
+]
+```
+
+#### 🔁 `dynamic-secrets lease renew`
+
+Renew an existing lease by a specified TTL (in seconds).
+
+Usage:
+
+```fish
+> phase dynamic-secrets lease renew LEASE_ID TTL [--env ENVIRONMENT] [--app APP_NAME] [--app-id APP_ID]
+```
+
+- `LEASE_ID`: Lease identifier to renew.
+- `TTL`: Renewal duration in seconds.
+
+Example:
+
+```fish
+> phase dynamic-secrets lease renew ce6ebf1a-c008-4379-9ed6-351dd763f18b 3600
+{
+  "message": "Lease renewed successfully. Updated expiry: 2025-09-29 14:45:50.912286+00:00"
+}
+```
+
+#### 🗑️ `dynamic-secrets lease revoke`
+
+Revoke an existing lease, immediately invalidating the credentials.
+
+Usage:
+
+```fish
+> phase dynamic-secrets lease revoke LEASE_ID [--env ENVIRONMENT] [--app APP_NAME] [--app-id APP_ID]
+```
+
+Example:
+
+```fish
+> phase dynamic-secrets lease revoke ce6ebf1a-c008-4379-9ed6-351dd763f18b
+{
+  "message": "Lease revoked successfully"
+}
+```
+
+#### ✨ `dynamic-secrets lease generate`
+
+Generate a new lease (create fresh ephemeral credentials) for a dynamic secret.
+
+Usage:
+
+```fish
+> phase dynamic-secrets lease generate SECRET_ID [--lease-ttl SECONDS] [--env ENVIRONMENT] [--app APP_NAME] [--app-id APP_ID]
+```
+
+- `SECRET_ID`: The dynamic secret ID.
+- `--lease-ttl`: (Optional) TTL in seconds for the generated lease. If omitted, the default TTL is used.
+
+Example:
+
+```fish
+> phase dynamic-secrets lease generate 3d07788d-a32a-4d54-8d7d-cc11efdfe424
+[
+  {
+    "id": "3d07788d-a32a-4d54-8d7d-cc11efdfe424",
+    "name": "AWS IAM credentials - docs example",
+    "type": "dynamic",
+    "description": "",
+    "environment": "febb85cd-561b-4d96-b20a-2cfd799586c1",
+    "folder": null,
+    "path": "/",
+    "defaultTtl": "01:00:00",
+    "maxTtl": "1 00:00:00",
+    "provider": "aws",
+    "keyMap": [
+      {
+        "id": "username",
+        "masked": false,
+        "keyName": "AWS_IAM_USERNAME",
+        "keyDigest": "bff90b6333a7af45e6c78f1c880fa626b3f93545ab5f21489df825bb38fed672"
+      },
+      {
+        "id": "access_key_id",
+        "masked": false,
+        "keyName": "AWS_ACCESS_KEY_ID",
+        "keyDigest": "a2c461ab14cc191f084bd7dda3b566dee65c6a287cf33b29b07f42bf35107c19"
+      },
+      {
+        "id": "secret_access_key",
+        "masked": true,
+        "keyName": "AWS_SECRET_ACCESS_KEY",
+        "keyDigest": "3813f891ac1901d258b20b7aa2b3108949971bcbdce380bf537c9da195b7c166"
+      }
+    ],
+    "createdAt": "2025-09-26T09:48:34.012281Z",
+    "updatedAt": "2025-09-26T09:48:34.012301Z",
+    "deletedAt": null,
+    "lease": {
+      "id": "d43fa19b-9060-4acf-b6d9-36c1e832c1bb",
+      "name": "AWS IAM credentials",
+      "description": "",
+      "secret": "3d07788d-a32a-4d54-8d7d-cc11efdfe424",
+      "ttl": "01:00:00",
+      "status": "active",
+      "owner": {
+        "type": "organisation_member",
+        "data": {
+          "id": "f1a8ede5-c96b-4514-b4f2-2b88bcce0b2e",
+          "username": "nimish-ks",
+          "fullName": "Nimish",
+          "email": "nimish@phase.dev",
+          "role": {
+            "id": "4bc0d6b1-8d3d-4dad-a2b2-cece14bd9ee4",
+            "name": "Owner"
+          }
+        }
+      },
+      "credentials": [
+        {
+          "key": "AWS_IAM_USERNAME",
+          "value": "ybm0vi9yk"
+        },
+        {
+          "key": "AWS_ACCESS_KEY_ID",
+          "value": "AKIAVWFM2HYO*********"
+        },
+        {
+          "key": "AWS_SECRET_ACCESS_KEY",
+          "value": "ozznB6pSagoTalgG************"
+        }
+      ],
+      "createdAt": "2025-09-29T13:47:24.199689Z",
+      "renewedAt": null,
+      "expiresAt": "2025-09-29T14:47:24.199283Z",
+      "revokedAt": null,
+      "deletedAt": null
+    }
+  }
+]
+```
+
+Notes:
+- Leases are time-bound credentials. When they expire (or are revoked), the credentials stop working.
+- Commands like `phase run`, `phase shell`, `phase secrets get`, and `phase secrets export` can automatically generate leases when injecting or exporting dynamic secrets. Control this with `--generate-leases` and `--lease-ttl`. This will allow you to make use of dynamic secrets without having to make any changes to your application code.
 
 ---
 
@@ -711,7 +1063,7 @@ Usage:
 > phase console
 ```
 
-This command is a shortcut to quickly access the Phase Console in your default web browser.
+This command is a shortcut to quickly access the Phase Console in your default web browser. If you have a `.phase.json` config in the current working directory, it will automatically open the Console for the app and environment that the config was initialized with.
 
 ---
 
