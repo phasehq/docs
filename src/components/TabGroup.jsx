@@ -119,8 +119,8 @@ function useTabGroupProps(availableTabSlugs, groupSlug) {
   const { preferredTabs, setPreferredTab } = usePreferredTabStore()
   const [selectedIndex, setSelectedIndex] = useState(0)
 
-  // Get tab from URL query string
-  const urlTab = router.query.tab
+  // Get tab from URL query string using group-specific query param
+  const urlTab = router.query[groupSlug]
 
   // Determine the active tab based on URL query, preferred tab, or default
   let activeTab = null
@@ -153,8 +153,11 @@ function useTabGroupProps(availableTabSlugs, groupSlug) {
         const newTabSlug = availableTabSlugs[newSelectedIndex]
         setPreferredTab(groupSlug, newTabSlug)
 
-        const newQuery = { ...router.query, tab: newTabSlug }
-        const newUrl = `${router.pathname}?tab=${newTabSlug}${window.location.hash}`
+        const newQuery = { ...router.query, [groupSlug]: newTabSlug }
+        const queryString = Object.entries(newQuery)
+          .map(([key, value]) => `${key}=${value}`)
+          .join('&')
+        const newUrl = `${router.pathname}?${queryString}${window.location.hash}`
 
         router
           .push(
