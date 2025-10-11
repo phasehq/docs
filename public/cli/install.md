@@ -1,4 +1,5 @@
 import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
 
 export const description =
   'Manage your secrets and environment variables with the Phase CLI'
@@ -8,6 +9,8 @@ export const description =
 # Install
 
 Install the Phase CLI on the platform or operating system of your choice.
+
+<DocActions /> 
 
 ## Prerequisites
 

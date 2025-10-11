@@ -1,14 +1,20 @@
 import { Tag } from '@/components/Tag'
 import { HeroPattern } from '@/components/HeroPattern'
 import { UserAuthProviders } from '@/components/UserAuthProviders'
+import { DocActions } from '@/components/DocActions'
 
 export const description =
   'This guide explains how to authenticate with Phase and manage access with the Access Control system.'
 
 <HeroPattern />
 
+<Tag variant="small">ACCESS CONTROL</Tag>
+
 # Authentication & Access Control
 
+Learn how to authenticate with Phase and manage access with the Access Control system.
+
+<DocActions /> 
 
 ## Overview
 

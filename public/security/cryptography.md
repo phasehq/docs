@@ -1,10 +1,15 @@
 import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
 
 export const description = 'Cryptographic algorithms used in Phase Encryption'
 
 <Tag variant="small">SECURITY</Tag>
 
 # Cryptographic Algorithms
+
+Low level details of cryptographic algorithms and implementations used to secure data in Phase. {{ className: 'lead' }}
+
+<DocActions /> 
 
 ## Data Encryption - `XChaCha20-Poly1305`
 

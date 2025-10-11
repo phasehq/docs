@@ -1,4 +1,5 @@
 import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
 
 export const metadata = {
   title: 'API Errors',
@@ -14,6 +15,7 @@ The Phase API will return approriate status codes and error messages when someth
 
 You can tell if your request was successful by checking the status code when receiving an API response. If a response comes back unsuccessful, you can use the status code and error message to figure out what has gone wrong and do some rudimentary debugging.
 
+<DocActions /> 
 
 ---
 

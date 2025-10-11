@@ -1,4 +1,5 @@
 import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
 
 export const description = 'Integrate Phase with AWS Elastic Container Service'
 
@@ -7,6 +8,8 @@ export const description = 'Integrate Phase with AWS Elastic Container Service'
 # AWS Elastic Container Service
 
 You can use Phase to securely supply secrets to your AWS Elastic Container Service (ECS) Tasks.
+
+<DocActions /> 
 
 ## Prerequisites
 

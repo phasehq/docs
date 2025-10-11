@@ -1,4 +1,5 @@
 import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
 
 export const description =
   'Deploy Phase via Helm on your AWS Elastic Kubernetes Service (EKS) cluster.'
@@ -8,6 +9,8 @@ export const description =
 # AWS EKS Helm Deployment
 
 Learn how to set up the Phase Console using Helm on AWS Elastic Kubernetes Service (EKS). {{ className: 'lead' }}
+
+<DocActions /> 
 
 This guide will walk you through installing the Phase Console on an AWS EKS cluster. This setup utilizes AWS native services where appropriate, such as Elastic Block Store (EBS) for persistent storage via a default StorageClass, and an AWS Load Balancer to expose the NGINX Ingress controller. By default, the installation includes:
 

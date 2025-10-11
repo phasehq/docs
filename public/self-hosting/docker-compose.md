@@ -1,4 +1,5 @@
 import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
 
 export const description =
   'Run Phase on your own infrastructure with Docker Compose.'
@@ -8,6 +9,8 @@ export const description =
 # Docker Compose
 
 Learn how to set up the Phase Console using the Docker Compose template. {{ className: 'lead' }}
+
+<DocActions /> 
 
 The steps outlined below provide a general guide for self-hosting Phase Services on your own infrastructure. 
 

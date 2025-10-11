@@ -1,4 +1,5 @@
 import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
 
 export const description = 'This guide will explain how to work with Secrets in Phase'
 
@@ -7,6 +8,8 @@ export const description = 'This guide will explain how to work with Secrets in 
 # Secrets
 
 Secrets are key/value pairs used to store application secrets and configuration for your applications across [Environments](/console/environments) in various folders and paths. Secrets in Phase can additionally have tags and comments associated with them. Every read, update or delete event for a secret will be logged and viewable on the [App logs](/console/apps#logs) screen. All changes to secrets in an environment automatically trigger deployments to their platform secret sync integrations, if set up. 
+
+<DocActions /> 
 
 ## Create a Secret
 

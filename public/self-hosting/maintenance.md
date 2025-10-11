@@ -1,4 +1,5 @@
 import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
 
 export const description =
   'Maintaining your Phase instance.'
@@ -8,6 +9,8 @@ export const description =
 # Database Migrations when Upgrading Phase
 
 Certain versions of Phase may require migrations to the database schema. Understanding how migrations work is crucial for maintaining a healthy Phase instance, especially when upgrading to a new version.
+
+<DocActions /> 
 
 ## Migration Requirements
 

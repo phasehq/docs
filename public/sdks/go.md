@@ -1,4 +1,5 @@
 import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
 
 export const description =
   'SDK to integrate Phase in server-side applications running GoLang.'
@@ -15,6 +16,8 @@ export const sections = [
 # GoLang SDK
 
 SDK to integrate Phase in server-side applications running GoLang.
+
+<DocActions /> 
 
 - [github.com/phasehq/golang-sdk](https://github.com/phasehq/golang-sdk)
 

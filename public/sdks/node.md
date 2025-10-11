@@ -1,4 +1,5 @@
 import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
 
 export const description =
   'SDK to integrate Phase in applications running Node.js.'
@@ -16,6 +17,8 @@ export const sections = [
 # Node.js SDK
 
 The Node.js SDK allows you to securely manage secrets in your applications, from simple scripts, to complex systems.
+
+<DocActions /> 
 
 - [@phase.dev/phase-node](https://www.npmjs.com/package/@phase.dev/phase-node)
 - [github.com/phasehq/node-sdk](https://github.com/phasehq/node-sdk)

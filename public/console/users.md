@@ -1,4 +1,5 @@
 import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
 
 export const description =
   'This guide will explain how user accounts work in Phase'
@@ -8,6 +9,8 @@ export const description =
 # Users
 
 Learn how User accounts work in Phase.
+
+<DocActions /> 
 
 ## Account keys & Signup
 

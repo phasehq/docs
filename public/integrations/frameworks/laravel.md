@@ -1,4 +1,5 @@
 import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
 
 export const description =
   'Manage your secrets and environment variables in your application with the Phase CLI'
@@ -8,6 +9,8 @@ export const description =
 # Laravel
 
 You can use Phase run to inject secrets to your application process during runtime. There is no need for you to change any code or add a dependency.
+
+<DocActions /> 
 
 ## Prerequisites
 

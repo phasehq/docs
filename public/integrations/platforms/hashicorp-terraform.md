@@ -1,5 +1,6 @@
 import { Tag } from '@/components/Tag'
 import { Button } from '@/components/Button'
+import { DocActions } from '@/components/DocActions'
 
 export const description = 'Use Phase with Terraform to manage your secrets'
 
@@ -8,6 +9,8 @@ export const description = 'Use Phase with Terraform to manage your secrets'
 # Terraform Provider
 
 The Phase Terraform Provider allows you to securely manage and retrieve secrets directly from your Terraform configurations. This integration enables you to incorporate secure secret management into your infrastructure-as-code workflows.
+
+<DocActions /> 
 
 ## Prerequisites
 

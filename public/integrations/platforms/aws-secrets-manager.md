@@ -1,4 +1,5 @@
 import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
 
 export const description = 'Integrate Phase with AWS Secrets Manager'
 
@@ -7,6 +8,8 @@ export const description = 'Integrate Phase with AWS Secrets Manager'
 # AWS Secrets Manager
 
 You can use Phase to sync secrets to your AWS infrastructure via AWS Secrets Manager.
+
+<DocActions /> 
 
 ### Prerequisites
 

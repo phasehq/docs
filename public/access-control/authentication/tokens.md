@@ -1,4 +1,5 @@
 import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
 
 export const description =
   'Learn how to create and manage authentication tokens in Phase.'
@@ -8,6 +9,8 @@ export const description =
 # Authentication Tokens
 
 Phase provides secure authentication tokens for both human users and service accounts. These tokens enable programmatic access to Phase through our API, CLI, and SDKs while maintaining strict access controls and security standards. {{ className: 'lead' }}
+
+<DocActions /> 
 
 ## Service Account Tokens
 

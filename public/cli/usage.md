@@ -1,5 +1,6 @@
 import { Tag } from '@/components/Tag'
 import CliDemo from '@/components/CliDemo'
+import { DocActions } from '@/components/DocActions'
 
 export const description =
   'Manage your secrets and environment variables with the Phase CLI'
@@ -9,6 +10,8 @@ export const description =
 # Quickstart {{ className: 'lead' }}
 
 The Phase CLI syncs with the [Phase Console](https://github.com/phasehq/console) to provide **end-to-end** encrypted secret management. It pulls, decrypts, and injects secrets into your applications during runtime. Manage secrets for various environments, such as development, staging, production, or custom ones, with ease.
+
+<DocActions /> 
 
 ### Prerequisites:
 

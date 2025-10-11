@@ -1,4 +1,5 @@
 import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
 
 export const description =
 'Deploy Phase via the official Helm chart on your Kubernetes cluster.'
@@ -8,6 +9,8 @@ export const description =
 # Kubernetes Helm Deployment
 
 Learn how to set up the Phase Console using Helm on Kubernetes. {{ className: 'lead' }}
+
+<DocActions /> 
 
 This guide will walk you through installing the Phase Console on a Kubernetes cluster. By default, the installation includes:
 
@@ -246,4 +249,11 @@ kubectl describe certificate phase-tls -n your-phase-namespace # Replace with th
    curl -v https://phase.your-domain.com/service/health/
    # Expected response: {"status": "alive", "version": "x.x.x"}
    ```
+
+7. If you update any configuration or secrets, you may need to restart the pods to pick up the changes:
+   ```fish
+   kubectl rollout restart deployment/phase-console-frontend
+   kubectl rollout restart deployment/phase-console-backend
+   ```
+   This will gracefully restart the pods and ensure they pick up the new configuration or secret values.
 

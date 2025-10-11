@@ -1,4 +1,5 @@
 import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
 
 export const description = 'Integrate Phase with Kubernetes'
 
@@ -7,6 +8,8 @@ export const description = 'Integrate Phase with Kubernetes'
 # Kubernetes
 
 You can use Phase to sync secrets with applications running in your Kubernetes cluster.
+
+<DocActions />
 
 ### Prerequisites
 

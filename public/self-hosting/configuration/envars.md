@@ -1,5 +1,6 @@
 import { Tag } from '@/components/Tag'
 import { HeroPattern } from '@/components/HeroPattern'
+import { DocActions } from '@/components/DocActions'
 
 export const description =
   'Overview of Phase Console deployment configuration options'
@@ -14,6 +15,8 @@ Configure your secrets and environment variables when self-hosting Phase. {{ cla
 
 Depending on your self-hosted deployment method, you may need to configure various environment variables.
 Certain environment variables are required, while others are optional based on your use case.
+
+<DocActions /> 
 
 <Note>
 For enhanced security, Phase services support mounting secrets from files. To use this feature, specify the mount location (e.g., `/run/secrets/secret_key`) using the `_FILE` suffix naming convention (e.g., `SECRET_KEY_FILE`).
@@ -302,6 +305,11 @@ Env(s) required by the following containers:
     USER_EMAIL_DOMAIN_WHITELIST=mydomain.com,subdomain.mydomain.com
     ```
     will only allow users with emails `@mydomain.com` or `@subdomain.mydomain.com` to login.
+    Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
+  </Property>
+  <Property name="LOGIN_BANNER_TEXT" type="string (Optional)">
+    A custom message to display on the login screen. Can be up to 512 characters long.
+    This allows self-hosting users to display important information, announcements, or notices to users before they log in.
     Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
   </Property>
 </Properties>

@@ -1,4 +1,5 @@
 import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
 
 export const description = 'Integrate Phase with Hashicorp Vault'
 
@@ -7,6 +8,8 @@ export const description = 'Integrate Phase with Hashicorp Vault'
 # Hashicorp Vault
 
 You can use Phase to sync secrets to your Hashicorp Vault instance.
+
+<DocActions /> 
 
 ### Prerequisites
 

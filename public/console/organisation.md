@@ -1,4 +1,5 @@
 import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
 
 export const description =
   'This guide will explain how organisations works in Phase'
@@ -8,6 +9,8 @@ export const description =
 # Organisations
 
 Organisations in Phase contain all your [Apps](/console/apps) and [Users](/console/users), and allow you to collaborate with your team.
+
+<DocActions /> 
 
 ## Create an Organisation
 

@@ -1,4 +1,6 @@
 import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
+
 export const description = 'This guide explains how Apps work in Phase.'
 
 <Tag variant="small">CONSOLE</Tag>
@@ -6,6 +8,8 @@ export const description = 'This guide explains how Apps work in Phase.'
 # Apps
 
 A Phase App is used to manage [Secrets](/console/secrets) for a single project, repository, or application. An App can contain multiple [Environments](/console/environments). Users can be added to or removed from an App to manage access.
+
+<DocActions /> 
 
 ## Create an App
 

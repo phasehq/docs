@@ -1,5 +1,6 @@
 import { Tag } from '@/components/Tag'
 import { HeroPattern } from '@/components/HeroPattern'
+import { DocActions } from '@/components/DocActions'
 
 export const description =
   'This guide will explain how to work with the Phase REST API.'
@@ -9,6 +10,8 @@ export const description =
 # API
 
 The Phase HTTP REST API allows you to manage secrets programmatically via an HTTP client. The API enables you to create, fetch, update, and delete secrets across all your Apps, Environments, and Folders. {{ className: 'lead' }}
+
+<DocActions /> 
 
 ## Overview
 

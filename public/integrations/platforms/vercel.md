@@ -1,4 +1,5 @@
 import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
 
 export const description = 'Integrate Phase with Vercel'
 
@@ -7,6 +8,8 @@ export const description = 'Integrate Phase with Vercel'
 # Vercel
 
 You can use Phase to sync secrets with your Vercel projects.
+
+<DocActions /> 
 
 <Warning>
   When secret syncing is enabled, secrets stored inside Phase will be treated as
