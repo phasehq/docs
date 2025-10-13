@@ -1,4 +1,5 @@
 import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
 
 export const description = 'Integrate Phase with Travis CI'
 
@@ -7,6 +8,8 @@ export const description = 'Integrate Phase with Travis CI'
 # Travis CI
 
 You can use the Phase CLI to effortlessly inject or expose secret inside your CI pipelines or jobs.
+
+<DocActions />
 
 ## Prerequisites
 

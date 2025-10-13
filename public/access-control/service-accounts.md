@@ -1,4 +1,5 @@
 import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
 
 <Tag variant="small">ACCESS CONTROL</Tag>
 
@@ -7,6 +8,8 @@ import { Tag } from '@/components/Tag'
 Service Accounts provide a secure and controlled method for programmatic access to the Phase platform. Service accounts are non-human users that can use various authentication mechanisms to access resources such as secrets within the applications and environments it has been granted access to. 
 
 Service accounts share many of the properties and behavior of human user accounts. Service Accounts follow an Access Policy that can be defined by [Managed Roles](/access-control/roles#managed-roles) or [Custom Roles](/access-control/roles#creating-custom-roles) based on the permissions required. Service accounts are secured with the same security and cryptographic architecture as user accounts, and must be manually provisioned access to Apps and Environments in order to access secrets. 
+
+<DocActions /> 
 
 ## Create a new Service Account
 
@@ -71,6 +74,28 @@ To delete a Service Account, click on the "Delete" button at the bottom of the p
 
 ![Confirm delete service account](/assets/images/console/access-control/service-accounts/manage-account/service-account-delete-2.png)
 
+### Account KMS
+
+Each Service Account has its own unique keyring, just like User accounts. KMS modes determine who has access to the service account's keyring and can create and manage tokens for this service account.
+
+#### Client-side KMS
+By default, Service Accounts use **Client-side KMS**. This means only designated users with the required `ServiceAccountTokens` permissions have access to create and manage tokens for this service account. These users are called *Service Account Handlers* and have access the service account's keyring, encrypted with their own keys. 
+
+
+#### Server-side KMS
+You can optionally enable **Server-side KMS** for a Service Account. This grants the Phase backend access to the service account's keyring, effectively making the backend a *Service Account Handler*. Enabling Server-side KMS allows the backend to create and manage tokens on behalf of the Service Account. This is required to use features such as [External Identities](/access-control/external-identities).
+
+#### Manage KMS mode
+
+You can manage the KMS mode for a Service Account by clicking the **Manage** button beside the account KMS indicator at the top of the account page:
+
+![Manage service account KMS button](/assets/images/console/access-control/service-accounts/manage-account/kms-button.png)
+
+Select the KMS mode you want to use and click **Save**:
+
+![Manage service account KMS dialog](/assets/images/console/access-control/service-accounts/manage-account/kms-dialog.png)
+
+
 ## Create a new Service Account Token
 
 You can find instructions on how to create a Service Account Token [here](/access-control/authentication/tokens#service-account-tokens).
@@ -78,3 +103,8 @@ You can find instructions on how to create a Service Account Token [here](/acces
 ## Add a Service Account to an App
 
 You can find instructions on adding Service Account to Apps [here](/console/apps#add-a-service-account-to-an-app).
+
+
+## Manage account Network Access Policies
+
+You can find instructions on managing Network Access Policies for Service Accounts [here](/access-control/network#applying-a-network-access-policy-to-a-service-account).

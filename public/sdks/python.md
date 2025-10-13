@@ -1,4 +1,5 @@
 import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
 
 export const description =
   'SDK to integrate Phase secret management in Python applications.'
@@ -15,6 +16,8 @@ export const sections = [
 # Python SDK
 
 The Python SDK allows you to securely manage secrets in your applications, from simple scripts to complex server-side systems.
+
+<DocActions /> 
 
 - [phase-dev](https://pypi.org/project/phase-dev/) on PyPI
 - [github.com/phasehq/python-sdk](https://github.com/phasehq/python-sdk)

@@ -1,10 +1,13 @@
 import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
 
 <Tag variant="small">ACCESS CONTROL</Tag>
 
 # Roles
 
 Roles in Phase define the level of access and permissions granted to users within an organization. They determine what actions a user can perform and what resources they can access. Phase offers both managed roles with predefined permissions and the ability to create custom roles for more specific access control needs.
+
+<DocActions /> 
 
 ## Assigning Roles to Users
 
@@ -37,6 +40,7 @@ The organization owner. This role is automatically assigned when a user creates 
 | **Member Personal Access Tokens** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Service Accounts** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Service Account Tokens** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **External Identities** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Roles** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Integration Credentials** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Network Access Policies** | Full access | ✅ | ✅ | ✅ | ✅ |
@@ -47,6 +51,7 @@ The organization owner. This role is automatically assigned when a user creates 
 |----------|--------|------|--------|--------|--------|
 | **Environments** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Secrets** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **DynamicSecretLeases** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Lockbox** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Logs** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Tokens (Legacy)** | Full access | ✅ | ✅ | ✅ | ✅ |
@@ -70,6 +75,7 @@ Admin users have access to most resources and permissions, and have global acces
 | **Member Personal Access Tokens** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Service Accounts** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Service Account Tokens** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **External Identities** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Roles** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Integration Credentials** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Network Access Policies** | Full access | ✅ | ✅ | ✅ | ✅ |
@@ -80,6 +86,7 @@ Admin users have access to most resources and permissions, and have global acces
 |----------|--------|------|--------|--------|--------|
 | **Environments** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Secrets** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **DynamicSecretLeases** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Lockbox** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Logs** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Tokens (Legacy)** | Full access | ✅ | ✅ | ✅ | ✅ |
@@ -105,6 +112,7 @@ Management users with broad access to environments, secrets, and service account
 | **Member Personal Access Tokens** | No access | ❌ | ❌ | ❌ | ❌ |
 | **Service Accounts** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Service Account Tokens** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **External Identities** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Roles** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Integration Credentials** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Network Access Policies** | Full access | ✅ | ✅ | ✅ | ✅ |
@@ -115,6 +123,7 @@ Management users with broad access to environments, secrets, and service account
 |----------|--------|------|--------|--------|--------|
 | **Environments** | Custom access | ✅ | ✅ | ✅ | ❌ |
 | **Secrets** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **DynamicSecretLeases** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Lockbox** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Logs** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Tokens (Legacy)** | Full access | ✅ | ✅ | ✅ | ✅ |
@@ -138,6 +147,7 @@ Default role for Service Accounts, providing programmatic access to secrets with
 | **Member Personal Access Tokens** | No access | ❌ | ❌ | ❌ | ❌ |
 | **Service Accounts** | Read access | ✅ | ❌ | ❌ | ❌ |
 | **Service Account Tokens** | Read access | ✅ | ❌ | ❌ | ❌ |
+| **External Identities** | Read access | ✅ | ❌ | ❌ | ❌ |
 | **Roles** | Read access | ✅ | ❌ | ❌ | ❌ |
 | **Integration Credentials** | Read access | ✅ | ❌ | ❌ | ❌ |
 | **Network Access Policies** | Read access | ✅ | ❌ | ❌ | ❌ |
@@ -148,6 +158,7 @@ Default role for Service Accounts, providing programmatic access to secrets with
 |----------|--------|------|--------|--------|--------|
 | **Environments** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Secrets** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **DynamicSecretLeases** | Full access | ✅ | ✅ | ❌ | ❌ |
 | **Lockbox** | No access | ❌ | ❌ | ❌ | ❌ |
 | **Logs** | No access | ❌ | ❌ | ❌ | ❌ |
 | **Tokens (Legacy)** | No access | ❌ | ❌ | ❌ | ❌ |
@@ -171,6 +182,7 @@ Developers have limited permissions at the organization level and must be given 
 | **Member Personal Access Tokens** | No access | ❌ | ❌ | ❌ | ❌ |
 | **Service Accounts** | No access | ❌ | ❌ | ❌ | ❌ |
 | **Service Account Tokens** | No access | ❌ | ❌ | ❌ | ❌ |
+| **External Identities** | No access | ❌ | ❌ | ❌ | ❌ |
 | **Roles** | Read access | ✅ | ❌ | ❌ | ❌ |
 | **Integration Credentials** | Custom access | ✅ | ✅ | ✅ | ❌ |
 | **Network Access Policies** | Read access | ✅ | ❌ | ❌ | ❌ |
@@ -181,6 +193,7 @@ Developers have limited permissions at the organization level and must be given 
 |----------|--------|------|--------|--------|--------|
 | **Environments** | Custom access | ✅ | ✅ | ✅ | ❌ |
 | **Secrets** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **DynamicSecretLeases** | Full access | ✅ | ✅ | ❌ | ❌ |
 | **Lockbox** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Logs** | Read access | ✅ | ❌ | ❌ | ❌ |
 | **Tokens (Legacy)** | Custom access | ✅ | ✅ | ❌ | ❌ |

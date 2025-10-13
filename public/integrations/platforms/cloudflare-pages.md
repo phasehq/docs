@@ -1,4 +1,5 @@
 import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
 
 export const description = 'Integrate Phase with Cloudflare Pages'
 
@@ -7,6 +8,8 @@ export const description = 'Integrate Phase with Cloudflare Pages'
 # Cloudflare Pages
 
 You can use Phase to sync secrets with your Cloudflare Pages.
+
+<DocActions />
 
 <Warning>
   When secret syncing is enabled, secrets stored inside Phase will be treated as

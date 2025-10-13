@@ -1,4 +1,5 @@
 import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
 
 export const description =
   'Run Phase on your own Amazon Web Services infrastructure.'
@@ -8,6 +9,8 @@ export const description =
 # AWS
 
 Learn how to set up the Phase Console using AWS EC2 and managed PostgreSQL RDS via the Docker Compose template. {{ className: 'lead' }}
+
+<DocActions /> 
 
 Keep in mind the steps listed below serve as a rough outline on how to self-hosting Phase Services on your own infrastructure.
 
