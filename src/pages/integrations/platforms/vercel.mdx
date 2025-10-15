@@ -79,9 +79,20 @@ Alternatively, you may create a token with a narrower scope to a specific team. 
 
 ![Sync status](/assets/images/platform-integrations/vercel/4-create-new-sync-sync-status-success.png)
 
-<Note>
-Environment variables that you may have already created in Vercel scoped to 'All Environments' will remain untouched and not managed by Phase. This may lead to unwanted duplication of environment variables, if the same secret key exists in Phase. While supplying secrets to your applications, Vercel will prioritize values of environment variables created in specific environments managed by Phase over those scoped to 'All Environments'. Example: `FOO=BAR` (in Production environment) will be supplied to your application over `FOO=BAZ` (in All Environments). This is a fundamental limitation of the Vercel platform.
-</Note>
+### Important considerations
+- Environment variables that you may have already created in Vercel scoped to 'All Environments' will remain untouched and not managed by Phase. This may lead to unwanted duplication of environment variables, if the same secret key exists in Phase. While supplying secrets to your applications, Vercel will prioritize values of environment variables created in specific environments managed by Phase over those scoped to 'All Environments'. Example: `FOO=BAR` (in Production environment) will be supplied to your application over `FOO=BAZ` (in All Environments). This is a fundamental limitation of the Vercel platform.
+- If you select 'All' Target Environments in Phase as the sync destination, your secrets will be synced to each of your environments in the Vercel project individually.
+
+For example:
+Phase: `FOO=BAR` -> Vercel Target Environment: All
+
+Secrets in Vercel:
+  -  Development: `FOO=BAR`
+  -  Preview: `FOO=BAR`
+  -  Staging: `FOO=BAR`
+  -  CustomEnv: `FOO=BAR`
+  -  Production: `FOO=BAR`
+
 
 
 ## Reserved environment variables keys by Vercel
