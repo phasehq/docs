@@ -22,7 +22,7 @@ Always check the release notes before upgrading to ensure you're aware of any mi
 
 ## Migration Configuration
 
-By default, the backend container will automatically run migrations upon starting if the `EXTERNAL_MIGRATIONS` environment variable is not set or is set to `false`. For more information on this setting, see the [environment variables documentation](/self-hosting/configuration/envars#database-configuration).
+By default, the backend container will automatically run migrations upon starting if the `EXTERNAL_MIGRATION` environment variable is not set or is set to `false`. For more information on this setting, see the [environment variables documentation](/self-hosting/configuration/envars#database-configuration).
 
 ## Automatic Migrations
 
@@ -40,7 +40,7 @@ If you've created your own deployment of Phase in a high availability system (i.
 python manage.py migrate
 ```
 
-Ensure that `EXTERNAL_MIGRATIONS` is set to `true` in your backend service's environment variables to prevent redundant migrations from being run.
+Ensure that `EXTERNAL_MIGRATION` is set to `true` in your backend service's environment variables to prevent redundant migrations from being run.
 
 ## One-Way Database Changes
 
