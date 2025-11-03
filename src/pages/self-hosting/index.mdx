@@ -42,6 +42,38 @@ You may choose to self-host Phase to meet various compliance requirements, to si
 
 <Deployments />
 
+## Architecture Overview
+
+<Diagram caption="Phase architecture">
+{`
+graph LR
+    Client["Client"]
+    
+    Client --> Nginx["Nginx"]
+    
+    Nginx --> Frontend["Frontend"]
+    Nginx --> Backend[" Backend"]
+    
+    Frontend -.->  Backend
+    
+    Backend --> DB["PostgreSQL"]
+    Backend --> Redis["Redis"]
+    
+    Worker["Worker (Async Jobs)"] --> DB
+    Worker --> Redis
+    
+    classDef client fill:#4A90E2,stroke:#333,stroke-width:2px,color:#fff
+    classDef proxy fill:#50C878,stroke:#333,stroke-width:2px,color:#fff
+    classDef app fill:#9B59B6,stroke:#333,stroke-width:2px,color:#fff
+    classDef data fill:#E67E22,stroke:#333,stroke-width:2px,color:#fff
+    
+    class Client client
+    class Nginx proxy
+    class Frontend,Backend app
+    class DB,Redis,Worker data
+`}
+</Diagram>
+
 ### Your Responsibilities
 
 When self-hosting Phase services on your own infrastructure, you assume sole responsibility for security, availability, and reliability. It is up to you to set up the following:
