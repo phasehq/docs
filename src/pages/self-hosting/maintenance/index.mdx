@@ -294,3 +294,59 @@ You may have to copy the above code and execute it one line at a time. Given thi
 <Note>
 This procedure should only be used in emergency situations when you've been locked out of your Phase instance. After regaining access, review and reconfigure your network access policies appropriately to ensure proper security.
 </Note>
+
+# Client IP Detection Behind Reverse Proxies
+
+Phase uses the `X-Real-IP` header to identify the actual client IP address for audit logging and network access policies. By default, Nginx detects the real client IP and forwards it to the Phase backend via this header.
+
+## Cloudflare and ALB Configuration
+
+If you're running Phase behind a reverse proxy like Cloudflare or Amazon ALB before Nginx (e.g., Cloudflare → ALB → Nginx → Phase services), you must configure Nginx to trust and extract the client IP from the upstream service's headers.
+
+<Warning>
+For security reasons, ensure your Nginx instance only accepts IP information from trusted sources (Cloudflare or ALB IP ranges). Use the [`ngx_http_realip_module`](https://nginx.org/en/docs/http/ngx_http_realip_module.html) to configure this properly. This is to make sure an attacker cannot spoof the client IP address to bypass any Network Access Policies or audit logs.
+</Warning>
+
+### Nginx Configuration Example
+
+If using Cloudflare, configure Nginx to map Cloudflare's `CF-Connecting-IP` header:
+
+```nginx
+# --- Cloudflare IP header forwarding ---
+map $http_cf_connecting_ip $client_real_ip {
+    default $remote_addr;
+    "~." $http_cf_connecting_ip;
+}
+
+http {
+  server {
+      listen 80;
+      listen 443 ssl;
+      http2 on;
+      server_tokens off;
+
+      # Route API traffic to backend
+      location /service/ {
+          rewrite ^/service/(.*) /$1 break;
+          proxy_set_header X-Real-IP $client_real_ip;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header Host $http_host;
+          proxy_pass http://backend:8000;
+      }
+
+      # Route traffic to frontend
+      location / {
+          proxy_set_header X-Real-IP $client_real_ip;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header Host $http_host;
+          proxy_pass http://frontend:3000;
+      }
+  }
+}
+```
+
+For Amazon ALB, replace `$http_cf_connecting_ip` with the ALB's IP header accordingly.
+
+See the [Cloudflare documentation](https://developers.cloudflare.com/support/troubleshooting/restoring-visitor-ips/restoring-original-visitor-ips/#nginx-1) for more details.
+
+If you're using Traefik or other reverse proxies, adjust the header mapping configuration to match your proxy's client IP header format. You may provide the above nginx config to your favorite AI assistant to help you configure your reverse proxy.
