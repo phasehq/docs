@@ -13,7 +13,7 @@ You can use Phase to sync secrets to GitHub Actions.
 
 ## Using Phase Console secret syncing
 
-Automatically sync secrets in your Phase Aoo to GitHub Actions Secrets & Environments.
+Automatically sync secrets in your Phase App to GitHub Actions Secrets & Environments.
 
 <Warning>
   When secret syncing is enabled, secrets stored inside Phase will be treated as
@@ -47,7 +47,7 @@ Docs](https://docs.github.com/en/rest/guides/encrypting-secrets-for-the-rest-api
 
 3. Choose between **OAuth** or **Access Token** authentication method.
 
-OAuth redirect you to GitHub, where you will be prompted to authorize Phase to access your repositories. Using an Access Token would mean you would have to manually create the token on GitHub for a given set of permissions and provide it to Phase.
+OAuth redirects you to GitHub, where you will be prompted to authorize Phase to access your repositories. Using an Access Token requires you to manually create the token on GitHub for a given set of permissions and provide it to Phase.
 
 <TabGroup title="Authentication Method" subtitle="Select your preferred authentication method." slug="auth-method-cloud">
   <TabPanel title="OAuth" slug="oauth">
@@ -66,7 +66,7 @@ This is only for users who want to integrate their self-managed GitHub Enterpris
 
 ![Add GitHub Enterprise Server credentials](/assets/images/platform-integrations/github/add-github-enterprise-server-creds.png)
 
-5. You will be redirected to GitHub to authorize Phase. **Make sure to grant access to any organizations whose repositories that you wish to integrate Phase with**. Click **Authorize** to continue.
+5. You will be redirected to GitHub to authorize Phase. **Make sure to grant access to any organizations whose repositories you wish to integrate Phase with**. Click **Authorize** to continue.
 
 ![Authorize GitHub Phase Integration](/assets/images/platform-integrations/github/github-oauth-consent.png)
 
@@ -101,7 +101,7 @@ Alternatively, if you want to use GitHub Enterprise Server, you will need to pro
 
 ![Add GitHub Access Token credentials](/assets/images/platform-integrations/github/add-github-credentials-self-hosted-access-token.png)
 
-5. You will see that the integration credential have been created successfully.
+5. You will see that the integration credential has been created successfully.
 
 ![GitHub credentials stored](/assets/images/platform-integrations/github/github-credentials-created.png)
 
@@ -112,7 +112,7 @@ Alternatively, if you want to use GitHub Enterprise Server, you will need to pro
   <TabPanel title="Self-hosted" slug="self-hosted">
 
 <Note>
-  If you are using a self-hosted instance of the Phase Console, you will need to
+  If you are using a self-hosted instance of the Phase Console and would like to set up credentials via the OAuth method, you will need to
   set up a new GitHub OAuth Application and supply the
   `GITHUB_INTEGRATION_CLIENT_ID` and `GITHUB_INTEGRATION_CLIENT_SECRET`
   environment variables. [Setup instructions](/self-hosting/configuration/envars#third-party-integrations-configuration)
@@ -180,7 +180,7 @@ Alternatively, if you want to use GitHub Enterprise Server, you will need to pro
 
 ![Add GitHub Access Token credentials](/assets/images/platform-integrations/github/add-github-credentials-self-hosted-access-token.png)
 
-5. You will see that the integration credential have been created successfully.
+5. You will see that the integration credential has been created successfully.
 
 ![GitHub credentials stored](/assets/images/platform-integrations/github/github-credentials-created.png)
 

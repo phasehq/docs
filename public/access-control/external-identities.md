@@ -17,7 +17,7 @@ Example use case: Imagine you have a fleet of EC2 instances in an autoscaling gr
 
 The authentication flow will be as follows:
 
-<Diagram caption="External Identity authentication flow with AWS IAM">
+<Diagram caption="External Identities authentication with AWS IAM">
 {`
 sequenceDiagram
   participant Client as Client
@@ -124,4 +124,37 @@ From the dialog, select the External Identity you want to bind to this Service A
 
 ![add external identity to service account](/assets/images/console/access-control/external-identities/manage-account-identities-dialog.png)
 
+## Authenticate with External Identities
+
+Once you have configured an External Identity and bound it to a Service Account, you can authenticate using the Phase CLI with your AWS credentials.
+
+### CLI Authentication
+
+To authenticate using an External Identity, use the `phase auth` command with the `--mode aws-iam` option:
+
+```fish
+# Authenticate using your current AWS identity
+phase auth --mode aws-iam --service-account-id 0f1a2b3c-4d5e-6789-abcd-ef0123456789
+```
+
+You can also specify additional options:
+
+```fish
+# Authenticate with a custom TTL and print token to STDOUT
+phase auth --mode aws-iam --service-account-id 0f1a2b3c-4d5e-6789-abcd-ef0123456789 --ttl 3600 --no-store
+```
+
+**Options:**
+- `--service-account-id` (Required): The ID of the Service Account that has the External Identity bound to it
+- `--ttl` (Optional): Token TTL in seconds. Defaults to the configured Default TTL of the external identity
+- `--no-store` (Optional): Print the access token & metadata to STDOUT without logging in
+
+### API Authentication
+
+You can also authenticate programmatically using the Phase API. For detailed information about the authentication endpoints and request formats, see the [Public API documentation](/public-api/external-identities).
+
+### Learn More
+
+- **CLI Commands**: See the [CLI Commands documentation](/cli/commands#auth) for complete authentication options
+- **API Reference**: Check the [Public API documentation](/public-api/external-identities) for programmatic authentication
 

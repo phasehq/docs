@@ -206,6 +206,27 @@ You may:
    - Add **REDIS_HOST**, **REDIS_PORT**, and **REDIS_PASSWORD** and set them to your Azure Cache for Redis host, port (6379), and access key.
    - Modify other environment variables as necessary.
 
+   ### Single sign-on (SSO)
+
+   At the very least, you will need to set the `SSO_PROVIDERS` envrionment variable along with the SSO credentials for the provider you wish to use. For more instructions on configuring SSO, please refer to the [authentication documentation](/access-control/authentication).
+
+   ### Generate secrets
+
+   You can use the following command to generate strong random secrets for your `.env` file:
+
+   ```fish
+   sed -i.bak "s|NEXTAUTH_SECRET=.*|NEXTAUTH_SECRET=$(openssl rand -hex 32)|g" .env && \
+   sed -i.bak "s|SECRET_KEY=.*|SECRET_KEY=$(openssl rand -hex 32)|g" .env && \
+   sed -i.bak "s|SERVER_SECRET=.*|SERVER_SECRET=$(openssl rand -hex 32)|g" .env && \
+   rm .env.bak
+   ```
+
+   For a complete list of available options, refer to the [environment variables](/self-hosting/configuration/envars) documentation.
+
+   <Note>
+   For a production deployment, please use a more secure method than a `.env` file to store your secrets. Please see our guide on [Docker Compose secrets](https://phase.dev/blog/docker-compose-secrets/) for more information.
+   </Note>
+
 5. **Edit `docker-compose.yml`**:
 
    - Comment out the PostgreSQL service.
@@ -213,11 +234,33 @@ You may:
 
 6. **Start services**:
 
+   Pull containers and start services:
+
    ```fish
    docker compose up -d
    ```
 
-7. You should now be able to access the Phase console at `https://your-vm-public-ip`.
+7. You should now be able to access the Phase console at `https://your-vm-public-ip`. By default, Phase provisions a self-signed TLS certificate using Nginx. For production use, please configure a valid TLS certificate for your domain.
+
+---
+
+## Stop services
+
+To stop the Phase Console services, run:
+
+```fish
+docker compose down
+```
+
+## Uninstall
+
+To completely remove the Phase Console and delete all data (excluding external databases), run:
+
+```fish
+docker compose down -v
+```
+
+---
 
 ## Troubleshooting
 
@@ -244,6 +287,3 @@ You can check the health of the services using `curl`. Since a self-signed certi
   # Expected response: {"status": "alive", "version": "x.x.x"}
   ```
 
----
-
-Remember to secure your environment and not expose sensitive data or configurations in production. By default Phase will provision a self-signed TLS certificate using nginx. Please use a valid TLS certificate for your own domain in production.
