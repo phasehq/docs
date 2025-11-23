@@ -27,7 +27,8 @@ const options = {
     maskInputOptions: {},
     recordCanvas: true,
     recordNetwork: true,
-    recordPerformance: true
+    recordPerformance: true,
+    person_profiles: 'always'
   }
 }
 
