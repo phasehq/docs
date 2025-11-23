@@ -80,17 +80,62 @@ wget -O ./nginx/Dockerfile https://raw.githubusercontent.com/phasehq/console/mai
 
 ## 3. Update your configuration
 
-Modify the `.env` file to match your environment settings. For a complete list of available options, refer to the [environment variables](/self-hosting/configuration/envars) documentation.
+Modify the `.env` file to match your environment settings. 
+
+
+### Single sign-on (SSO)
+
+At the very least, you will need to set the `SSO_PROVIDERS` envrionment variable along with the SSO credentials for the provider you wish to use. For more instructions on configuring SSO, please refer to the [authentication documentation](/access-control/authentication). 
+
+### Generate secrets 
+
+```fish
+sed -i.bak "s|DATABASE_PASSWORD=.*|DATABASE_PASSWORD=$(openssl rand -hex 32)|g" .env && \
+sed -i.bak "s|NEXTAUTH_SECRET=.*|NEXTAUTH_SECRET=$(openssl rand -hex 32)|g" .env && \
+sed -i.bak "s|SECRET_KEY=.*|SECRET_KEY=$(openssl rand -hex 32)|g" .env && \
+sed -i.bak "s|SERVER_SECRET=.*|SERVER_SECRET=$(openssl rand -hex 32)|g" .env && \
+rm .env.bak
+```
+
+For a complete list of available options, refer to the [environment variables](/self-hosting/configuration/envars) documentation.
+
+<Note>
+For a production deployment, please use a more secure method than a `.env` file to store your secrets. Please see our guide on [Docker Compose secrets](https://phase.dev/blog/docker-compose-secrets/) for more information.
+</Note>
 
 ## 4. Start services
 
-Launch the Phase Console services:
+Pull containers and start services:
 
 ```fish
 docker compose up -d
 ```
 
+Your Phase Console deployment will be accessible at `https://<your-host-ip-address>`. By default, Phase provisions a self-signed TLS certificate using Nginx. For production use, please configure a valid TLS certificate for your domain.
+
+---
+
+## Stop services
+
+To stop the Phase Console services, run:
+
+```fish
+docker compose down
+```
+
+## Uninstall
+
+To completely remove the Phase Console and delete all data (including the database), run:
+
+```fish
+docker compose down -v
+```
+
+---
+
 ## Troubleshooting
+
+In case you encounter any issues, please refer to the troubleshooting section below.
 
 ### Routing Structure
 
@@ -114,5 +159,3 @@ You can check the health of the services using `curl`. Since a self-signed certi
   curl -vk https://<your-host-ip-address>/service/health/
   # Expected response: {"status": "alive", "version": "x.x.x"}
   ```
-
-Your Phase Console deployment will be accessible at `https://<your-host-ip-address>`. By default, Phase provisions a self-signed TLS certificate using Nginx. For production use, please configure a valid TLS certificate for your domain.
