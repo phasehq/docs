@@ -34,7 +34,7 @@
     "next-sitemap": "^4.2.3",
     "postcss": "^8.4.31",
     "postcss-focus-visible": "^6.0.4",
-    "posthog-js": "^1.280.1",
+    "posthog-js": "^1.297.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-highlight-words": "^0.20.0",
