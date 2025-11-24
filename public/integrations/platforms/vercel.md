@@ -13,8 +13,8 @@ You can use Phase to sync secrets with your Vercel projects.
 
 <Warning>
   When secret syncing is enabled, secrets stored inside Phase will be treated as
-  the source of truth. Any secrets on the target service will be overwritten or
-  deleted. Please import your secrets into Phase before continuing.
+  the source of truth. Any secrets in the target Vercel environment will be overwritten. 
+  Please import your secrets into Phase before continuing.
 </Warning>
 
 ### Prerequisites
@@ -49,13 +49,6 @@ Alternatively, you may create a token with a narrower scope to a specific team. 
 
 ### Store authentication credentials in Phase
 
-<Note>
-  Your credentials are kept secure with robust application-layer encryption.
-  Phase encrypts your credentials directly in the browser and only decrypts them
-  in memory to perform sync operations. Your credentials are never stored in
-  plaintext.
-</Note>
-
 1. Go to **Integrations** from the sidebar and click on **Third-party credentials** in the integrations tab.
 
 ![Go to integrations](/assets/images/platform-integrations/integrations-sidebar.png)
@@ -85,6 +78,22 @@ Alternatively, you may create a token with a narrower scope to a specific team. 
 4. Once set up, your secrets will automatically be synced to the chosen destination project in Vercel. You can manage your sync from the *Syncing* tab of your App, or from the *Integrations* screen.
 
 ![Sync status](/assets/images/platform-integrations/vercel/4-create-new-sync-sync-status-success.png)
+
+### Important considerations
+- Environment variables that you may have already created in Vercel scoped to 'All Environments' will remain untouched and not managed by Phase. This may lead to unwanted duplication of environment variables, if the same secret key exists in Phase. While supplying secrets to your applications, Vercel will prioritize values of environment variables created in specific environments managed by Phase over those scoped to 'All Environments'. Example: `FOO=BAR` (in Production environment) will be supplied to your application over `FOO=BAZ` (in All Environments). This is a fundamental limitation of the Vercel platform.
+- If you select 'All' Target Environments in Phase as the sync destination, your secrets will be synced to each of your environments in the Vercel project individually.
+
+For example:
+Phase: `FOO=BAR` -> Vercel Target Environment: All
+
+Secrets in Vercel:
+  -  Development: `FOO=BAR`
+  -  Preview: `FOO=BAR`
+  -  Staging: `FOO=BAR`
+  -  CustomEnv: `FOO=BAR`
+  -  Production: `FOO=BAR`
+
+
 
 ## Reserved environment variables keys by Vercel
 

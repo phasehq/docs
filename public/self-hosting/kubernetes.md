@@ -257,3 +257,44 @@ kubectl describe certificate phase-tls -n your-phase-namespace # Replace with th
    ```
    This will gracefully restart the pods and ensure they pick up the new configuration or secret values.
 
+8. **Installation stuck on migrations job**
+
+   If your installation appears to be stuck with a migrations job that won't complete:
+
+   ```fish
+   kubectl get pods
+   ```
+
+   Example output showing a stuck migration:
+   ```fish
+   NAME                             READY   STATUS     RESTARTS   AGE
+   phase-console-migrations-tfz46   0/1     Init:0/2   0          4m34s
+   ```
+
+   **Fix**: Delete the stuck migrations job to allow the installation to proceed:
+
+   ```fish
+   kubectl delete job phase-console-migrations
+   ```
+
+9. **ConfigMap ownership error during upgrade**
+
+   If you encounter a ConfigMap ownership error when upgrading or reinstalling:
+
+   ```fish
+   helm upgrade --install phase-console phase/phase -f phase-values.yaml
+   ```
+
+   Error message:
+   ```fish
+   Error: Unable to continue with install: ConfigMap "phase-console-config" in namespace "default" exists and cannot be imported into the current release: invalid ownership metadata; annotation validation error: missing key "meta.helm.sh/release-name": must be set to "phase-console"; annotation validation error: missing key "meta.helm.sh/release-namespace": must be set to "default"
+   ```
+
+   **Fix**: Delete the orphaned ConfigMap to allow Helm to create a new one with proper ownership:
+
+   ```fish
+   kubectl delete configmap phase-console-config
+   ```
+
+   Then retry your Helm install or upgrade command.
+

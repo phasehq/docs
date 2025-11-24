@@ -30,11 +30,25 @@ Security is at the core of Phase's design and operations. As a platform for mana
 
 ---
 
+## SOC 2 Type II Compliance
+
+Phase is currently undergoing an audit for the **SOC 2 Type II** compliance certification. You can find more information about the audit and track the progress in our [Trust Center](https://trust.phase.dev).
+
+<div style={{ textAlign: 'left' }}>
+  <a href="https://trust.phase.dev" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block' }}>
+    <img src="/assets/soc2-inprogress-dark-badge.svg" alt="SOC 2 Type II compliance" width="150" loading="lazy" />
+  </a>
+</div>
+
+## Penetration Testing
+
+Phase undergoes annual external penetration testing conducted by an independent security firm. The assessment covers Phase's platform, APIs, and services, with remediation tracked to completion. Please contact us at info@phase.dev if you would like to request an executive summary of the latest report.
+
 ## Version Control and Code Security
 
 ### GPG Signed Commits
 
-Phase implements GPG key signing for all commits to ensure the authenticity and integrity of the codebase. Commits can be verified against the GPG public keys of Phase maintainers, and the trust chain of a particular git blame can be traced to its origin.
+Phase implements GPG key signing for all commits to ensure the authenticity and integrity of the codebase. Commits can be verified against the GPG public keys of Phase maintainers, and the trust chain for a particular `git blame` can be traced to its origin.
 
 ### Dependency Management and Scanning
 
@@ -48,7 +62,7 @@ Phase's container images are built publicly in repositories via GitHub Actions, 
 
 ### Two-Factor Authentication (2FA)
 
-Phase enforces two-factor authentication (2FA) using U2F / YubiKey for all system access. This additional security layer significantly reduces the risk of unauthorized access, even in scenarios where passwords might be compromised. The U2F / YubiKey implementation offers strong protection against phishing attacks, enhancing the overall security posture of the system.
+Phase enforces two-factor authentication (2FA) using U2F/YubiKey for all system access. This additional security layer significantly reduces the risk of unauthorized access, even in scenarios where passwords might be compromised. The U2F/YubiKey implementation offers strong protection against phishing attacks, enhancing the overall security posture of the system.
 
 ### Password Policies
 
@@ -62,7 +76,7 @@ Secure remote access is facilitated through Tailscale VPN with centralized manag
 
 ### Cloudflare
 
-All web traffic to Phase services is routed through Cloudflare, leveraging its Web Application Firewall (WAF), reverse proxy, and DDoS protection capabilities along with other important security features. This setup allows Phase to benefit from Cloudflare's global network and advanced security features. EC2 instances are configured to accept HTTP/HTTPS traffic only from Cloudflare IPs, as listed at https://www.cloudflare.com/ips/, adding an extra layer of protection against unauthorized access attempts.
+All web traffic to Phase services is routed through Cloudflare, leveraging its Web Application Firewall (WAF), reverse proxy, and DDoS protection capabilities along with other important security features. This setup allows Phase to benefit from Cloudflare's global network and advanced security features. EC2 instances are configured to accept HTTP/HTTPS traffic only from Cloudflare IPs, as listed at `https://www.cloudflare.com/ips/`, adding an extra layer of protection against unauthorized access attempts.
 
 ## Infrastructure Security
 
@@ -86,7 +100,7 @@ Phase maintains a comprehensive backup strategy for its AWS RDS instances, inclu
 
 ### HTTPS Configuration
 
-The HTTPS configuration implemented by Phase has achieved an A+ rating from Qualys SSL Lab tests. This configuration enforces a minimum TLS version of 1.2 and supports HTTP/3 for improved performance and security. By maintaining high standards for HTTPS implementation, Phase ensures that all data transmitted between servers and clients is strongly encrypted and protected against interception or tampering.
+The HTTPS configuration implemented by Phase has achieved an A+ rating from Qualys SSL Labs tests. This configuration enforces a minimum TLS version of 1.2 and supports HTTP/3 for improved performance and security. By maintaining high standards for HTTPS implementation, Phase ensures that all data transmitted between servers and clients is strongly encrypted and protected against interception or tampering.
 
 ### DNSSEC
 
@@ -96,4 +110,5 @@ Phase has enabled DNSSEC for its domains, adding an extra layer of security to t
 
 ### AWS CloudWatch
 
-Comprehensive logging, monitoring, and alerting across Phase's infrastructure are managed through AWS CloudWatch. This service enables maintenance of visibility into system performance and security status, facilitating quick anomaly detection and timely incident response. Custom alerts and dashboards are configured to monitor key security metrics and events, allowing for proactive management of potential security issues and ensuring the overall health of the infrastructure.
+Comprehensive logging, monitoring, and alerting across Phase's infrastructure are managed through AWS CloudWatch. This service provides visibility into system performance and security status, facilitating quick anomaly detection and timely incident response. Custom alerts and dashboards are configured to monitor key security metrics and events, allowing for proactive management of potential security issues and ensuring the overall health of the infrastructure.
+
