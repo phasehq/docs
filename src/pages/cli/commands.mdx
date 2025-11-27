@@ -162,6 +162,10 @@ phase auth --mode aws-iam --service-account=2115a1fc-0a78-4a7b-ad8c-6fa6cc15f489
 - `ttl` (Optional): Only applicable for when using external identities for authentication (e.g., `aws-iam` mode). TTL in seconds for the issued token.
 - `no-store` (Optional): Only applicable for when using external identities for authentication (e.g., `aws-iam` mode). Print the authentication token response to STDOUT without storing credentials.
  
+<Note>
+The CLI will auto detect the AWS region you are in and use it to authenticate with the AWS API. You can also use `aws configure` to set the region.
+</Note>
+
 ---
 
 ## 🔗 `init`
