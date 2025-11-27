@@ -307,3 +307,49 @@ To resolve this:
 
 After adding the email address to the user's profile, they should be able to log in successfully.
 
+
+## Okta
+
+You can use Okta as an OIDC provider to set up SSO for your Phase instance. Follow these steps to set up an Okta SSO application for Phase:
+
+1.  Go to the [Okta Admin Dashboard](https://admin.okta.com/), enter your organization URL, and log in. In the sidebar, navigate to **Applications** > **Applications**.
+
+    ![Access Okta Applications](/assets/images/auth/sso/oidc/okta/1-click-on-applications.png)
+
+2.  Click on the **Create App Integration** button.
+
+    ![Create App Integration](/assets/images/auth/sso/oidc/okta/2-create-app-integration.png)
+
+3.  For the **Sign-in method**, select **OIDC - OpenID Connect**. For the **Application type**, choose **Web Application**. Then, click **Next**.
+
+    ![Select OIDC Web Application](/assets/images/auth/sso/oidc/okta/3-select-oidc-web-application.png)
+
+4.  On the **New Web App Integration** page, configure the following:
+    -   Enter an **App integration name** (e.g., "Phase Console").
+    -   Under **Sign-in redirect URIs**, add your Phase application's redirect URI. This will be the hostname of your instance followed by:
+
+    ```
+    /api/auth/callback/okta-oidc
+    ```
+    (e.g., `https://[YOUR_PHASE_HOST]/api/auth/callback/okta-oidc`).
+
+    - For sign-out redirect URIs, add your Phase application's sign-out redirect URI. This will be the hostname of your instance. eg. `https://[YOUR_PHASE_HOST]`.
+
+    ![Configure App Name and Redirect URI](/assets/images/auth/sso/oidc/okta/4-setup-app-enter-name-redirection-url.png)
+
+5.  Next, scroll down to view the **Assignments** section, select who should have access to this application. For the purposed of this guide we are going to choose **Allow everyone in your organization to access**. Please feel free to scope this down to a specific group of users if you prefer. Click **Save**.
+
+    ![Configure Assignments and Save](/assets/images/auth/sso/oidc/okta/5-setup-assginemnts-click-save.png)
+
+6.  After the application is created, you will be taken to its settings page. In the **General** tab, under **Client Credentials**, copy the **Client ID** and **Client secret**.
+
+    ![Copy Client Credentials](/assets/images/auth/sso/oidc/okta/6-copy-credentials.png)
+
+7.  Supply these credentials, along with your Okta domain (e.g., `https://acme-1234567.okta.com`), to your Phase Console deployment as [environment variables](/self-hosting/configuration/envars#okta-oidc).
+
+   - `OKTA_OIDC_CLIENT_ID`
+   - `OKTA_OIDC_CLIENT_SECRET`
+   - `OKTA_OIDC_ISSUER`
+  
+  You can find more detailed information in the [official Okta documentation](https://help.okta.com/oie/en-us/content/topics/apps/apps_app_integration_wizard_oidc.htm).
+
