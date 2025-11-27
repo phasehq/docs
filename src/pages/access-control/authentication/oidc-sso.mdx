@@ -333,11 +333,11 @@ You can use Okta as an OIDC provider to set up SSO for your Phase instance. Foll
     ```
     (e.g., `https://[YOUR_PHASE_HOST]/api/auth/callback/okta-oidc`).
 
-    - For sign-out redirect URIs, add your Phase application's sign-out redirect URI. This will be the hostname of your instance. eg. `https://[YOUR_PHASE_HOST]`.
+    - For sign-out redirect URIs, add your Phase application's sign-out redirect URI. This will be the hostname of your instance. e.g., `https://[YOUR_PHASE_HOST]`.
 
     ![Configure App Name and Redirect URI](/assets/images/auth/sso/oidc/okta/4-setup-app-enter-name-redirection-url.png)
 
-5.  Next, scroll down to view the **Assignments** section, select who should have access to this application. For the purposed of this guide we are going to choose **Allow everyone in your organization to access**. Please feel free to scope this down to a specific group of users if you prefer. Click **Save**.
+5.  Next, scroll down to view the **Assignments** section, select who should have access to this application. For the purposes of this guide we are going to choose **Allow everyone in your organization to access**. Please feel free to scope this down to a specific group of users if you prefer. Click **Save**.
 
     ![Configure Assignments and Save](/assets/images/auth/sso/oidc/okta/5-setup-assginemnts-click-save.png)
 
@@ -345,12 +345,12 @@ You can use Okta as an OIDC provider to set up SSO for your Phase instance. Foll
 
     ![Copy Client Credentials](/assets/images/auth/sso/oidc/okta/6-copy-credentials.png)
 
-7.  You can find your Okta domain by clicking on the drop down in the top right corner and clicking the copy button on host listed under your name and email (e.g. `acme-1234567.okta.com`). Supply these configuration credentials, along with your Okta domain, make sure to prefix `https://` to the Okta domain (e.g., `https://acme-1234567.okta.com`), to your Phase Console deployment as [environment variables](/self-hosting/configuration/envars#okta-oidc).
+7.  To find your Okta domain, click the drop-down in the top right corner. Copy the host listed under your name and email (e.g., `acme-1234567.okta.com`). Supply this domain (prefixed with `https://`) along with the other credentials to your Phase Console deployment as [environment variables](/self-hosting/configuration/envars#okta-oidc).
 
     ![Copy Okta OIDC Issuer Host](/assets/images/auth/sso/oidc/okta/7-copy-okta-oidc-issuer-host.png)
 
    - `OKTA_OIDC_CLIENT_ID` - Okta OIDC Application Client ID
-   - `OKTA_OIDC_CLIENT_SECRET` - Okta OIDC Application Client secret
+   - `OKTA_OIDC_CLIENT_SECRET` - Okta OIDC Application Client Secret
    - `OKTA_OIDC_ISSUER` - Your Okta domain URL, prefixed with `https://`
   
   You can find more detailed information in the [official Okta documentation](https://help.okta.com/oie/en-us/content/topics/apps/apps_app_integration_wizard_oidc.htm).
