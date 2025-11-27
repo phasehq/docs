@@ -149,6 +149,10 @@ phase auth --mode aws-iam --service-account-id 0f1a2b3c-4d5e-6789-abcd-ef0123456
 - `--ttl` (Optional): Token TTL in seconds. Defaults to the configured Default TTL of the external identity
 - `--no-store` (Optional): Print the access token & metadata to STDOUT without logging in
 
+<Note>
+The CLI will auto detect the AWS region you are in and use it to authenticate with the AWS API. You can also use `aws configure` to set the region.
+</Note>
+
 ### API Authentication
 
 You can also authenticate programmatically using the Phase API. For detailed information about the authentication endpoints and request formats, see the [Public API documentation](/public-api/external-identities).
