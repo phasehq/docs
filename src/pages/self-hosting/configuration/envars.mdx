@@ -37,6 +37,7 @@ The following providers are available:
 - `google-oidc` - Google OIDC
 - `jumpcloud-oidc` - JumpCloud OIDC
 - `entra-id-oidc` - Microsoft Entra ID OIDC
+- `okta-oidc` - Okta OIDC
 
 You can find a complete list of user auth providers [here](/access-control/authentication#user-authentication).
 
@@ -264,6 +265,35 @@ After setting up your Application on Microsoft Entra ID, set the Tenant ID, Clie
   </Property>
   <Property name="ENTRA_ID_OIDC_CLIENT_SECRET" type="string">
     Microsoft Entra ID Client secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
+  </Property>
+</Properties>
+
+Env(s) required by the following containers:
+- [`frontend`](https://hub.docker.com/r/phasehq/frontend)
+- [`backend`](https://hub.docker.com/r/phasehq/backend)
+
+### Okta OIDC
+
+You can find instructions for setting up SSO with an Okta OIDC Application [here](/access-control/authentication/oidc-sso#okta).
+
+Set the "Sign-in redirect URIs" for your Okta OIDC App as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/okta-oidc`.
+
+Example:
+```bash
+https://[**YOUR_DOMAIN**]/api/auth/callback/okta-oidc
+```
+
+After setting up your Application on Okta, set the Client ID, Client Secret and Issuer values:
+
+<Properties>
+  <Property name="OKTA_OIDC_CLIENT_ID" type="string">
+    Okta OIDC Application Client ID
+  </Property>
+  <Property name="OKTA_OIDC_CLIENT_SECRET" type="string">
+    Okta OIDC Application Client secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
+  </Property>
+  <Property name="OKTA_OIDC_ISSUER" type="string">
+    Your Okta domain URL. Can be found in your Okta dashboard URL (e.g. `https://acme-1234567.okta.com`).
   </Property>
 </Properties>
 
