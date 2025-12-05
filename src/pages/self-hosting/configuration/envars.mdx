@@ -932,4 +932,9 @@ These variables are not required if using the suggested [docker-compose template
     Example: `phase_license:v1:...`
     Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
+  <Property name="RATE_LIMIT_DEFAULT" type="string">
+    Rate limit for API requests.
+    Example: `100/minute`. Rate limits can be specified over a period of second, minute, hour or day. The period must be specified after the / separator using s, m, h or d, respectively. For increased clarity, extended units such as second, minute, hour, day or even abbreviations like sec, min, hr are allowed, as only the first character is relevant to identify the rate. 
+    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  </Property>
 </Properties>
