@@ -38,12 +38,19 @@ By default, the "Remember password on this device" option is turned on. If you a
 In case you lose or forget your `sudo` password, you will need a recovery phrase to restore your account keys. This step provides you with a downloadable recovery kit that you can print out and store somewhere safe. 
 You can also copy the entire contents of the recovery kit to store as a secure note in a password manager or digital wallet. You can choose either option, but we recommend both. 
 
+<Note>
+  The recovery phrase in the account recovery kit is read left to right, top to bottom. You may simply highlight all the words and copy paste them in the recovery box. The recovery box will auto detect the order.
+</Note>
+
 ![account recovery](/assets/images/console/users/users-account-recovery.png)
 
 <Warning>
   Make sure to save your recovery kit in a safe place! If you forget your `sudo`
   password, it is the **only** way to regain access to your account.
+
 </Warning>
+
+If a non-owner user forgets their account sudo password and cannot access their recovery phrase, they can be removed from the organisation and re-added by another user. However, if the Organisation **Owner** forgets their sudo password and cannot access their account recovery phrase they will have lost access to the account permanently.
 
 ## The `sudo` password
 
