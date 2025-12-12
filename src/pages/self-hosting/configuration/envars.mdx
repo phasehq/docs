@@ -420,6 +420,13 @@ Env(s) required by the following containers:
 
     Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
+  <Property name="REDIS_SSL" type="boolean">
+    Enables or disables SSL for Redis connections. Defaults to `False`.
+
+    The value is considered `True` if the environment variable is set to `"true"` (case-insensitive).
+
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  </Property>
 </Properties>
 
 ---
