@@ -79,6 +79,10 @@ The Phase Cloud API enforces rate limiting to ensure fair usage and maintain opt
 | Pro  | 240                 |
 | Enterprise | Custom |
 
+<Note>
+The rate limits are enforced per account (User or Service Account) across an organisation.
+</Note>
+
 If you exceed the allowed number of requests within a given time frame, you will receive a `429 Too Many Requests` response. The response will include information about when you can retry your request in the `retry-after` header.
 
 ```bash
