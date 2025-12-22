@@ -856,7 +856,7 @@ Env(s) required by the following containers:
 
 ---
 
-## Additional Environment Variables 
+## Additional Environment Variables
 
 These variables are not required if using the suggested [docker-compose template](https://raw.githubusercontent.com/phasehq/console/main/docker-compose.yml). However if you are deploying the Phase Console using a custom docker-compose configuration or without docker-compose, make sure the following variables are correctly set. 
 
@@ -931,5 +931,12 @@ These variables are not required if using the suggested [docker-compose template
     The environment variable Phase license for self-hosted deployments with egress restrictions. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath
     Example: `phase_license:v1:...`
     Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  </Property>
+
+  <Property name="GUNICORN_WORKERS" type="number (Optional)">
+    The number of Gunicorn worker processes for handling requests in the backend. 
+    If not specified, Phase will automatically calculate the number of workers based on available CPU cores using the formula `(2 * CPUs) + 1`, with a default cap of 8 workers to prevent potential database connection exhaustion.
+    
+    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
 </Properties>
