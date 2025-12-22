@@ -835,6 +835,36 @@ aws iam create-access-key --user-name phase-integration-user
 
 ---
 
+## License
+
+Phase requires a valid license to use the Enterprise tier features in self-hosted deployments. You can request a free trial license [here](https://phase.dev/pricing).
+
+### Offline license
+
+For air-gapped or restricted-egress environments, use the `PHASE_LICENSE_OFFLINE` variable.
+
+<Note>
+Phase does not export any outbound usage telemetry for self-hosted instances. This license will work in fully air-gapped environments or where egress is filtered.
+</Note>
+
+
+<Properties>
+  <Property name="PHASE_LICENSE_OFFLINE" type="string">
+    The environment variable Phase license for self-hosted deployments with egress restrictions. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath
+    Example: `phase_license:v1:...`
+    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  </Property>
+</Properties>
+
+The backend logs license validation details on every startup:
+
+```fish
+phase-backend  | License is valid.
+phase-backend  | License ID: e3de75b1-9afc-4ec1-a203-18febd7be2c0, Customer Name: SpaceX, Tier: ENTERPRISE, Expiry: 2080-01-01
+```
+
+---
+
 ## Debugging
 
 <Properties>
@@ -925,12 +955,6 @@ These variables are not required if using the suggested [docker-compose template
     Example: `[**YOUR_DOMAIN**]` (example.com)
 
     Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
-  </Property>
-
-  <Property name="PHASE_LICENSE_OFFLINE" type="string">
-    The environment variable Phase license for self-hosted deployments with egress restrictions. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath
-    Example: `phase_license:v1:...`
-    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
 
   <Property name="GUNICORN_WORKERS" type="number (Optional)">
