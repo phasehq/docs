@@ -398,6 +398,22 @@ Env(s) required by the following containers:
 
     Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
+  <Property name="DATABASE_SSL" type="boolean">
+    Enables or disables SSL/TLS for database connections. Defaults to `False`. 
+    
+    When `False` or unset, Phase uses the default `sslmode=prefer`, which attempts a TLS connection but falls back to plaintext if TLS is unavailable. When `True`, Phase enforces a TLS connection.
+    
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  </Property>
+  <Property name="DATABASE_SSL_CA_PATH" type="string (Optional)">
+    Path to the CA certificate bundle for verifying the database's TLS certificate.
+    
+    If provided, Phase sets `sslmode=verify-full` and validates the database certificate against this CA, including a hostname check. If not provided (but `DATABASE_SSL=True`), Phase sets `sslmode=require`.
+    
+    For AWS RDS, Phase includes the RDS CA bundle at `/etc/ssl/certs/rds-ca-bundle.pem` which you can point this variable to.
+    
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  </Property>
 </Properties>
 
 ---
@@ -438,7 +454,7 @@ Phase uses Redis or Valkey for a synchronous jobs queues, caching and rate limit
 
     Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
-  <Property name="REDIS_CA_CERTS_PATH" type="string (Optional)">
+  <Property name="REDIS_SSL_CA_PATH" type="string (Optional)">
     Path to the CA certificate bundle for verifying Redis SSL certificates. Required if `REDIS_SSL` is set to `True`.
     Example: `/etc/ssl/certs/ca-certificates.crt`
     If you using a self-signed certificate, you can set this to the path to the certificate bundle. Sames goes for a certificate bundle for a managed service like Redis Cloud which may not be available in the default certificate bundle.
