@@ -404,6 +404,12 @@ Env(s) required by the following containers:
 
 ## Redis configuration
 
+Phase uses Redis or Valkey for a synchronous jobs queues, caching and rate limiting.
+
+<Note>
+  If your Redis or Valkey instance support ACLs, make sure it's set up with at least `on ~* -@all +@read +@write` access string (ACL) permissions.
+</Note>
+
 <Properties>
   <Property name="REDIS_HOST" type="string">
     The Redis server hostname. Defaults to `redis`.
@@ -425,6 +431,17 @@ Env(s) required by the following containers:
 
     The value is considered `True` if the environment variable is set to `"true"` (case-insensitive).
 
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  </Property>
+  <Property name="REDIS_USERNAME" type="string (Optional)">
+    The username for the Redis server. Required if your Redis instance has ACLs enabled.
+
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  </Property>
+  <Property name="REDIS_CA_CERTS_PATH" type="string (Optional)">
+    Path to the CA certificate bundle for verifying Redis SSL certificates. Required if `REDIS_SSL` is set to `True`.
+    Example: `/etc/ssl/certs/ca-certificates.crt`
+    If you using a self-signed certificate, you can set this to the path to the certificate bundle. Sames goes for a certificate bundle for a managed service like Redis Cloud which may not be available in the default certificate bundle.
     Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
 </Properties>
