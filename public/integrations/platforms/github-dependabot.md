@@ -1,19 +1,19 @@
 import { Tag } from '@/components/Tag'
 import { DocActions } from '@/components/DocActions'
 
-export const description = 'Integrate Phase with GitHub Actions'
+export const description = 'Integrate Phase with GitHub Dependabot'
 
 <Tag variant="small">INTEGRATE</Tag>
 
-# GitHub Actions
+# GitHub Dependabot
 
-You can use Phase to sync secrets to GitHub Actions.
+You can use Phase to sync secrets to GitHub Dependabot.
 
 <DocActions />
 
 ## Automated secret syncing
 
-Automatically sync secrets in your Phase App to GitHub Actions Secrets & Environments.
+Automatically sync secrets in your Phase App to GitHub Dependabot Secrets.
 
 <Warning>
   When secret syncing is enabled, secrets stored inside Phase will be treated as
@@ -84,10 +84,8 @@ This is only for users who want to integrate their self-managed GitHub Enterpris
 - **Expiration**: select No expiration, although GitHub may rightfully recommend you set an expiration date, this is to simply prevent your integrations from breaking unexpectedly.
 - **Repository access**: choose between Public repositories, All repositories or Only select repositories, based on your requirements.
 - **Permissions**: select the following permissions that are required for Phase to sync secrets to your repositories:
-  - **Actions** - Access: `Read-only`
-  - **Environments** - Access: `Read and write`
+  - **Dependabot secrets** - Access: `Read and write`
   - **Metadata** - Access: `Read-only` (Auto-selected)
-  - **Secrets** - Access: `Read and write`
 
 ![Add GitHub Access Token credentials](/assets/images/platform-integrations/github/github-fine-grained-pat-syncing-permissons.png)
 
@@ -163,10 +161,8 @@ This is only for users who want to integrate their self-managed GitHub Enterpris
 - **Expiration**: select No expiration, although GitHub may rightfully recommend you set an expiration date, this is to simply prevent your integrations from breaking unexpectedly.
 - **Repository access**: choose between Public repositories, All repositories or Only select repositories, based on your requirements.
 - **Permissions**: select the following permissions that are required for Phase to sync secrets to your repositories:
-  - **Actions** - Access: `Read-only`
-  - **Environments** - Access: `Read and write`
+  - **Dependabot secrets** - Access: `Read and write`
   - **Metadata** - Access: `Read-only` (Auto-selected)
-  - **Secrets** - Access: `Read and write`
 
 ![Add GitHub Access Token credentials](/assets/images/platform-integrations/github/github-fine-grained-pat-syncing-permissons.png)
 
@@ -194,22 +190,22 @@ Alternatively, if you want to use GitHub Enterprise Server, you will need to pro
 
 Now that you have authenticated with GitHub, you can configure syncs for your app:
 
-1. Go to your App in the Phase Console and go to the **Syncing** tab. Select **GitHub Actions** under the 'Create a new Sync' menu.
+1. Go to your App in the Phase Console and go to the **Syncing** tab. Select **GitHub Dependabot** under the 'Create a new Sync' menu.
 
-![Create a new sync button](/assets/images/platform-integrations/github/create-gh-actions-sync-button.png)
+![Create a new sync button](/assets/images/platform-integrations/github/dependabot/create-gh-dependabot-sync-button.png)
 
 2. Select the credentials stored in the previous step as the authentication method for this sync, and click **Next**
 
-![Choose sync authentication credentials](/assets/images/platform-integrations/github/select-gh-credentials.png)
+![Choose sync authentication credentials](/assets/images/platform-integrations/github/dependabot/select-gh-third-party-credentials.png)
 
 3. Choose the source and destination to sync secrets. Select the Phase Environment as the source for Secrets.
-   Next, choose a GitHub repository from the dropdown as the destination to sync Secrets to. You may also optionally choose an GitHub Environment to sync Secrets to. Here's how you can create one - [GitHub Docs](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment).
+   Next, choose a GitHub repository from the dropdown as the destination to sync Secrets to.
 
    <Note>
-   For security reasons, secrets in your source Phase Environment will be synced to your GitHub repository as type Secrets, whether it's at a repository level or an Environment level.
+   For security reasons, secrets in your source Phase Environment will be synced to your GitHub repository as Dependabot Secrets.
    </Note>
 
-![Configure a repository sync](/assets/images/platform-integrations/github/gh-actions-configure-sync-repo.png)
+![Configure sync](/assets/images/platform-integrations/github/dependabot/setup-gh-dependabot-sync-repo.png)
 
 Alternatively, you sync secrets directly to your GitHub organization. You can choose between **All repositories**, meaning private and public repositories, or Only **Private repositories**, based on your requirements. Your GitHub repositories will inherit the organization-level secrets automatically. GitHub Actions secret takes the following presidence:
 
@@ -219,187 +215,13 @@ Alternatively, you sync secrets directly to your GitHub organization. You can ch
     - if not present, then use **Organization secret**
 
 
-![Configure an organization sync](/assets/images/platform-integrations/github/gh-actions-configure-sync-org.png)
-
+![Configure an organization sync](/assets/images/platform-integrations/github/dependabot/setup-gh-dependabot-sync-org.png)
 
 4. Once you have selected your desired source and destination, click **Create**.
-   The sync has been set up! Secrets will automatically be synced from your chosen Phase Environment to the GitHub repository as Secrets that can be used for GitHub Actions.
+   The sync has been set up! Secrets will automatically be synced from your chosen Phase Environment to the GitHub repository as Dependabot Secrets.
    You can click on the **Manage** button on the Sync card to view sync logs, pause syncing, or update authentication credentials.
 
 #### Troubleshooting
 
 - If you are using a self-hosted Phase instance and see a warning message about missing `GITHUB_INTEGRATION_CLIENT_ID` and `GITHUB_INTEGRATION_CLIENT_SECRET` while trying to set up GitHub integration credentials, this means the GitHub integration credentials have not been configured for your self-hosted deployment. Please provision the integration credentials following the [Third-party integrations configuration](/self-hosting/configuration/envars#third-party-integrations-configuration) guide, restart your deployment and then **hard refresh** the page in your browser.
 - If you are not able to see your repositories or organizations, please check if you have provisioned the correct scope of access to your GitHub credentials. If you used the OAuth flow, please make sure to go through it again and to grant access to any organizations whose repositories you wish to integrate Phase with.
-
-#### Accessing the secrets in GitHub Actions
-
-Once your secrets are synced, you can access them in your workflows using the `secrets` context. Here's an example workflow showing a typical CI/CD pipeline with different environments and their respective secrets:
-
-```yaml
-name: Build and Deploy
-on: [push]
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    environment:
-      name: test
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Run tests
-        env:
-          # 👇 Explicitly mention each secret you want to have access to in each job
-          TEST_DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
-          TEST_API_KEY: ${{ secrets.TEST_API_KEY }}
-          STRIPE_TEST_KEY: ${{ secrets.STRIPE_TEST_KEY }}
-        run: |
-          npm install
-          npm test
-
-  build:
-    needs: test
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    environment: 
-      name: build
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Build application
-        env:
-          # 👇 Explicitly mention each secret you want to have access to in each job
-          VITE_API_URL: ${{ secrets.VITE_API_URL }}
-          VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}
-          NEXT_PUBLIC_ANALYTICS_ID: ${{ secrets.NEXT_PUBLIC_ANALYTICS_ID }}
-        run: |
-          npm install
-          npm run build
-
-  push:
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-    environment:
-      name: production
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Login and push to Docker Hub
-        env:
-          # 👇 Explicitly mention each secret you want to have access to in each job
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-        run: |
-          docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_TOKEN
-          docker build -t myorg/myapp:latest .
-          docker push myorg/myapp:latest
-```
-
-You can find more information on how to use secrets inside of a GitHub Actions workflow [here](https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions#using-secrets-in-a-workflow).
-
-## Using the Phase CLI
-
-Fetch secrets directly inside your GitHub Actions workflow during runtime without storing them in GitHub.
-
-### Prerequisites
-
-- Sign up for the [Phase Console](/quickstart) and [create an App](/console/apps#create-an-app)
-- `PHASE_SERVICE_TOKEN`
-
-<Note>
-  If you are using a self-hosted instance of the Phase Console, you may supply
-  the `PHASE_HOST` environment variable with your URL (`https://<HOST>`).
-</Note>
-
-For detailed CLI installation options, please see: [Installation](/cli/install)
-
-### Setting `PHASE_SERVICE_TOKEN`
-
-1. Go to your GitHub Repository
-2. Click on the `Settings` tab
-3. Select `Secrets` from the left sidebar
-4. Click on `New repository secret`
-5. Name it `PHASE_SERVICE_TOKEN` and provide its value.
-
-### Single stage
-
-```yaml
-name: CI
-
-on: [push]
-
-jobs:
-  build_and_push:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Install phase-cli
-        run: curl -fsSL https://pkg.phase.dev/install.sh | sudo bash
-
-      - name: Export and set environment variables
-        env:
-          PHASE_SERVICE_TOKEN: ${{ secrets.PHASE_SERVICE_TOKEN }}
-        run: |
-          export $(phase secrets export --app "my application name" --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN | xargs)
-
-      - name: Build and Push Docker image
-        run: |
-          docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_TOKEN
-          docker build -t my-image .
-          docker push my-image:latest
-```
-
-### Multi-stage using `phasehq/cli` Docker image
-
-You can find the Phase CLI docker builds and related images [here](https://hub.docker.com/r/phasehq/cli).
-
-```yaml
-name: CI
-
-on: [push]
-
-jobs:
-  export_secrets:
-    runs-on: ubuntu-latest
-
-    container:
-      image: phasehq/cli
-    env:
-      PHASE_SERVICE_TOKEN: ${{ secrets.PHASE_SERVICE_TOKEN }}
-    steps:
-      - name: Export environment variables
-        id: export
-        run: |
-          # Export secrets
-          eval "$(phase secrets export --app "my application name" --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN)"
-          
-          # Set them in GitHub Actions environment file
-          echo "username=$DOCKERHUB_USERNAME" >> $GITHUB_OUTPUT
-          echo "token=$DOCKERHUB_TOKEN" >> $GITHUB_OUTPUT
-    outputs:
-      username: ${{ steps.export.outputs.username }}
-      token: ${{ steps.export.outputs.token }}
-
-  build_and_push:
-    needs: export_secrets
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Build and Push Docker image
-        run: |
-          docker login -u ${{ needs.export_secrets.outputs.username }} -p ${{ needs.export_secrets.outputs.token }}
-          docker build -t my-image .
-          docker push my-image:latest
-```
