@@ -221,9 +221,6 @@ Alternatively, you sync secrets directly to your GitHub organization. You can ch
 
 ![Configure an organization sync](/assets/images/platform-integrations/github/gh-actions-configure-sync-org.png)
 
-<Note>
-  If you are not able to see your repositories or organizations, please check if you have provisioned the correct scope of access to your GitHub credentials.
-</Note>
 
 4. Once you have selected your desired source and destination, click **Create**.
    The sync has been set up! Secrets will automatically be synced from your chosen Phase Environment to the GitHub repository as Secrets that can be used for GitHub Actions.
@@ -231,7 +228,8 @@ Alternatively, you sync secrets directly to your GitHub organization. You can ch
 
 #### Troubleshooting
 
-If you are using a self-hosted Phase instance and see a warning message about missing `GITHUB_INTEGRATION_CLIENT_ID` and `GITHUB_INTEGRATION_CLIENT_SECRET` while trying to set up GitHub integration credentials, this means the GitHub integration credentials have not been configured for your self-hosted deployment. Please provision the integration credentials following the [Third-party integrations configuration](/self-hosting/configuration/envars#third-party-integrations-configuration) guide, restart your deployment and then **hard refresh** the page in your browser.
+- If you are using a self-hosted Phase instance and see a warning message about missing `GITHUB_INTEGRATION_CLIENT_ID` and `GITHUB_INTEGRATION_CLIENT_SECRET` while trying to set up GitHub integration credentials, this means the GitHub integration credentials have not been configured for your self-hosted deployment. Please provision the integration credentials following the [Third-party integrations configuration](/self-hosting/configuration/envars#third-party-integrations-configuration) guide, restart your deployment and then **hard refresh** the page in your browser.
+- If you are not able to see your repositories or organizations, please check if you have provisioned the correct scope of access to your GitHub credentials. If you used the OAuth flow, please make sure to go through it again and to grant access to any organizations whose repositories you wish to integrate Phase with.
 
 #### Accessing the secrets in GitHub Actions
 
