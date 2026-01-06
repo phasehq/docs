@@ -322,6 +322,10 @@ export const navigation = [
         title: 'GitHub Actions',
         href: '/integrations/platforms/github-actions',
       },
+      {
+        title: 'GitHub Dependabot',
+        href: '/integrations/platforms/github-dependabot',
+      },
       { title: 'GitLab CI', href: '/integrations/platforms/gitlab-ci' },
       { title: 'Vercel', href: '/integrations/platforms/vercel' },
       { title: 'Railway', href: '/integrations/platforms/railway' },
