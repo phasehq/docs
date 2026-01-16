@@ -46,6 +46,7 @@
 - [integrations/platforms/cloudflare-workers](https://docs.phase.dev/integrations/platforms/cloudflare-workers.md)
 - [integrations/platforms/cloudflare-pages](https://docs.phase.dev/integrations/platforms/cloudflare-pages.md)
 - [integrations/platforms/github-actions](https://docs.phase.dev/integrations/platforms/github-actions.md)
+- [integrations/platforms/github-dependabot](https://docs.phase.dev/integrations/platforms/github-dependabot.md)
 - [integrations/platforms/gitlab-ci](https://docs.phase.dev/integrations/platforms/gitlab-ci.md)
 - [integrations/platforms/vercel](https://docs.phase.dev/integrations/platforms/vercel.md)
 - [integrations/platforms/railway](https://docs.phase.dev/integrations/platforms/railway.md)

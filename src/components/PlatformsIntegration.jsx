@@ -34,7 +34,14 @@ const SDKs = [
     available: true,
   },
   {
-    href: '/integrations/platforms/integrations/platforms/aws-elastic-container-service',
+    href: '/integrations/platforms/github-dependabot',
+    name: 'GitHub Dependabot',
+    description: 'Sync secrets to GitHub Dependabot.',
+    logo: logoGitHub,
+    available: true,
+  },
+  {
+    href: '/integrations/platforms/aws-elastic-container-service',
     name: 'AWS Elastic Container Service',
     description:
       'Deploy secrets to your ECS tasks.',

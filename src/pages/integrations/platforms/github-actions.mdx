@@ -11,7 +11,7 @@ You can use Phase to sync secrets to GitHub Actions.
 
 <DocActions />
 
-## Using Phase Console secret syncing
+## Automated secret syncing
 
 Automatically sync secrets in your Phase App to GitHub Actions Secrets & Environments.
 
@@ -209,7 +209,18 @@ Now that you have authenticated with GitHub, you can configure syncs for your ap
    For security reasons, secrets in your source Phase Environment will be synced to your GitHub repository as type Secrets, whether it's at a repository level or an Environment level.
    </Note>
 
-![Configure sync](/assets/images/platform-integrations/github/gh-actions-configure-sync.png)
+![Configure a repository sync](/assets/images/platform-integrations/github/gh-actions-configure-sync-repo.png)
+
+Alternatively, you sync secrets directly to your GitHub organization. You can choose between **All repositories**, meaning private and public repositories, or Only **Private repositories**, based on your requirements. Your GitHub repositories will inherit the organization-level secrets automatically. GitHub Actions secret takes the following presidence:
+
+
+- **Environment secret**
+  - if not present, then use **Repository secret** 
+    - if not present, then use **Organization secret**
+
+
+![Configure an organization sync](/assets/images/platform-integrations/github/gh-actions-configure-sync-org.png)
+
 
 4. Once you have selected your desired source and destination, click **Create**.
    The sync has been set up! Secrets will automatically be synced from your chosen Phase Environment to the GitHub repository as Secrets that can be used for GitHub Actions.
@@ -217,7 +228,8 @@ Now that you have authenticated with GitHub, you can configure syncs for your ap
 
 #### Troubleshooting
 
-If you are using a self-hosted Phase instance and see a warning message about missing `GITHUB_INTEGRATION_CLIENT_ID` and `GITHUB_INTEGRATION_CLIENT_SECRET` while trying to set up GitHub integration credentials, this means the GitHub integration credentials have not been configured for your self-hosted deployment. Please provision the integration credentials following the [Third-party integrations configuration](/self-hosting/configuration/envars#third-party-integrations-configuration) guide, restart your deployment and then **hard refresh** the page in your browser.
+- If you are using a self-hosted Phase instance and see a warning message about missing `GITHUB_INTEGRATION_CLIENT_ID` and `GITHUB_INTEGRATION_CLIENT_SECRET` while trying to set up GitHub integration credentials, this means the GitHub integration credentials have not been configured for your self-hosted deployment. Please provision the integration credentials following the [Third-party integrations configuration](/self-hosting/configuration/envars#third-party-integrations-configuration) guide, restart your deployment and then **hard refresh** the page in your browser.
+- If you are not able to see your repositories or organizations, please check if you have provisioned the correct scope of access to your GitHub credentials. If you used the OAuth flow, please make sure to go through it again and to grant access to any organizations whose repositories you wish to integrate Phase with.
 
 #### Accessing the secrets in GitHub Actions
 

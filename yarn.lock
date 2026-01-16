@@ -444,10 +444,10 @@
   resolved "https://registry.npmjs.org/@pkgjs/parseargs/-/parseargs-0.11.0.tgz"
   integrity sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==
 
-"@posthog/core@1.5.5":
-  version "1.5.5"
-  resolved "https://registry.yarnpkg.com/@posthog/core/-/core-1.5.5.tgz#fc650389b4275cec73b2e64cc2642f709bd61c39"
-  integrity sha512-m7G1EQTgo9xrr3lZxCp9C2egP99MSRpIDD95wYzwUPxMesKxI0xEQ+TC5LS/XOXIdmsNvsx4UcxwmzhSwD2GWA==
+"@posthog/core@1.9.0":
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/@posthog/core/-/core-1.9.0.tgz#b0f3b2018e166dd47e8d5a38fbcf32c93ff384f7"
+  integrity sha512-j7KSWxJTUtNyKynLt/p0hfip/3I46dWU2dk+pt7dKRoz2l5CYueHuHK4EO7Wlgno5yo1HO4sc4s30MXMTICHJw==
   dependencies:
     cross-spawn "^7.0.6"
 
@@ -4983,12 +4983,12 @@ postcss@^8.4.31:
     picocolors "^1.1.1"
     source-map-js "^1.2.1"
 
-posthog-js@^1.297.2:
-  version "1.297.2"
-  resolved "https://registry.yarnpkg.com/posthog-js/-/posthog-js-1.297.2.tgz#708e77e9acc5bbaf35ec40261cfe0da3a1a7597e"
-  integrity sha512-pDtCKHpKegV1D5Yk9PBmkFwI9FMnLJm0TsBO5c5/PhPq5Om4y/t+1qqbNcLCdLajkuYl2px9UlRTzycQ6W7Vmw==
+posthog-js@^1.314.0:
+  version "1.314.0"
+  resolved "https://registry.yarnpkg.com/posthog-js/-/posthog-js-1.314.0.tgz#800512434d1e9d9da08cd07f541bcc1a799124d8"
+  integrity sha512-qW1T73UAFpA0g2Ln0blsOUJxRhv0Tn4DrPdhGyTpw+MupW+qvVjzEg/i9jWQ4Al+8AkrNcmZFafJcSWXxWsWqg==
   dependencies:
-    "@posthog/core" "1.5.5"
+    "@posthog/core" "1.9.0"
     core-js "^3.38.1"
     fflate "^0.4.8"
     preact "^10.19.3"

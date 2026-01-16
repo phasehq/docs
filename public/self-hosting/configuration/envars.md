@@ -37,10 +37,13 @@ The following providers are available:
 - `google-oidc` - Google OIDC
 - `jumpcloud-oidc` - JumpCloud OIDC
 - `entra-id-oidc` - Microsoft Entra ID OIDC
+- `okta-oidc` - Okta OIDC
 
 You can find a complete list of user auth providers [here](/access-control/authentication#user-authentication).
 
 ### Google OAuth 2.0
+
+Provider slug: `google`
 
 You can find instructions for setting up SSO with Google OAuth 2.0 [here](/access-control/authentication/oauth-sso#google).
 
@@ -68,6 +71,8 @@ Env(s) required by the following containers:
 
 ### GitHub OAuth 2.0
 
+Provider slug: `github`
+
 You can find instructions for setting up SSO with a GitHub OAuth 2.0 App [here](/access-control/authentication/oauth-sso#git-hub).
 
 Set the "Authorization callback URL" for your GitHub OAuth App as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/github`.
@@ -93,6 +98,8 @@ Env(s) required by the following containers:
 - [`backend`](https://hub.docker.com/r/phasehq/backend)
 
 ### GitHub Enterprise Server (self-hosted) OAuth 2.0
+
+Provider slug: `github-enterprise`
 
 You can find instructions for setting up SSO with a GitHub Enterprise Server OAuth 2.0 App using the same steps as [GitHub OAuth](/access-control/authentication/oauth-sso#git-hub), but with your enterprise instance.
 
@@ -125,6 +132,8 @@ Env(s) required by the following containers:
 - [`backend`](https://hub.docker.com/r/phasehq/backend)
 
 ### GitLab OAuth 2.0
+
+Provider slug: `gitlab`
 
 You can find instructions for setting up SSO with a GitLab OAuth 2.0 Application [here](/access-control/authentication/oauth-sso#git-lab).
 
@@ -161,6 +170,8 @@ Env(s) required by the following containers:
 
 ### Authentik OAuth 2.0
 
+Provider slug: `authentik`
+
 You can find instructions for setting up SSO with an Authentik OAuth/OIDC Application [here](/access-control/authentication/oauth-sso#authentik).
 
 Set the "Redirect URI" for your Authentik OAuth/OIDC App as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/authentik`.
@@ -193,6 +204,8 @@ Env(s) required by the following containers:
 
 ### Google OIDC
 
+Provider slug: `google-oidc`
+
 You can find instructions for setting up SSO with a Google OIDC Application [here](/access-control/authentication/oidc-sso#google).
 
 Set the "callback URL" for your Google OIDC App as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/google-oidc`.
@@ -217,6 +230,8 @@ Env(s) required by the following containers:
 - [`backend`](https://hub.docker.com/r/phasehq/backend)
 
 ### JumpCloud OIDC
+
+Provider slug: `jumpcloud-oidc`
 
 You can find instructions for setting up SSO with a JumpCloud OIDC Application [here](/access-control/authentication/oidc-sso#jump-cloud).
 
@@ -244,6 +259,8 @@ Env(s) required by the following containers:
 
 ### Microsoft Entra ID OIDC
 
+Provider slug: `entra-id-oidc`
+
 You can find instructions for setting up SSO with a Microsoft Entra ID OIDC Application [here](/access-control/authentication/oidc-sso#microsoft-entra-id-azure-ad).
 
 Set the "callback URL" for your Microsoft Entra ID OIDC App as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/entra-id-oidc`.
@@ -264,6 +281,37 @@ After setting up your Application on Microsoft Entra ID, set the Tenant ID, Clie
   </Property>
   <Property name="ENTRA_ID_OIDC_CLIENT_SECRET" type="string">
     Microsoft Entra ID Client secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
+  </Property>
+</Properties>
+
+Env(s) required by the following containers:
+- [`frontend`](https://hub.docker.com/r/phasehq/frontend)
+- [`backend`](https://hub.docker.com/r/phasehq/backend)
+
+### Okta OIDC
+
+Provider slug: `okta-oidc`
+
+You can find instructions for setting up SSO with an Okta OIDC Application [here](/access-control/authentication/oidc-sso#okta).
+
+Set the "Sign-in redirect URIs" for your Okta OIDC App as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/okta-oidc`.
+
+Example:
+```bash
+https://[**YOUR_DOMAIN**]/api/auth/callback/okta-oidc
+```
+
+After setting up your Application on Okta, set the Client ID, Client Secret and Issuer values:
+
+<Properties>
+  <Property name="OKTA_OIDC_CLIENT_ID" type="string">
+    Okta OIDC Application Client ID
+  </Property>
+  <Property name="OKTA_OIDC_CLIENT_SECRET" type="string">
+    Okta OIDC Application Client secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
+  </Property>
+  <Property name="OKTA_OIDC_ISSUER" type="string">
+    Your Okta domain URL. Can be found in your Okta dashboard URL (e.g. `https://acme-1234567.okta.com`).
   </Property>
 </Properties>
 
@@ -787,6 +835,36 @@ aws iam create-access-key --user-name phase-integration-user
 
 ---
 
+## License
+
+Phase requires a valid license to use the Enterprise tier features in self-hosted deployments. You can request a free trial license [here](https://phase.dev/pricing).
+
+### Offline license
+
+For air-gapped or restricted-egress environments, use the `PHASE_LICENSE_OFFLINE` variable.
+
+<Note>
+Phase does not export any outbound usage telemetry for self-hosted instances. This license will work in fully air-gapped environments or where egress is filtered.
+</Note>
+
+
+<Properties>
+  <Property name="PHASE_LICENSE_OFFLINE" type="string">
+    The environment variable Phase license for self-hosted deployments with egress restrictions. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath
+    Example: `phase_license:v1:...`
+    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  </Property>
+</Properties>
+
+The backend logs license validation details on every startup:
+
+```fish
+phase-backend  | License is valid.
+phase-backend  | License ID: e3de75b1-9afc-4ec1-a203-18febd7be2c0, Customer Name: SpaceX, Tier: ENTERPRISE, Expiry: 2080-01-01
+```
+
+---
+
 ## Debugging
 
 <Properties>
@@ -808,7 +886,7 @@ Env(s) required by the following containers:
 
 ---
 
-## Additional Environment Variables 
+## Additional Environment Variables
 
 These variables are not required if using the suggested [docker-compose template](https://raw.githubusercontent.com/phasehq/console/main/docker-compose.yml). However if you are deploying the Phase Console using a custom docker-compose configuration or without docker-compose, make sure the following variables are correctly set. 
 
@@ -879,9 +957,10 @@ These variables are not required if using the suggested [docker-compose template
     Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
 
-  <Property name="PHASE_LICENSE_OFFLINE" type="string">
-    The environment variable Phase license for self-hosted deployments with egress restrictions. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath
-    Example: `phase_license:v1:...`
-    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  <Property name="GUNICORN_WORKERS" type="number (Optional)">
+    The number of Gunicorn worker processes for handling requests in the backend. 
+    If not specified, Phase will automatically calculate the number of workers based on available CPU cores using the formula `(2 * CPUs) + 1`, with a default cap of 8 workers to prevent potential database connection exhaustion.
+    
+    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
 </Properties>
