@@ -41,7 +41,7 @@ const SDKs = [
     available: true,
   },
   {
-    href: '/integrations/platforms/integrations/platforms/aws-elastic-container-service',
+    href: '/integrations/platforms/aws-elastic-container-service',
     name: 'AWS Elastic Container Service',
     description:
       'Deploy secrets to your ECS tasks.',
