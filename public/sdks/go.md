@@ -28,50 +28,9 @@ SDK to integrate Phase in server-side applications running GoLang.
 
 ---
 
-### Install `libsodium` dependency
-
 <Note>
-  To utilize the GoLang SDK, ensure you have `libsodium` installed on your
-  system as it's required for cryptographic operations.
+  Starting from version `2.0.0`, the Phase Go SDK is a pure Go implementation and no longer requires `libsodium` or `CGO`.
 </Note>
-
-<CodeGroup>
-
-```fish {{ title: 'macOS' }}
-brew install libsodium
-```
-
-```fish {{ title: 'Fedora' }}
-sudo dnf install libsodium-devel
-```
-
-```fish {{ title: 'Ubuntu and Debian' }}
-sudo apt-get update && sudo apt-get install libsodium-dev
-```
-
-```fish {{ title: 'Arch Linux' }}
-sudo pacman -Syu libsodium
-```
-
-```fish {{ title: 'Alpine Linux' }}
-sudo apk add libsodium-dev
-```
-
-```fish {{ title: 'Windows - vcpkg' }}
-vcpkg install libsodium
-```
-
-```fish {{ title: 'Windows - choco' }}
-choco install libsodium
-```
-
-```plaintext {{ title: 'Windows (manual)' }}
-Download pre-built binaries from the official libsodium GitHub releases page (https://github.com/jedisct1/libsodium/releases). Follow the included instructions to integrate `libsodium` with your development environment.
-```
-
-</CodeGroup>
-
----
 
 ## Install the SDK
 

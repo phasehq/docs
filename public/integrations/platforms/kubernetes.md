@@ -33,7 +33,7 @@ helm repo add phase https://helm.phase.dev && helm repo update
 Install the Phase Secrets Operator:
 
 ```fish
-helm install phase-secrets-operator phase/phase-kubernetes-operator --set image.tag=v1.3.0
+helm install phase-secrets-operator phase/phase-kubernetes-operator --set image.tag=v1.4.0
 ```
 
 <Note>
@@ -70,6 +70,7 @@ spec:
   phaseAppEnv: 'production' # OPTIONAL - The Phase App Environment to fetch secrets from
   phaseAppEnvPath: '/' # OPTIONAL Path within the Phase application environment to fetch secrets from
   phaseHost: 'https://console.phase.dev' # OPTIONAL - URL of a Phase Console instance
+  pollingInterval: 5 # OPTIONAL - Interval in seconds to poll for secret updates
   authentication:
     serviceToken:
       serviceTokenSecretReference:
@@ -98,7 +99,10 @@ View the secrets:
 kubectl get secret my-application-secret -o yaml
 ```
 
-<Note>The operator automatically synchronizes secrets every 60 seconds.</Note>
+<Note>
+  The operator automatically synchronizes secrets every 60 seconds by default,
+  or as specified by the `pollingInterval` property.
+</Note>
 
 ### Properties
 
@@ -121,6 +125,11 @@ kubectl get secret my-application-secret -o yaml
   <Property name="phaseHost" type="optional">
     The URL of a Phase Console instance. <b>Default</b>:
     `https://console.phase.dev`.
+  </Property>
+  <Property name="pollingInterval" type="optional">
+    Interval in seconds to poll for secret updates. For near real-time syncing,
+    it is recommended to set this value to 5 seconds or less.{' '}
+    <b>Default</b>: `60`.
   </Property>
   <Property
     name="authentication.serviceToken.serviceTokenSecretReference.secretName"
@@ -186,6 +195,7 @@ spec:
   phaseAppEnv: 'production'
   phaseAppEnvTag: 'certs'
   phaseHost: 'https://console.phase.dev'
+  pollingInterval: 5
   authentication:
     serviceToken:
       serviceTokenSecretReference:
