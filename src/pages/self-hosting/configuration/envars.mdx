@@ -398,11 +398,33 @@ Env(s) required by the following containers:
 
     Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
+  <Property name="DATABASE_SSL" type="boolean">
+    Enables or disables SSL/TLS for database connections. Defaults to `False`. 
+    
+    When `False` or unset, Phase uses the default `sslmode=prefer`, which attempts a TLS connection but falls back to plaintext if TLS is unavailable. When `True`, Phase enforces a TLS connection.
+    
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  </Property>
+  <Property name="DATABASE_SSL_CA_PATH" type="string (Optional)">
+    Path to the CA certificate bundle for verifying the database's TLS certificate.
+    
+    If provided, Phase sets `sslmode=verify-full` and validates the database certificate against this CA, including a hostname check. If not provided (but `DATABASE_SSL=True`), Phase sets `sslmode=require`.
+    
+    For AWS RDS, Phase includes the RDS CA bundle at `/etc/ssl/certs/rds-ca-bundle.pem` which you can point this variable to.
+    
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  </Property>
 </Properties>
 
 ---
 
 ## Redis configuration
+
+Phase uses Redis or Valkey for a synchronous jobs queues, caching and rate limiting.
+
+<Note>
+  If your Redis or Valkey instance support ACLs, make sure it's set up with at least `on ~* -@all +@read +@write +ping` access string (ACL) permissions.
+</Note>
 
 <Properties>
   <Property name="REDIS_HOST" type="string">
@@ -418,6 +440,24 @@ Env(s) required by the following containers:
   <Property name="REDIS_PASSWORD" type="string">
     The password for the Redis server. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
 
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  </Property>
+  <Property name="REDIS_SSL" type="boolean">
+    Enables or disables SSL for Redis connections. Defaults to `False`.
+
+    The value is considered `True` if the environment variable is set to `"true"` (case-insensitive).
+
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  </Property>
+  <Property name="REDIS_USER" type="string (Optional)">
+    The username for the Redis server. Required if your Redis instance has ACLs enabled.
+
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  </Property>
+  <Property name="REDIS_SSL_CA_PATH" type="string (Optional)">
+    Path to the CA certificate bundle for verifying Redis SSL certificates. Required if `REDIS_SSL` is set to `True`.
+    Example: `/etc/ssl/certs/ca-certificates.crt`
+    If you using a self-signed certificate, you can set this to the path to the certificate bundle. Sames goes for a certificate bundle for a managed service like Redis Cloud which may not be available in the default certificate bundle.
     Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
 </Properties>
@@ -962,5 +1002,10 @@ These variables are not required if using the suggested [docker-compose template
     If not specified, Phase will automatically calculate the number of workers based on available CPU cores using the formula `(2 * CPUs) + 1`, with a default cap of 8 workers to prevent potential database connection exhaustion.
     
     Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
+  </Property>
+  <Property name="RATE_LIMIT_DEFAULT" type="string">
+    Rate limit for API requests.
+    Example: `100/minute`. Rate limits can be specified over a period of second, minute, hour or day. The period must be specified after the / separator using s, m, h or d, respectively. For increased clarity, extended units such as second, minute, hour, day or even abbreviations like sec, min, hr are allowed, as only the first character is relevant to identify the rate. 
+    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
 </Properties>
