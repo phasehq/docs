@@ -207,7 +207,7 @@ Now that you have authenticated with GitHub, you can configure syncs for your ap
 
 ![Configure sync](/assets/images/platform-integrations/github/dependabot/setup-gh-dependabot-sync-repo.png)
 
-Alternatively, you sync secrets directly to your GitHub organization. You can choose between **All repositories**, meaning private and public repositories, or Only **Private repositories**, based on your requirements. Your GitHub repositories will inherit the organization-level secrets automatically. GitHub Actions secret takes the following precedence:
+Alternatively, you sync secrets directly to your GitHub organization. You can choose between **All repositories**, meaning private and public repositories, or Only **Private repositories**, based on your requirements. Your GitHub repositories will inherit the organization-level secrets automatically. GitHub Actions secret takes the following presidence:
 
 
 - **Environment secret**

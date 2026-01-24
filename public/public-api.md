@@ -68,3 +68,36 @@ curl https://api.phase.dev/v1/secrets/?app_id=8d8fde43-ceb6-4c92-a776-827433512f
 ## Encryption Mode
 
 Certain API endpoints that allow manipulation of encrypted data such as Secrets require Server-side Encryption (SSE) to be enabled for the App. You can enable SSE for an App from the [App settings page](/console/apps#settings).
+
+## Rate Limits
+
+The Phase Cloud API enforces rate limiting to ensure fair usage and maintain optimal performance for all users. The following standard rate limits apply, based on your Organisation's plan:
+
+| Plan | Requests per Minute |
+|------|---------------------|
+| Free | 120                  |
+| Pro  | 240                 |
+| Enterprise | Custom |
+
+<Note>
+The rate limits are enforced per account (User or Service Account) across an organisation.
+</Note>
+
+If you exceed the allowed number of requests within a given time frame, you will receive a `429 Too Many Requests` response. The response will include information about when you can retry your request in the `retry-after` header.
+
+```bash
+HTTP/2 429 
+server: nginx
+date: Fri, 05 Dec 2025 07:18:01 GMT
+content-type: application/json
+content-length: 68
+retry-after: 52
+allow: GET, POST, PUT, DELETE, HEAD, OPTIONS
+x-frame-options: DENY
+vary: Origin
+x-content-type-options: nosniff
+referrer-policy: same-origin
+cross-origin-opener-policy: same-origin
+```
+
+Self-hosted Phase instances do not enforce rate limiting by default. However, administrators can configure rate limiting based on their requirements via the `RATE_LIMIT_DEFAULT` environment variable. Please see the self-hosting [deployment configuration documentation](/self-hosting/configuration/envars#additional-environment-variables) for more details.
