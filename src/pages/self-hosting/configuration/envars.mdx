@@ -423,7 +423,7 @@ Env(s) required by the following containers:
 Phase uses Redis or Valkey for a synchronous jobs queues, caching and rate limiting.
 
 <Note>
-  If your Redis or Valkey instance support ACLs, make sure it's set up with at least `on ~* -@all +@read +@write +ping` access string (ACL) permissions.
+  If your Redis or Valkey instance support ACLs, make sure it's set up with at least `on ~* -@all +@read +@write +ping +multi +exec +discard +watch +unwatch +@scripting` access string (ACL) permissions.
 </Note>
 
 <Properties>
