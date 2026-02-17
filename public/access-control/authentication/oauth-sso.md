@@ -118,7 +118,7 @@ If you are using GitHub Enterprise Server (self-hosted) instance, you may follow
        `https://[**YOUR_DOMAIN**]`
      </Property>
      <Property name="Authorization callback URL" type="string">
-       For GitHub.com: `https://[**YOUR_DOMAIN**]/api/auth/callback/github`<br/>
+       For GitHub.com: `https://[**YOUR_DOMAIN**]/service/oauth/github/callback`<br/>
        For GitHub Enterprise Server: `https://[**YOUR_DOMAIN**]/api/auth/callback/github-enterprise`
      </Property>
    </Properties>
