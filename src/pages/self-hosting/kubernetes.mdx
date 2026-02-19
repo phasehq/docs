@@ -198,6 +198,37 @@ helm repo update
 helm upgrade phase-console phase/phase -f phase-values.yaml
 ```
 
+### Upgrading to 1.0.0
+
+Version 1.0.0 introduces breaking changes that require attention:
+
+**PostgreSQL StatefulSet Migration**
+
+PostgreSQL has been changed from a Deployment to a StatefulSet for improved data safety. This changes the PVC naming:
+- Old: `<release>-postgres-pvc`
+- New: `postgres-data-<release>-postgres-0`
+
+If you have existing data, you'll need to migrate it manually:
+
+```fish
+# 1. Create a backup before upgrading
+kubectl exec -it <postgres-pod> -- pg_dumpall -U postgres > backup.sql
+
+# 2. Upgrade the chart
+helm upgrade phase-console phase/phase -f phase-values.yaml
+
+# 3. Restore the data
+kubectl exec -i <new-postgres-pod> -- psql -U postgres < backup.sql
+```
+
+**File-Based Secrets**
+
+Secrets are now mounted as files at `/etc/phase/secrets/` with corresponding `_FILE` environment variables (e.g., `DATABASE_PASSWORD_FILE=/etc/phase/secrets/DATABASE_PASSWORD`). The Phase Console application already supports this pattern, so no application changes are needed.
+
+**Per-Component Secret Isolation**
+
+Each component (backend, frontend, worker) now only receives the secrets it needs. For example, the frontend no longer has access to `DATABASE_PASSWORD`. This is configured in `values.yaml` under the `secrets` key.
+
 ## Uninstalling
 
 To uninstall Phase Console:
@@ -205,6 +236,37 @@ To uninstall Phase Console:
 ```fish
 helm uninstall phase-console
 ```
+
+## Security
+
+### Client IP Forwarding
+
+By default, the NGINX ingress controller may not forward the real client IP address to the Phase backend. This means audit logs and rate limiting will see the ingress controller's internal pod IP instead of the actual client IP.
+
+Phase's backend reads the client IP from the `X-Real-IP` header set by the NGINX ingress controller. To ensure this header contains the real client IP (and not a spoofed value), configure the NGINX ingress controller's ConfigMap:
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ingress-nginx-controller
+  namespace: ingress-nginx
+data:
+  use-forwarded-headers: "true"
+  compute-real-ip-from: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16" # 👈 Replace with your load balancer / VPC CIDR
+```
+
+Apply the ConfigMap:
+
+```fish
+kubectl apply -f ingress-nginx-configmap.yaml
+```
+
+<Note>
+The `compute-real-ip-from` setting defines which source IPs are trusted to send `X-Forwarded-For` headers. Only headers from IPs matching these CIDRs are trusted — all others are overwritten with the actual TCP source IP, preventing client-side IP spoofing.
+
+Set this to the CIDR range of your load balancer or VPC. For example, if your cluster VPC uses `10.0.0.0/16`, set `compute-real-ip-from: "10.0.0.0/16"`.
+</Note>
 
 ## Troubleshooting
 
