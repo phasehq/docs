@@ -3,6 +3,7 @@ import clsx from 'clsx'
 
 import { Heading } from '@/components/Heading'
 import ZoomableImage from './ZoomableImage'
+export { SkillBox } from '@/components/SkillBox'
 
 export const a = Link
 export { Button } from '@/components/Button'
