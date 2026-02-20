@@ -19,6 +19,12 @@ This guide will walk you through installing the Phase Console on an AWS EKS clus
 
 Both paths share the same cluster setup steps and diverge at the database and deployment configuration.
 
+<SkillBox
+  skill="eks"
+  refs={["eks-deployment", "troubleshooting"]}
+  triggerPhrase="deploy Phase on EKS"
+/>
+
 ## Prerequisites
 
 - An AWS Account with necessary permissions to create EKS clusters, IAM roles, and related resources.
@@ -100,7 +106,7 @@ kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/
 Wait for cert-manager to be fully deployed:
 
 ```fish
-kubectl wait --for=condition=Ready pods -l app.kubernetes.io/instance=cert-manager -n cert-manager --timeout=60s
+kubectl wait --for=condition=Ready pods -l app.kubernetes.io/instance=cert-manager -n cert-manager --timeout=120s
 ```
 
 ### 4. Configure ClusterIssuer
@@ -668,11 +674,72 @@ With Proxy Protocol enabled, the NLB embeds the original client IP in the TCP st
 
 ## IRSA (IAM Roles for Service Accounts)
 
-If your Phase Console backend needs to access AWS services (e.g., S3, SES, Secrets Manager), you can use [IAM Roles for Service Accounts (IRSA)](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html) to grant fine-grained IAM permissions to the Phase Console pods without managing AWS credentials.
+If your Phase Console backend needs to access AWS services, you can use [IAM Roles for Service Accounts (IRSA)](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html) to grant fine-grained IAM permissions to Phase pods without managing static AWS credentials.
+
+The primary use case for IRSA with Phase is **integration credentials** — allowing Phase to sync secrets to AWS-native backends like Secrets Manager and SSM Parameter Store without embedding `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` in your configuration.
 
 ### 1. Create an IAM Policy
 
-Create an IAM policy with the permissions your Phase Console needs. For example, to allow sending emails via SES:
+Create an IAM policy with the permissions your Phase Console needs. Choose the policy based on which AWS integrations you plan to use:
+
+<TabGroup title="IAM Policy" subtitle="Choose the AWS integration you want to enable." slug="irsa-policy">
+  <TabPanel title="Secrets Manager" slug="secrets-manager">
+
+Allows Phase to create, read, update, and delete secrets in AWS Secrets Manager:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "secretsmanager:CreateSecret",
+        "secretsmanager:UpdateSecret",
+        "secretsmanager:PutSecretValue",
+        "secretsmanager:GetSecretValue",
+        "secretsmanager:DeleteSecret",
+        "secretsmanager:DescribeSecret",
+        "secretsmanager:ListSecrets",
+        "secretsmanager:TagResource"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+```
+
+  </TabPanel>
+  <TabPanel title="SSM Parameter Store" slug="ssm">
+
+Allows Phase to create, read, update, and delete parameters in AWS Systems Manager Parameter Store:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ssm:PutParameter",
+        "ssm:GetParameter",
+        "ssm:GetParameters",
+        "ssm:GetParametersByPath",
+        "ssm:DeleteParameter",
+        "ssm:DeleteParameters",
+        "ssm:AddTagsToResource",
+        "ssm:ListTagsForResource"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+```
+
+  </TabPanel>
+  <TabPanel title="SES (Email)" slug="ses">
+
+Allows Phase to send email via Amazon SES (used for notifications and invites):
 
 ```json
 {
@@ -690,9 +757,22 @@ Create an IAM policy with the permissions your Phase Console needs. For example,
 }
 ```
 
+  </TabPanel>
+</TabGroup>
+
+Save the policy JSON to a file (e.g., `phase-policy.json`) and create it in IAM:
+
+```fish
+aws iam create-policy \
+  --policy-name PhaseConsolePolicy \
+  --policy-document file://phase-policy.json
+```
+
+Note the returned `Arn` — you'll need it in the next step.
+
 ### 2. Create an IRSA Service Account
 
-Use `eksctl` to create a service account with the IAM role:
+Use `eksctl` to create a service account linked to the IAM role:
 
 ```fish
 eksctl create iamserviceaccount \
@@ -702,6 +782,8 @@ eksctl create iamserviceaccount \
   --attach-policy-arn arn:aws:iam::123456789012:policy/PhaseConsolePolicy \
   --approve
 ```
+
+Replace `123456789012` with your AWS account ID and `phase-eks-cluster` with your cluster name.
 
 ### 3. Configure the Helm Chart
 
@@ -715,4 +797,10 @@ serviceAccount:
     eks.amazonaws.com/role-arn: "arn:aws:iam::123456789012:role/phase-backend-role"
 ```
 
-The Helm chart will configure the backend, worker, and migration pods to use this service account, enabling them to assume the associated IAM role.
+Apply the change:
+
+```fish
+helm upgrade phase-console phase/phase -f phase-values.yaml
+```
+
+The Helm chart will configure the backend, worker, and migration pods to use this service account, enabling them to assume the associated IAM role. Phase will automatically use the instance credentials — no `AWS_ACCESS_KEY_ID` or `AWS_SECRET_ACCESS_KEY` configuration is needed.
