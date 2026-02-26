@@ -33,7 +33,7 @@ helm repo add phase https://helm.phase.dev && helm repo update
 Install the Phase Secrets Operator:
 
 ```fish
-helm install phase-secrets-operator phase/phase-kubernetes-operator --set image.tag=v1.4.0
+helm install phase-secrets-operator phase/phase-kubernetes-operator --set image.tag=v1.4.1
 ```
 
 <Note>
@@ -156,24 +156,81 @@ kubectl get secret my-application-secret -o yaml
     The type of the Kubernetes Secret. Options include: "Opaque",
     "kubernetes.io/tls"
   </Property>
+  <Property name="managedSecretReferences.nameTransformer" type="optional">
+    Default name transformer applied to all secret keys in this managed secret.
+    Per-key `nameTransformer` set within `processors` takes precedence.
+    Options: `camel`, `upper-camel`, `lower-snake`, `tf-var`, `lower-kebab`.
+  </Property>
   <Property name="managedSecretReferences.processors" type="optional">
-    Processors to transform the data during ingestion. Each processor has
-    properties like 'asName', 'nameTransformer', and 'type', with various
-    options for transforming the secret key name and the type of process to be
-    performed. <b>Default</b> for 'type': `plain`.
+    Per-key processors to transform secret key names and values during ingestion.
+    Each processor can have the following properties:
+    `asName` (rename the key), `nameTransformer` (transform the key casing),
+    and `type` (`plain` or `base64`). <b>Default</b> for 'type': `plain`.
   </Property>
 </Properties>
 
 ## Secret processors:
 
+### Secret key name transformation
+
+The `nameTransformer` option transforms secret key names from `UPPER_SNAKE_CASE` to a target format. It can be set at two levels:
+
+1. **Secret-level** — applies to all keys in the managed secret.
+2. **Per-key** — set within `processors` for a specific key. Takes precedence over the secret-level transformer.
+
+If both `asName` and `nameTransformer` are set on the same key, `asName` takes precedence.
+
+#### Example: Transforming all keys to camelCase
+
+```yaml
+managedSecretReferences:
+  - secretName: 'my-app-config'
+    secretNamespace: 'default'
+    nameTransformer: 'camel'
+```
+
+| Secret stored in Phase | Synced to Kubernetes |
+| ---------------------- | -------------------- |
+| `DATABASE_HOST`        | `databaseHost`       |
+| `API_KEY`              | `apiKey`             |
+| `STRIPE_SECRET_KEY`    | `stripeSecretKey`    |
+
+#### Example: Mixed transformations with per-key overrides
+
+```yaml
+managedSecretReferences:
+  - secretName: 'my-app-config'
+    secretNamespace: 'default'
+    nameTransformer: 'camel'
+    processors:
+      DATABASE_HOST:
+        nameTransformer: upper-camel
+      STRIPE_SECRET_KEY:
+        asName: stripeKey
+```
+
+| Secret stored in Phase | Processor             | Synced to Kubernetes |
+| ---------------------- | --------------------- | -------------------- |
+| `DATABASE_HOST`        | per-key `upper-camel` | `DatabaseHost`       |
+| `STRIPE_SECRET_KEY`    | per-key `asName`      | `stripeKey`          |
+| `API_KEY`              | secret-level `camel`  | `apiKey`             |
+
+#### Available transformations
+
+| Type            | Secret stored in Phase | Post transformation |
+| --------------- | ---------------------- | ------------------- |
+| **camel**       | SECRET_KEY             | secretKey           |
+| **upper-camel** | SECRET_KEY             | SecretKey           |
+| **lower-snake** | SECRET_KEY             | secret_key          |
+| **tf-var**      | SECRET_KEY             | TF_VAR_secret_key   |
+| **lower-kebab** | SECRET_KEY             | secret-key          |
+
 ### Secret value transformation
 
-In the custom resource, the `processors` field is used to transform and manage secrets. Here's an explanation using PKCS12 secrets as an example:
+The `processors` field can also transform secret values during ingestion:
 
-- `asName`: This parameter renames the secret in compliance to Kubernetes secret formats. For instance, `PKCS12_PRIVATE_KEY` is renamed to `tls.crt`.
-- `type`: Specifies the encoding type of the secret. In this case, `base64` indicates that the secret is already base64 encoded.
-
-This setup is specifically for a PKCS12 secret that is pre-encoded in base64. If a secret is set to `type: "plain"`, which is the default, the Kubernetes operator will encode it in base64.
+- `asName`: Renames the secret key. For instance, `PKCS12_PRIVATE_KEY` is renamed to `tls.crt`.
+- `type`: Specifies the encoding type of the secret. `base64` indicates that the secret is already base64 encoded. If a secret is set to `type: "plain"`, which is the default, the Kubernetes operator will encode it in base64.
 
 #### Example: **PKCS12** Secret Transformation
 
@@ -218,23 +275,6 @@ spec:
 | ------------------------------ | ----------------------------------- |
 | `PKCS12_PRIVATE_KEY`           | `tls.crt` (base64 encoded)          |
 | `PKCS12_CERTIFICATE`           | `tls.key` (base64 encoded)          |
-
-This table illustrates the transformation of secrets from how they are stored in the Phase Console to how they are saved in the Kubernetes cluster.
-
-### Secret key
-
-Additionally, the following table shows various transformations that can be applied to a generic secret key:
-
-| Type            | Secret stored in Phase | Post transformation |
-| --------------- | ---------------------- | ------------------- |
-| **camel**       | SECRET_KEY             | secretKey           |
-| **upper-camel** | SECRET_KEY             | SecretKey           |
-| **lower-snake** | SECRET_KEY             | secret_key          |
-| **tf-var**      | SECRET_KEY             | TF_VAR_secret_key   |
-| **dotnet-env**  | DB\_\_USER_NAME        | Db\_\_UserName      |
-| **lower-kebab** | SECRET_KEY             | secret-key          |
-
-These transformations dictate how the secret keys are renamed or formatted when stored in Kubernetes.
 
 ## Using secrets in Kubernetes Deployments
 
