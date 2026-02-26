@@ -20,7 +20,7 @@ You can also optionally choose to initialize your App with example secrets. This
 
 ## App Description
 
-Each App can have a description that serves as a space for developer documentation, runbooks, onboarding notes, or any other relevant information. The description is displayed on the App's Home tab and supports full **Markdown** rendering, including headings, lists, links, code blocks, and blockquotes.
+Each App can have a description that serves as a space for developer documentation, runbooks, onboarding notes, or any other relevant information. The description is displayed on the App's **Home** tab and supports full markdown rendering, including headings, lists, links, code blocks, and blockquotes.
 
 ![app description on home tab](/assets/images/console/apps/app-description-home.png)
 
