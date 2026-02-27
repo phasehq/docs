@@ -18,24 +18,24 @@ You can also optionally choose to initialize your App with example secrets. This
 
 ![create app](/assets/images/console/apps/app-create.png)
 
-## App Description
+## App Readme
 
-Each App can have a description that serves as a space for developer documentation, runbooks, onboarding notes, or any other relevant information. The description is displayed on the App's **Home** tab and supports full markdown rendering, including headings, lists, links, code blocks, and blockquotes.
+Each App can have a readme that serves as a space for developer documentation, runbooks, onboarding notes, or any other relevant information. The readme is displayed on the App's **Home** tab and supports full markdown rendering, including headings, lists, links, code blocks, and blockquotes.
 
-![app description on home tab](/assets/images/console/apps/app-description-home.png)
+![app readme on home tab](/assets/images/console/apps/app-readme-home.png)
 
-Click the description to expand it in a full-screen dialog for easier reading.
+Click the readme to expand it in a full-screen dialog for easier reading.
 
-![expanded app description with markdown rendering](/assets/images/console/apps/app-description-expanded.png)
+![expanded app readme with markdown rendering](/assets/images/console/apps/app-readme-expanded.png)
 
-### Editing a description
+### Editing the readme
 
-To add or edit a description, go to the App's **Settings** tab. The editor supports a **Write** and **Preview** toggle so you can author Markdown and preview the rendered output before saving.
+To add or edit a readme, go to the App's **Settings** tab. The editor supports a **Write** and **Preview** toggle so you can author Markdown and preview the rendered output before saving.
 
-![app description editor in settings](/assets/images/console/apps/app-description-editor.png)
+![app readme editor in settings](/assets/images/console/apps/app-readme-editor.png)
 
 <Note>
-New organisations are created with an example app that includes a sample description demonstrating the available Markdown features.
+New organisations are created with an example app that includes a sample readme demonstrating the available Markdown features.
 </Note>
 
 ## Secrets
