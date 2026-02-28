@@ -18,6 +18,26 @@ You can also optionally choose to initialize your App with example secrets. This
 
 ![create app](/assets/images/console/apps/app-create.png)
 
+## App Description
+
+Each App can have a description that serves as a space for developer documentation, runbooks, onboarding notes, or any other relevant information. The description is displayed on the App's **Home** tab and supports full markdown rendering, including headings, lists, links, code blocks, and blockquotes.
+
+![app description on home tab](/assets/images/console/apps/app-description-home.png)
+
+Click the description to expand it in a full-screen dialog for easier reading.
+
+![expanded app description with markdown rendering](/assets/images/console/apps/app-description-expanded.png)
+
+### Editing a description
+
+To add or edit a description, go to the App's **Settings** tab. The editor supports a **Write** and **Preview** toggle so you can author Markdown and preview the rendered output before saving.
+
+![app description editor in settings](/assets/images/console/apps/app-description-editor.png)
+
+<Note>
+New organisations are created with an example app that includes a sample description demonstrating the available Markdown features.
+</Note>
+
 ## Secrets
 
 This screen shows an overview of all Secrets in this App across all Environments. You can explore a specific Environment by clicking the Environment name in the column headers.
