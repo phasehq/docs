@@ -18,6 +18,8 @@ Explore deployment options for self-hosting Phase. {{ className: 'lead' }}
 
 You may choose to self-host Phase to meet various compliance requirements, to simply maintain control over your data or run Phase behind your firewall.
 
+<SkillBox />
+
 ## System Requirements
 
 | Requirement       | Minimum         | Recommended          |
