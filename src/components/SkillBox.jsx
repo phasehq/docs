@@ -1,11 +1,43 @@
 'use client'
 
 import { useState } from 'react'
+import { siClaude, siWindsurf, siGithubcopilot } from 'simple-icons'
+
+function ClaudeIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor" {...props}>
+      <path d={siClaude.path} />
+    </svg>
+  )
+}
+
+function CursorIcon(props) {
+  return (
+    <svg viewBox="0 0 466.73 532.09" aria-hidden="true" fill="currentColor" {...props}>
+      <path d="M457.43,125.94L244.42,2.96c-6.84-3.95-15.28-3.95-22.12,0L9.3,125.94c-5.75,3.32-9.3,9.46-9.3,16.11v247.99c0,6.65,3.55,12.79,9.3,16.11l213.01,122.98c6.84,3.95,15.28,3.95,22.12,0l213.01-122.98c5.75-3.32,9.3-9.46,9.3-16.11v-247.99c0-6.65-3.55-12.79-9.3-16.11h-.01ZM444.05,151.99l-205.63,356.16c-1.39,2.4-5.06,1.42-5.06-1.36v-233.21c0-4.66-2.49-8.97-6.53-11.31L24.87,145.67c-2.4-1.39-1.42-5.06,1.36-5.06h411.26c5.84,0,9.49,6.33,6.57,11.39h-.01Z" />
+    </svg>
+  )
+}
+
+function WindsurfIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor" {...props}>
+      <path d={siWindsurf.path} />
+    </svg>
+  )
+}
+
+function CopilotIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor" {...props}>
+      <path d={siGithubcopilot.path} />
+    </svg>
+  )
+}
 
 function TerminalIcon(props) {
   return (
     <svg viewBox="0 0 16 16" aria-hidden="true" fill="none" {...props}>
-      <rect width="16" height="16" rx="4" className="fill-current opacity-10" />
       <path
         d="M3.5 5.5L6.5 8L3.5 10.5"
         strokeWidth="1.5"
@@ -52,22 +84,20 @@ function CheckIcon(props) {
   )
 }
 
-export function SkillBox({ skill, refs = [], triggerPhrase }) {
+const agents = [
+  { name: 'Claude Code', icon: ClaudeIcon, href: 'https://claude.ai/download' },
+  { name: 'Cursor', icon: CursorIcon, href: 'https://cursor.com' },
+  { name: 'Windsurf', icon: WindsurfIcon, href: 'https://windsurf.com' },
+  { name: 'GitHub Copilot', icon: CopilotIcon, href: 'https://github.com/features/copilot' },
+]
+
+export function SkillBox({ skill, triggerPhrase }) {
   const [copied, setCopied] = useState(false)
 
-  const baseUrl = `https://docs.phase.dev/self-hosting/skills/${skill}`
-  const dir = `.claude/skills/${skill}`
-
-  const commands = [
-    `mkdir -p ${dir}/refs`,
-    `curl -sL ${baseUrl}/SKILL.md -o ${dir}/SKILL.md`,
-    ...refs.map(
-      (ref) => `curl -sL ${baseUrl}/refs/${ref}.md -o ${dir}/refs/${ref}.md`
-    ),
-  ].join('\n')
+  const command = `npx @phasehq/ai install ${skill}`
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(commands).then(() => {
+    navigator.clipboard.writeText(command).then(() => {
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     })
@@ -76,24 +106,34 @@ export function SkillBox({ skill, refs = [], triggerPhrase }) {
   return (
     <div className="not-prose my-6 overflow-hidden rounded-2xl border border-violet-500/20 bg-violet-50/50 dark:border-violet-500/30 dark:bg-violet-500/5">
       {/* Header */}
-      <div className="flex items-center gap-2.5 border-b border-violet-500/20 px-4 py-3 dark:border-violet-500/30">
-        <TerminalIcon className="h-4 w-4 flex-none text-violet-500 dark:text-violet-400" />
-        <span className="text-sm font-semibold text-violet-900 dark:text-violet-200">
-          Deploy with Claude Code
-        </span>
+      <div className="flex items-center justify-between border-b border-violet-500/20 px-4 py-3 dark:border-violet-500/30">
+        <div className="flex items-center gap-2.5">
+          <TerminalIcon className="h-4 w-4 flex-none text-violet-500 dark:text-violet-400" />
+          <span className="text-sm font-semibold text-violet-900 dark:text-violet-200">
+            AI Deployment Skill
+          </span>
+        </div>
+        <div className="flex items-center gap-1">
+          {agents.map((agent) => (
+            <a
+              key={agent.name}
+              href={agent.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              title={agent.name}
+              className="rounded-md p-1 text-zinc-400 transition-colors hover:bg-violet-500/10 hover:text-violet-600 dark:text-zinc-500 dark:hover:text-violet-300"
+            >
+              <agent.icon className="h-3.5 w-3.5" />
+            </a>
+          ))}
+        </div>
       </div>
 
       {/* Body */}
       <div className="p-4">
         <p className="mb-3 text-sm leading-6 text-violet-900 dark:text-violet-200">
-          Automate this entire deployment interactively with{' '}
-          <a
-            href="https://claude.ai/download"
-            className="font-medium underline underline-offset-2 hover:text-violet-700 dark:hover:text-violet-100"
-          >
-            Claude Code
-          </a>
-          . Install the skill below, then ask Claude to{' '}
+          Automate this deployment with an AI coding agent.
+          Install the skill, then ask your agent to{' '}
           <code className="rounded-md bg-violet-500/10 px-1.5 py-0.5 font-mono text-xs font-medium dark:bg-violet-500/20">
             {triggerPhrase}
           </code>
@@ -102,8 +142,10 @@ export function SkillBox({ skill, refs = [], triggerPhrase }) {
 
         {/* Code block */}
         <div className="relative">
-          <pre className="overflow-x-auto rounded-xl bg-zinc-900 p-4 pr-16 text-xs leading-6 text-zinc-300 dark:bg-zinc-950">
-            <code>{commands}</code>
+          <pre className="overflow-x-auto rounded-xl bg-zinc-900 p-4 pr-24 text-sm leading-6 text-zinc-300 dark:bg-zinc-950">
+            <code>
+              <span className="text-zinc-500">$ </span>{command}
+            </code>
           </pre>
           <button
             onClick={handleCopy}
