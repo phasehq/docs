@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import clsx from 'clsx'
 import { siClaude, siWindsurf, siGithubcopilot } from 'simple-icons'
 
 function ClaudeIcon(props) {
@@ -35,50 +36,17 @@ function CopilotIcon(props) {
   )
 }
 
-function TerminalIcon(props) {
+function ClipboardIcon(props) {
   return (
-    <svg viewBox="0 0 16 16" aria-hidden="true" fill="none" {...props}>
+    <svg viewBox="0 0 20 20" aria-hidden="true" {...props}>
       <path
-        d="M3.5 5.5L6.5 8L3.5 10.5"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="stroke-current"
+        strokeWidth="0"
+        d="M5.5 13.5v-5a2 2 0 0 1 2-2l.447-.894A2 2 0 0 1 9.737 4.5h.527a2 2 0 0 1 1.789 1.106l.447.894a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-5a2 2 0 0 1-2-2Z"
       />
       <path
-        d="M8 10.5H12"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        className="stroke-current"
-      />
-    </svg>
-  )
-}
-
-function CopyIcon(props) {
-  return (
-    <svg viewBox="0 0 16 16" aria-hidden="true" fill="none" {...props}>
-      <path
-        d="M4 4.5V11a1.5 1.5 0 0 0 1.5 1.5H10"
-        strokeWidth="1.25"
-        strokeLinecap="round"
+        fill="none"
         strokeLinejoin="round"
-        className="stroke-current"
-      />
-      <rect x="5.5" y="2" width="8" height="9.5" rx="1.5" strokeWidth="1.25" className="stroke-current" />
-    </svg>
-  )
-}
-
-function CheckIcon(props) {
-  return (
-    <svg viewBox="0 0 16 16" aria-hidden="true" fill="none" {...props}>
-      <path
-        d="M3 8.5L6.5 12L13 5"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="stroke-current"
+        d="M12.5 6.5a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-5a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2m5 0-.447-.894a2 2 0 0 0-1.79-1.106h-.527a2 2 0 0 0-1.789 1.106L7.5 6.5m5 0-1 1h-3l-1-1"
       />
     </svg>
   )
@@ -92,28 +60,34 @@ const agents = [
 ]
 
 export function SkillBox({ skill, triggerPhrase }) {
-  const [copied, setCopied] = useState(false)
+  const [copyCount, setCopyCount] = useState(0)
+  const copied = copyCount > 0
 
-  const command = `npx @phasehq/ai install ${skill}`
+  const command = skill
+    ? `npx skills add phasehq/ai -s ${skill}`
+    : 'npx skills add phasehq/ai'
+
+  const headerLabel = skill || 'phasehq/ai'
 
   const handleCopy = () => {
     navigator.clipboard.writeText(command).then(() => {
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
+      setCopyCount((c) => c + 1)
+      setTimeout(() => setCopyCount(0), 1000)
     })
   }
 
   return (
-    <div className="not-prose my-6 overflow-hidden rounded-2xl border border-violet-500/20 bg-violet-50/50 dark:border-violet-500/30 dark:bg-violet-500/5">
+    <div className="not-prose my-6 overflow-hidden rounded-2xl bg-zinc-900 shadow-md ring-1 ring-emerald-500/20 dark:ring-emerald-500/30 dark:shadow-emerald-500/5">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-violet-500/20 px-4 py-3 dark:border-violet-500/30">
-        <div className="flex items-center gap-2.5">
-          <TerminalIcon className="h-4 w-4 flex-none text-violet-500 dark:text-violet-400" />
-          <span className="text-sm font-semibold text-violet-900 dark:text-violet-200">
+      <div className="flex min-h-[calc(theme(spacing.12)+1px)] items-center justify-between gap-x-4 border-b border-emerald-500/20 bg-zinc-800 px-4 dark:border-emerald-500/20 dark:bg-emerald-500/[0.03]">
+        <div className="flex items-center gap-2">
+          <h3 className="text-xs font-semibold text-emerald-400">
             AI Deployment Skill
-          </span>
+          </h3>
+          <span className="h-0.5 w-0.5 rounded-full bg-emerald-500/50" />
+          <span className="font-mono text-xs text-zinc-400">{headerLabel}</span>
         </div>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-0.5">
           {agents.map((agent) => (
             <a
               key={agent.name}
@@ -121,7 +95,7 @@ export function SkillBox({ skill, triggerPhrase }) {
               target="_blank"
               rel="noopener noreferrer"
               title={agent.name}
-              className="rounded-md p-1 text-zinc-400 transition-colors hover:bg-violet-500/10 hover:text-violet-600 dark:text-zinc-500 dark:hover:text-violet-300"
+              className="rounded-md p-1 text-zinc-500 transition-colors hover:text-zinc-300"
             >
               <agent.icon className="h-3.5 w-3.5" />
             </a>
@@ -130,42 +104,60 @@ export function SkillBox({ skill, triggerPhrase }) {
       </div>
 
       {/* Body */}
-      <div className="p-4">
-        <p className="mb-3 text-sm leading-6 text-violet-900 dark:text-violet-200">
-          Automate this deployment with an AI coding agent.
-          Install the skill, then ask your agent to{' '}
-          <code className="rounded-md bg-violet-500/10 px-1.5 py-0.5 font-mono text-xs font-medium dark:bg-violet-500/20">
-            {triggerPhrase}
+      <div className="group relative">
+        <pre className="overflow-x-auto p-4 text-xs text-white">
+          <code>
+            <span className="text-emerald-400">$</span>{' '}
+            <span className="text-zinc-300">{command}</span>
           </code>
-          .
-        </p>
-
-        {/* Code block */}
-        <div className="relative">
-          <pre className="overflow-x-auto rounded-xl bg-zinc-900 p-4 pr-24 text-sm leading-6 text-zinc-300 dark:bg-zinc-950">
-            <code>
-              <span className="text-zinc-500">$ </span>{command}
-            </code>
-          </pre>
+        </pre>
+        <div
+          className={clsx(
+            'absolute right-4 top-3.5 backdrop-blur transition',
+            !copied && 'opacity-0 focus-within:opacity-100 group-hover:opacity-100'
+          )}
+        >
           <button
             onClick={handleCopy}
-            aria-label={copied ? 'Copied' : 'Copy to clipboard'}
-            className="absolute right-3 top-3 flex items-center gap-1.5 rounded-lg bg-zinc-700/80 px-2 py-1.5 text-xs font-medium text-zinc-300 transition-colors hover:bg-zinc-600 hover:text-white dark:bg-zinc-800 dark:hover:bg-zinc-700"
+            title="Copy to clipboard"
+            className="flex items-center gap-1 text-xs"
           >
-            {copied ? (
-              <>
-                <CheckIcon className="h-3.5 w-3.5 text-emerald-400" />
-                <span className="text-emerald-400">Copied</span>
-              </>
-            ) : (
-              <>
-                <CopyIcon className="h-3.5 w-3.5" />
-                Copy
-              </>
-            )}
+            <div className="relative flex items-center justify-center">
+              <div
+                aria-hidden={copied}
+                className={clsx(
+                  'pointer-events-none flex items-center gap-1 transition duration-300',
+                  copied && '-translate-y-1.5 opacity-0'
+                )}
+              >
+                <ClipboardIcon className="h-5 w-5 fill-zinc-500/20 stroke-zinc-500 transition-colors hover:stroke-zinc-400" />
+                <span className="text-zinc-400">Copy</span>
+              </div>
+              <span
+                aria-hidden={!copied}
+                className={clsx(
+                  'pointer-events-none absolute inset-0 flex items-center justify-center text-emerald-400 transition duration-300',
+                  !copied && 'translate-y-1.5 opacity-0'
+                )}
+              >
+                Copied!
+              </span>
+            </div>
           </button>
         </div>
       </div>
+
+      {/* Footer */}
+      {triggerPhrase && (
+        <div className="border-t border-emerald-500/20 bg-zinc-800 px-4 py-2.5 dark:border-emerald-500/20 dark:bg-emerald-500/[0.03]">
+          <p className="text-xs leading-5 text-zinc-400">
+            Then ask your agent to{' '}
+            <code className="rounded-md bg-emerald-400/10 px-1.5 py-0.5 font-mono text-2xs font-semibold text-emerald-400">
+              {triggerPhrase}
+            </code>
+          </p>
+        </div>
+      )}
     </div>
   )
 }
