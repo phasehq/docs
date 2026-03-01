@@ -42,19 +42,6 @@ apk update && apk add --no-cache curl bash
 nix-channel --update
 ```
 
-```fish {{ title: 'Python pip' }}
-# Install python pip: https://pip.pypa.io/en/stable/installation/
-
-# Linux:
-python -m ensurepip --upgrade
-
-# MacOS:
-python -m ensurepip --upgrade
-
-# Windows:
-C:> py -m ensurepip --upgrade
-```
-
 ```fish {{ title: 'Arch Linux' }}
 sudo pacman -S jq unzip
 ```
@@ -103,10 +90,6 @@ curl -fsSL https://pkg.phase.dev/install.sh | bash
 nix-shell -p phase-cli
 ```
 
-```fish {{ title: 'Python pip' }}
-pip install phase-cli
-```
-
 ```fish {{ title: 'Arch Linux' }}
 curl -fsSL https://pkg.phase.dev/install.sh | bash
 ```
@@ -150,10 +133,6 @@ phase update
 
 ```fish {{ title: 'NixOS' }}
 nix-channel --update && nix-shell -p phase-cli
-```
-
-```fish {{ title: 'Python pip' }}
-pip install --upgrade phase-cli
 ```
 
 ```fish {{ title: 'Arch Linux' }}
