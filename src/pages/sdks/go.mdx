@@ -282,23 +282,21 @@ if len(keysNotFound) > 0 {
 }
 ```
 
-### Resolving Secret References
+### Secret References
 
-Resolve `${REF}` syntax in secret values, including cross-environment and cross-application references.
+`Get()` automatically resolves `${REF}` syntax in secret values before returning results. This includes same-environment (`${KEY}`), cross-environment (`${staging.SECRET_KEY}`), cross-app (`${backend_api::production.API_KEY}`), and path-scoped (`${/backend/config/DB_HOST}`) references.
 
 ```go
+// References are resolved automatically — no extra steps needed
 secrets, _ := p.Get(phase.GetOptions{
     EnvName: "Production",
     AppName: "MyApp",
 })
 
 for _, s := range secrets {
-    resolved := phase.ResolveAllSecrets(s.Value, secrets, p, s.Application, s.Environment)
-    fmt.Printf("%s=%s\n", s.Key, resolved)
+    // s.Value already has all ${REF} references resolved
+    fmt.Printf("%s=%s\n", s.Key, s.Value)
 }
-
-// Clear the referencing cache between runs
-phase.ResetSecretsCache()
 ```
 
 ### Overrides
