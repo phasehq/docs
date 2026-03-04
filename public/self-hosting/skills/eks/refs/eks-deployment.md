@@ -427,6 +427,7 @@ For external databases, `DATABASE_PASSWORD` and `REDIS_PASSWORD` are auto-genera
 | JumpCloud OIDC | `jumpcloud-oidc` | `JUMPCLOUD_OIDC_CLIENT_ID` | `JUMPCLOUD_OIDC_CLIENT_SECRET` |
 | Microsoft Entra ID | `entra-id-oidc` | `ENTRA_ID_OIDC_CLIENT_ID` | `ENTRA_ID_OIDC_CLIENT_SECRET` |
 | Okta OIDC | `okta-oidc` | `OKTA_OIDC_CLIENT_ID` | `OKTA_OIDC_CLIENT_SECRET` |
+| Authelia | `authelia` | `AUTHELIA_CLIENT_ID` | `AUTHELIA_CLIENT_SECRET` |
 
 ## SSO Callback URLs
 
@@ -442,6 +443,7 @@ Examples:
 - JumpCloud OIDC: `https://phase.example.com/api/auth/callback/jumpcloud-oidc`
 - Microsoft Entra ID: `https://phase.example.com/api/auth/callback/entra-id-oidc`
 - Okta OIDC: `https://phase.example.com/api/auth/callback/okta-oidc`
+- Authelia: `https://phase.example.com/api/auth/callback/authelia`
 
 ## Additional SSO Provider Variables
 
@@ -452,6 +454,7 @@ Some providers require extra environment variables in the secret:
 - **GitLab (self-hosted)**: Optionally needs `GITLAB_AUTH_URL`
 - **Microsoft Entra ID**: Also needs `ENTRA_ID_OIDC_TENANT_ID`
 - **Okta OIDC**: Also needs `OKTA_OIDC_ISSUER`
+- **Authelia**: Also needs `AUTHELIA_URL`
 
 ## Values File Templates
 
