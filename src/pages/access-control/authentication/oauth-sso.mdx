@@ -272,3 +272,65 @@ If you receive an error like:
 Ensure that the redirect URI configured in Authentik exactly matches:
 
 `https://[YOUR_PHASE_HOST]/api/auth/callback/authentik`
+
+## Authelia
+
+You can use [Authelia](https://www.authelia.com) as a self-hosted OIDC provider to set up SSO for your Phase instance. Follow these steps to configure Authelia as an OIDC provider:
+
+1. Configure the OIDC identity provider in your Authelia `configuration.yml` file. You'll need to generate an RSA private key for signing JWTs.
+
+2. Add a client configuration for Phase Console to the `clients` list:
+
+   ```yaml
+   identity_providers:
+     oidc:
+       jwks:
+         - key: |
+             -----BEGIN RSA PRIVATE KEY-----
+             <your-rsa-private-key-here>
+             -----END RSA PRIVATE KEY-----
+       clients:
+         - client_id: 'phase-console'
+           client_name: 'Phase Console'
+           client_secret: '<bcrypt-hashed-secret>'
+           public: false
+           authorization_policy: one_factor
+           token_endpoint_auth_method: 'client_secret_post'
+           redirect_uris:
+             - 'https://[YOUR_PHASE_HOST]/api/auth/callback/authelia'
+           scopes:
+             - openid
+             - profile
+             - email
+           userinfo_signed_response_alg: none
+   ```
+
+   <Note>
+     The `token_endpoint_auth_method: 'client_secret_post'` setting is **required** for Phase Console compatibility. Phase Console's OIDC client uses the `client_secret_post` method for token endpoint authentication.
+   </Note>
+
+3. Generate a bcrypt hash for your client secret using the Authelia Docker image:
+
+   ```bash
+   docker run authelia/authelia:latest authelia crypto hash generate bcrypt --password 'your-client-secret'
+   ```
+
+4. Set the redirect URI to match your Phase Console deployment. The pattern is:
+
+   ```
+   <YOUR_PHASE_HOST>/api/auth/callback/authelia
+   ```
+
+   Example: `https://phase.example.com/api/auth/callback/authelia`
+
+5. Supply these credentials to your Phase Console deployment as environment variables:
+   - `AUTHELIA_CLIENT_ID` - The client ID (e.g., `phase-console`)
+   - `AUTHELIA_CLIENT_SECRET` - The plaintext client secret (not the bcrypt hash)
+   - `AUTHELIA_URL` - Your Authelia instance URL (e.g., `https://auth.example.com`)
+
+   Please see [deployment configuration](/self-hosting/configuration/envars#authelia-oidc) for more details.
+
+Your Authelia SSO integration is now configured! Users can access Phase through Authelia's authentication portal.
+
+For more detailed information about Authelia OIDC configuration, refer to the [official Authelia documentation](https://www.authelia.com/configuration/identity-providers/openid-connect/).
+
