@@ -30,6 +30,24 @@ SDK to integrate Phase in server-side applications running Go.
 
 <Note>
   Starting from version `2.0.0`, the Phase Go SDK is a pure Go implementation and no longer requires `libsodium` or `CGO`.
+
+  **Upgrading from v1.x:** Update your module dependency and imports from `github.com/phasehq/golang-sdk` to `github.com/phasehq/golang-sdk/v2`:
+
+  ```bash
+  go get github.com/phasehq/golang-sdk/v2/phase
+  ```
+
+  Then update your imports:
+
+  ```go
+  // 1.x.x
+  import "github.com/phasehq/golang-sdk/phase"
+
+  // 2.x.x
+  import "github.com/phasehq/golang-sdk/v2/phase"
+  ```
+
+  Users on `v1.x` are unaffected and can continue using `github.com/phasehq/golang-sdk` without changes.
 </Note>
 
 ## Install the SDK
@@ -38,8 +56,8 @@ Install the SDK using `go get`.
 
 <CodeGroup title="Install">
 
-    ```bash {{ title: 'Go Get' }}
-    go get github.com/phasehq/golang-sdk/phase
+    ```fish {{ title: 'Go Get' }}
+    go get github.com/phasehq/golang-sdk/v2/phase
     ```
 
 </CodeGroup>
@@ -51,7 +69,7 @@ Install the SDK using `go get`.
 Import the SDK in your Go files to start using its features.
 
 ```go
-import "github.com/phasehq/golang-sdk/phase"
+import "github.com/phasehq/golang-sdk/v2/phase"
 ```
 
 ---
@@ -71,7 +89,7 @@ package main
 
 import (
     "log"
-    "github.com/phasehq/golang-sdk/phase"
+    "github.com/phasehq/golang-sdk/v2/phase"
 )
 
 func main() {
@@ -91,7 +109,7 @@ func main() {
 ## Usage
 
 <Note>
-  Using the AppID ensures precise targeting of the intended application, especially in scenarios where multiple applications might share the same name.
+  All operations accept either `AppID` or `AppName` to identify your application. `AppID` is recommended as it avoids ambiguity when multiple applications share the same name.
 </Note>
 
 You can get the AppID by going to your application settings in the Phase Console, hovering over UUID under the App section and clicking the `Copy` button:
@@ -108,8 +126,8 @@ Options:
 type CreateOptions struct {
     KeyValuePairs []phase.KeyValuePair
     EnvName       string
-    AppName       string
     AppID         string
+    AppName       string // Alternative to AppID
     Path          string
     OverrideValue string
 }
@@ -127,8 +145,8 @@ err := p.Create(phase.CreateOptions{
         {Key: "DB_HOST", Value: "localhost:5432"},
     },
     EnvName: "Production",
-    AppName: "MyApp",       // Or use AppID: "app-id-here"
-    Path:    "/api/keys",   // Optional, default path: /
+    AppID:   "app-id-here",  // Or use AppName: "MyApp"
+    Path:    "/api/keys",    // Optional, default path: /
 })
 if err != nil {
     log.Fatalf("Failed to create secret: %v", err)
@@ -144,8 +162,8 @@ Options:
 ```go
 type GetOptions struct {
     EnvName  string
-    AppName  string
     AppID    string
+    AppName  string // Alternative to AppID
     Keys     []string // Optional: filter by specific key names
     Tag      string   // Optional: filter by tag
     Path     string   // Optional: filter by path (default: /)
@@ -177,7 +195,7 @@ type SecretResult struct {
 ```go
 secrets, err := p.Get(phase.GetOptions{
     EnvName: "Production",
-    AppName: "MyApp", // Or use AppID: "app-id-here"
+    AppID:   "app-id-here", // Or use AppName: "MyApp"
 })
 if err != nil {
     log.Fatalf("Failed to get secrets: %v", err)
@@ -192,7 +210,7 @@ for _, s := range secrets {
 ```go
 secrets, err := p.Get(phase.GetOptions{
     EnvName: "Production",
-    AppName: "MyApp",
+    AppID:   "app-id-here",
     Keys:    []string{"API_KEY", "DB_HOST"},
 })
 ```
@@ -202,7 +220,7 @@ secrets, err := p.Get(phase.GetOptions{
 ```go
 secrets, err := p.Get(phase.GetOptions{
     EnvName: "Production",
-    AppName: "MyApp",
+    AppID:   "app-id-here",
     Tag:     "backend",
     Path:    "/api/config",
 })
@@ -213,7 +231,7 @@ secrets, err := p.Get(phase.GetOptions{
 ```go
 secrets, err := p.Get(phase.GetOptions{
     EnvName: "Production",
-    AppName: "MyApp",
+    AppID:   "app-id-here",
     Dynamic: true,
     Lease:   true,
 })
@@ -228,8 +246,8 @@ Options:
 ```go
 type UpdateOptions struct {
     EnvName         string
-    AppName         string
     AppID           string
+    AppName         string // Alternative to AppID
     Key             string
     Value           string
     SourcePath      string // Path where the secret currently lives
@@ -242,7 +260,7 @@ type UpdateOptions struct {
 ```go
 result, err := p.Update(phase.UpdateOptions{
     EnvName: "Production",
-    AppName: "MyApp", // Or use AppID: "app-id-here"
+    AppID:   "app-id-here", // Or use AppName: "MyApp"
     Key:     "API_KEY",
     Value:   "my_updated_api_secret",
 })
@@ -260,8 +278,8 @@ Options:
 ```go
 type DeleteOptions struct {
     EnvName      string
-    AppName      string
     AppID        string
+    AppName      string // Alternative to AppID
     KeysToDelete []string
     Path         string
 }
@@ -270,7 +288,7 @@ type DeleteOptions struct {
 ```go
 keysNotFound, err := p.Delete(phase.DeleteOptions{
     EnvName:      "Production",
-    AppName:      "MyApp", // Or use AppID: "app-id-here"
+    AppID:        "app-id-here", // Or use AppName: "MyApp"
     KeysToDelete: []string{"API_KEY", "OLD_SECRET"},
     Path:         "/api/keys", // Optional, default path: /
 })
@@ -290,7 +308,7 @@ if len(keysNotFound) > 0 {
 // References are resolved automatically — no extra steps needed
 secrets, _ := p.Get(phase.GetOptions{
     EnvName: "Production",
-    AppName: "MyApp",
+    AppID:   "app-id-here",
 })
 
 for _, s := range secrets {
@@ -310,14 +328,14 @@ err := p.Create(phase.CreateOptions{
         {Key: "API_URL", Value: "https://api.example.com"},
     },
     EnvName:       "Development",
-    AppName:       "MyApp",
+    AppID:         "app-id-here",
     OverrideValue: "http://localhost:3000",
 })
 
 // Update override for existing secret
 _, err := p.Update(phase.UpdateOptions{
     EnvName:  "Development",
-    AppName:  "MyApp",
+    AppID:    "app-id-here",
     Key:      "API_URL",
     Value:    "http://localhost:4000",
     Override: true,
@@ -326,7 +344,7 @@ _, err := p.Update(phase.UpdateOptions{
 // Toggle override on/off
 _, err := p.Update(phase.UpdateOptions{
     EnvName:        "Development",
-    AppName:        "MyApp",
+    AppID:          "app-id-here",
     Key:            "API_URL",
     ToggleOverride: true,
 })
