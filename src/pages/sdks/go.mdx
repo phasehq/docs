@@ -2,7 +2,7 @@ import { Tag } from '@/components/Tag'
 import { DocActions } from '@/components/DocActions'
 
 export const description =
-  'SDK to integrate Phase in server-side applications running GoLang.'
+  'SDK to integrate Phase in server-side applications running Go.'
 
 export const sections = [
   { title: 'Install', id: 'install-the-sdk' },
@@ -13,11 +13,11 @@ export const sections = [
 
 <Tag variant="small">RESOURCES</Tag>
 
-# GoLang SDK
+# Go SDK
 
-SDK to integrate Phase in server-side applications running GoLang.
+SDK to integrate Phase in server-side applications running Go.
 
-<DocActions /> 
+<DocActions />
 
 - [github.com/phasehq/golang-sdk](https://github.com/phasehq/golang-sdk)
 
@@ -28,50 +28,27 @@ SDK to integrate Phase in server-side applications running GoLang.
 
 ---
 
-### Install `libsodium` dependency
-
 <Note>
-  To utilize the GoLang SDK, ensure you have `libsodium` installed on your
-  system as it's required for cryptographic operations.
+  Starting from version `2.0.0`, the Phase Go SDK is a pure Go implementation and no longer requires `libsodium` or `CGO`.
+
+  **Upgrading from v1.x:** Update your module dependency and imports from `github.com/phasehq/golang-sdk` to `github.com/phasehq/golang-sdk/v2`:
+
+  ```bash
+  go get github.com/phasehq/golang-sdk/v2/phase
+  ```
+
+  Then update your imports:
+
+  ```go
+  // 1.x.x
+  import "github.com/phasehq/golang-sdk/phase"
+
+  // 2.x.x
+  import "github.com/phasehq/golang-sdk/v2/phase"
+  ```
+
+  Users on `v1.x` are unaffected and can continue using `github.com/phasehq/golang-sdk` without changes.
 </Note>
-
-<CodeGroup>
-
-```fish {{ title: 'macOS' }}
-brew install libsodium
-```
-
-```fish {{ title: 'Fedora' }}
-sudo dnf install libsodium-devel
-```
-
-```fish {{ title: 'Ubuntu and Debian' }}
-sudo apt-get update && sudo apt-get install libsodium-dev
-```
-
-```fish {{ title: 'Arch Linux' }}
-sudo pacman -Syu libsodium
-```
-
-```fish {{ title: 'Alpine Linux' }}
-sudo apk add libsodium-dev
-```
-
-```fish {{ title: 'Windows - vcpkg' }}
-vcpkg install libsodium
-```
-
-```fish {{ title: 'Windows - choco' }}
-choco install libsodium
-```
-
-```plaintext {{ title: 'Windows (manual)' }}
-Download pre-built binaries from the official libsodium GitHub releases page (https://github.com/jedisct1/libsodium/releases). Follow the included instructions to integrate `libsodium` with your development environment.
-```
-
-</CodeGroup>
-
----
 
 ## Install the SDK
 
@@ -79,8 +56,8 @@ Install the SDK using `go get`.
 
 <CodeGroup title="Install">
 
-    ```bash {{ title: 'Go Get' }}
-    go get github.com/phasehq/golang-sdk/phase
+    ```fish {{ title: 'Go Get' }}
+    go get github.com/phasehq/golang-sdk/v2/phase
     ```
 
 </CodeGroup>
@@ -92,7 +69,7 @@ Install the SDK using `go get`.
 Import the SDK in your Go files to start using its features.
 
 ```go
-import "github.com/phasehq/golang-sdk/phase"
+import "github.com/phasehq/golang-sdk/v2/phase"
 ```
 
 ---
@@ -103,8 +80,8 @@ Before interacting with the Phase service, initialize the SDK with your service 
 
 Parameters:
 
-- `serviceToken` type `string`: Your Phase Service Token used to authenticate with the service and decrypt secrets
-- `host` type `string`: The URL of the Phase Console instance
+- `token` type `string`: Your Phase Service Token (`pss_service:v1:...` or `pss_service:v2:...`) or User Token (`pss_user:v1:...`)
+- `host` type `string`: The URL of the Phase Console instance. Defaults to `https://console.phase.dev` if empty.
 - `debug` type `bool`: Setting to true will result in a higher level of log verbosity useful when debugging
 
 ```go
@@ -112,17 +89,17 @@ package main
 
 import (
     "log"
-    "github.com/phasehq/golang-sdk/phase"
+    "github.com/phasehq/golang-sdk/v2/phase"
 )
 
 func main() {
-    serviceToken := "pss_service:v1:....."
+    token := "pss_service:v1:....."
     host := "https://console.phase.dev" // Adjust this for a self-hosted instance of Phase
     debug := false // For logging verbosity, disable in production
 
-    phaseClient := phase.Init(serviceToken, host, debug)
-    if phaseClient == nil {
-        log.Fatal("Failed to initialize Phase client")
+    p, err := phase.New(token, host, debug)
+    if err != nil {
+        log.Fatalf("Failed to initialize Phase client: %v", err)
     }
 }
 ```
@@ -132,167 +109,243 @@ func main() {
 ## Usage
 
 <Note>
-  Using the AppID ensures precise targeting of the intended application, especially in scenarios where multiple applications might share the same name.
+  All operations accept either `AppID` or `AppName` to identify your application. `AppID` is recommended as it avoids ambiguity when multiple applications share the same name.
 </Note>
 
 You can get the AppID by going to your application settings in the Phase Console, hovering over UUID under the App section and clicking the `Copy` button:
 
 ![hello world](/assets/images/console/settings/application-id.png)
 
-### Creating a Secret
+### Creating Secrets
 
-Define key-value pairs and specify the Environment, App name or ID, and path (optional) for each key to create new Secrets.
+Define key-value pairs and specify the Environment, App name or ID, and path (optional) to create new Secrets.
 
 Options:
 
 ```go
-type CreateSecretsOptions struct {
-    KeyValuePairs []map[string]string
+type CreateOptions struct {
+    KeyValuePairs []phase.KeyValuePair
     EnvName       string
-    AppName       string
     AppID         string
-    SecretPath    map[string]string
+    AppName       string // Alternative to AppID
+    Path          string
+    OverrideValue string
+}
+
+type KeyValuePair struct {
+    Key   string
+    Value string
 }
 ```
 
 ```go
-opts := phase.CreateSecretsOptions{
-    KeyValuePairs: []map[string]string{
-        {"API_KEY": "api_secret"},
+err := p.Create(phase.CreateOptions{
+    KeyValuePairs: []phase.KeyValuePair{
+        {Key: "API_KEY", Value: "api_secret"},
+        {Key: "DB_HOST", Value: "localhost:5432"},
     },
-    EnvName:    "Production",
-    AppName:    "MyApp", // Or use AppID: "app-id-here"
-    SecretPath: map[string]string{"API_KEY": "/api/keys"}, // Optional, default path: /
-}
-
-err := phaseClient.Create(opts)
+    EnvName: "Production",
+    AppID:   "app-id-here",  // Or use AppName: "MyApp"
+    Path:    "/api/keys",    // Optional, default path: /
+})
 if err != nil {
     log.Fatalf("Failed to create secret: %v", err)
 }
 ```
 
-### Retrieving a Secret
+### Getting Secrets
 
-To retrieve the value of a single Secret, provide the Environment name, App name or ID, Key, and optionally a tag and path.
-
-Options:
-
-```go
-type GetSecretOptions struct {
-    EnvName    string
-    AppName    string
-    AppID      string
-    KeyToFind  string
-    Tag        string
-    SecretPath string
-}
-```
-
-```go
-getOpts := phase.GetSecretOptions{
-    EnvName:   "Production",
-    AppName:   "MyApp", // Or use AppID: "app-id-here"
-    KeyToFind: "API_KEY",
-}
-
-secret, err := phaseClient.Get(getOpts)
-if err != nil {
-    log.Fatalf("Failed to get secret: %v", err)
-} else {
-    log.Printf("Secret: %+v", secret)
-}
-```
-
-### Retrieving all Secrets
-
-To retrieve all Secrets, provide the Environment name, App name or ID, and optionally a tag and path.
+Provide the Environment name, App name or ID, and optionally filter by specific keys, tags, and path.
 
 Options:
 
 ```go
-type GetAllSecretsOptions struct {
-    EnvName    string
-    AppName    string
-    AppID      string
-    Tag        string
-    SecretPath string
+type GetOptions struct {
+    EnvName  string
+    AppID    string
+    AppName  string // Alternative to AppID
+    Keys     []string // Optional: filter by specific key names
+    Tag      string   // Optional: filter by tag
+    Path     string   // Optional: filter by path (default: /)
+    Dynamic  bool     // Optional: include dynamic secrets
+    Lease    bool     // Optional: generate leases for dynamic secrets
+    LeaseTTL *int     // Optional: lease TTL in seconds
 }
 ```
 
-```go
-getOpts := phase.GetAllSecretsOptions{
-    EnvName:    "Production",
-    AppName:    "MyApp", // Or use AppID: "app-id-here"
-    Tag:        "",
-    SecretPath: "",
-}
+Each secret is returned as a `SecretResult`:
 
-secrets, err := phaseClient.GetAll(getOpts)
-if err != nil {
-    log.Fatalf("Failed to fetch all secrets: %v", err)
-} else {
-    log.Printf("Secrets: %+v", secrets)
+```go
+type SecretResult struct {
+    Key          string
+    Value        string
+    Comment      string
+    Path         string
+    Application  string
+    Environment  string
+    Tags         []string
+    Overridden   bool         // true if a personal override is active
+    IsDynamic    bool         // true for dynamic secrets
+    DynamicGroup string       // provider group label for dynamic secrets
 }
+```
+
+#### Get all secrets
+
+```go
+secrets, err := p.Get(phase.GetOptions{
+    EnvName: "Production",
+    AppID:   "app-id-here", // Or use AppName: "MyApp"
+})
+if err != nil {
+    log.Fatalf("Failed to get secrets: %v", err)
+}
+for _, s := range secrets {
+    log.Printf("%s=%s", s.Key, s.Value)
+}
+```
+
+#### Get specific keys
+
+```go
+secrets, err := p.Get(phase.GetOptions{
+    EnvName: "Production",
+    AppID:   "app-id-here",
+    Keys:    []string{"API_KEY", "DB_HOST"},
+})
+```
+
+#### Filter by tag and path
+
+```go
+secrets, err := p.Get(phase.GetOptions{
+    EnvName: "Production",
+    AppID:   "app-id-here",
+    Tag:     "backend",
+    Path:    "/api/config",
+})
+```
+
+#### Include dynamic secrets with leases
+
+```go
+secrets, err := p.Get(phase.GetOptions{
+    EnvName: "Production",
+    AppID:   "app-id-here",
+    Dynamic: true,
+    Lease:   true,
+})
 ```
 
 ### Updating a Secret
 
-Provide the new value along with the environment name, application name or ID, key, and optionally the path to update an existing secret.
+Provide the new value along with the environment name, application name or ID, and key to update an existing secret.
 
 Options:
 
 ```go
-type SecretUpdateOptions struct {
-    EnvName    string
-    AppName    string
-    AppID      string
-    Key        string
-    Value      string
-    SecretPath string
+type UpdateOptions struct {
+    EnvName         string
+    AppID           string
+    AppName         string // Alternative to AppID
+    Key             string
+    Value           string
+    SourcePath      string // Path where the secret currently lives
+    DestinationPath string // Optional: move the secret to a new path
+    Override        bool   // Set a personal override
+    ToggleOverride  bool   // Toggle personal override on/off
 }
 ```
 
 ```go
-updateOpts := phase.SecretUpdateOptions{
-    EnvName:    "Production",
-    AppName:    "MyApp", // Or use AppID: "app-id-here"
-    Key:        "API_KEY",
-    Value:      "my_updated_api_secret",
-    SecretPath: "/api/keys", // Optional, default path: /
-}
-
-err := phaseClient.Update(updateOpts)
+result, err := p.Update(phase.UpdateOptions{
+    EnvName: "Production",
+    AppID:   "app-id-here", // Or use AppName: "MyApp"
+    Key:     "API_KEY",
+    Value:   "my_updated_api_secret",
+})
 if err != nil {
     log.Fatalf("Failed to update secret: %v", err)
 }
 ```
 
-### Deleting a Secret
+### Deleting Secrets
 
-Specify the environment name, application name or ID, key to delete, and optionally the path to delete a secret.
+Specify the environment name, application name or ID, keys to delete, and optionally the path.
 
 Options:
 
 ```go
-type DeleteSecretOptions struct {
-    EnvName     string
-    AppName     string
-    AppID       string
-    KeyToDelete string
-    SecretPath  string
+type DeleteOptions struct {
+    EnvName      string
+    AppID        string
+    AppName      string // Alternative to AppID
+    KeysToDelete []string
+    Path         string
 }
 ```
 
 ```go
-deleteOpts := phase.DeleteSecretOptions{
-    EnvName:     "Production",
-    AppName:     "MyApp", // Or use AppID: "app-id-here"
-    KeyToDelete: "API_KEY",
-    SecretPath:  "/api/keys", // Optional, default path: /
-}
-
-err := phaseClient.Delete(deleteOpts)
+keysNotFound, err := p.Delete(phase.DeleteOptions{
+    EnvName:      "Production",
+    AppID:        "app-id-here", // Or use AppName: "MyApp"
+    KeysToDelete: []string{"API_KEY", "OLD_SECRET"},
+    Path:         "/api/keys", // Optional, default path: /
+})
 if err != nil {
     log.Fatalf("Failed to delete secret: %v", err)
 }
+if len(keysNotFound) > 0 {
+    log.Printf("Keys not found: %v", keysNotFound)
+}
+```
+
+### Secret References
+
+`Get()` automatically resolves `${REF}` syntax in secret values before returning results. This includes same-environment (`${KEY}`), cross-environment (`${staging.SECRET_KEY}`), cross-app (`${backend_api::production.API_KEY}`), and path-scoped (`${/backend/config/DB_HOST}`) references.
+
+```go
+// References are resolved automatically — no extra steps needed
+secrets, _ := p.Get(phase.GetOptions{
+    EnvName: "Production",
+    AppID:   "app-id-here",
+})
+
+for _, s := range secrets {
+    // s.Value already has all ${REF} references resolved
+    fmt.Printf("%s=%s\n", s.Key, s.Value)
+}
+```
+
+### Overrides
+
+Create or update a personal override for a secret:
+
+```go
+// Create a secret with an override value
+err := p.Create(phase.CreateOptions{
+    KeyValuePairs: []phase.KeyValuePair{
+        {Key: "API_URL", Value: "https://api.example.com"},
+    },
+    EnvName:       "Development",
+    AppID:         "app-id-here",
+    OverrideValue: "http://localhost:3000",
+})
+
+// Update override for existing secret
+_, err := p.Update(phase.UpdateOptions{
+    EnvName:  "Development",
+    AppID:    "app-id-here",
+    Key:      "API_URL",
+    Value:    "http://localhost:4000",
+    Override: true,
+})
+
+// Toggle override on/off
+_, err := p.Update(phase.UpdateOptions{
+    EnvName:        "Development",
+    AppID:          "app-id-here",
+    Key:            "API_URL",
+    ToggleOverride: true,
+})
 ```
