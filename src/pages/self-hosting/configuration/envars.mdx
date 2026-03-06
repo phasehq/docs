@@ -328,7 +328,7 @@ Env(s) required by the following containers:
     A random 32 byte hex string. Can be generated with `openssl rand -hex 32`. Required by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
   </Property>
   <Property name="SECRET_KEY" type="string">
-    A random 32 byte hex string. Can be generated with `openssl rand -hex 32`. Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) container. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
+    A random 32 byte hex string. Can be generated with `openssl rand -hex 32`. Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
   </Property>
   <Property name="SERVER_SECRET" type="string">
     A random 32 byte hex string. Can be generated with `openssl rand -hex 32`. Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
@@ -344,7 +344,7 @@ Env(s) required by the following containers:
     The hostname where you would like to run Phase. Defaults to `localhost`. Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend), [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
   <Property name="HTTP_PROTOCOL" type="string">
-    The url scheme for your host. Defaults to `https://`. Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) and [`backend`](https://hub.docker.com/r/phasehq/backend) containers.
+    The url scheme for your host. Defaults to `https://`. Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend), [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
   <Property name="USER_EMAIL_DOMAIN_WHITELIST" type="string (Optional)">
     A comma-separated list of domains to restrict logins from. Commented out by default.
@@ -398,11 +398,33 @@ Env(s) required by the following containers:
 
     Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
+  <Property name="DATABASE_SSL" type="boolean">
+    Enables or disables SSL/TLS for database connections. Defaults to `False`. 
+    
+    When `False` or unset, Phase uses the default `sslmode=prefer`, which attempts a TLS connection but falls back to plaintext if TLS is unavailable. When `True`, Phase enforces a TLS connection.
+    
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  </Property>
+  <Property name="DATABASE_SSL_CA_PATH" type="string (Optional)">
+    Path to the CA certificate bundle for verifying the database's TLS certificate.
+    
+    If provided, Phase sets `sslmode=verify-full` and validates the database certificate against this CA, including a hostname check. If not provided (but `DATABASE_SSL=True`), Phase sets `sslmode=require`.
+    
+    For AWS RDS, Phase includes the RDS CA bundle at `/etc/ssl/certs/rds-ca-bundle.pem` which you can point this variable to.
+    
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  </Property>
 </Properties>
 
 ---
 
 ## Redis configuration
+
+Phase uses Redis or Valkey for a synchronous jobs queues, caching and rate limiting.
+
+<Note>
+  If your Redis or Valkey instance support ACLs, make sure it's set up with at least `on ~* -@all +@read +@write +ping +multi +exec +discard +watch +unwatch +@scripting` access string (ACL) permissions.
+</Note>
 
 <Properties>
   <Property name="REDIS_HOST" type="string">
@@ -420,6 +442,24 @@ Env(s) required by the following containers:
 
     Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
+  <Property name="REDIS_SSL" type="boolean">
+    Enables or disables SSL for Redis connections. Defaults to `False`.
+
+    The value is considered `True` if the environment variable is set to `"true"` (case-insensitive).
+
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  </Property>
+  <Property name="REDIS_USER" type="string (Optional)">
+    The username for the Redis server. Required if your Redis instance has ACLs enabled.
+
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  </Property>
+  <Property name="REDIS_SSL_CA_PATH" type="string (Optional)">
+    Path to the CA certificate bundle for verifying Redis SSL certificates. Required if `REDIS_SSL` is set to `True`.
+    Example: `/etc/ssl/certs/ca-certificates.crt`
+    If you using a self-signed certificate, you can set this to the path to the certificate bundle. Sames goes for a certificate bundle for a managed service like Redis Cloud which may not be available in the default certificate bundle.
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  </Property>
 </Properties>
 
 ---
@@ -430,50 +470,50 @@ Env(s) required by the following containers:
   <Property name="SMTP_SERVER" type="string">
     Your SMTP gateway host. eg. `my-email-gateway-smtp.eu-central-1.amazonaws.com`
 
-    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
+    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
   <Property name="SMTP_PORT" type="number">
     The port for your SMTP server. Defaults to `587`, if not specified.
 
-    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
+    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
   <Property name="SMTP_USERNAME" type="string">
     Your SMTP email gateway username.
 
-    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
+    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
   <Property name="SMTP_PASSWORD" type="string">
     Your SMTP email gateway password. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
 
-    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
+    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
   <Property name="DEFAULT_FROM_EMAIL" type="string">
     Email address from which you want to dispatch emails.
 
-    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
+    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
   <Property name="SMTP_TIMEOUT" type="number">
     The timeout in seconds for SMTP operations. Defaults to `5`, if not specified.
 
-    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
+    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
   <Property name="SMTP_USE_TLS" type="boolean">
-    Enables or disables TLS (Transport Layer Security) for SMTP connections. Defaults to `True`. 
-    
+    Enables or disables TLS (Transport Layer Security) for SMTP connections. Defaults to `True`.
+
     The value is considered `True` if the environment variable is set to `"true"` or `"1"` (case-insensitive).
-    
+
     Note: Only one of `SMTP_USE_TLS` or `SMTP_USE_SSL` should be enabled.
 
-    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
+    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
   <Property name="SMTP_USE_SSL" type="boolean">
     Enables or disables SSL (Secure Sockets Layer) for SMTP connections. Defaults to `False`.
-    
+
     The value is considered `True` if the environment variable is set to `"true"` or `"1"` (case-insensitive).
-    
+
     Note: Only one of `SMTP_USE_TLS` or `SMTP_USE_SSL` should be enabled.
 
-    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
+    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
 </Properties>
 
@@ -502,12 +542,12 @@ These logs can be useful for troubleshooting email delivery issues when self-hos
   <Property name="GITHUB_INTEGRATION_CLIENT_ID" type="string">
     GitHub OAuth application Client ID
 
-    Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend), [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+    Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) and [`backend`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
   <Property name="GITHUB_INTEGRATION_CLIENT_SECRET" type="string">
     GitHub OAuth application Client Secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
 
-    Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend), [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
 </Properties>
 
@@ -522,12 +562,12 @@ These logs can be useful for troubleshooting email delivery issues when self-hos
   <Property name="GITHUB_ENTERPRISE_INTEGRATION_CLIENT_ID" type="string">
     GitHub Enterprise Server OAuth application Client ID
 
-    Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend), [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+    Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) and [`backend`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
   <Property name="GITHUB_ENTERPRISE_INTEGRATION_CLIENT_SECRET" type="string">
     GitHub Enterprise Server OAuth application Client Secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
 
-    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
 </Properties>
 
@@ -937,24 +977,24 @@ These variables are not required if using the suggested [docker-compose template
   </Property>
   <Property name="ALLOWED_HOSTS" type="string">
     Comma-separated list of allowed hosts used the backend. Default: `${HOST},backend`
-    
+
     Example: `[**YOUR_DOMAIN**],backend`
 
-    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
   <Property name="ALLOWED_ORIGINS" type="string">
     Comma-separated list of allowed origins used by the Phase backend. References `${HTTP_PROTOCOL}${HOST}`
-    
+
     Example: `https://[**YOUR_DOMAIN**]`
 
-    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
   <Property name="SESSION_COOKIE_DOMAIN" type="string">
     Domain for the session cookie used by the Phase backend. References `${HOST}`
-    
+
     Example: `[**YOUR_DOMAIN**]` (example.com)
 
-    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
 
   <Property name="GUNICORN_WORKERS" type="number (Optional)">
@@ -962,5 +1002,10 @@ These variables are not required if using the suggested [docker-compose template
     If not specified, Phase will automatically calculate the number of workers based on available CPU cores using the formula `(2 * CPUs) + 1`, with a default cap of 8 workers to prevent potential database connection exhaustion.
     
     Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
+  </Property>
+  <Property name="RATE_LIMIT_DEFAULT" type="string">
+    Rate limit for API requests.
+    Example: `100/minute`. Rate limits can be specified over a period of second, minute, hour or day. The period must be specified after the / separator using s, m, h or d, respectively. For increased clarity, extended units such as second, minute, hour, day or even abbreviations like sec, min, hr are allowed, as only the first character is relevant to identify the rate. 
+    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
 </Properties>

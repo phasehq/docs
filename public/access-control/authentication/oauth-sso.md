@@ -102,7 +102,7 @@ If you are using GitHub Enterprise Server (self-hosted) instance, you may follow
    GitHub Enterprise Server (self-hosted) instance for OAuth SSO is only available for organizations with an `Enterprise` tier subscription. See [Pricing](https://phase.dev/pricing).
 </Note>
 
-1. Log in to your GitHub account and go to [OAuth Apps](https://github.com/settings/developers) in Developer Settings.
+1. Log in to your GitHub account and go to [OAuth Apps](https://github.com/settings/applications/new) in Developer Settings.
 
 2. Click "New OAuth App".
 

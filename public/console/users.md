@@ -50,7 +50,7 @@ You can also copy the entire contents of the recovery kit to store as a secure n
 
 </Warning>
 
-If a non-owner user forgets their account sudo password and cannot access their recovery phrase, they can be removed from the organisation and re-added by another user. However, if the Organisation **Owner** forgets their sudo password and cannot access their account recovery phrase they will have lost access to the account permanently.
+If a non-owner user forgets their account sudo password and cannot access their recovery phrase, they can be removed from the organisation and re-added by another user. However, if the Organisation **Owner** forgets their sudo password and cannot access their account recovery phrase they will have lost access to the account permanently. To mitigate this risk, ownership can be [transferred](/console/organisation#transfer-ownership) to another Admin member who has access to their recovery kit.
 
 ## The `sudo` password
 

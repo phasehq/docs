@@ -10,7 +10,13 @@ export const description =
 
 Learn how to set up the Phase Console using the Docker Compose template. {{ className: 'lead' }}
 
-<DocActions /> 
+<DocActions />
+
+<SkillBox
+  skill="docker-compose"
+  refs={["docker-compose-deployment", "troubleshooting"]}
+  triggerPhrase="deploy Phase with Docker Compose"
+/>
 
 The steps outlined below provide a general guide for self-hosting Phase Services on your own infrastructure. 
 

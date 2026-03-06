@@ -27,7 +27,7 @@ Phase provides managed roles out of the box to every organization.
 
 ### Owner
 
-The organization owner. This role is automatically assigned when a user creates a new organization. It is unique to a single user and grants access to all resources and actions.
+The organization owner. This role is automatically assigned when a user creates a new organization. It is unique to a single user and grants access to all resources and actions. Ownership can be [transferred](/console/organisation#transfer-ownership) to another Admin member from the Organisation Settings.
 
 #### Organization-level permissions:
 
