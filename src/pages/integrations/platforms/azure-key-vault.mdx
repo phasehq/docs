@@ -1,0 +1,280 @@
+import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
+
+export const description = 'Integrate Phase with Azure Key Vault'
+
+<Tag variant="small">INTEGRATE</Tag>
+
+# Azure Key Vault
+
+You can use Phase to sync secrets to Azure Key Vault. Phase supports two sync modes:
+
+- **Individual Secrets**: Each Phase secret becomes a separate Key Vault secret. Ideal for workloads that reference individual secrets via `@Microsoft.KeyVault(...)` (e.g. Azure App Service, Azure Functions).
+- **JSON Blob**: All Phase secrets are synced as a single JSON object to one Key Vault secret. Useful for applications that consume all secrets at once.
+
+<DocActions />
+
+### Prerequisites
+
+- Azure CLI (`az`) installed locally, or use [Azure Cloud Shell](https://shell.azure.com)
+- An Azure account with permissions to create App Registrations and assign Key Vault roles
+
+<Warning>
+  When secret syncing is enabled, secrets stored inside Phase will be treated as
+  the source of truth. In **Individual Secrets** mode, any Key Vault secrets not present in Phase will be **disabled**. In **JSON Blob** mode, the target secret will be **overwritten**.
+  Please import your secrets into Phase before enabling a sync.
+</Warning>
+
+## Azure Authentication Setup
+
+Phase authenticates with Azure using a **Service Principal** (App Registration with a client secret). This gives Phase the `tenant_id`, `client_id`, and `client_secret` it needs to access your Key Vault.
+
+### Step 1: Log in to Azure
+
+```fish
+az login
+```
+
+If you have multiple subscriptions, set the one you want to use:
+
+```fish
+az account set --subscription "YOUR_SUBSCRIPTION_NAME_OR_ID"
+```
+
+### Step 2: Create a Key Vault (skip if you already have one)
+
+Create a resource group and Key Vault. Replace `phase-rg` and `phase-kv` with your preferred names:
+
+```fish
+az group create --name phase-rg --location eastus
+```
+
+```fish
+az keyvault create --name phase-kv --resource-group phase-rg --location eastus
+```
+
+<Note>
+  Azure Key Vault names must be globally unique (3-24 characters, alphanumeric and hyphens only).
+  If `phase-kv` is taken, choose a different name.
+</Note>
+
+Your Vault URI will be `https://phase-kv.vault.azure.net` (replace `phase-kv` with your vault name).
+
+If you see **"You are unauthorized to view these contents"** when viewing the vault in the Azure Portal, grant yourself access:
+
+```fish
+az role assignment create \
+  --role "Key Vault Secrets Officer" \
+  --assignee $(az ad signed-in-user show --query id -o tsv) \
+  --scope /subscriptions/$(az account show --query id -o tsv)/resourceGroups/phase-rg/providers/Microsoft.KeyVault/vaults/phase-kv
+```
+
+<Note>
+  Role assignments can take up to 30 seconds to propagate. Refresh the page if you don't see the change immediately.
+</Note>
+
+### Step 3: Create a Service Principal with Key Vault access
+
+This single command creates an App Registration, generates a client secret, and assigns the **Key Vault Secrets Officer** role scoped to your Key Vault:
+
+```fish
+az ad sp create-for-rbac \
+  --name phase-kv-sync \
+  --role "Key Vault Secrets Officer" \
+  --scopes /subscriptions/$(az account show --query id -o tsv)/resourceGroups/phase-rg/providers/Microsoft.KeyVault/vaults/phase-kv
+```
+
+<Note>
+  Replace `phase-rg` and `phase-kv` with your actual resource group and vault names.
+</Note>
+
+Example output:
+
+```json
+{
+  "appId": "12345678-abcd-1234-efgh-123456789012",
+  "displayName": "phase-kv-sync",
+  "password": "abcdefgh-1234-5678-ijkl-mnopqrstuvwx",
+  "tenant": "87654321-dcba-4321-hgfe-210987654321"
+}
+```
+
+**Save these values** - they map to Phase credential fields as follows:
+
+| Azure CLI output | Phase credential field |
+|------------------|----------------------|
+| `tenant`         | **Tenant ID**        |
+| `appId`          | **Client ID**        |
+| `password`       | **Client Secret**    |
+
+<Warning>
+  The `password` (Client Secret) is only shown once. If you lose it, you'll need to create a new one
+  with `az ad app credential reset --id YOUR_APP_ID`.
+</Warning>
+
+### Step 4: Verify access (optional)
+
+Confirm the service principal can list secrets in your vault:
+
+```fish
+az login --service-principal \
+  --username "APP_ID" \
+  --password "PASSWORD" \
+  --tenant "TENANT_ID"
+```
+
+```fish
+az keyvault secret list --vault-name phase-kv --query "[].name" -o tsv
+```
+
+This should return an empty list (or your existing secrets) without errors. Log back in as yourself afterwards:
+
+```fish
+az login
+```
+
+### Using Vault Access Policies (legacy vaults)
+
+If your Key Vault uses the **Vault access policy** permission model instead of Azure RBAC, you need to grant the service principal access separately after creating it:
+
+```fish
+az ad sp create-for-rbac --name phase-kv-sync
+```
+
+Then assign the necessary secret permissions:
+
+```fish
+az keyvault set-policy \
+  --name phase-kv \
+  --spn "APP_ID_FROM_ABOVE" \
+  --secret-permissions get list set delete recover
+```
+
+<Note>
+  New Key Vaults default to Azure RBAC. You can check your vault's permission model with:
+  `az keyvault show --name phase-kv --query "properties.enableRbacAuthorization"`.
+  If it returns `true`, use the RBAC method in Step 3.
+</Note>
+
+## Optional: Import existing secrets from Azure Key Vault into Phase
+
+If you have existing secrets in your Key Vault that you want to manage with Phase, you can export them to a `.env` file and import them.
+
+1. List all secrets in your vault:
+
+```fish
+az keyvault secret list --vault-name phase-kv --query "[].name" -o tsv
+```
+
+2. Export secrets to a `.env` file:
+
+```fish
+for name in $(az keyvault secret list --vault-name phase-kv --query "[].name" -o tsv); do
+  value=$(az keyvault secret show --vault-name phase-kv --name "$name" --query "value" -o tsv)
+  # Convert hyphens back to underscores for env var names
+  env_name=$(echo "$name" | tr '-' '_')
+  echo "${env_name}=${value}" >> .env
+done
+```
+
+3. Import secrets into Phase via the `phase-cli`:
+
+```fish
+phase secrets import .env --env development
+```
+
+4. Delete the `.env` file:
+
+```fish
+rm .env
+```
+
+## Sync Secrets from Phase
+
+### Step 1: Set up your Azure credentials in Phase
+
+<Note>
+  Your credentials are kept secure with robust application-layer encryption.
+  Phase encrypts your credentials directly in the browser and only decrypts them
+  in memory to perform sync operations. Your credentials are never stored in
+  plaintext.
+</Note>
+
+1. Go to **Integrations** from the sidebar and click on **Third-party credentials**.
+
+2. Click on **Azure**.
+
+3. Enter the credentials from [Step 3](#step-3-create-a-service-principal-with-key-vault-access):
+   - **Tenant ID**: The `tenant` value
+   - **Client ID**: The `appId` value
+   - **Client Secret**: The `password` value
+
+4. Give these credentials a descriptive name (e.g. "Azure KV - Production") and click **Save**.
+
+### Step 2: Configure the Sync
+
+1. Enable Server-side Encryption (SSE) for the App from the [Settings](/console/apps#settings) tab if not enabled already.
+
+2. Go to your App in the Phase Console and go to the **Syncing** tab. Select **Azure Key Vault** under the 'Create a new Sync' menu.
+
+3. Select the Azure credentials stored in the previous step and enter your **Vault URI** (e.g. `https://phase-kv.vault.azure.net`). Click **Next**.
+
+<Note>
+  If you see an error and cannot proceed, verify that the credentials are correct and that the
+  service principal has the **Key Vault Secrets Officer** role (or appropriate vault access policies)
+  on the target vault.
+</Note>
+
+4. Choose the Phase **Environment** and **Path** as the source for secrets.
+
+5. Select a **Sync Mode**:
+
+   - **Individual Secrets**: Each Phase secret is synced as its own Key Vault secret. Underscores (`_`) in secret names are automatically converted to hyphens (`-`) to comply with Key Vault naming rules. Secrets in Key Vault that are not present in Phase will be **disabled** (not deleted).
+
+   - **JSON Blob**: All secrets are stored as a single JSON object in one Key Vault secret. Choose to create a new secret or select an existing one from the dropdown.
+
+6. Click **Create**. The sync is now active! Secrets will automatically sync whenever they are updated in Phase.
+
+### Individual Secrets mode: naming behavior
+
+Azure Key Vault secret names only allow alphanumeric characters and hyphens. Phase automatically transforms secret names:
+
+| Phase Secret Name   | Key Vault Secret Name |
+|--------------------|-----------------------|
+| `DATABASE_URL`     | `DATABASE-URL`        |
+| `API_KEY`          | `API-KEY`             |
+| `my_secret_value`  | `my-secret-value`     |
+
+<Warning>
+  If two Phase secrets map to the same Key Vault name after transformation (e.g. `MY-KEY` and `MY_KEY`
+  both become `MY-KEY`), the sync will fail with a name collision error. Rename one of the secrets in
+  Phase to resolve this.
+</Warning>
+
+### Individual Secrets mode: referencing secrets in App Service
+
+Once secrets are synced, you can reference them in Azure App Service or Azure Functions using Key Vault references:
+
+```
+@Microsoft.KeyVault(SecretUri=https://phase-kv.vault.azure.net/secrets/DATABASE-URL/)
+```
+
+Or using the vault name shorthand:
+
+```
+@Microsoft.KeyVault(VaultName=phase-kv;SecretName=DATABASE-URL)
+```
+
+### JSON Blob mode
+
+In JSON Blob mode, all Phase secrets are stored as a single JSON object:
+
+```json
+{
+  "DATABASE_URL": "postgres://...",
+  "API_KEY": "sk-...",
+  "SECRET_TOKEN": "abc123"
+}
+```
+
+The secret is stored with `content_type: application/json` in Key Vault. Your application can retrieve and parse this JSON to access all secrets at once.
