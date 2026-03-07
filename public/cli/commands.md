@@ -13,52 +13,49 @@ export const description =
 
 ```
 λ phase --help
-Securely manage application secrets and environment variables with Phase.
+Keep Secrets.
 
-           /$$
-          | $$
-  /$$$$$$ | $$$$$$$   /$$$$$$   /$$$$$$$  /$$$$$$
- /$$__  $$| $$__  $$ |____  $$ /$$_____/ /$$__  $$
-| $$  \ $$| $$  \ $$  /$$$$$$$|  $$$$$$ | $$$$$$$$
-| $$  | $$| $$  | $$ /$$__  $$ \____  $$| $$_____/
-| $$$$$$$/| $$  | $$|  $$$$$$$ /$$$$$$$/|  $$$$$$$
-| $$____/ |__/  |__/ \_______/|_______/  \_______/
-| $$
-|__/
+             /$$
+            | $$
+    /$$$$$$ | $$$$$$$   /$$$$$$   /$$$$$$$  /$$$$$$
+   /$$__  $$| $$__  $$ |____  $$ /$$_____/ /$$__  $$
+  | $$  \ $$| $$  \ $$  /$$$$$$$|  $$$$$$ | $$$$$$$$
+  | $$  | $$| $$  | $$ /$$__  $$ \____  $$| $$_____/
+  | $$$$$$$/| $$  | $$|  $$$$$$$ /$$$$$$$/|  $$$$$$$
+  | $$____/ |__/  |__/ \_______/|_______/  \_______/
+  | $$
+  |__/
 
-options:
-  -h, --help   show this help message and exit
-  --version, -v
-               show program's version number and exit
 Commands:
+  auth                              💻 Authenticate with Phase
+  init                              🔗 Link your project with your Phase app
+  run                               🚀 Run and inject secrets to your app
+  shell                             🐚 Launch a sub-shell with secrets as environment variables
+  secrets list                      📇 List all the secrets
+  secrets get                       🔍 Fetch details about a secret in JSON
+  secrets create                    💳 Create a new secret
+  secrets update                    📝 Update an existing secret
+  secrets delete                    🗑️ Delete a secret
+  secrets import                    📩 Import secrets from a .env file
+  secrets export                    🥡 Export secrets in a specific format
+  dynamic-secrets list              📇 List dynamic secrets & metadata
+  dynamic-secrets lease generate    ✨ Generate a lease (create fresh dynamic secret)
+  dynamic-secrets lease get         🔍 Get leases for a dynamic secret
+  dynamic-secrets lease renew       🔁 Renew a lease
+  dynamic-secrets lease revoke      🗑️ Revoke a lease
+  users whoami                      🙋 See details of the current user
+  users switch                      🪄 Switch between Phase users, orgs and hosts
+  users logout                      🏃 Logout from phase-cli
+  users keyring                     🔐 Display information about the Phase keyring
+  console                           🖥️ Open the Phase Console in your browser
+  docs                              📖 Open the Phase CLI Docs in your browser
+  completion                        ⌨️ Generate the autocompletion script for the specified shell
 
-    auth                             💻 Authenticate with Phase
-    init                             🔗 Link your project with your Phase app
-    run                              🚀 Run and inject secrets to your app
-    shell                            🐚 Launch a sub-shell with secrets as environment variables (BETA)
-    secrets                          🗝️ Manage your secrets
-    secrets list                     📇 List all the secrets
-    secrets get                      🔍 Get a specific secret by key
-    secrets create                   💳 Create a new secret
-    secrets update                   📝 Update an existing secret
-    secrets delete                   🗑️ Delete a secret
-    secrets import                   📩 Import secrets from a .env file
-    secrets export                   🥡 Export secrets in a dotenv format
-    dynamic-secrets                  ⚡️ Manage dynamic secrets
-    dynamic-secrets list             📇 List dynamic secrets & metadata
-    dynamic-secrets lease            📜 Manage dynamic secret leases
-    dynamic-secrets lease get        🔍 Get leases for a dynamic secret
-    dynamic-secrets lease renew      🔁 Renew a lease
-    dynamic-secrets lease revoke     🗑️ Revoke a lease
-    dynamic-secrets lease generate   ✨ Generate a lease (create fresh dynamic secrets)
-    users                            👥 Manage users and accounts
-    users whoami                     🙋 See details of the current user
-    users switch                     🪄 Switch between Phase users, orgs and hosts
-    users logout                     🏃 Logout from phase-cli
-    users keyring                    🔐 Display information about the Phase keyring
-    docs                             📖 Open the Phase CLI Docs in your browser
-    console                          🖥️ Open the Phase Console in your browser
-    update                           🆙 Update the Phase CLI to the latest version
+Flags:
+  -h, --help      help for phase
+  -v, --version   version for phase
+
+Use "phase [command] --help" for more information about a command.
 ```
 
 ## Available commands {{ className: 'lead' }}
@@ -206,7 +203,7 @@ Choosing an app will create a `.phase.json` configuration file in your project's
 
 > cat .phase.json
 {
-  "version": "1",
+  "version": "2",
   "phaseApp": "keyspace",
   "appId": "511f26b7-5b56-47f3-920e-a4edb9cdbf3c",
   "defaultEnv": "Development",
@@ -274,18 +271,22 @@ Injecting [Referenced secrets](/cli/commands#secret-referencing):
 
 ```fish
 > phase secrets get PROD_AWS_KEY --env dev
-KEY 🗝️                | VALUE ✨
-----------------------------------------------------------------------------------------
-PROD_AWS_KEY         | ⛓️` ${prod.AWS_ACCESS_KEY_ID}
+{
+    "key": "PROD_AWS_KEY",
+    "value": "${prod.AWS_ACCESS_KEY_ID}",
+    "comment": "",
+    "path": "/",
+    "application": "example-app",
+    "environment": "Development",
+    "tags": [],
+    "overridden": false
+}
 
 > phase run --env dev "printenv | grep PROD_AWS_KEY"
 PROD_AWS_KEY=AKIA2OGYBAH63UA3VNFG
-
-# In the event a user doesn't have access to prod / production environment
-> phase run --env dev "printenv | grep PROD_AWS_KEY"
-⚠️ Warning: The environment 'prod' for key 'PROD_AWS_KEY' either does not exist or you do not have access to it. Reference AWS_ACCESS_KEY_ID not found. Ignoring...
-PROD_AWS_KEY=
 ```
+
+Note that `secrets get` returns the raw, unresolved reference syntax (`${prod.AWS_ACCESS_KEY_ID}`), while `phase run` automatically resolves references and injects the actual secret value.
 
 Chaining multiple commands:
 
@@ -305,11 +306,7 @@ Chaining multiple commands:
 
 ## 🐚 `shell`
 
-Launch an ephemeral shell with secrets injected as environment variables. 
-
-<Note>
-This feature is currently in BETA.
-</Note>
+Launch an ephemeral shell with secrets injected as environment variables.
 
 Usage:
 
@@ -321,7 +318,7 @@ Usage:
 - `--path`: (Optional) Specific path under which to fetch secrets from and inject into your shell. Default is '/'. Pass an empty string `""` to fetch secrets from all paths.
 - `--app`: (Optional) Name of your Phase application. Use this if you don't have a `.phase.json` file in your project directory or want to override it.
 - `--app-id`: (Optional) ID of your Phase application. Takes precedence over `--app` if both are provided.
-- `--shell`: (Optional) Specify the shell to launch. Supported shells: `bash`, `sh`, `fish`, `zsh`. Default is your current shell.
+- `--shell`: (Optional) Specify the shell to launch. Supported shells: `bash`, `zsh`, `fish`, `sh`, `powershell`, `pwsh`, `cmd`. Default is your current shell.
 - `--tags`: (Optional) Comma-separated list of tags to filter secrets.
 - `--generate-leases`: (Optional) Whether to generate leases for dynamic secrets (`true`/`false`). Default: `true`.
 - `--lease-ttl`: (Optional) TTL in seconds to use when generating leases.
@@ -346,7 +343,6 @@ postgresql://postgres:dbc76c4d...@localhost:5432/mydb
 
 **Notes**:
 
-- This feature is currently in BETA and is being tested for performance, usage, and reliability across different platforms.
 - When using zsh with modifications like powerline10k, command suggestions and tab completions might be affected in certain cases. This is not due to the Phase CLI - you can verify this by launching zsh directly.
 - Secrets are only available within the shell session and are automatically cleared when you exit.
 - Inside the shell, `PHASE_ENV` is set to the full environment name from the fetched secrets (e.g., "Development", "Production").
@@ -377,19 +373,21 @@ Usage:
 - `--app`: (Optional) Name of your Phase application. Use this to override the `.phase.json` file or when it's not present in your project directory.
 - `--app-id`: (Optional) ID of your Phase application. Takes precedence over `--app` if both are provided.
 - `--tags`: (Optional) Comma-separated list of tags to filter secrets.
+- `--generate-leases`: (Optional) Whether to generate leases for dynamic secrets. Defaults to the value of `--show`.
+- `--lease-ttl`: (Optional) TTL in seconds to use when generating leases.
 
 **Indicators**:
 
-- `🔗`: Indicates a reference to another secret within the same environment.
-- `⛓️`: Indicates a cross-environment reference to a secret in another environment.
-- `🏷️`: Indicates a tag associated with a secret.
-- `💬`: Indicates a comment associated with a secret.
-- `🔏`: Indicates a personal secret, visible only to the user who set it.
-- `⚡️`: Indicates a dynamic secret.
+- `🔗`: Secret references another secret in the same environment.
+- `🌐`: Cross-environment reference (secret from another environment in the same or different application).
+- `🔖`: Tag associated with the secret.
+- `💬`: Comment associated with the secret.
+- `🔏`: Personal secret override (visible only to you).
+- `⚡️`: Dynamic secret.
 
 ### 🔍 `secrets get`
 
-Retrieve detailed information about a specific secret, with the ability to specify the application and filter by tags.
+Fetch details about a specific secret in JSON, with the ability to specify the application and filter by tags.
 
 Usage:
 
@@ -414,14 +412,14 @@ Example:
 {
     "key": "DEBUG",
     "value": "True",
-    "overridden": null,
-    "tags": [
-        "local-development"
-    ],
     "comment": "This is only for local development. NOT to be used in production.",
     "path": "/",
     "application": "example-app",
-    "environment": "Development"
+    "environment": "Development",
+    "tags": [
+        "local-development"
+    ],
+    "overridden": false
 }
 ```
 
@@ -431,12 +429,12 @@ Dynamic secret example:
 {
     "key": "AWS_IAM_USERNAME",
     "value": "wwm6hwzpbpnvxs",
-    "overridden": false,
-    "tags": [],
-    "comment": null,
+    "comment": "",
     "path": "/",
     "application": "example-app",
     "environment": "Development",
+    "tags": [],
+    "overridden": false,
     "is_dynamic": true,
     "dynamic_group": "AWS IAM credentials (aws)"
 }
@@ -464,7 +462,7 @@ Usage:
 - `--app`: (Optional) Name of your Phase application. Use this to override the `.phase.json` file or when it's not present in your project directory.
 - `--app-id`: (Optional) ID of your Phase application. Takes precedence over `--app` if both are provided.
 - `--random`: (Optional) Specify the type of random value to generate. Available types are `hex`, `alphanumeric`, `base64`, `base64url`, `key128`, `key256`. Example: `--random hex`.
-- `--length`: (Optional) Specify the length of the random value, between 1 and 256. Applicable for types other than `key128` and `key256`. Default length is 32. Example: `--length 16`.
+- `--length`: (Optional) Specify the length of the random value. Applicable for types other than `key128` and `key256`. Default length is 32. Example: `--length 16`.
 - `--override`: (Optional) Update the personal override value.
 
 Examples:
@@ -479,6 +477,8 @@ Examples:
 
 **Notes**:
 
+- `base64` : Random bytes, base64 encoded
+- `base64url` : Random bytes, base64url encoded (URL-safe)
 - `key128` : 16 Byte high entropy base64 encoded symmetric key - suitable for AES-128
 - `key256` : 32 Byte high entropy base64 encoded symmetric key - suitable for use with ChaCha20 or AES-256
 
@@ -499,7 +499,7 @@ Usage:
 - `--app`: (Optional) Name of your Phase application. Use this to override the `.phase.json` file or when it's not present in your project directory.
 - `--app-id`: (Optional) ID of your Phase application. Takes precedence over `--app` if both are provided.
 - `--random`: (Optional) Specify the type of random value to generate. Available types are `hex`, `alphanumeric`, `base64`, `base64url`, `key128`, `key256`. Example: `--random hex`.
-- `--length`: (Optional) Specify the length of the random value, between 1 and 256. Applicable for types other than `key128` and `key256`. Default length is 32. Example: `--length 16`.
+- `--length`: (Optional) Specify the length of the random value. Applicable for types other than `key128` and `key256`. Default length is 32. Example: `--length 16`.
 - `--override`: (Optional) Update the personal override value.
 - `--toggle-override`: (Optional) Toggle the override state between active and inactive.
 
@@ -524,6 +524,8 @@ Examples:
 
 **Notes**:
 
+- `base64` : Random bytes, base64 encoded
+- `base64url` : Random bytes, base64url encoded (URL-safe)
 - `key128` : 16 Byte high entropy base64 encoded symmetric key - suitable for AES-128
 - `key256` : 32 Byte high entropy base64 encoded symmetric key - suitable for use with ChaCha20 or AES-256
 
@@ -539,6 +541,7 @@ Usage:
 
 - `KEYS...`: One or more keys of the secrets to be deleted. Separate multiple keys with spaces.
 - `--env`: (Optional) Specify the environment from which the secrets will be deleted.
+- `--path`: (Optional) Path filter for deleting secrets. Default is `/`. Pass an empty string `""` to delete from all paths.
 - `--app`: (Optional) Name of your Phase application. Use this to override the `.phase.json` file or when it's not present in your project directory.
 - `--app-id`: (Optional) ID of your Phase application. Takes precedence over `--app` if both are provided.
 
@@ -607,10 +610,10 @@ Export secrets from your Phase environment, with options to filter by keys, tags
 Usage:
 
 ```fish
-> phase secrets export [KEYS...] [--env ENVIRONMENT] [--app APP_NAME] [--tags TAGS] [--format FORMAT]
+> phase secrets export [keys...] [--env ENVIRONMENT] [--app APP_NAME] [--tags TAGS] [--format FORMAT]
 ```
 
-- `KEYS...`: (Optional) List of keys to export, separated by space.
+- `keys...`: (Optional) One or more specific secret keys to export. If omitted, all secrets are exported.
 - `--env`: (Optional) Specify the environment from which the secrets will be exported.
 - `--path`: (Optional) The path from which you want to export secret(s). Default is '/'. Pass an empty string `""` to export secrets from all paths.
 - `--app`: (Optional) Name of your Phase application. Use this to override the `.phase.json` file or when it's not present in your project directory.
@@ -630,14 +633,15 @@ AWS_SECRET_ACCESS_KEY="V5yWXDe82Gohf9DYBhpatYZ74a5fiKfJVx8rx6W1"
 ```
 
 ```
-# Export only specific secrets in the 'prod' environment
-> phase secrets export AWS_SECRET_ACCESS_KEY --env prod
-AWS_SECRET_ACCESS_KEY="V5yWXDe82Gohf9DYBhpatYZ74a5fiKfJVx8rx6W1"
-```
-
-```
 # Export all secrets in the 'dev' environment to a .env file
 > phase secrets export --env dev > .env.example
+```
+
+```fish
+# Export only specific keys
+> phase secrets export AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY --env prod
+AWS_ACCESS_KEY_ID="AKIA2OGYBAH63UA3VNFG"
+AWS_SECRET_ACCESS_KEY="V5yWXDe82Gohf9DYBhpatYZ74a5fiKfJVx8rx6W1"
 ```
 
 ```fish
@@ -648,14 +652,6 @@ AWS_SECRET_ACCESS_KEY="V5yWXDe82Gohf9DYBhpatYZ74a5fiKfJVx8rx6W1"
   "DB_NAME": "XP1_LM",
 
 }
-```
-
-```fish
-# In the event a user doesn't have access to a specified environment
-> phase secrets export PROD_AWS_KEY PROD_AWS_SECRET_ACCESS_KEY --env prod
-AWS_ACCESS_KEY_ID="AKIA2OGYBAH63UA3VNFGds"
-# Warning: The environment 'prod' for key 'PROD_AWS_SECRET_ACCESS_KEY' either does not exist or you do not have access to it.
-PROD_AWS_SECRET_ACCESS_KEY=""
 ```
 
 **Notes**:
@@ -1022,7 +1018,7 @@ Logout from the Phase CLI.
 Usage:
 
 ```fish
-> phase logout [--purge]
+> phase users logout [--purge]
 ```
 
 - `--purge`: Purge all local data. This option will remove any local configuration and data related to the current user's session.
@@ -1071,17 +1067,37 @@ This command is a shortcut to quickly access the Phase Console in your default w
 
 ---
 
-## 🆙 `update`
+## ⌨️ `completion`
 
-Update the Phase CLI to the latest version. This subcommand is available only on Linux systems when the CLI is installed via the installation script.
+Generate shell autocompletion scripts for the Phase CLI. This allows tab-completion of commands, flags, and arguments in your terminal.
 
 Usage:
 
 ```fish
-> phase update
+> phase completion [shell]
 ```
 
-This command checks for updates and installs the latest version of the Phase CLI.
+Available sub-commands:
+
+- `bash` — Generate the autocompletion script for bash
+- `zsh` — Generate the autocompletion script for zsh
+- `fish` — Generate the autocompletion script for fish
+- `powershell` — Generate the autocompletion script for powershell
+
+Examples:
+
+```fish
+# Generate and load zsh completions
+> phase completion zsh > "${fpath[1]}/_phase"
+
+# Generate and load bash completions
+> phase completion bash > /etc/bash_completion.d/phase
+
+# Generate and load fish completions
+> phase completion fish > ~/.config/fish/completions/phase.fish
+```
+
+Run `phase completion [shell] --help` for detailed instructions for each shell.
 
 ---
 
@@ -1102,7 +1118,7 @@ You can set a value of a secret to a value of another by simply pointing to it v
 
 For more information see: [Phase Console Secrets](/console/secrets)
 
-Values prefixed with a `🔗` indicate a local secret being referenced, whereas values prefixed with `⛓️` indicate cross environment secret value being referenced ie. development, staging, prod.
+Values prefixed with a `🔗` indicate a local secret being referenced, whereas values prefixed with `🌐` indicate a cross-environment secret value being referenced ie. development, staging, prod.
 
 **Examples**:
 
@@ -1155,7 +1171,7 @@ The database connection string `postgresql://` is referencing `DB_USER`, `DB_PAS
 > phase secrets list --env prod --show
 KEY 🗝️                    | VALUE ✨
 ----------------------------------------------------------------------------
-DATABASE_URL              | ⛓️ postgresql://${dev.DB_USER}:${dev.DB_PASSWORD}@${dev.DB_HOST}:${dev.DB_PORT}/${dev.DB_NAME}
+DATABASE_URL              | 🌐 postgresql://${dev.DB_USER}:${dev.DB_PASSWORD}@${dev.DB_HOST}:${dev.DB_PORT}/${dev.DB_NAME}
 
 > phase run --env prod "printenv | grep DATABASE_URL"
 DATABASE_URL=postgresql://j_mclaren:6c37810ec6e74ec3228416d2844564fceb99ebd94b29f4334c244db011630b0e@mc-laren-prod-db.c9ufzjtplsaq.us-west-1.rds.amazonaws.com:5432/XP1_LM
@@ -1177,7 +1193,6 @@ Example:
 
 ```fish
 > PHASE_DEBUG=True phase secrets list
-Exception: 🗿 Network error: Please check your internet connection. Detail: HTTPConnectionPool(host='localhost', port=443): Max retries exceeded with url: /secrets/tokens/ (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f7c2041d7d0>: Failed to establish a new connection: [Errno 111] Connection refused'))
 ```
 
 ### `PHASE_HOST`
