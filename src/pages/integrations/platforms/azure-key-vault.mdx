@@ -100,14 +100,14 @@ Example output:
 
 2. Click on **Azure**.
 
-![Select Azure](/assets/images/platform-integrations/azure/2-select-azure-credential-provider.png)
+![Select Azure](/assets/images/platform-integrations/azure/2-select-azure-credential-provider.webp)
 
 3. Enter the credentials from [Step 2](#step-2-create-a-service-principal-with-key-vault-access):
    - **Tenant ID**: The `tenant` value
    - **Client ID**: The `appId` value
    - **Client Secret**: The `password` value
 
-![Create new Azure creds](/assets/images/platform-integrations/azure/3-create-new-azure-credentials.png)
+![Create new Azure creds](/assets/images/platform-integrations/azure/3-create-new-azure-credentials.webp)
 
 4. Give these credentials a descriptive name (e.g. "Azure KV - Production") and click **Save**.
 
@@ -117,11 +117,11 @@ Example output:
 
 2. Go to your App in the Phase Console and go to the **Syncing** tab. Select **Azure Key Vault** under the 'Create a new Sync' menu.
 
-![Select Azure KV sync provider](/assets/images/platform-integrations/azure/4-create-a-sync-w:-azure-kv.png)
+![Select Azure KV sync provider](/assets/images/platform-integrations/azure/4-create-a-sync-w:-azure-kv.webp)
 
 3. Select the Azure credentials stored in the previous step and enter your **Vault URI** (e.g. `https://phase-kv.vault.azure.net`). Click **Next**.
 
-![Select credentials and Azure KV URI](/assets/images/platform-integrations/azure/5-select-credentials-and-vault-uri.png)
+![Select credentials and Azure KV URI](/assets/images/platform-integrations/azure/5-select-credentials-and-vault-uri.webp)
 
 <Note>
   If you see an error and cannot proceed, verify that the credentials are correct and that the
@@ -138,7 +138,7 @@ Example output:
 
 Each Phase secret is synced as its own Key Vault secret. Underscores (`_`) in secret names are automatically converted to hyphens (`-`) to comply with Key Vault naming rules. Secrets in Key Vault that are not present in Phase will be **disabled** (not deleted).
 
-![Sync mode type - individual secrets](/assets/images/platform-integrations/azure/6-sync-config-map-individual.png)
+![Sync mode type - individual secrets](/assets/images/platform-integrations/azure/6-sync-config-map-individual.webp)
 
 #### Naming behavior
 
@@ -169,7 +169,7 @@ Or using the vault name shorthand:
 
 All secrets are stored as a single JSON object in one Key Vault secret. Choose to create a new secret or select an existing one from the dropdown.
 
-![Sync mode type - json blob](/assets/images/platform-integrations/azure/6-sync-config-map-json-blob.png)
+![Sync mode type - json blob](/assets/images/platform-integrations/azure/6-sync-config-map-json-blob.webp)
 
 The secret is stored with `content_type: application/json` in Key Vault. Your application can retrieve and parse this JSON to access all secrets at once.
 
