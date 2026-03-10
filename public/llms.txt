@@ -40,6 +40,7 @@
 - [integrations/platforms/aws-iam](https://docs.phase.dev/integrations/platforms/aws-iam.md)
 - [integrations/platforms/aws-elastic-container-service](https://docs.phase.dev/integrations/platforms/aws-elastic-container-service.md)
 - [integrations/platforms/aws-secrets-manager](https://docs.phase.dev/integrations/platforms/aws-secrets-manager.md)
+- [integrations/platforms/azure-key-vault](https://docs.phase.dev/integrations/platforms/azure-key-vault.md)
 - [integrations/platforms/hashicorp-terraform](https://docs.phase.dev/integrations/platforms/hashicorp-terraform.md)
 - [integrations/platforms/hashicorp-vault](https://docs.phase.dev/integrations/platforms/hashicorp-vault.md)
 - [integrations/platforms/hashicorp-nomad](https://docs.phase.dev/integrations/platforms/hashicorp-nomad.md)

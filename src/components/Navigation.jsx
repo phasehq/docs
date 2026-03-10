@@ -299,6 +299,10 @@ export const navigation = [
         href: '/integrations/platforms/aws-secrets-manager',
       },
       {
+        title: 'Azure Key Vault',
+        href: '/integrations/platforms/azure-key-vault',
+      },
+      {
         title: 'Hashicorp Terraform',
         href: '/integrations/platforms/hashicorp-terraform',
       },
