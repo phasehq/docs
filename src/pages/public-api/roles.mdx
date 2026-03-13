@@ -1,0 +1,483 @@
+import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
+
+export const metadata = {
+  title: 'Roles API',
+  description:
+    'Explore the Phase Roles API for managing roles and permissions programmatically.',
+}
+
+<Tag variant="small">API</Tag>
+
+# Roles
+
+Roles define the set of permissions granted to users and service accounts within your organisation. Phase includes five default roles (Owner, Admin, Manager, Developer, Service) and supports creating custom roles on paid plans. On this page, we'll look at the Roles API endpoints for listing, creating, updating, and deleting roles. {{ className: 'lead' }}
+
+<DocActions />
+
+## The Role model
+
+### Properties
+
+<Properties>
+  <Property name="id" type="string">
+    Unique identifier for the role.
+  </Property>
+  <Property name="name" type="string">
+    The name of the role.
+  </Property>
+  <Property name="description" type="string">
+    An optional description for the role.
+  </Property>
+  <Property name="color" type="string">
+    A hex color code for the role (e.g. `#FF0000`).
+  </Property>
+  <Property name="isDefault" type="boolean">
+    Whether this is a built-in default role. Default roles cannot be modified or deleted.
+  </Property>
+  <Property name="createdAt" type="timestamp">
+    Timestamp of when the role was created.
+  </Property>
+</Properties>
+
+### Permissions object
+
+When fetching a single role, the full permissions object is included. The permissions structure contains:
+
+<Properties>
+  <Property name="permissions" type="object">
+    Organisation-level permissions. Keys are resource names (e.g. `Apps`, `Members`, `Roles`), values are arrays of allowed actions (`create`, `read`, `update`, `delete`).
+  </Property>
+  <Property name="app_permissions" type="object">
+    App-level permissions. Keys are resource names (e.g. `Secrets`, `Environments`), values are arrays of allowed actions.
+  </Property>
+  <Property name="global_access" type="boolean">
+    Whether the role grants global access to all Apps and Environments.
+  </Property>
+</Properties>
+
+---
+
+## List Roles {{ tag: 'GET', label: '/v1/roles' }}
+
+<Row>
+  <Col>
+
+    Retrieve all roles in the organisation, including both default and custom roles.
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/v1/roles">
+
+    ```fish {{ title: 'cURL' }}
+    curl https://api.phase.dev/v1/roles/ \
+      -H "Authorization: Bearer {token}"
+    ```
+
+    ```python
+    import requests
+
+    url = 'https://api.phase.dev/v1/roles/'
+    headers = {
+        'Authorization': f'Bearer {token}'
+    }
+
+    response = requests.get(url, headers=headers)
+    data = response.json()
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    [
+        {
+            "id": "226bf078-74d5-406e-ba5b-dd68bf23326c",
+            "name": "Owner",
+            "description": null,
+            "color": "",
+            "isDefault": true,
+            "createdAt": "2024-01-01T00:00:00Z"
+        },
+        {
+            "id": "151e4e7b-6e39-4ede-a064-1f7d228723c5",
+            "name": "Admin",
+            "description": null,
+            "color": "",
+            "isDefault": true,
+            "createdAt": "2024-01-01T00:00:00Z"
+        },
+        {
+            "id": "6aec9df5-cd75-4645-a9d0-8b6f6aff78d6",
+            "name": "Developer",
+            "description": null,
+            "color": "",
+            "isDefault": true,
+            "createdAt": "2024-01-01T00:00:00Z"
+        }
+    ]
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Get Role {{ tag: 'GET', label: '/v1/roles/:id' }}
+
+<Row>
+  <Col>
+
+    Retrieve a single role with its full permissions object. For default roles, the permissions are resolved from the built-in role definitions. For custom roles, the stored permissions are returned directly.
+
+    ### URL parameters
+
+    <Properties>
+      <Property name="id" type="string">
+        The unique identifier of the role.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/v1/roles/:id">
+
+    ```fish {{ title: 'cURL' }}
+    curl https://api.phase.dev/v1/roles/6aec9df5-cd75-4645-a9d0-8b6f6aff78d6/ \
+      -H "Authorization: Bearer {token}"
+    ```
+
+    ```python
+    import requests
+
+    role_id = '6aec9df5-cd75-4645-a9d0-8b6f6aff78d6'
+    url = f'https://api.phase.dev/v1/roles/{role_id}/'
+    headers = {
+        'Authorization': f'Bearer {token}'
+    }
+
+    response = requests.get(url, headers=headers)
+    data = response.json()
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+        "id": "6aec9df5-cd75-4645-a9d0-8b6f6aff78d6",
+        "name": "Developer",
+        "description": null,
+        "color": "",
+        "isDefault": true,
+        "createdAt": "2024-01-01T00:00:00Z",
+        "permissions": {
+            "permissions": {
+                "Organisation": [],
+                "Billing": [],
+                "Apps": ["read"],
+                "Members": ["read"],
+                "ServiceAccounts": [],
+                "Roles": ["read"]
+            },
+            "app_permissions": {
+                "Environments": ["read", "create", "update"],
+                "Secrets": ["create", "read", "update", "delete"],
+                "Tokens": ["read", "create"],
+                "Members": ["read"]
+            },
+            "global_access": false
+        }
+    }
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Create Role {{ tag: 'POST', label: '/v1/roles' }}
+
+<Row>
+  <Col>
+
+    Create a custom role with a specified set of permissions.
+
+    <Note>
+    Custom roles are not available on the Free plan. You must be on a Pro or Enterprise plan to create custom roles.
+    </Note>
+
+    ### JSON Body
+
+    #### Required fields
+
+    <Properties>
+      <Property name="name" type="string">
+        The role name. Maximum 64 characters. Must be unique within the organisation (case-insensitive).
+      </Property>
+      <Property name="permissions" type="object">
+        The permissions object. Must include `permissions` (org-level), `app_permissions` (app-level), and `global_access` (boolean).
+      </Property>
+    </Properties>
+
+    #### Optional fields
+
+    <Properties>
+      <Property name="description" type="string">
+        A description for the role. Maximum 500 characters.
+      </Property>
+      <Property name="color" type="string">
+        A hex color code. Maximum 7 characters (e.g. `#FF0000`).
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="POST" label="/v1/roles">
+
+    ```fish {{ title: 'cURL' }}
+    curl -X POST https://api.phase.dev/v1/roles/ \
+      -H "Authorization: Bearer {token}" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "name": "Read Only",
+        "description": "Read-only access to all resources",
+        "color": "#64748b",
+        "permissions": {
+          "permissions": {
+            "Organisation": ["read"],
+            "Apps": ["read"],
+            "Members": ["read"],
+            "Roles": ["read"]
+          },
+          "app_permissions": {
+            "Secrets": ["read"],
+            "Environments": ["read"]
+          },
+          "global_access": false
+        }
+      }'
+    ```
+
+    ```python
+    import requests
+
+    url = 'https://api.phase.dev/v1/roles/'
+    headers = {
+        'Authorization': f'Bearer {token}',
+        'Content-Type': 'application/json'
+    }
+    payload = {
+        'name': 'Read Only',
+        'description': 'Read-only access to all resources',
+        'color': '#64748b',
+        'permissions': {
+            'permissions': {
+                'Organisation': ['read'],
+                'Apps': ['read'],
+                'Members': ['read'],
+                'Roles': ['read'],
+            },
+            'app_permissions': {
+                'Secrets': ['read'],
+                'Environments': ['read'],
+            },
+            'global_access': False,
+        }
+    }
+
+    response = requests.post(url, json=payload, headers=headers)
+    data = response.json()
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+        "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+        "name": "Read Only",
+        "description": "Read-only access to all resources",
+        "color": "#64748b",
+        "isDefault": false,
+        "createdAt": "2024-06-02T10:00:00Z",
+        "permissions": {
+            "permissions": {
+                "Organisation": ["read"],
+                "Apps": ["read"],
+                "Members": ["read"],
+                "Roles": ["read"]
+            },
+            "app_permissions": {
+                "Secrets": ["read"],
+                "Environments": ["read"]
+            },
+            "global_access": false
+        }
+    }
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Update Role {{ tag: 'PUT', label: '/v1/roles/:id' }}
+
+<Row>
+  <Col>
+
+    Update a custom role's name, description, color, and/or permissions. At least one field must be provided. Default roles cannot be modified.
+
+    ### URL parameters
+
+    <Properties>
+      <Property name="id" type="string">
+        The unique identifier of the role.
+      </Property>
+    </Properties>
+
+    ### JSON Body
+
+    <Properties>
+      <Property name="name" type="string">
+        The new role name. Maximum 64 characters. Must be unique (case-insensitive).
+      </Property>
+      <Property name="description" type="string">
+        The new description. Maximum 500 characters.
+      </Property>
+      <Property name="color" type="string">
+        The new hex color code. Maximum 7 characters.
+      </Property>
+      <Property name="permissions" type="object">
+        The updated permissions object.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="PUT" label="/v1/roles/:id">
+
+    ```fish {{ title: 'cURL' }}
+    curl -X PUT https://api.phase.dev/v1/roles/f47ac10b-58cc-4372-a567-0e02b2c3d479/ \
+      -H "Authorization: Bearer {token}" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "name": "Auditor",
+        "description": "Read-only auditor role",
+        "permissions": {
+          "permissions": {
+            "Organisation": ["read"],
+            "Apps": ["read"],
+            "Members": ["read"],
+            "Roles": ["read"],
+            "ServiceAccounts": ["read"]
+          },
+          "app_permissions": {
+            "Secrets": ["read"],
+            "Environments": ["read"],
+            "Logs": ["read"]
+          },
+          "global_access": false
+        }
+      }'
+    ```
+
+    ```python
+    import requests
+
+    role_id = 'f47ac10b-58cc-4372-a567-0e02b2c3d479'
+    url = f'https://api.phase.dev/v1/roles/{role_id}/'
+    headers = {
+        'Authorization': f'Bearer {token}',
+        'Content-Type': 'application/json'
+    }
+    payload = {
+        'name': 'Auditor',
+        'description': 'Read-only auditor role'
+    }
+
+    response = requests.put(url, json=payload, headers=headers)
+    data = response.json()
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+        "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+        "name": "Auditor",
+        "description": "Read-only auditor role",
+        "color": "#64748b",
+        "isDefault": false,
+        "createdAt": "2024-06-02T10:00:00Z",
+        "permissions": {
+            "permissions": {
+                "Organisation": ["read"],
+                "Apps": ["read"],
+                "Members": ["read"],
+                "Roles": ["read"],
+                "ServiceAccounts": ["read"]
+            },
+            "app_permissions": {
+                "Secrets": ["read"],
+                "Environments": ["read"],
+                "Logs": ["read"]
+            },
+            "global_access": false
+        }
+    }
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Delete Role {{ tag: 'DELETE', label: '/v1/roles/:id' }}
+
+<Row>
+  <Col>
+
+    Delete a custom role. Default roles cannot be deleted. A role cannot be deleted if it has members or service accounts assigned to it.
+
+    ### URL parameters
+
+    <Properties>
+      <Property name="id" type="string">
+        The unique identifier of the role.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="DELETE" label="/v1/roles/:id">
+
+    ```fish {{ title: 'cURL' }}
+    curl -X DELETE https://api.phase.dev/v1/roles/f47ac10b-58cc-4372-a567-0e02b2c3d479/ \
+      -H "Authorization: Bearer {token}"
+    ```
+
+    ```python
+    import requests
+
+    role_id = 'f47ac10b-58cc-4372-a567-0e02b2c3d479'
+    url = f'https://api.phase.dev/v1/roles/{role_id}/'
+    headers = {
+        'Authorization': f'Bearer {token}'
+    }
+
+    response = requests.delete(url, headers=headers)
+    # Returns 204 No Content on success
+    ```
+
+    </CodeGroup>
+
+    ```text {{ title: 'Response' }}
+    204 No Content
+    ```
+
+  </Col>
+</Row>
