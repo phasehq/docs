@@ -243,8 +243,12 @@ export const navigation = [
     title: 'API',
     links: [
       { title: 'Overview', href: '/public-api' },
+      { title: 'Apps', href: '/public-api/apps' },
+      { title: 'Environments', href: '/public-api/environments' },
       { title: 'Secrets', href: '/public-api/secrets' },
       { title: 'Dynamic Secrets', href: '/public-api/dynamic-secrets' },
+      { title: 'Service Accounts', href: '/public-api/service-accounts' },
+      { title: 'Roles', href: '/public-api/roles' },
       { title: 'External Identities', href: '/public-api/external-identities' },
       { title: 'Errors', href: '/public-api/errors' },
     ],
