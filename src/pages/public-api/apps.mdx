@@ -1,0 +1,367 @@
+import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
+
+export const metadata = {
+  title: 'Apps API',
+  description:
+    'Explore the Phase Apps API for managing applications programmatically.',
+}
+
+<Tag variant="small">API</Tag>
+
+# Apps
+
+Apps are the top-level organizational unit in Phase. Each App contains Environments, which in turn hold Secrets. On this page, we'll look at the Apps API endpoints for listing, creating, updating, and deleting Apps. {{ className: 'lead' }}
+
+<Note>
+The Apps API requires server-side encryption (SSE). Apps created via the API are SSE-enabled by default. Only SSE-enabled Apps are returned by the API.
+</Note>
+
+<DocActions />
+
+## The App model
+
+### Properties
+
+<Properties>
+  <Property name="id" type="string">
+    Unique identifier for the app.
+  </Property>
+  <Property name="name" type="string">
+    The name of the app.
+  </Property>
+  <Property name="description" type="string">
+    An optional description for the app.
+  </Property>
+  <Property name="sseEnabled" type="boolean">
+    Whether server-side encryption is enabled for this app.
+  </Property>
+  <Property name="createdAt" type="timestamp">
+    Timestamp of when the app was created.
+  </Property>
+  <Property name="updatedAt" type="timestamp">
+    Timestamp of when the app was last updated.
+  </Property>
+</Properties>
+
+---
+
+## List Apps {{ tag: 'GET', label: '/v1/apps' }}
+
+<Row>
+  <Col>
+
+    Retrieve all SSE-enabled apps that the authenticated account has access to.
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/v1/apps">
+
+    ```fish {{ title: 'cURL' }}
+    curl https://api.phase.dev/v1/apps/ \
+      -H "Authorization: Bearer {token}"
+    ```
+
+    ```python
+    import requests
+
+    url = 'https://api.phase.dev/v1/apps/'
+    headers = {
+        'Authorization': f'Bearer {token}'
+    }
+
+    response = requests.get(url, headers=headers)
+    data = response.json()
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    [
+        {
+            "id": "58006442-007b-4625-b8e2-80f7606484a0",
+            "name": "My App",
+            "description": "Production application",
+            "sseEnabled": true,
+            "createdAt": "2024-06-01T12:00:00Z",
+            "updatedAt": "2024-06-01T12:00:00Z"
+        }
+    ]
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Create App {{ tag: 'POST', label: '/v1/apps' }}
+
+<Row>
+  <Col>
+
+    Create a new SSE-enabled App. By default, three environments are created automatically: Development, Staging, and Production. You can optionally supply a custom list of environment names.
+
+    ### JSON Body
+
+    #### Required fields
+
+    <Properties>
+      <Property name="name" type="string">
+        The app name. Maximum 64 characters.
+      </Property>
+    </Properties>
+
+    #### Optional fields
+
+    <Properties>
+      <Property name="description" type="string">
+        A description for the app. Maximum 10,000 characters.
+      </Property>
+      <Property name="environments" type="array">
+        A list of custom environment names to create instead of the defaults. Each name must contain only letters, numbers, hyphens, and underscores. Requires a paid plan.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="POST" label="/v1/apps">
+
+    ```fish {{ title: 'cURL' }}
+    curl -X POST https://api.phase.dev/v1/apps/ \
+      -H "Authorization: Bearer {token}" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "name": "My New App",
+        "description": "A new application"
+      }'
+    ```
+
+    ```fish {{ title: 'cURL (custom environments)' }}
+    curl -X POST https://api.phase.dev/v1/apps/ \
+      -H "Authorization: Bearer {token}" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "name": "My New App",
+        "environments": ["dev", "test", "staging", "prod"]
+      }'
+    ```
+
+    ```python
+    import requests
+
+    url = 'https://api.phase.dev/v1/apps/'
+    headers = {
+        'Authorization': f'Bearer {token}',
+        'Content-Type': 'application/json'
+    }
+    payload = {
+        'name': 'My New App',
+        'description': 'A new application'
+    }
+
+    response = requests.post(url, json=payload, headers=headers)
+    data = response.json()
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+        "id": "72b9ddd5-8fce-49ab-89d9-c431d53a9552",
+        "name": "My New App",
+        "description": "A new application",
+        "sseEnabled": true,
+        "createdAt": "2024-06-01T12:00:00Z",
+        "updatedAt": "2024-06-01T12:00:00Z"
+    }
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Get App {{ tag: 'GET', label: '/v1/apps/:id' }}
+
+<Row>
+  <Col>
+
+    Retrieve a single app by its ID.
+
+    ### URL parameters
+
+    <Properties>
+      <Property name="id" type="string">
+        The unique identifier of the app.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/v1/apps/:id">
+
+    ```fish {{ title: 'cURL' }}
+    curl https://api.phase.dev/v1/apps/72b9ddd5-8fce-49ab-89d9-c431d53a9552/ \
+      -H "Authorization: Bearer {token}"
+    ```
+
+    ```python
+    import requests
+
+    app_id = '72b9ddd5-8fce-49ab-89d9-c431d53a9552'
+    url = f'https://api.phase.dev/v1/apps/{app_id}/'
+    headers = {
+        'Authorization': f'Bearer {token}'
+    }
+
+    response = requests.get(url, headers=headers)
+    data = response.json()
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+        "id": "72b9ddd5-8fce-49ab-89d9-c431d53a9552",
+        "name": "My App",
+        "description": "Production application",
+        "sseEnabled": true,
+        "createdAt": "2024-06-01T12:00:00Z",
+        "updatedAt": "2024-06-01T12:00:00Z"
+    }
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Update App {{ tag: 'PUT', label: '/v1/apps/:id' }}
+
+<Row>
+  <Col>
+
+    Update an app's name and/or description. At least one field must be provided.
+
+    ### URL parameters
+
+    <Properties>
+      <Property name="id" type="string">
+        The unique identifier of the app.
+      </Property>
+    </Properties>
+
+    ### JSON Body
+
+    <Properties>
+      <Property name="name" type="string">
+        The new app name. Maximum 64 characters.
+      </Property>
+      <Property name="description" type="string">
+        The new app description. Maximum 10,000 characters.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="PUT" label="/v1/apps/:id">
+
+    ```fish {{ title: 'cURL' }}
+    curl -X PUT https://api.phase.dev/v1/apps/72b9ddd5-8fce-49ab-89d9-c431d53a9552/ \
+      -H "Authorization: Bearer {token}" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "name": "Updated App Name",
+        "description": "Updated description"
+      }'
+    ```
+
+    ```python
+    import requests
+
+    app_id = '72b9ddd5-8fce-49ab-89d9-c431d53a9552'
+    url = f'https://api.phase.dev/v1/apps/{app_id}/'
+    headers = {
+        'Authorization': f'Bearer {token}',
+        'Content-Type': 'application/json'
+    }
+    payload = {
+        'name': 'Updated App Name'
+    }
+
+    response = requests.put(url, json=payload, headers=headers)
+    data = response.json()
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+        "id": "72b9ddd5-8fce-49ab-89d9-c431d53a9552",
+        "name": "Updated App Name",
+        "description": "Updated description",
+        "sseEnabled": true,
+        "createdAt": "2024-06-01T12:00:00Z",
+        "updatedAt": "2024-06-02T10:30:00Z"
+    }
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Delete App {{ tag: 'DELETE', label: '/v1/apps/:id' }}
+
+<Row>
+  <Col>
+
+    Permanently delete an app and all its associated data.
+
+    <Note>
+    This action is irreversible. All environments, secrets, and access configurations associated with the app will be permanently deleted.
+    </Note>
+
+    ### URL parameters
+
+    <Properties>
+      <Property name="id" type="string">
+        The unique identifier of the app.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="DELETE" label="/v1/apps/:id">
+
+    ```fish {{ title: 'cURL' }}
+    curl -X DELETE https://api.phase.dev/v1/apps/72b9ddd5-8fce-49ab-89d9-c431d53a9552/ \
+      -H "Authorization: Bearer {token}"
+    ```
+
+    ```python
+    import requests
+
+    app_id = '72b9ddd5-8fce-49ab-89d9-c431d53a9552'
+    url = f'https://api.phase.dev/v1/apps/{app_id}/'
+    headers = {
+        'Authorization': f'Bearer {token}'
+    }
+
+    response = requests.delete(url, headers=headers)
+    # Returns 204 No Content on success
+    ```
+
+    </CodeGroup>
+
+    ```text {{ title: 'Response' }}
+    204 No Content
+    ```
+
+  </Col>
+</Row>
