@@ -170,6 +170,7 @@ type GetOptions struct {
     Dynamic  bool     // Optional: include dynamic secrets
     Lease    bool     // Optional: generate leases for dynamic secrets
     LeaseTTL *int     // Optional: lease TTL in seconds
+    Raw      bool     // Optional: skip ${REF} reference resolution
 }
 ```
 
@@ -300,6 +301,16 @@ if len(keysNotFound) > 0 {
 }
 ```
 
+#### Get raw values without resolving references
+
+```go
+secrets, err := p.Get(phase.GetOptions{
+    EnvName: "Production",
+    AppID:   "app-id-here",
+    Raw:     true, // ${REF} syntax is preserved as-is
+})
+```
+
 ### Secret References
 
 `Get()` automatically resolves `${REF}` syntax in secret values before returning results. This includes same-environment (`${KEY}`), cross-environment (`${staging.SECRET_KEY}`), cross-app (`${backend_api::production.API_KEY}`), and path-scoped (`${/backend/config/DB_HOST}`) references.
@@ -313,6 +324,21 @@ secrets, _ := p.Get(phase.GetOptions{
 
 for _, s := range secrets {
     // s.Value already has all ${REF} references resolved
+    fmt.Printf("%s=%s\n", s.Key, s.Value)
+}
+```
+
+To get raw, unresolved values (e.g. for display or inspection), set `Raw: true`:
+
+```go
+secrets, _ := p.Get(phase.GetOptions{
+    EnvName: "Production",
+    AppID:   "app-id-here",
+    Raw:     true,
+})
+
+for _, s := range secrets {
+    // s.Value contains the original ${REF} syntax, not the resolved value
     fmt.Printf("%s=%s\n", s.Key, s.Value)
 }
 ```
