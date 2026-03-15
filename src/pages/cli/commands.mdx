@@ -378,6 +378,8 @@ Usage:
 
 **Indicators**:
 
+- `🔒`: Sealed secret (write-only — value cannot be read back after creation).
+- `🔧`: Config secret (non-sensitive configuration value, stored unencrypted).
 - `🔗`: Secret references another secret in the same environment.
 - `🌐`: Cross-environment reference (secret from another environment in the same or different application).
 - `🔖`: Tag associated with the secret.
@@ -453,7 +455,7 @@ Create a new secret with options to input the value manually, read from stdin, o
 Usage:
 
 ```fish
-> phase secrets create [KEY] [--env ENVIRONMENT] [--app APP_NAME] [--random TYPE] [--length LENGTH] [--override]
+> phase secrets create [KEY] [--env ENVIRONMENT] [--app APP_NAME] [--random TYPE] [--length LENGTH] [--override] [--type TYPE]
 ```
 
 - `KEY`: (Optional) The key for the new secret. It will be converted to uppercase. If the value is not provided as an argument, it will be read from stdin.
@@ -464,6 +466,7 @@ Usage:
 - `--random`: (Optional) Specify the type of random value to generate. Available types are `hex`, `alphanumeric`, `base64`, `base64url`, `key128`, `key256`. Example: `--random hex`.
 - `--length`: (Optional) Specify the length of the random value. Applicable for types other than `key128` and `key256`. Default length is 32. Example: `--length 16`.
 - `--override`: (Optional) Update the personal override value.
+- `--type`: (Optional) Secret type. One of `secret` (default), `sealed` (write-only — value cannot be read back after creation), or `config` (non-sensitive configuration value).
 
 Examples:
 
@@ -473,6 +476,12 @@ Examples:
 
 # Create a secret with a randomly generated hexadecimal value of 32 characters
 > phase secrets create RAND --random hex --length 32
+
+# Create a sealed secret (value cannot be read back)
+> phase secrets create STRIPE_KEY --type sealed
+
+# Create a config value (non-sensitive, stored unencrypted)
+> phase secrets create APP_PORT --type config
 ```
 
 **Notes**:
@@ -489,7 +498,7 @@ Update an existing secret with options to input the new value manually, read fro
 Usage:
 
 ```fish
-> phase secrets update KEY [--env ENVIRONMENT] [--app APP_NAME] [--random TYPE] [--length LENGTH] [--override] [--toggle-override]
+> phase secrets update KEY [--env ENVIRONMENT] [--app APP_NAME] [--random TYPE] [--length LENGTH] [--override] [--toggle-override] [--type TYPE]
 ```
 
 - `KEY`: The key associated with the secret to update. If the new value is not provided as an argument, it will be read from stdin.
@@ -502,6 +511,7 @@ Usage:
 - `--length`: (Optional) Specify the length of the random value. Applicable for types other than `key128` and `key256`. Default length is 32. Example: `--length 16`.
 - `--override`: (Optional) Update the personal override value.
 - `--toggle-override`: (Optional) Toggle the override state between active and inactive.
+- `--type`: (Optional) Change the secret type. One of `secret`, `sealed`, or `config`.
 
 Examples:
 
@@ -569,7 +579,7 @@ Import secrets into your Phase environment from a `.env` file, with an option to
 Usage:
 
 ```fish
-> phase secrets import ENV_FILE [--env ENVIRONMENT] [--app APP_NAME]
+> phase secrets import ENV_FILE [--env ENVIRONMENT] [--app APP_NAME] [--type TYPE]
 ```
 
 - `ENV_FILE`: The path to the `.env` file from which the secrets will be imported.
@@ -577,6 +587,7 @@ Usage:
 - `--path`: (Optional) The path to which you want to import secret(s). Default is '/'
 - `--app`: (Optional) Name of your Phase application. Use this to override the `.phase.json` file or when it's not present in your project directory.
 - `--app-id`: (Optional) ID of your Phase application. Takes precedence over `--app` if both are provided.
+- `--type`: (Optional) Secret type to apply to all imported secrets. One of `secret` (default), `sealed`, or `config`.
 
 Example:
 
