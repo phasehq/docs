@@ -116,6 +116,18 @@ You can get the AppID by going to your application settings in the Phase Console
 
 ![hello world](/assets/images/console/settings/application-id.png)
 
+### Secret Types
+
+Phase supports three secret types, available as constants:
+
+| Constant | Value | Description |
+|---|---|---|
+| `phase.SecretTypeSecret` | `"secret"` | Default — standard encrypted secret |
+| `phase.SecretTypeSealed` | `"sealed"` | Write-only — value cannot be read back after creation |
+| `phase.SecretTypeConfig` | `"config"` | Non-sensitive configuration value |
+
+Use `phase.ValidateSecretType(t)` to validate a type string — returns `nil` for valid types (including empty string, which defaults to `"secret"`).
+
 ### Creating Secrets
 
 Define key-value pairs and specify the Environment, App name or ID, and path (optional) to create new Secrets.
@@ -130,11 +142,13 @@ type CreateOptions struct {
     AppName       string // Alternative to AppID
     Path          string
     OverrideValue string
+    Type          string // "secret" (default), "sealed", or "config" — applied to all pairs when KeyValuePair.Type is empty
 }
 
 type KeyValuePair struct {
     Key   string
     Value string
+    Type  string // Per-pair type override; takes precedence over CreateOptions.Type
 }
 ```
 
@@ -151,6 +165,27 @@ err := p.Create(phase.CreateOptions{
 if err != nil {
     log.Fatalf("Failed to create secret: %v", err)
 }
+
+// Create a sealed secret (write-only)
+err = p.Create(phase.CreateOptions{
+    KeyValuePairs: []phase.KeyValuePair{
+        {Key: "STRIPE_KEY", Value: "sk_live_..."},
+    },
+    EnvName: "Production",
+    AppID:   "app-id-here",
+    Type:    phase.SecretTypeSealed,
+})
+
+// Create config values (non-sensitive)
+err = p.Create(phase.CreateOptions{
+    KeyValuePairs: []phase.KeyValuePair{
+        {Key: "APP_PORT", Value: "8080"},
+        {Key: "LOG_LEVEL", Value: "info"},
+    },
+    EnvName: "Production",
+    AppID:   "app-id-here",
+    Type:    phase.SecretTypeConfig,
+})
 ```
 
 ### Getting Secrets
@@ -182,6 +217,7 @@ type SecretResult struct {
     Value        string
     Comment      string
     Path         string
+    Type         string       // "secret", "sealed", or "config"
     Application  string
     Environment  string
     Tags         []string
@@ -255,6 +291,7 @@ type UpdateOptions struct {
     DestinationPath string // Optional: move the secret to a new path
     Override        bool   // Set a personal override
     ToggleOverride  bool   // Toggle personal override on/off
+    Type            string // "secret", "sealed", or "config" — leave empty to keep existing type
 }
 ```
 
