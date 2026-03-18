@@ -43,6 +43,10 @@ Commands:
   dynamic-secrets lease get         🔍 Get leases for a dynamic secret
   dynamic-secrets lease renew       🔁 Renew a lease
   dynamic-secrets lease revoke      🗑️ Revoke a lease
+  ai enable                         🤖 Enable AI integrations and configure secret visibility
+  ai mcp install                    🔌 Install the Phase MCP server for Claude Code
+  ai mcp uninstall                  🔌 Uninstall the Phase MCP server from Claude Code
+  ai mcp serve                      🔌 Start the Phase MCP server (stdio transport)
   users whoami                      🙋 See details of the current user
   users switch                      🪄 Switch between Phase users, orgs and hosts
   users logout                      🏃 Logout from phase-cli
@@ -378,6 +382,8 @@ Usage:
 
 **Indicators**:
 
+- `🔒`: Sealed secret (write-only — value cannot be read back after creation).
+- `🔧`: Config secret (non-sensitive configuration value, stored unencrypted).
 - `🔗`: Secret references another secret in the same environment.
 - `🌐`: Cross-environment reference (secret from another environment in the same or different application).
 - `🔖`: Tag associated with the secret.
@@ -453,7 +459,7 @@ Create a new secret with options to input the value manually, read from stdin, o
 Usage:
 
 ```fish
-> phase secrets create [KEY] [--env ENVIRONMENT] [--app APP_NAME] [--random TYPE] [--length LENGTH] [--override]
+> phase secrets create [KEY] [--env ENVIRONMENT] [--app APP_NAME] [--random TYPE] [--length LENGTH] [--override] [--type TYPE]
 ```
 
 - `KEY`: (Optional) The key for the new secret. It will be converted to uppercase. If the value is not provided as an argument, it will be read from stdin.
@@ -464,6 +470,7 @@ Usage:
 - `--random`: (Optional) Specify the type of random value to generate. Available types are `hex`, `alphanumeric`, `base64`, `base64url`, `key128`, `key256`. Example: `--random hex`.
 - `--length`: (Optional) Specify the length of the random value. Applicable for types other than `key128` and `key256`. Default length is 32. Example: `--length 16`.
 - `--override`: (Optional) Update the personal override value.
+- `--type`: (Optional) Secret type. One of `secret` (default), `sealed` (write-only — value cannot be read back after creation), or `config` (non-sensitive configuration value).
 
 Examples:
 
@@ -473,6 +480,12 @@ Examples:
 
 # Create a secret with a randomly generated hexadecimal value of 32 characters
 > phase secrets create RAND --random hex --length 32
+
+# Create a sealed secret (value cannot be read back)
+> phase secrets create STRIPE_KEY --type sealed
+
+# Create a config value (non-sensitive, stored unencrypted)
+> phase secrets create APP_PORT --type config
 ```
 
 **Notes**:
@@ -489,7 +502,7 @@ Update an existing secret with options to input the new value manually, read fro
 Usage:
 
 ```fish
-> phase secrets update KEY [--env ENVIRONMENT] [--app APP_NAME] [--random TYPE] [--length LENGTH] [--override] [--toggle-override]
+> phase secrets update KEY [--env ENVIRONMENT] [--app APP_NAME] [--random TYPE] [--length LENGTH] [--override] [--toggle-override] [--type TYPE]
 ```
 
 - `KEY`: The key associated with the secret to update. If the new value is not provided as an argument, it will be read from stdin.
@@ -502,6 +515,7 @@ Usage:
 - `--length`: (Optional) Specify the length of the random value. Applicable for types other than `key128` and `key256`. Default length is 32. Example: `--length 16`.
 - `--override`: (Optional) Update the personal override value.
 - `--toggle-override`: (Optional) Toggle the override state between active and inactive.
+- `--type`: (Optional) Change the secret type. One of `secret`, `sealed`, or `config`.
 
 Examples:
 
@@ -569,7 +583,7 @@ Import secrets into your Phase environment from a `.env` file, with an option to
 Usage:
 
 ```fish
-> phase secrets import ENV_FILE [--env ENVIRONMENT] [--app APP_NAME]
+> phase secrets import ENV_FILE [--env ENVIRONMENT] [--app APP_NAME] [--type TYPE]
 ```
 
 - `ENV_FILE`: The path to the `.env` file from which the secrets will be imported.
@@ -577,6 +591,7 @@ Usage:
 - `--path`: (Optional) The path to which you want to import secret(s). Default is '/'
 - `--app`: (Optional) Name of your Phase application. Use this to override the `.phase.json` file or when it's not present in your project directory.
 - `--app-id`: (Optional) ID of your Phase application. Takes precedence over `--app` if both are provided.
+- `--type`: (Optional) Secret type to apply to all imported secrets. One of `secret` (default), `sealed`, or `config`.
 
 Example:
 
@@ -956,6 +971,98 @@ Example:
 Notes:
 - Leases are time-bound credentials. When they expire (or are revoked), the credentials stop working.
 - Commands like `phase run`, `phase shell`, `phase secrets get`, and `phase secrets export` can automatically generate leases when injecting or exporting dynamic secrets. Control this with `--generate-leases` and `--lease-ttl`. This will allow you to make use of dynamic secrets without having to make any changes to your application code.
+
+---
+
+## 🤖 `ai` (Beta)
+
+Configure AI integrations for Phase. The `ai` command group lets you control how AI coding assistants interact with your Phase secrets via the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/).
+
+### `ai enable`
+
+Enable AI integrations and configure secret visibility. This writes a configuration file to `~/.phase/ai.json` that controls which secret values are visible to AI tools.
+
+Usage:
+
+```fish
+> phase ai enable
+```
+
+You will be prompted to choose whether AI tools can see secret-type values:
+
+```
+🤖 Allow AI agents to see values of secrets and configs? (Note: Sealed secrets are always hidden regardless)
+❯ No — mask secret values
+  Yes — allow AI to read secret values (suitable for development environments)
+```
+
+<Note>
+Sealed secret values are **always** hidden from AI tools regardless of this setting. This is a hard security boundary — sealed secrets (API keys, tokens, passwords) can only be created/updated with random generation and their values never appear in AI conversations.
+</Note>
+
+**Value visibility by type and setting:**
+
+| Secret Type | `maskSecretValues: true` (default) | `maskSecretValues: false` |
+| ----------- | ---------------------------------- | ------------------------- |
+| `sealed`    | Hidden                             | Hidden                    |
+| `secret`    | Hidden                             | Visible                   |
+| `config`    | Visible                            | Visible                   |
+
+---
+
+### 🔌 `ai mcp`
+
+Manage the Phase MCP (Model Context Protocol) server. The MCP server exposes Phase secret management as tools that AI coding assistants can use directly.
+
+#### `ai mcp install`
+
+Register the Phase MCP server with Claude Code.
+
+Usage:
+
+```fish
+> phase ai mcp install
+✅ Phase MCP server registered with Claude Code.
+   Restart Claude Code to activate.
+```
+
+This runs `claude mcp add phase-secrets -- phase ai mcp serve` under the hood. After installing, restart Claude Code to pick up the new tools.
+
+#### `ai mcp uninstall`
+
+Remove the Phase MCP server from Claude Code.
+
+Usage:
+
+```fish
+> phase ai mcp uninstall
+✅ Phase MCP server removed from Claude Code.
+```
+
+#### `ai mcp serve`
+
+Start the MCP server using stdio transport. This is called automatically by Claude Code — you do not need to run this manually.
+
+```fish
+> phase ai mcp serve
+```
+
+**Available MCP tools:**
+
+| Tool | Description |
+| ---- | ----------- |
+| `phase_get_context` | Read the current `.phase.json` project config |
+| `phase_init` | Link a project to a Phase app and environment |
+| `phase_list_secrets` | List secrets with metadata (type, path, tags, comments) |
+| `phase_get_secret` | Get a single secret's details |
+| `phase_create_secrets` | Create one or more secrets (supports random generation) |
+| `phase_update_secret` | Update a secret's value, type, or path |
+| `phase_delete_secrets` | Delete one or more secrets by key |
+| `phase_run` | Start a process with secrets injected as env vars |
+| `phase_stop` | Stop a managed process |
+| `phase_run_logs` | Get stdout/stderr output from a managed process |
+
+For a detailed integration guide, see [Claude Code Integration](/integrations/platforms/claude-code).
 
 ---
 

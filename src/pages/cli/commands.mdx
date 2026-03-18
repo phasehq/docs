@@ -43,6 +43,10 @@ Commands:
   dynamic-secrets lease get         🔍 Get leases for a dynamic secret
   dynamic-secrets lease renew       🔁 Renew a lease
   dynamic-secrets lease revoke      🗑️ Revoke a lease
+  ai enable                         🤖 Enable AI integrations and configure secret visibility
+  ai mcp install                    🔌 Install the Phase MCP server for Claude Code
+  ai mcp uninstall                  🔌 Uninstall the Phase MCP server from Claude Code
+  ai mcp serve                      🔌 Start the Phase MCP server (stdio transport)
   users whoami                      🙋 See details of the current user
   users switch                      🪄 Switch between Phase users, orgs and hosts
   users logout                      🏃 Logout from phase-cli
@@ -967,6 +971,98 @@ Example:
 Notes:
 - Leases are time-bound credentials. When they expire (or are revoked), the credentials stop working.
 - Commands like `phase run`, `phase shell`, `phase secrets get`, and `phase secrets export` can automatically generate leases when injecting or exporting dynamic secrets. Control this with `--generate-leases` and `--lease-ttl`. This will allow you to make use of dynamic secrets without having to make any changes to your application code.
+
+---
+
+## 🤖 `ai` (Beta)
+
+Configure AI integrations for Phase. The `ai` command group lets you control how AI coding assistants interact with your Phase secrets via the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/).
+
+### `ai enable`
+
+Enable AI integrations and configure secret visibility. This writes a configuration file to `~/.phase/ai.json` that controls which secret values are visible to AI tools.
+
+Usage:
+
+```fish
+> phase ai enable
+```
+
+You will be prompted to choose whether AI tools can see secret-type values:
+
+```
+🤖 Allow AI agents to see values of secrets and configs? (Note: Sealed secrets are always hidden regardless)
+❯ No — mask secret values
+  Yes — allow AI to read secret values (suitable for development environments)
+```
+
+<Note>
+Sealed secret values are **always** hidden from AI tools regardless of this setting. This is a hard security boundary — sealed secrets (API keys, tokens, passwords) can only be created/updated with random generation and their values never appear in AI conversations.
+</Note>
+
+**Value visibility by type and setting:**
+
+| Secret Type | `maskSecretValues: true` (default) | `maskSecretValues: false` |
+| ----------- | ---------------------------------- | ------------------------- |
+| `sealed`    | Hidden                             | Hidden                    |
+| `secret`    | Hidden                             | Visible                   |
+| `config`    | Visible                            | Visible                   |
+
+---
+
+### 🔌 `ai mcp`
+
+Manage the Phase MCP (Model Context Protocol) server. The MCP server exposes Phase secret management as tools that AI coding assistants can use directly.
+
+#### `ai mcp install`
+
+Register the Phase MCP server with Claude Code.
+
+Usage:
+
+```fish
+> phase ai mcp install
+✅ Phase MCP server registered with Claude Code.
+   Restart Claude Code to activate.
+```
+
+This runs `claude mcp add phase-secrets -- phase ai mcp serve` under the hood. After installing, restart Claude Code to pick up the new tools.
+
+#### `ai mcp uninstall`
+
+Remove the Phase MCP server from Claude Code.
+
+Usage:
+
+```fish
+> phase ai mcp uninstall
+✅ Phase MCP server removed from Claude Code.
+```
+
+#### `ai mcp serve`
+
+Start the MCP server using stdio transport. This is called automatically by Claude Code — you do not need to run this manually.
+
+```fish
+> phase ai mcp serve
+```
+
+**Available MCP tools:**
+
+| Tool | Description |
+| ---- | ----------- |
+| `phase_get_context` | Read the current `.phase.json` project config |
+| `phase_init` | Link a project to a Phase app and environment |
+| `phase_list_secrets` | List secrets with metadata (type, path, tags, comments) |
+| `phase_get_secret` | Get a single secret's details |
+| `phase_create_secrets` | Create one or more secrets (supports random generation) |
+| `phase_update_secret` | Update a secret's value, type, or path |
+| `phase_delete_secrets` | Delete one or more secrets by key |
+| `phase_run` | Start a process with secrets injected as env vars |
+| `phase_stop` | Stop a managed process |
+| `phase_run_logs` | Get stdout/stderr output from a managed process |
+
+For a detailed integration guide, see [Claude Code Integration](/integrations/platforms/claude-code).
 
 ---
 
