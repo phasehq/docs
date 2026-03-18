@@ -1,0 +1,406 @@
+import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
+
+export const metadata = {
+  title: 'Environments API',
+  description:
+    'Explore the Phase Environments API for managing environments programmatically.',
+}
+
+<Tag variant="small">API</Tag>
+
+# Environments
+
+Environments represent deployment stages within an App (e.g. Development, Staging, Production). Each Environment contains its own set of Secrets. On this page, we'll look at the Environments API endpoints for listing, creating, updating, and deleting Environments. {{ className: 'lead' }}
+
+<Note>
+The Environments API requires server-side encryption (SSE) to be enabled for the parent App. An `app_id` query parameter is required for list and create operations.
+</Note>
+
+<DocActions />
+
+## The Environment model
+
+### Properties
+
+<Properties>
+  <Property name="id" type="string">
+    Unique identifier for the environment.
+  </Property>
+  <Property name="name" type="string">
+    The name of the environment.
+  </Property>
+  <Property name="envType" type="string">
+    The type of environment: `dev`, `staging`, `prod`, or `custom`.
+  </Property>
+  <Property name="app" type="object">
+    The parent app, with `id` and `name`.
+  </Property>
+  <Property name="createdAt" type="timestamp">
+    Timestamp of when the environment was created.
+  </Property>
+  <Property name="updatedAt" type="timestamp">
+    Timestamp of when the environment was last updated.
+  </Property>
+</Properties>
+
+---
+
+## List Environments {{ tag: 'GET', label: '/v1/environments' }}
+
+<Row>
+  <Col>
+
+    Retrieve all environments for a given app that the authenticated account has access to.
+
+    ### Required parameters
+
+    <Properties>
+      <Property name="app_id" type="string">
+        Unique identifier for the Phase App.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/v1/environments">
+
+    ```fish {{ title: 'cURL' }}
+    curl "https://api.phase.dev/v1/environments/?app_id=72b9ddd5-8fce-49ab-89d9-c431d53a9552" \
+      -H "Authorization: Bearer {token}"
+    ```
+
+    ```python
+    import requests
+
+    url = 'https://api.phase.dev/v1/environments/'
+    params = {
+        'app_id': '72b9ddd5-8fce-49ab-89d9-c431d53a9552'
+    }
+    headers = {
+        'Authorization': f'Bearer {token}'
+    }
+
+    response = requests.get(url, params=params, headers=headers)
+    data = response.json()
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    [
+        {
+            "id": "af6b7a8e-c268-48c2-967c-032e86e26110",
+            "name": "Development",
+            "envType": "dev",
+            "app": {
+                "id": "72b9ddd5-8fce-49ab-89d9-c431d53a9552",
+                "name": "My App"
+            },
+            "createdAt": "2024-06-01T12:00:00Z",
+            "updatedAt": "2024-06-01T12:00:00Z"
+        },
+        {
+            "id": "b12c3d4e-5678-90ab-cdef-1234567890ab",
+            "name": "Staging",
+            "envType": "staging",
+            "app": {
+                "id": "72b9ddd5-8fce-49ab-89d9-c431d53a9552",
+                "name": "My App"
+            },
+            "createdAt": "2024-06-01T12:00:00Z",
+            "updatedAt": "2024-06-01T12:00:00Z"
+        },
+        {
+            "id": "c23d4e5f-6789-01bc-def2-3456789012cd",
+            "name": "Production",
+            "envType": "prod",
+            "app": {
+                "id": "72b9ddd5-8fce-49ab-89d9-c431d53a9552",
+                "name": "My App"
+            },
+            "createdAt": "2024-06-01T12:00:00Z",
+            "updatedAt": "2024-06-01T12:00:00Z"
+        }
+    ]
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Create Environment {{ tag: 'POST', label: '/v1/environments' }}
+
+<Row>
+  <Col>
+
+    Create a new environment within an app. The environment name must contain only letters, numbers, hyphens, and underscores (max 64 characters).
+
+    ### Required parameters
+
+    <Properties>
+      <Property name="app_id" type="string">
+        Unique identifier for the Phase App.
+      </Property>
+    </Properties>
+
+    ### JSON Body
+
+    #### Required fields
+
+    <Properties>
+      <Property name="name" type="string">
+        The environment name. Must match `[a-zA-Z0-9\-_]{1,64}`.
+      </Property>
+    </Properties>
+
+    #### Optional fields
+
+    <Properties>
+      <Property name="env_type" type="string">
+        The environment type: `dev`, `staging`, `prod`, or `custom`. Defaults to `custom`.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="POST" label="/v1/environments">
+
+    ```fish {{ title: 'cURL' }}
+    curl -X POST "https://api.phase.dev/v1/environments/?app_id=72b9ddd5-8fce-49ab-89d9-c431d53a9552" \
+      -H "Authorization: Bearer {token}" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "name": "canary",
+        "env_type": "custom"
+      }'
+    ```
+
+    ```python
+    import requests
+
+    url = 'https://api.phase.dev/v1/environments/'
+    params = {
+        'app_id': '72b9ddd5-8fce-49ab-89d9-c431d53a9552'
+    }
+    headers = {
+        'Authorization': f'Bearer {token}',
+        'Content-Type': 'application/json'
+    }
+    payload = {
+        'name': 'canary',
+        'env_type': 'custom'
+    }
+
+    response = requests.post(url, params=params, json=payload, headers=headers)
+    data = response.json()
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+        "id": "d34e5f6a-7890-12cd-ef34-567890123456",
+        "name": "canary",
+        "envType": "custom",
+        "app": {
+            "id": "72b9ddd5-8fce-49ab-89d9-c431d53a9552",
+            "name": "My App"
+        },
+        "createdAt": "2024-06-02T10:00:00Z",
+        "updatedAt": "2024-06-02T10:00:00Z"
+    }
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Get Environment {{ tag: 'GET', label: '/v1/environments/:id' }}
+
+<Row>
+  <Col>
+
+    Retrieve a single environment by its ID.
+
+    ### URL parameters
+
+    <Properties>
+      <Property name="id" type="string">
+        The unique identifier of the environment.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/v1/environments/:id">
+
+    ```fish {{ title: 'cURL' }}
+    curl https://api.phase.dev/v1/environments/af6b7a8e-c268-48c2-967c-032e86e26110/ \
+      -H "Authorization: Bearer {token}"
+    ```
+
+    ```python
+    import requests
+
+    env_id = 'af6b7a8e-c268-48c2-967c-032e86e26110'
+    url = f'https://api.phase.dev/v1/environments/{env_id}/'
+    headers = {
+        'Authorization': f'Bearer {token}'
+    }
+
+    response = requests.get(url, headers=headers)
+    data = response.json()
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+        "id": "af6b7a8e-c268-48c2-967c-032e86e26110",
+        "name": "Development",
+        "envType": "dev",
+        "app": {
+            "id": "72b9ddd5-8fce-49ab-89d9-c431d53a9552",
+            "name": "My App"
+        },
+        "createdAt": "2024-06-01T12:00:00Z",
+        "updatedAt": "2024-06-01T12:00:00Z"
+    }
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Update Environment {{ tag: 'PUT', label: '/v1/environments/:id' }}
+
+<Row>
+  <Col>
+
+    Update an environment's name.
+
+    ### URL parameters
+
+    <Properties>
+      <Property name="id" type="string">
+        The unique identifier of the environment.
+      </Property>
+    </Properties>
+
+    ### JSON Body
+
+    <Properties>
+      <Property name="name" type="string">
+        The new environment name. Must match `[a-zA-Z0-9\-_]{1,64}`.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="PUT" label="/v1/environments/:id">
+
+    ```fish {{ title: 'cURL' }}
+    curl -X PUT https://api.phase.dev/v1/environments/af6b7a8e-c268-48c2-967c-032e86e26110/ \
+      -H "Authorization: Bearer {token}" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "name": "dev-v2"
+      }'
+    ```
+
+    ```python
+    import requests
+
+    env_id = 'af6b7a8e-c268-48c2-967c-032e86e26110'
+    url = f'https://api.phase.dev/v1/environments/{env_id}/'
+    headers = {
+        'Authorization': f'Bearer {token}',
+        'Content-Type': 'application/json'
+    }
+    payload = {
+        'name': 'dev-v2'
+    }
+
+    response = requests.put(url, json=payload, headers=headers)
+    data = response.json()
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+        "id": "af6b7a8e-c268-48c2-967c-032e86e26110",
+        "name": "dev-v2",
+        "envType": "dev",
+        "app": {
+            "id": "72b9ddd5-8fce-49ab-89d9-c431d53a9552",
+            "name": "My App"
+        },
+        "createdAt": "2024-06-01T12:00:00Z",
+        "updatedAt": "2024-06-02T11:00:00Z"
+    }
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Delete Environment {{ tag: 'DELETE', label: '/v1/environments/:id' }}
+
+<Row>
+  <Col>
+
+    Permanently delete an environment and all its secrets.
+
+    <Note>
+    This action is irreversible. All secrets and access keys in the environment will be permanently deleted.
+    </Note>
+
+    ### URL parameters
+
+    <Properties>
+      <Property name="id" type="string">
+        The unique identifier of the environment.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="DELETE" label="/v1/environments/:id">
+
+    ```fish {{ title: 'cURL' }}
+    curl -X DELETE https://api.phase.dev/v1/environments/af6b7a8e-c268-48c2-967c-032e86e26110/ \
+      -H "Authorization: Bearer {token}"
+    ```
+
+    ```python
+    import requests
+
+    env_id = 'af6b7a8e-c268-48c2-967c-032e86e26110'
+    url = f'https://api.phase.dev/v1/environments/{env_id}/'
+    headers = {
+        'Authorization': f'Bearer {token}'
+    }
+
+    response = requests.delete(url, headers=headers)
+    # Returns 204 No Content on success
+    ```
+
+    </CodeGroup>
+
+    ```text {{ title: 'Response' }}
+    204 No Content
+    ```
+
+  </Col>
+</Row>
