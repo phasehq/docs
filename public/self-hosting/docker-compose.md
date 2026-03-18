@@ -14,7 +14,6 @@ Learn how to set up the Phase Console using the Docker Compose template. {{ clas
 
 <SkillBox
   skill="docker-compose"
-  refs={["docker-compose-deployment", "troubleshooting"]}
   triggerPhrase="deploy Phase with Docker Compose"
 />
 

@@ -14,7 +14,6 @@ Learn how to set up the Phase Console using Helm on Kubernetes. {{ className: 'l
 
 <SkillBox
   skill="k8s"
-  refs={["k8s-deployment", "troubleshooting"]}
   triggerPhrase="deploy Phase on Kubernetes"
 />
 
