@@ -247,6 +247,8 @@ export const navigation = [
       { title: 'Environments', href: '/public-api/environments' },
       { title: 'Secrets', href: '/public-api/secrets' },
       { title: 'Dynamic Secrets', href: '/public-api/dynamic-secrets' },
+      { title: 'Members', href: '/public-api/members' },
+      { title: 'Invites', href: '/public-api/invites' },
       { title: 'Service Accounts', href: '/public-api/service-accounts' },
       { title: 'Roles', href: '/public-api/roles' },
       { title: 'External Identities', href: '/public-api/external-identities' },
