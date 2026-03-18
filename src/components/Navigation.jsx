@@ -280,6 +280,10 @@ export const navigation = [
   {
     title: 'Platform Integration',
     links: [
+      {
+        title: 'Claude Code (Beta)',
+        href: '/integrations/platforms/claude-code',
+      },
       { title: 'Docker', href: '/integrations/platforms/docker' },
       {
         title: 'Docker Compose',
