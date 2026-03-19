@@ -7,6 +7,7 @@ import logoGitHub from '@/images/logos/github.svg'
 import logoGitLab from '@/images/logos/gitlab.svg'
 import logoJumpCloud from '@/images/logos/jumpcloud.svg'
 import logoAuthentik from '@/images/logos/authentik.svg'
+import logoAuthelia from '@/images/logos/authelia.svg'
 
 import clsx from 'clsx'
 
@@ -86,6 +87,12 @@ const OAuthProviders = [
     name: 'Authentik',
     description: 'Use Authentik SSO to Authenticate with Phase.',
     logo: logoAuthentik, 
+  },
+  {
+    href: '/access-control/authentication/oauth-sso#authelia',
+    name: 'Authelia',
+    description: 'Use Authelia self-hosted SSO to Authenticate with Phase.',
+    logo: logoAuthelia,
   },
 ]
 
