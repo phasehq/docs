@@ -281,8 +281,24 @@ export const navigation = [
     title: 'Platform Integration',
     links: [
       {
-        title: 'Claude Code (Beta)',
+        title: 'Claude Code',
         href: '/integrations/platforms/claude-code',
+      },
+      {
+        title: 'Cursor',
+        href: '/integrations/platforms/cursor',
+      },
+      {
+        title: 'VS Code Copilot',
+        href: '/integrations/platforms/vscode-copilot',
+      },
+      {
+        title: 'OpenAI Codex',
+        href: '/integrations/platforms/codex',
+      },
+      {
+        title: 'OpenCode',
+        href: '/integrations/platforms/opencode',
       },
       { title: 'Docker', href: '/integrations/platforms/docker' },
       {
