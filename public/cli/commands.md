@@ -28,14 +28,15 @@ Keep Secrets.
 
 Commands:
   auth                              💻 Authenticate with Phase
-  init                              🔗 Link your project with your Phase app
+  init                              🔗 Link local project with Phase app
   run                               🚀 Run and inject secrets to your app
   shell                             🐚 Launch a sub-shell with secrets as environment variables
+  apps list                         📋 List available apps and their environments
   secrets list                      📇 List all the secrets
-  secrets get                       🔍 Fetch details about a secret in JSON
+  secrets get                       🔍 Fetch details about one or more secrets in JSON
   secrets create                    💳 Create a new secret
   secrets update                    📝 Update an existing secret
-  secrets delete                    🗑️ Delete a secret
+  secrets delete                    🗑️ Delete secrets
   secrets import                    📩 Import secrets from a .env file
   secrets export                    🥡 Export secrets in a specific format
   dynamic-secrets list              📇 List dynamic secrets & metadata
@@ -43,6 +44,9 @@ Commands:
   dynamic-secrets lease get         🔍 Get leases for a dynamic secret
   dynamic-secrets lease renew       🔁 Renew a lease
   dynamic-secrets lease revoke      🗑️ Revoke a lease
+  ai enable                         🪄 Enable AI integrations and configure secret visibility
+  ai disable                        🚫 Disable AI integrations
+  ai skill                          📄 Print the Phase AI skill document
   users whoami                      🙋 See details of the current user
   users switch                      🪄 Switch between Phase users, orgs and hosts
   users logout                      🏃 Logout from phase-cli
@@ -172,10 +176,18 @@ Link your local application or project to your Phase app. The `phase init` comma
 Usage:
 
 ```fish
+# Interactive (prompts for app, environment, monorepo)
 > phase init
+
+# Non-interactive (for CI/CD or AI agents)
+> phase init --app-id APP_ID --env ENVIRONMENT [--monorepo]
 ```
 
-During the process, you'll be asked to:
+- `--app-id`: (Optional) Application ID. When provided with `--env`, skips interactive prompts.
+- `--env`: (Optional) Environment name. When provided with `--app-id`, skips interactive prompts.
+- `--monorepo`: (Optional) Enable monorepo support. Default is `false`.
+
+During interactive mode, you'll be asked to:
 1. Select an App previously created in the Phase Console
 2. Choose a default Environment
 3. Enable monorepo support (optional)
@@ -301,6 +313,7 @@ Chaining multiple commands:
 - Cross-environment and local references in secrets are automatically resolved and injected. Warnings are issued if any references cannot be resolved.
 - Errors during the command execution or secret fetching process will result in an appropriate error message and termination of the process.
 - When dynamic secrets are configured, the CLI will automatically generate leases and inject the freshly created dynamic secrets along with static secrets. Control this behavior with `--generate-leases` and `--lease-ttl`.
+- **AI mode**: Commands that dump environment variables (`printenv`, `env`, `export`, `set`, `declare`, `compgen`) are blocked when the CLI detects an AI agent, to prevent secret exposure.
 
 ---
 
@@ -348,6 +361,37 @@ postgresql://postgres:dbc76c4d...@localhost:5432/mydb
 - Inside the shell, `PHASE_ENV` is set to the full environment name from the fetched secrets (e.g., "Development", "Production").
 - Inside the shell, `PHASE_APP` is set to the full application name from the fetched secrets. (e.g., "example-app")
 - When dynamic secrets are configured, the CLI can automatically generate leases and provision the freshly created dynamic secrets along with static secrets. Control this behavior with `--generate-leases` and `--lease-ttl`.
+- **AI mode**: `phase shell` is blocked entirely when invoked by an AI agent. Use `phase run <command>` instead.
+
+---
+
+## 📱 `apps`
+
+### 📋 `apps list`
+
+List all available applications and their environments as JSON. Useful for scripting, CI/CD, and AI agents that need to discover app IDs for non-interactive `phase init`.
+
+Usage:
+
+```fish
+> phase apps list
+```
+
+Example:
+
+```fish
+> phase apps list
+[
+  {
+    "id": "511f26b7-5b56-47f3-920e-a4edb9cdbf3c",
+    "name": "my-app",
+    "environments": [
+      { "id": "679bf2bc-9353-4fe0-a84f-825f284c8f8d", "name": "Development", "env_type": "DEV" },
+      { "id": "a1b2c3d4-e5f6-7890-abcd-ef0123456789", "name": "Production", "env_type": "PROD" }
+    ]
+  }
+]
+```
 
 ---
 
@@ -378,6 +422,8 @@ Usage:
 
 **Indicators**:
 
+- `🔒`: Sealed secret (write-only — value cannot be read back after creation).
+- `🔧`: Config secret (non-sensitive configuration value, stored unencrypted).
 - `🔗`: Secret references another secret in the same environment.
 - `🌐`: Cross-environment reference (secret from another environment in the same or different application).
 - `🔖`: Tag associated with the secret.
@@ -385,17 +431,19 @@ Usage:
 - `🔏`: Personal secret override (visible only to you).
 - `⚡️`: Dynamic secret.
 
+**AI mode behaviour**: `config`-type secrets are always shown in plaintext (even without `--show`). When invoked by an AI agent, sealed secrets show as `[REDACTED]` and secret-type values are redacted based on `ai.json` configuration.
+
 ### 🔍 `secrets get`
 
-Fetch details about a specific secret in JSON, with the ability to specify the application and filter by tags.
+Fetch details about one or more secrets in JSON, with the ability to specify the application and filter by tags.
 
 Usage:
 
 ```fish
-> phase secrets get KEY [--env ENVIRONMENT] [--app APP_NAME] [--tags TAGS]
+> phase secrets get KEY [KEY...] [--env ENVIRONMENT] [--app APP_NAME] [--tags TAGS]
 ```
 
-- `KEY`: The key associated with the secret you want to fetch.
+- `KEY`: One or more keys to fetch. Single key returns a JSON object; multiple keys returns a JSON array.
 - `--env`: (Optional) Specify the environment in which to search for the secret.
 - `--path`: (Optional) The path from which to fetch the secret from. Default is '/'
 - `--app`: (Optional) Name of your Phase application. Use this option to override the `.phase.json` file in your project directory or when it's not present.
@@ -440,11 +488,31 @@ Dynamic secret example:
 }
 ```
 
+Multiple keys example:
+
+```fish
+> phase secrets get DATABASE_HOST DATABASE_PORT
+[
+    {
+        "key": "DATABASE_HOST",
+        "value": "localhost",
+        ...
+    },
+    {
+        "key": "DATABASE_PORT",
+        "value": "5432",
+        ...
+    }
+]
+```
+
 **Notes**:
 
+- Single key returns a JSON object (backwards compatible). Multiple keys returns a JSON array.
 - The `get` command provides a JSON-formatted output including key details such as the secret value, whether it's overridden, tags associated with it, and any comments.
 - Using the `--tags` option allows you to filter the secret based on specific tags.
 - If you have dynamic secrets configured and try to fetch one by key, the CLI will automatically generate a lease and return the value of the freshly created dynamic secret.
+- When invoked by an AI agent, sealed and secret-type values are redacted based on `ai.json` configuration.
 
 ### 💳 `secrets create`
 
@@ -453,7 +521,7 @@ Create a new secret with options to input the value manually, read from stdin, o
 Usage:
 
 ```fish
-> phase secrets create [KEY] [--env ENVIRONMENT] [--app APP_NAME] [--random TYPE] [--length LENGTH] [--override]
+> phase secrets create [KEY] [--env ENVIRONMENT] [--app APP_NAME] [--random TYPE] [--length LENGTH] [--override] [--type TYPE]
 ```
 
 - `KEY`: (Optional) The key for the new secret. It will be converted to uppercase. If the value is not provided as an argument, it will be read from stdin.
@@ -464,6 +532,7 @@ Usage:
 - `--random`: (Optional) Specify the type of random value to generate. Available types are `hex`, `alphanumeric`, `base64`, `base64url`, `key128`, `key256`. Example: `--random hex`.
 - `--length`: (Optional) Specify the length of the random value. Applicable for types other than `key128` and `key256`. Default length is 32. Example: `--length 16`.
 - `--override`: (Optional) Update the personal override value.
+- `--type`: (Optional) Secret type. One of `secret` (default), `sealed` (write-only — value cannot be read back after creation), or `config` (non-sensitive configuration value).
 
 Examples:
 
@@ -473,6 +542,12 @@ Examples:
 
 # Create a secret with a randomly generated hexadecimal value of 32 characters
 > phase secrets create RAND --random hex --length 32
+
+# Create a sealed secret (value cannot be read back)
+> phase secrets create STRIPE_KEY --type sealed
+
+# Create a config value (non-sensitive, stored unencrypted)
+> phase secrets create APP_PORT --type config
 ```
 
 **Notes**:
@@ -489,7 +564,7 @@ Update an existing secret with options to input the new value manually, read fro
 Usage:
 
 ```fish
-> phase secrets update KEY [--env ENVIRONMENT] [--app APP_NAME] [--random TYPE] [--length LENGTH] [--override] [--toggle-override]
+> phase secrets update KEY [--env ENVIRONMENT] [--app APP_NAME] [--random TYPE] [--length LENGTH] [--override] [--toggle-override] [--type TYPE]
 ```
 
 - `KEY`: The key associated with the secret to update. If the new value is not provided as an argument, it will be read from stdin.
@@ -502,6 +577,7 @@ Usage:
 - `--length`: (Optional) Specify the length of the random value. Applicable for types other than `key128` and `key256`. Default length is 32. Example: `--length 16`.
 - `--override`: (Optional) Update the personal override value.
 - `--toggle-override`: (Optional) Toggle the override state between active and inactive.
+- `--type`: (Optional) Change the secret type. One of `secret`, `sealed`, or `config`.
 
 Examples:
 
@@ -520,6 +596,10 @@ Examples:
 
 # Toggle the override state of a secret
 > phase secrets update POSTGRES_CONNECTION_STRING --toggle-override
+
+# Change only the secret type (no value prompt)
+> phase secrets update APP_PORT --type config
+> phase secrets update API_KEY --type sealed
 ```
 
 **Notes**:
@@ -569,7 +649,7 @@ Import secrets into your Phase environment from a `.env` file, with an option to
 Usage:
 
 ```fish
-> phase secrets import ENV_FILE [--env ENVIRONMENT] [--app APP_NAME]
+> phase secrets import ENV_FILE [--env ENVIRONMENT] [--app APP_NAME] [--type TYPE]
 ```
 
 - `ENV_FILE`: The path to the `.env` file from which the secrets will be imported.
@@ -577,6 +657,7 @@ Usage:
 - `--path`: (Optional) The path to which you want to import secret(s). Default is '/'
 - `--app`: (Optional) Name of your Phase application. Use this to override the `.phase.json` file or when it's not present in your project directory.
 - `--app-id`: (Optional) ID of your Phase application. Takes precedence over `--app` if both are provided.
+- `--type`: (Optional) Secret type to apply to all imported secrets. One of `secret` (default), `sealed`, or `config`.
 
 Example:
 
@@ -670,6 +751,7 @@ AWS_SECRET_ACCESS_KEY="V5yWXDe82Gohf9DYBhpatYZ74a5fiKfJVx8rx6W1"
 - Use the `--tags` option to filter secrets by tags, which supports partial matching and considers underscores as spaces.
 - If an `.phase.json` file exists in your project directory, it will determine the default application. The `--app` option can be used to override this behavior.
 - If you have dynamic secrets configured, the CLI will automatically generate leases and export the values of the freshly created dynamic secrets along with static secrets.
+- **AI mode**: When invoked by an AI agent, sealed and secret-type values are replaced with `[REDACTED]` in the exported output.
 
 ---
 
@@ -956,6 +1038,90 @@ Example:
 Notes:
 - Leases are time-bound credentials. When they expire (or are revoked), the credentials stop working.
 - Commands like `phase run`, `phase shell`, `phase secrets get`, and `phase secrets export` can automatically generate leases when injecting or exporting dynamic secrets. Control this with `--generate-leases` and `--lease-ttl`. This will allow you to make use of dynamic secrets without having to make any changes to your application code.
+
+---
+
+## 🥷 `ai`
+
+Configure AI integrations for Phase. The `ai` command group controls how AI coding agents interact with your Phase secrets. When enabled, the CLI installs a skill document to your AI tool's global skill directory and applies security guardrails automatically.
+
+See [AI agent integration pages](/integrations/platforms/claude-code) for setup guides for each supported tool.
+
+### 🪄 `ai enable`
+
+Enable AI integrations: installs the Phase skill document for your chosen AI agent and configures secret visibility. This command **cannot be run by AI agents** — it must be run by the user directly.
+
+Usage:
+
+```fish
+# Interactive — select AI agent and visibility
+> phase ai enable
+
+# Non-interactive
+> phase ai enable --mask --path ~/.claude/skills/phase-cli/SKILL.md
+> phase ai enable --no-mask --path ~/.cursor/skills/phase-cli/SKILL.md
+```
+
+Interactive mode first asks which AI agent to install for, then prompts for secret visibility:
+
+```
+🪄  Install Phase AI skill for
+❯ Claude Code (global) → ~/.claude/skills/phase-cli/SKILL.md
+  Cursor (global) → ~/.cursor/skills/phase-cli/SKILL.md
+  VS Code Copilot (global) → ~/.copilot/skills/phase-cli/SKILL.md
+  Codex (global) → ~/.agents/skills/phase-cli/SKILL.md
+  OpenCode (global) → ~/.config/opencode/skills/phase-cli/SKILL.md
+  Custom path...
+
+🔒 Mask secret values from AI agents?
+❯ Yes — mask secret values (recommended for production)
+  No — allow AI to read secret values (e.g. development environments)
+```
+
+<Note>
+Sealed secret values are **always** hidden from AI tools regardless of this setting. This is a hard security boundary — sealed secrets (API keys, tokens, passwords) can only be created/updated with random generation and their values never appear in AI conversations.
+</Note>
+
+**Value visibility by type and setting:**
+
+| Secret Type | `maskSecretValues: true` (default) | `maskSecretValues: false` |
+| ----------- | ---------------------------------- | ------------------------- |
+| `sealed`    | Hidden                             | Hidden                    |
+| `secret`    | Hidden                             | Visible                   |
+| `config`    | Visible                            | Visible                   |
+
+### 🚫 `ai disable`
+
+Disable AI integrations. Removes `~/.phase/ai.json` and uninstalls the skill document from all known AI agent directories.
+
+```fish
+> phase ai disable
+```
+
+### 📄 `ai skill`
+
+Print the raw Phase AI skill document to stdout. Useful for piping to a custom location or inspecting the skill content.
+
+```fish
+> phase ai skill
+> phase ai skill > /path/to/custom/SKILL.md
+```
+
+### AI Security Guardrails
+
+When the CLI detects it is being run by an AI agent:
+
+1. **Output redaction**: `secrets list`, `secrets get`, and `secrets export` automatically redact values based on secret type and `ai.json` settings. Redacted values show as `[REDACTED]`.
+2. **Blocked commands**: `phase run` refuses to execute commands that dump environment variables (`printenv`, `env`, `export`, `set`, `declare`, `compgen`), since these would expose injected secrets.
+3. **Shell blocked**: `phase shell` is entirely blocked in AI mode to prevent unrestricted access to injected secrets.
+4. **AI commands blocked**: `phase ai enable` and `phase ai disable` cannot be run by AI agents.
+
+**AI agent detection** works via environment variables set by supported tools:
+- Claude Code: `CLAUDECODE=1`
+- Cursor: `CURSOR_AGENT=1`
+- OpenAI Codex: `CODEX=1`
+- OpenCode: `OPENCODE=1`
+- Cross-tool convention: `AGENT=<name>` (Codex, Goose, Amp, etc.)
 
 ---
 

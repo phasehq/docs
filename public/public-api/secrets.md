@@ -39,6 +39,9 @@ The secret model contains the basic key / value pairs that define your environme
   <Property name="value" type="string">
     The value of the secret, in plaintext.
   </Property>
+  <Property name="type" type="string">
+    The secret type. One of `secret` (default), `sealed`, or `config`. Sealed secrets have their values redacted in the Console UI after saving, and their type cannot be changed once saved. Config secrets are non-sensitive values displayed in plaintext by default.
+  </Property>
   <Property name="comment" type="string">
     The comment for the secret, if provided.
   </Property>
@@ -239,6 +242,7 @@ The secret model contains the basic key / value pairs that define your environme
             "id": "36fc2244-47f5-4ff4-8b72-deed1bf876da",
             "key": "DEBUG",
             "value": "False",
+            "type": "secret",
             "comment": "Debug mode for the backend app",
             "tags": ["config"],
             "override": {
@@ -300,6 +304,9 @@ The secret model contains the basic key / value pairs that define your environme
     #### **Optional fields**
 
     <Properties>
+      <Property name="type" type="string">
+        The secret type. One of `secret`, `sealed`, or `config`. Defaults to `secret`.
+      </Property>
       <Property name="comment" type="string">
         A comment to associate with the secret.
       </Property>
@@ -516,6 +523,7 @@ The secret model contains the basic key / value pairs that define your environme
             "id": "36fc2244-47f5-4ff4-8b72-deed1bf876da",
             "key": "DB_NAME",
             "value": "postgres",
+            "type": "secret",
             "comment": "primary db name",
             "tags": ["db"],
             "path": "/backend",
@@ -579,6 +587,9 @@ The secret model contains the basic key / value pairs that define your environme
       </Property>
       <Property name="value" type="string">
         The secret value.
+      </Property>
+      <Property name="type" type="string">
+        The secret type. One of `secret`, `sealed`, or `config`. Note: sealed secrets cannot have their type changed.
       </Property>
       <Property name="comment" type="string">
         A comment to associate with the secret.
@@ -788,6 +799,7 @@ The secret model contains the basic key / value pairs that define your environme
             "id": "36fc2244-47f5-4ff4-8b72-deed1bf876da",
             "key": "DB_NAME_POSTGRES",
             "value": "postgres-primary",
+            "type": "secret",
             "comment": "primary db name",
             "tags": ["db"],
             "path": "/backend/db",
