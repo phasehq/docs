@@ -278,7 +278,7 @@ export const navigation = [
     ],
   },
   {
-    title: 'Agent Integrations',
+    title: 'Agent Integration',
     links: [
       {
         title: 'Claude Code',
