@@ -15,4 +15,6 @@ The Phase Console is "Mission Control" for your application secrets. It is the s
 
 The Phase Console has tools to manage all your Apps, collaborate with your team securely via end-to-end encryption and integrates seamlessly with the Phase CLI for local development, CI environments or full-fledged production setups.
 
+For a detailed overview of the core concepts that underpin the Console — such as [Organisations](/platform/organisations), [Apps](/platform/apps), [Environments](/platform/environments), [Secrets](/platform/secrets), and [Users](/platform/users) — see the [Platform](/platform) section.
+
 <ConsoleFeatures />
