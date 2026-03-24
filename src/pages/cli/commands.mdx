@@ -1058,8 +1058,8 @@ Usage:
 > phase ai enable
 
 # Non-interactive
-> phase ai enable --mask --target ~/.claude/skills/phase-cli/SKILL.md
-> phase ai enable --no-mask --target ~/.cursor/skills/phase-cli/SKILL.md
+> phase ai enable --mask --path ~/.claude/skills/phase-cli/SKILL.md
+> phase ai enable --no-mask --path ~/.cursor/skills/phase-cli/SKILL.md
 ```
 
 Interactive mode first asks which AI agent to install for, then prompts for secret visibility:
@@ -1073,9 +1073,9 @@ Interactive mode first asks which AI agent to install for, then prompts for secr
   OpenCode (global) → ~/.config/opencode/skills/phase-cli/SKILL.md
   Custom path...
 
-👀 Allow AI agents to view secret values? Sealed secrets are never revealed!
-❯ No — mask secret values eg. API_KEY=[REDACTED]
-  Yes — let AI see secret values eg. API_KEY=sk_live_abc123...
+🔒 Mask secret values from AI agents?
+❯ Yes — mask secret values (recommended for production)
+  No — allow AI to read secret values (e.g. development environments)
 ```
 
 <Note>
@@ -1120,6 +1120,8 @@ When the CLI detects it is being run by an AI agent:
 - Claude Code: `CLAUDECODE=1`
 - Cursor: `CURSOR_AGENT=1`
 - OpenAI Codex: `CODEX=1`
+- OpenCode: `OPENCODE=1`
+- Cross-tool convention: `AGENT=<name>` (Codex, Goose, Amp, etc.)
 
 ---
 

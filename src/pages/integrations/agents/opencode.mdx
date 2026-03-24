@@ -34,7 +34,7 @@ You'll be asked whether AI agents can see secret values:
 OpenCode also reads skills from `~/.claude/skills/` and `~/.agents/skills/`. If you've already installed the Phase skill for Claude Code or Codex, OpenCode will pick it up automatically.
 </Note>
 
-### 4. Start using Phase in OpenCode
+### 2. Start using Phase in OpenCode
 
 You can immediately start managing secrets:
 
@@ -73,7 +73,7 @@ Sealed secret values are **never** exposed to AI agents regardless of configurat
 
 The Phase CLI enforces guardrails when it detects an AI agent:
 
-- `printenv`, `env`, `export`, `set` are **blocked** inside `phase run`
+- `printenv`, `env`, `export`, `set`, `declare`, `compgen` are **blocked** inside `phase run`
 - `phase shell` is **blocked entirely** in AI mode
 - Sealed secret values are **always redacted** in output
 - `phase ai enable` / `phase ai disable` **must be run by the user** directly

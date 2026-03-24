@@ -30,7 +30,7 @@ You'll be asked whether AI agents can see secret values:
 - **Mask values** (recommended) — `secret` and `sealed` types show as `[REDACTED]`
 - **Show values** — `secret` and `config` types are visible; `sealed` is always hidden
 
-### 4. Start using Phase in Claude Code
+### 2. Start using Phase in Claude Code
 
 Open Claude Code in your project directory. You can immediately start managing secrets:
 
@@ -77,7 +77,7 @@ The Phase CLI enforces guardrails when it detects an AI agent:
 
 | Guardrail | Enforcement |
 | --------- | ----------- |
-| `printenv`, `env`, `export`, `set` inside `phase run` | **Blocked by CLI** |
+| `printenv`, `env`, `export`, `set`, `declare`, `compgen` inside `phase run` | **Blocked by CLI** |
 | `phase shell` | **Blocked entirely** in AI mode |
 | Sealed secret values in output | **Always redacted** |
 | Secret values in `phase secrets export` | **Redacted** based on type and config |

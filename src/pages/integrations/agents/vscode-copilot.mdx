@@ -30,7 +30,7 @@ You'll be asked whether AI agents can see secret values:
 - **Mask values** (recommended) — `secret` and `sealed` types show as `[REDACTED]`
 - **Show values** — `secret` and `config` types are visible; `sealed` is always hidden
 
-### 4. Start using Phase in Copilot
+### 2. Start using Phase in Copilot
 
 Open Copilot Chat in Agent mode. You can immediately start managing secrets:
 
@@ -69,7 +69,7 @@ Sealed secret values are **never** exposed to AI agents regardless of configurat
 
 The Phase CLI enforces guardrails when it detects an AI agent:
 
-- `printenv`, `env`, `export`, `set` are **blocked** inside `phase run`
+- `printenv`, `env`, `export`, `set`, `declare`, `compgen` are **blocked** inside `phase run`
 - `phase shell` is **blocked entirely** in AI mode
 - Sealed secret values are **always redacted** in output
 - `phase ai enable` / `phase ai disable` **must be run by the user** directly
