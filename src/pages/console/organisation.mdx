@@ -2,19 +2,19 @@ import { Tag } from '@/components/Tag'
 import { DocActions } from '@/components/DocActions'
 
 export const description =
-  'This guide will explain how organisations works in Phase'
+  'How to manage Organisations in the Phase Console'
 
 <Tag variant="small">CONSOLE</Tag>
 
 # Organisations
 
-Organisations in Phase contain all your [Apps](/console/apps) and [Users](/console/users), and allow you to collaborate with your team.
+Manage your [Organisation](/platform/organisations) through the Phase Console. This page covers the practical steps for creating, configuring, and administering your Organisation in the Console UI.
 
-<DocActions /> 
+<DocActions />
 
 ## Create an Organisation
 
-When you signup on Phase, you will need to create an Organisation. You must choose an name for your Organisation that can contain letters or numbers. Organistaion names must be unique.
+When you signup on Phase, you will need to create an Organisation. You must choose a name for your Organisation that can contain letters or numbers. Organisation names must be unique.
 
 ![create organsation](/assets/images/console/organisation/organisation-create.png)
 
@@ -30,7 +30,7 @@ This page lists all members of your Organisation. If you are an Owner or Admin, 
 
 ![organsation members](/assets/images/console/organisation/organisation-members.png)
 
-You can also invite new members to your Organisation. To invite a new member, click on the "Add a member" button, enter the email of the user you wish to invite, optionally select a role and click "Invite". You will need to manually provision access to Apps for the new member.
+To invite a new member, click on the "Add a member" button, enter the email of the user you wish to invite, optionally select a role and click "Invite". You will need to manually provision access to Apps for the new member.
 
 ![invite member](/assets/images/console/organisation/organisation-memmber-invite.png)
 
@@ -44,12 +44,11 @@ This page shows your account and recovery info related to this Organisation. You
 
 ## Transfer Ownership
 
-Organisation Owners can transfer ownership to another member who has the [Admin](/access-control/roles#admin) role. This is useful when an organisation needs to change hands, such as when the current owner is leaving the team or delegating responsibilities.
+Organisation Owners can transfer ownership to another member who has the [Admin](/access-control/roles#admin) role. For more on how ownership works, see [Platform > Organisations](/platform/organisations#ownership).
 
 <Warning>
   Make sure the new Owner has access to their **account recovery kit** before transferring ownership. After the transfer, the new Owner's recovery kit will be the **only** way to restore access to the organisation if they forget their `sudo` password.
 </Warning>
-
 
 To transfer ownership:
 

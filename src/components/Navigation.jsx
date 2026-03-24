@@ -210,6 +210,21 @@ export const navigation = [
     ],
   },
   {
+    title: 'Platform',
+    links: [
+      { title: 'Overview', href: '/platform' },
+      { title: 'Organisations', href: '/platform/organisations' },
+      { title: 'Apps', href: '/platform/apps' },
+      { title: 'Environments', href: '/platform/environments' },
+      { title: 'Secrets', href: '/platform/secrets' },
+      { title: 'Dynamic Secrets', href: '/platform/dynamic-secrets' },
+      { title: 'Users', href: '/platform/users' },
+      { title: 'Service Accounts', href: '/platform/service-accounts' },
+      { title: 'Access Control', href: '/platform/access' },
+      { title: 'Integrations', href: '/platform/integrations' },
+    ],
+  },
+  {
     title: 'Console',
     links: [
       { title: 'Overview', href: '/console' },

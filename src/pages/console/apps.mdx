@@ -1,15 +1,15 @@
 import { Tag } from '@/components/Tag'
 import { DocActions } from '@/components/DocActions'
 
-export const description = 'This guide explains how Apps work in Phase.'
+export const description = 'How to manage Apps in the Phase Console'
 
 <Tag variant="small">CONSOLE</Tag>
 
 # Apps
 
-A Phase App is used to manage [Secrets](/console/secrets) for a single project, repository, or application. An App can contain multiple [Environments](/console/environments). Users can be added to or removed from an App to manage access.
+Manage your [Apps](/platform/apps) in the Phase Console. This page covers the practical steps for creating, configuring, and administering Apps through the Console UI.
 
-<DocActions /> 
+<DocActions />
 
 ## Create an App
 
@@ -20,7 +20,7 @@ You can also optionally choose to initialize your App with example secrets. This
 
 ## App Readme
 
-Each App can have a readme that serves as a space for developer documentation, runbooks, onboarding notes, or any other relevant information. The readme is displayed on the App's **Home** tab and supports full markdown rendering, including headings, lists, links, code blocks, and blockquotes.
+Each App can have a readme that serves as a space for developer documentation, runbooks, onboarding notes, or any other relevant information. The readme is displayed on the App's **Home** tab and supports full markdown rendering.
 
 ![app readme on home tab](/assets/images/console/apps/app-readme-home.png)
 
@@ -47,21 +47,17 @@ You can expand a Secret to view its status in each Environment. Clicking an Envi
 
 ### One-click secret access
 
-The Phase Console has a "One-click access" menu in the top right of the screen when inside of an App. Open this menu and click to copy a one-liner for either the CLI or REST API to fetch secrets from the current environment and path based on the context (this defaults to the first environment and the root / path if in the App home). The ability to access secrets over the REST API requires an SSE (Server-Side Encryption) enabled App.
-
-Here's a quick demo of how it works:
+The Phase Console has a "One-click access" menu in the top right of the screen when inside of an App. Open this menu and click to copy a one-liner for either the CLI or REST API to fetch secrets from the current environment and path.
 
 <video controls autoPlay="true" muted loop><source src="/assets/images/console/apps/one-click-access.mp4" /></video>
 
-A temporary Personal Access Token (PAT) is automatically generated and copied to your clipboard to authenticate the request. This is ideal for quickly fetching secrets either in your dev environment or in a shell session on a remote machine.
-
-You may modify the one-liners to best suit your needs by injecting, exporting, or parsing the secrets via the CLI or over the REST API with curl. You may also run follow-up commands as the one-liners set the Personal Access Token as the `PHASE_TOKEN` environment variable, and the token is valid for 5 minutes.
+A temporary Personal Access Token (PAT) is automatically generated and copied to your clipboard to authenticate the request. The token is valid for 5 minutes. You may modify the one-liners to best suit your needs.
 
 ## Access
 
 ### Add a service account to an App
 
-You can add a Service Account to any App from the respective App's "Access" tab. 
+You can add a Service Account to any App from the respective App's "Access" tab.
 
 1. Click "Service accounts" on the left, and then "Add service account"
 
@@ -71,7 +67,7 @@ You can add a Service Account to any App from the respective App's "Access" tab.
 
 ![Add service account to app](/assets/images/console/access-control/service-accounts/manage-account/add-to-app-2.png)
 
-3. The account will now have access to the Environments you selected. You can always update the Environment scope for this account or remove it from the App entirely. 
+3. The account will now have access to the Environments you selected. You can always update the Environment scope for this account or remove it from the App entirely.
 
 ![Add service account to app](/assets/images/console/access-control/service-accounts/manage-account/add-to-app-3.png)
 
@@ -94,12 +90,7 @@ To remove a member from an App, click the "Remove member" button.
 
 ## Syncing
 
-Phase offers the ability to automatically sync secrets to various third-party platforms and services. This feature enables seamless deployment of secrets to services like GitHub Actions, Railway, AWS Secrets Manager, and HashiCorp Nomad.
-
-### Requirements for Syncing
-
-1. Server-Side Encryption (SSE) must be enabled for the App to use secret syncing integrations. This allows Phase to securely manage and deploy secrets to external services.
-2. Appropriate permissions and access tokens for the target service must be configured.
+Phase can automatically sync secrets to third-party platforms. For more on how syncing works, see [Platform > Apps > Secret Syncing](/platform/apps#secret-syncing).
 
 ### Setting Up a Sync
 
@@ -111,27 +102,25 @@ To set up a new sync:
 
 ![secret syncing](/assets/images/console/apps/app-sync.png)
 
-Syncing allows Phase to keep your secrets up-to-date across different platforms automatically. This ensures consistency and reduces manual secret management tasks.
+<Note>
+Server-Side Encryption (SSE) must be enabled for the App to use secret syncing integrations. See [Enabling SSE](#enabling-sse) below.
+</Note>
 
 ## Logs
 
-This screen shows you audit logs for all CRUD events for all Secrets and Environments in this App. You can expand a specific log event to view more information.
+This screen shows audit logs for all CRUD events for all Secrets and Environments in this App. You can expand a specific log event to view more information.
 
 ![app logs](/assets/images/console/apps/app-logs.png)
 
 ## Settings
 
-This screen shows you metadata for the App and allows you to perform administrative tasks such as changing the encryption mode of the App or deleting it permanently.
-
-### Encryption
-
-Phase Apps are secured with end-to-end encryption (E2EE) by default. This means only users who are granted access to the App and its Environments can decrypt the secrets that are stored within it.
-However, to use certain features of Phase such as third-party integrations or the [public REST API](/public-api), you will need to enable server-side encryption (SSE).
-Enabling SSE will store a copy of each Environment's root key on the server, encrypted with the server's encryption key. This allows the server to decrypt secrets for syncing with third parties or to make them available over the API.
+This screen shows metadata for the App and allows you to perform administrative tasks such as changing the encryption mode or deleting the App.
 
 ### Enabling SSE
 
-To enable SSE for an App, click the "Enable SSE" button under the "Encryption" section of the App Settings tab.
+Phase Apps use end-to-end encryption (E2EE) by default. To use features like third-party integrations, the [public REST API](/public-api), or [Dynamic Secrets](/platform/dynamic-secrets), you need to enable server-side encryption (SSE). For more on encryption modes, see [Platform > Apps > Encryption Modes](/platform/apps#encryption-modes).
+
+To enable SSE, click the "Enable SSE" button under the "Encryption" section of the App Settings tab.
 
 ![enable sse button](/assets/images/console/settings/encryption-section-e2ee.webp)
 
