@@ -21,6 +21,24 @@ To create a Secret in a specific Environment, click the "New Secret" button. Thi
 Secret keys cannot be empty, or share the same key as another secret in the current environment at the same path.
 </Note>
 
+## Secret Types
+
+Every secret in Phase has a type that controls its behavior and visibility. All secrets are end-to-end encrypted regardless of type — the type only affects how the secret is displayed and whether the value can be read back after saving. You can set the type when creating a secret, or change it later using the type selector that appears when hovering over the secret key.
+
+| Type | Description |
+| ---- | ----------- |
+| **Secret** | The default type. Values are masked in the UI until revealed. |
+| **Sealed** | Values are write-once. After saving, the plaintext value is redacted server-side and can never be read back in the Console UI. The type cannot be changed once saved. Use this for values that should only be injected at runtime and never exposed in the UI, such as root credentials or signing keys. |
+| **Config** | Non-sensitive configuration values (e.g. `APP_NAME`, `LOG_LEVEL`, `REGION`). Values are shown in plaintext by default without masking. |
+
+### Changing a secret's type
+
+You can change a secret's type by hovering over the secret row and using the type selector in the key field. Type changes are staged like any other edit and are only saved when you deploy.
+
+<Warning>
+Once a sealed secret is saved, its type is permanently locked. You cannot unseal a secret or change it to another type. To replace it, delete the secret and create a new one.
+</Warning>
+
 ## Import Secrets
 
 You can import secrets into your Apps and Environments by dragging-and-dropping `.env` files or selecting them from your filesystem. 
