@@ -22,7 +22,7 @@ The Phase CLI syncs with the [Phase Console](https://github.com/phasehq/console)
 
 ## 1. Login
 
-Authenticate with Phase as a [User](/console/users). This is suitable for installing the Phase CLI on your local development machine, where you can access a web browser to complete the authentication.
+Authenticate with Phase as a [User](/platform/users). This is suitable for installing the Phase CLI on your local development machine, where you can access a web browser to complete the authentication.
 
 ```fish
 phase auth

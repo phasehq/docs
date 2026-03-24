@@ -279,7 +279,7 @@ Examples:
 DJANGO_SECRET_KEY=7842cc89c5a703acdf4797e0f063e1851734cea0677ad9382158cfcee26195df
 ```
 
-Injecting [Referenced secrets](/cli/commands#secret-referencing):
+Injecting [referenced secrets](/platform/secrets#secret-referencing):
 
 ```fish
 > phase secrets get PROD_AWS_KEY --env dev
@@ -1269,81 +1269,30 @@ Run `phase completion [shell] --help` for detailed instructions for each shell.
 
 ## 🔗 Secret referencing
 
-You can set a value of a secret to a value of another by simply pointing to it via the following syntax.
+Secrets can reference other secret values using the `${...}` syntax. References work across environments, folders, and even across applications. The CLI automatically resolves all references when injecting secrets via `phase run`.
 
-### Secret referencing syntax:
+For the full referencing syntax and detailed documentation, see [Platform > Secrets > Secret Referencing](/platform/secrets#secret-referencing).
 
-| Value reference syntax | Environment | Path | Secret Key Being Referenced | Description |
-| ---------------------- | ----------- | ---- | --------------------------- | ----------- |
-| `${KEY}` | same environment | `/` | KEY | Local reference in the same environment and path root (/). |
-| `${staging.DEBUG}` | `staging` | `/` (root of staging environment) | DEBUG | Cross-environment reference to a secret at the root (/). |
-| `${production./frontend/SECRET_KEY}` | `production` | `/frontend/` | SECRET_KEY | Cross-environment reference to a secret in a specific path. |
-| `${/backend/payments/STRIPE_KEY}` | same environment | `/backend/payments/` | STRIPE_KEY | Local reference with a specified path within the same environment. |
-| `${backend_api::production.SECRET_KEY}` | `production` (in `backend_api` app) | `/` (root of backend_api app) | SECRET_KEY | Cross-application reference to a secret at the root path within another application. |
-| `${backend_api::production./frontend/SECRET_KEY}` | `production` (in `backend_api` app) | `/frontend/` | SECRET_KEY | Cross-application reference to a secret in a specific path within another application. |
+When listing secrets, the CLI uses indicators to show reference types:
 
-For more information see: [Phase Console Secrets](/console/secrets)
+- `🔗` — Local reference (same environment)
+- `🌐` — Cross-environment or cross-application reference
 
-Values prefixed with a `🔗` indicate a local secret being referenced, whereas values prefixed with `🌐` indicate a cross-environment secret value being referenced ie. development, staging, prod.
-
-**Examples**:
-
-### Local environment secret referencing:
+**Example**:
 
 ```fish
 > phase secrets list --env prod --show
 KEY 🗝️                   | VALUE ✨
 -------------------------------------------------------------------------------------------------
-DB_NAME                  | XP1_LM
-DB_USER                  | j_mclaren
-DB_PASSWORD              | 6c37810ec6e74ec3228416d2844564fceb99ebd94b29f4334c244db011630b0e
 DB_HOST                  | mc-laren-prod-db.c9ufzjtplsaq.us-west-1.rds.amazonaws.com
 DB_PORT                  | 5432
 DATABASE_URL             | 🔗 postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
 
 > phase run "printenv | grep DATABASE_URL"
-DATABASE_URL=postgresql://j_mclaren:6c37810ec6e74ec3228416d2844564fceb99ebd94b29f4334c244db011630b0e@mc-laren-prod-db.c9ufzjtplsaq.us-west-1.rds.amazonaws.com:5432/XP1_LM
+DATABASE_URL=postgresql://j_mclaren:6c37...@mc-laren-prod-db.c9ufzjtplsaq.us-west-1.rds.amazonaws.com:5432/XP1_LM
 ```
 
-The database connection string `postgresql://` is referencing `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT` and `DB_NAME` from the same environment (dev/development)
-
-### Local environment secret referencing inside a folder:
-
-The following database credentials are inside of `postgres` folder
-
-```fish
-DB_NAME                  | XP1_LM
-DB_USER                  | j_mclaren
-DB_PASSWORD              | 6c37810ec6e74ec3228416d2844564fceb99ebd94b29f4334c244db011630b0e
-DB_HOST                  | mc-laren-prod-db.c9ufzjtplsaq.us-west-1.rds.amazonaws.com
-DB_PORT                  | 5432
-```
-
-```fish
-> phase secrets list --env prod --show
-KEY 🗝️                   | VALUE ✨
--------------------------------------------------------------------------------------------------
-DATABASE_URL             | 🔗 postgresql://${postgres/DB_USER}:${postgres/DB_PASSWORD}@${postgres/DB_HOST}:${postgres/DB_PORT}/${postgres/DB_NAME}
-
-> phase run "printenv | grep DATABASE_URL"
-DATABASE_URL=postgresql://j_mclaren:6c37810ec6e74ec3228416d2844564fceb99ebd94b29f4334c244db011630b0e@mc-laren-prod-db.c9ufzjtplsaq.us-west-1.rds.amazonaws.com:5432/XP1_LM
-```
-
-The database connection string `postgresql://` is referencing `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT` and `DB_NAME` from the same environment (dev/development)
-
-### Cross environment secret referencing:
-
-```fish
-> phase secrets list --env prod --show
-KEY 🗝️                    | VALUE ✨
-----------------------------------------------------------------------------
-DATABASE_URL              | 🌐 postgresql://${dev.DB_USER}:${dev.DB_PASSWORD}@${dev.DB_HOST}:${dev.DB_PORT}/${dev.DB_NAME}
-
-> phase run --env prod "printenv | grep DATABASE_URL"
-DATABASE_URL=postgresql://j_mclaren:6c37810ec6e74ec3228416d2844564fceb99ebd94b29f4334c244db011630b0e@mc-laren-prod-db.c9ufzjtplsaq.us-west-1.rds.amazonaws.com:5432/XP1_LM
-```
-
-**Note**: This is assuming an environment named dev/development exists and has a secrets with the keys `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
+References are resolved at runtime by `phase run`. Note that `secrets get` returns the raw, unresolved reference syntax, while `phase run` resolves and injects the actual values.
 
 ---
 
