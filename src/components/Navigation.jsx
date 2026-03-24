@@ -278,28 +278,33 @@ export const navigation = [
     ],
   },
   {
-    title: 'Platform Integration',
+    title: 'Agent Integrations',
     links: [
       {
         title: 'Claude Code',
-        href: '/integrations/platforms/claude-code',
+        href: '/integrations/agents/claude-code',
       },
       {
         title: 'Cursor',
-        href: '/integrations/platforms/cursor',
+        href: '/integrations/agents/cursor',
       },
       {
         title: 'VS Code Copilot',
-        href: '/integrations/platforms/vscode-copilot',
+        href: '/integrations/agents/vscode-copilot',
       },
       {
         title: 'OpenAI Codex',
-        href: '/integrations/platforms/codex',
+        href: '/integrations/agents/codex',
       },
       {
         title: 'OpenCode',
-        href: '/integrations/platforms/opencode',
+        href: '/integrations/agents/opencode',
       },
+    ],
+  },
+  {
+    title: 'Platform Integration',
+    links: [
       { title: 'Docker', href: '/integrations/platforms/docker' },
       {
         title: 'Docker Compose',
