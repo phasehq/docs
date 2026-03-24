@@ -21,7 +21,6 @@ Both paths share the same cluster setup steps and diverge at the database and de
 
 <SkillBox
   skill="eks"
-  refs={["eks-deployment", "troubleshooting"]}
   triggerPhrase="deploy Phase on EKS"
 />
 
