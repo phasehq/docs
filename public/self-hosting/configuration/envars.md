@@ -38,6 +38,7 @@ The following providers are available:
 - `jumpcloud-oidc` - JumpCloud OIDC
 - `entra-id-oidc` - Microsoft Entra ID OIDC
 - `okta-oidc` - Okta OIDC
+- `authelia` - Authelia OIDC
 
 You can find a complete list of user auth providers [here](/access-control/authentication#user-authentication).
 
@@ -195,6 +196,37 @@ After setting up your Application on Authentik, set the Client ID, Client Secret
   </Property>
   <Property name="AUTHENTIK_APP_SLUG" type="string">
     Authentik App slug
+  </Property>
+</Properties>
+
+Env(s) required by the following containers:
+- [`frontend`](https://hub.docker.com/r/phasehq/frontend)
+- [`backend`](https://hub.docker.com/r/phasehq/backend)
+
+### Authelia OIDC
+
+Provider slug: `authelia`
+
+You can find instructions for setting up SSO with an Authelia OIDC Application [here](/access-control/authentication/oauth-sso#authelia).
+
+Set the "Redirect URI" for your Authelia OIDC client as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/authelia`.
+
+Example:
+```bash
+https://[**YOUR_DOMAIN**]/api/auth/callback/authelia
+```
+
+After configuring your Authelia OIDC client, set the Client ID, Client Secret, and URL values:
+
+<Properties>
+  <Property name="AUTHELIA_CLIENT_ID" type="string">
+    Authelia OIDC Client ID
+  </Property>
+  <Property name="AUTHELIA_CLIENT_SECRET" type="string">
+    Authelia OIDC Client secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
+  </Property>
+  <Property name="AUTHELIA_URL" type="string">
+    Authelia instance URL (e.g., `https://auth.example.com`)
   </Property>
 </Properties>
 
