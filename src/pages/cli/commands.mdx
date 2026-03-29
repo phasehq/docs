@@ -121,7 +121,7 @@ For `token` mode, provide the following:
 Obtain a Personal Access Token (PAT) from the [Phase Console](https://console.phase.dev) by going to Access Control -> Authentication -> Personal Access Tokens -> + `Create Token`.
 
 
-3. **AWS IAM**: Authenticate using your current AWS identity from the standard AWS credential chain (env vars, shared config/credentials, SSO, role assumption, instance profile, etc). Optionally bind the external identity to a Phase Service Account and set a TTL for the issued token. You'll need to have configured an external identity to a service account in the Phase Console first. 
+3. **AWS IAM**: Authenticate using your current AWS identity from the standard AWS credential chain (env vars, shared config/credentials, SSO, role assumption, instance profile, etc). Optionally bind the external identity to a Phase Service Account and set a TTL for the issued token. You'll need to have configured an external identity to a service account in the Phase Console first.
 
 See [External Identities](/access-control/external-identities) for more details.
 
@@ -158,14 +158,50 @@ phase auth --mode aws-iam --service-account=2115a1fc-0a78-4a7b-ad8c-6fa6cc15f489
 }
 ```
 
-- `mode`: Choose the mode of authentication (`token`, `webauth`, `aws-iam`). Default: `webauth`
-- `service-account-id` (Required for external identities): Bind external identity to a Phase Service Account.
-- `ttl` (Optional): Only applicable for when using external identities for authentication (e.g., `aws-iam` mode). TTL in seconds for the issued token.
-- `no-store` (Optional): Only applicable for when using external identities for authentication (e.g., `aws-iam` mode). Print the authentication token response to STDOUT without storing credentials.
- 
 <Note>
 The CLI will auto detect the AWS region you are in and use it to authenticate with the AWS API. You can also use `aws configure` to set the region.
 </Note>
+
+4. **Azure**: Authenticate using your current Azure identity via `DefaultAzureCredential` (Managed Identity, Service Principal, Workload Identity, Azure CLI, etc). You'll need to have configured an Azure external identity on a service account in the Phase Console first.
+
+See [External Identities](/access-control/external-identities#azure) for more details.
+
+Usage:
+
+```fish
+> phase auth --mode azure [--service-account-id SERVICE_ACCOUNT_ID] [--azure-resource RESOURCE] [--ttl SECONDS] [--no-store]
+```
+
+Options:
+
+- `--service-account-id` (Required): Service Account ID to map this external Azure identity to a Phase Service Account.
+- `--azure-resource` (Optional): Azure AD resource/audience for the token request. Must match the "Resource / Audience" configured on the Phase identity. Default: `https://management.azure.com/`.
+- `--ttl` (Optional): Token TTL in seconds. Defaults to the configured Default TTL of the external identity.
+- `--no-store` (Optional): Print the authentication token to STDOUT without storing credentials in the keyring.
+
+Examples:
+
+```fish
+# Log in using your current Azure identity and persist credentials
+> phase auth --mode azure --service-account-id 0f1a2b3c-4d5e-6789-abcd-ef0123456789
+```
+
+```fish
+# Authenticate with a custom resource and print token to STDOUT
+> phase auth --mode azure --service-account-id 0f1a2b3c-4d5e-6789-abcd-ef0123456789 --azure-resource "https://management.azure.com/" --ttl 3600 --no-store
+```
+
+<Note>
+`DefaultAzureCredential` automatically tries (in order): environment variables (`AZURE_TENANT_ID`, `AZURE_CLIENT_ID`, `AZURE_CLIENT_SECRET`), Workload Identity (Kubernetes), Managed Identity (IMDS), Azure CLI (`az login`), and Azure Developer CLI (`azd login`).
+</Note>
+
+#### Auth Options Summary
+
+- `mode`: Choose the mode of authentication (`token`, `webauth`, `aws-iam`, `azure`). Default: `webauth`
+- `service-account-id` (Required for external identities): Bind external identity to a Phase Service Account.
+- `ttl` (Optional): Only applicable when using external identities for authentication. TTL in seconds for the issued token.
+- `no-store` (Optional): Only applicable when using external identities for authentication. Print the authentication token response to STDOUT without storing credentials.
+- `azure-resource` (Optional, Azure only): Azure AD resource/audience. Default: `https://management.azure.com/`.
 
 ---
 
