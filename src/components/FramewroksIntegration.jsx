@@ -17,13 +17,13 @@ import clsx from 'clsx'
 
 const SDKs = [
   {
-    href: '/integrations/frameworks/react',
+    href: '/integrations/frameworks#react',
     name: 'React',
     description: 'Inject secrets and environment variables to your React app.',
     logo: logoReact,
   },
   {
-    href: '/integrations/frameworks/node',
+    href: '/integrations/frameworks#node-js',
     name: 'Node.js',
     description:
       'Inject secrets and environment variables to your Node.js app.',
@@ -31,7 +31,7 @@ const SDKs = [
     available: true,
   },
   {
-    href: '/integrations/frameworks/next-js',
+    href: '/integrations/frameworks#next-js',
     name: 'Next.js',
     description:
       'Inject secrets and environment variables to your Next.js app.',
@@ -39,21 +39,21 @@ const SDKs = [
     available: true,
   },
   {
-    href: '/integrations/frameworks/django',
+    href: '/integrations/frameworks#django',
     name: 'Django',
     description: 'Inject secrets and environment variables to your Django app.',
     logo: logoDjango,
     available: true,
   },
   {
-    href: '/integrations/frameworks/fiber',
+    href: '/integrations/frameworks#fiber',
     name: 'Golang',
     description: 'Inject secrets and environment variables to your Go app.',
     logo: logoGo,
     available: true,
   },
   {
-    href: '/integrations/frameworks/ruby-on-rails',
+    href: '/integrations/frameworks#ruby-on-rails',
     name: 'Ruby on Rails',
     description:
       'Inject secrets and environment variables to your Ruby on Rails app.',
@@ -61,14 +61,14 @@ const SDKs = [
     available: true,
   },
   {
-    href: '/integrations/frameworks/dotnet',
+    href: '/integrations/frameworks#net',
     name: '.NET',
     description: 'Inject secrets and environment variables to your .NET app.',
     logo: logoDotnet,
     available: true,
   },
   {
-    href: '/integrations/frameworks/laravel',
+    href: '/integrations/frameworks#laravel',
     name: 'Laravel',
     description:
       'Inject secrets and environment variables to your Laravel app.',

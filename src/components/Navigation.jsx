@@ -391,26 +391,7 @@ export const navigation = [
   {
     title: 'Framework Integration',
     links: [
-      { title: 'Overview', href: '/integrations' },
-      { title: 'Next.js', href: '/integrations/frameworks/next-js' },
-      { title: 'Node.js', href: '/integrations/frameworks/node' },
-      { title: 'React', href: '/integrations/frameworks/react' },
-      { title: 'Django', href: '/integrations/frameworks/django' },
-      { title: 'Nuxt', href: '/integrations/frameworks/nuxt' },
-      { title: 'NestJS', href: '/integrations/frameworks/nest-js' },
-      { title: 'Vue.js', href: '/integrations/frameworks/vue-js' },
-      { title: 'FastAPI', href: '/integrations/frameworks/fast-api' },
-      { title: 'Flask', href: '/integrations/frameworks/flask' },
-      { title: 'Svelte', href: '/integrations/frameworks/svelte' },
-      { title: 'Fiber', href: '/integrations/frameworks/fiber' },
-      {
-        title: 'Ruby on Rails',
-        href: '/integrations/frameworks/ruby-on-rails',
-      },
-      { title: 'Laravel', href: '/integrations/frameworks/laravel' },
-      { title: 'Gatsby', href: '/integrations/frameworks/gatsby' },
-      { title: 'Remix', href: '/integrations/frameworks/remix' },
-      { title: '.NET', href: '/integrations/frameworks/dotnet' },
+      { title: 'Overview', href: '/integrations/frameworks' },
     ],
   },
   {
