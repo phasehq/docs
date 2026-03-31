@@ -4,21 +4,23 @@ import { DocActions } from '@/components/DocActions'
 export const metadata = {
   title: 'External Identities API',
   description:
-    'Authenticate with Phase using external identity providers (AWS IAM).',
+    'Authenticate with Phase using external identity providers (AWS IAM, Azure).',
 }
 
 
 <Tag variant="small">API</Tag>
 
-# External Identities (AWS IAM)
+# External Identities
 
-Authenticate to Phase using AWS IAM via a SigV4-signed STS GetCallerIdentity request. This flow returns a Phase authentication token scoped to the specified Service Account, with an optional TTL. {{ className: 'lead' }}
+Authenticate to Phase using external identity providers. Each provider returns a Phase authentication token scoped to the specified Service Account, with an optional TTL. {{ className: 'lead' }}
 
-<DocActions /> 
+<DocActions />
 
 ---
 
-## Authenticate with AWS IAM {{ tag: 'POST', label: '/identities/external/v1/aws/iam/auth/' }}
+## AWS IAM
+
+### Authenticate with AWS IAM {{ tag: 'POST', label: '/identities/external/v1/aws/iam/auth/' }}
 
 <Row>
   <Col>
@@ -316,4 +318,223 @@ Authenticate to Phase using AWS IAM via a SigV4-signed STS GetCallerIdentity req
   </Col>
 </Row>
 
+---
+
+## Azure
+
+### Authenticate with Azure {{ tag: 'POST', label: '/identities/external/v1/azure/entra/auth/' }}
+
+<Row>
+  <Col>
+
+    Exchange an Azure AD JWT for a Phase token. The JWT is validated statelessly using Azure AD's public OIDC signing keys — no Azure credentials are stored on the Phase backend.
+
+    ### JSON Body
+
+    Supply the Service Account to authenticate and the base64-encoded Azure AD JWT.
+
+    #### **Required fields**
+
+    <Properties>
+      <Property name="account.id" type="string">
+        Service Account ID (UUID) to authenticate.
+      </Property>
+      <Property name="azureEntra.jwt" type="string">
+        Base64-encoded Azure AD JWT access token.
+      </Property>
+    </Properties>
+
+    #### **Optional fields**
+
+    <Properties>
+      <Property name="account.type" type="string">
+        Defaults to <code>service</code>. Only <code>service</code> is supported currently.
+      </Property>
+      <Property name="tokenRequest.ttl" type="number">
+        Requested token TTL in seconds. If omitted, the default identity TTL is used.
+      </Property>
+    </Properties>
+
+    <Note>
+      The JWT must be obtained from Azure AD with a <code>resource</code> / <code>audience</code> that matches the value configured on the Phase identity (default: <code>https://management.azure.com/</code>). The <code>oid</code> claim in the JWT (the service principal's object ID) must be in the identity's allowed service principal IDs list.
+    </Note>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="POST" label="/identities/external/v1/azure/entra/auth/">
+
+    ```json {{ title: 'JSON body' }}
+    {
+      "account": {
+        "type": "service",
+        "id": "00000000-0000-0000-0000-000000000000"
+      },
+      "azureEntra": {
+        "jwt": "<base64-encoded-jwt>"
+      },
+      "tokenRequest": {
+        "ttl": 3600
+      }
+    }
+    ```
+
+    ```js
+    import { DefaultAzureCredential } from '@azure/identity'
+
+    const HOST = 'https://api.phase.dev'
+    const SERVICE_ACCOUNT_ID = '00000000-0000-0000-0000-000000000000'
+    const RESOURCE = 'https://management.azure.com/'
+
+    ;(async () => {
+      const credential = new DefaultAzureCredential()
+      const token = await credential.getToken(RESOURCE + '.default')
+      const encodedJWT = Buffer.from(token.token).toString('base64')
+
+      const payload = {
+        account: { type: 'service', id: SERVICE_ACCOUNT_ID },
+        azureEntra: { jwt: encodedJWT },
+      }
+
+      const res = await fetch(`${HOST}/service/public/identities/external/v1/azure/entra/auth/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      console.log(await res.json())
+    })()
+    ```
+
+    ```python
+    import base64, json
+    import requests
+    from azure.identity import DefaultAzureCredential
+
+    HOST = "https://api.phase.dev"
+    SERVICE_ACCOUNT_ID = "00000000-0000-0000-0000-000000000000"
+    RESOURCE = "https://management.azure.com/"
+
+    credential = DefaultAzureCredential()
+    token = credential.get_token(RESOURCE + ".default")
+    encoded_jwt = base64.b64encode(token.token.encode()).decode()
+
+    payload = {
+        "account": {"type": "service", "id": SERVICE_ACCOUNT_ID},
+        "azureEntra": {"jwt": encoded_jwt},
+    }
+
+    r = requests.post(
+        f"{HOST}/service/public/identities/external/v1/azure/entra/auth/",
+        json=payload,
+        headers={"Content-Type": "application/json"},
+        timeout=30,
+    )
+    r.raise_for_status()
+    print(r.json())
+    ```
+
+    ```go
+    package main
+
+    import (
+      "bytes"
+      "encoding/base64"
+      "encoding/json"
+      "fmt"
+      "io"
+      "net/http"
+      "os"
+      "context"
+
+      "github.com/Azure/azure-sdk-for-go/sdk/azcore/policy"
+      "github.com/Azure/azure-sdk-for-go/sdk/azidentity"
+    )
+
+    func main() {
+      host := "https://api.phase.dev"
+      serviceAccount := "00000000-0000-0000-0000-000000000000"
+      resource := "https://management.azure.com/"
+
+      cred, err := azidentity.NewDefaultAzureCredential(nil)
+      if err != nil { panic(err) }
+
+      token, err := cred.GetToken(context.Background(), policy.TokenRequestOptions{
+        Scopes: []string{resource + ".default"},
+      })
+      if err != nil { panic(err) }
+
+      encodedJWT := base64.StdEncoding.EncodeToString([]byte(token.Token))
+
+      payload := map[string]any{
+        "account":    map[string]string{"type": "service", "id": serviceAccount},
+        "azureEntra": map[string]string{"jwt": encodedJWT},
+      }
+
+      b, _ := json.Marshal(payload)
+      res, err := http.Post(host+"/service/public/identities/external/v1/azure/entra/auth/", "application/json", bytes.NewReader(b))
+      if err != nil { panic(err) }
+      defer res.Body.Close()
+      io.Copy(os.Stdout, res.Body)
+    }
+    ```
+
+    ```bash {{ title: 'curl' }}
+    # Get token via Azure CLI (as logged-in user or service principal)
+    TOKEN=$(az account get-access-token \
+      --resource https://management.azure.com/ \
+      --query accessToken -o tsv)
+    ENCODED=$(echo -n "$TOKEN" | base64)
+
+    curl -X POST https://api.phase.dev/service/public/identities/external/v1/azure/entra/auth/ \
+      -H "Content-Type: application/json" \
+      -d "{
+        \"account\": {\"type\": \"service\", \"id\": \"00000000-0000-0000-0000-000000000000\"},
+        \"azureEntra\": {\"jwt\": \"$ENCODED\"},
+        \"tokenRequest\": {\"ttl\": 3600}
+      }"
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+      "authentication": {
+        "tokenType": "ServiceAccount",
+        "token": "pss_service:v2:...",
+        "bearerToken": "ServiceAccount baca69c634d84e5d3d04d31a487eb1c4c5f2a3ef2a6683f77cf965d3ad7633d3",
+        "TTL": 3600,
+        "maxTTL": 86400
+      }
+    }
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Notes on Azure JWT tokens
+
+<Row>
+  <Col>
+
+    Azure AD issues two token versions. The version is determined by the `accessTokenAcceptedVersion` on the **resource** app registration, not the client.
+
+    <Properties>
+      <Property name="v1.0 tokens (default)" type="string">
+        Used for <code>https://management.azure.com/</code>. Issuer: <code>https://sts.windows.net/{'{'}tenantId{'}'}/</code>. Audience: resource URI string.
+      </Property>
+      <Property name="v2.0 tokens" type="string">
+        Used for custom app registrations with <code>accessTokenAcceptedVersion: 2</code>. Issuer: <code>https://login.microsoftonline.com/{'{'}tenantId{'}'}/v2.0</code>. Audience: client ID GUID.
+      </Property>
+      <Property name="Credential sources" type="string">
+        <code>DefaultAzureCredential</code> tries (in order): environment variables (Service Principal), Workload Identity (Kubernetes), Managed Identity (IMDS), Azure CLI, Azure Developer CLI.
+      </Property>
+    </Properties>
+
+    Phase automatically detects the token version and validates accordingly. No configuration is needed.
+
+  </Col>
+</Row>
 
