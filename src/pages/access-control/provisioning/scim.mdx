@@ -1,0 +1,197 @@
+import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
+
+export const description = 'Set up SCIM v2 provisioning to automatically sync users and groups from your identity provider to Phase.'
+
+<Tag variant="small">PROVISIONING</Tag>
+
+# SCIM Provisioning
+
+SCIM (System for Cross-domain Identity Management) v2 enables automatic user and group provisioning from your identity provider (IdP) to Phase. When configured, your IdP can automatically create, update, and deactivate user accounts in Phase, eliminating the need for manual user management.
+
+<DocActions />
+
+<Note>
+  SCIM provisioning is available for organisations with an `Enterprise` tier subscription. See [Pricing](https://phase.dev/pricing).
+</Note>
+
+## How it works
+
+When SCIM is enabled, your identity provider communicates with Phase's SCIM v2 API to:
+
+- **Provision users**: Automatically create Phase accounts when users are assigned to the application in your IdP. Users are created with a `Pending` status until they complete their first login and key ceremony.
+- **Deprovision users**: Automatically deactivate Phase accounts when users are unassigned or disabled in your IdP. The user's environment keys are revoked and their org membership is soft-deleted.
+- **Sync groups**: Map IdP groups to Phase Teams, automatically managing team membership as group assignments change.
+- **Update user attributes**: Keep user details (name, email) in sync between your IdP and Phase.
+
+### User lifecycle
+
+1. **IdP assigns user** → SCIM creates a Phase user account with `Pending` status (SCIM + Pending badges shown in the console)
+2. **User logs in via SSO** → Phase auto-links the SSO account to the SCIM-provisioned user
+3. **User completes key ceremony** → User sets up their sudo password and recovery phrase, enabling them to decrypt secrets
+4. **IdP unassigns user** → SCIM deactivates the user, revokes environment keys, and removes them from the organisation
+
+## Enable SCIM in Phase
+
+Before configuring your identity provider, enable SCIM in the Phase Console and create a provisioning token:
+
+1. Log into the Phase Console as an **Owner** or **Admin**.
+
+2. Navigate to **Access** > **SCIM** in the sidebar.
+
+3. Toggle **Enable SCIM** to on.
+
+4. Copy the **SCIM Base URL** shown on the page. It will look like:
+
+   ```
+   https://[YOUR_PHASE_HOST]/service/scim/v2/
+   ```
+
+5. Click **Create token** to generate a SCIM bearer token. Give it a descriptive name (e.g., "Azure Entra ID") and select an expiry period.
+
+6. Copy the generated token immediately — it will not be shown again. This token will be used as the **Secret Token** in your identity provider's SCIM configuration.
+
+<Warning>
+  Treat the SCIM token like a password. Anyone with this token can provision and deprovision users in your Phase organisation.
+</Warning>
+
+## Microsoft Entra ID (Azure AD)
+
+Microsoft Entra ID supports SCIM-based provisioning through Enterprise Applications. Follow these steps to configure automatic user and group provisioning from Entra ID to Phase.
+
+### Prerequisites
+
+- A Microsoft Entra ID tenant with a P1 or P2 license (required for enterprise app provisioning)
+- An existing Phase Enterprise organisation with SCIM enabled and a SCIM token (see above)
+- OIDC SSO configured for Microsoft Entra ID (see [Entra ID OIDC setup](/access-control/authentication/oidc-sso#microsoft-entra-id--azure-ad))
+
+<Note>
+  SCIM provisioning and OIDC SSO are complementary features. SCIM handles account lifecycle (creation, deactivation), while OIDC handles authentication (login). You should configure both for the best experience.
+</Note>
+
+### Step 1: Create an Enterprise Application
+
+1. Sign in to the [Azure Portal](https://portal.azure.com).
+
+2. Navigate to **Microsoft Entra ID** > **Enterprise applications**.
+
+3. Click **+ New application** at the top.
+
+4. Click **+ Create your own application**.
+
+5. Enter a name for the application (e.g., "Phase Console SCIM"), select **Integrate any other application you find in the gallery (Non-gallery)**, and click **Create**.
+
+### Step 2: Configure Provisioning
+
+1. In your newly created Enterprise Application, select **Provisioning** from the left sidebar under *Manage*.
+
+2. Click **Get started** or set the **Provisioning Mode** to **Automatic**.
+
+3. Under **Admin Credentials**, enter:
+   - **Tenant URL**: The SCIM Base URL from Phase (e.g., `https://[YOUR_PHASE_HOST]/service/scim/v2/`)
+   - **Secret Token**: The SCIM token you generated in Phase
+
+4. Click **Test Connection** to verify connectivity. Azure should report "The supplied credentials are authorized to enable provisioning".
+
+5. Click **Save**.
+
+### Step 3: Configure Attribute Mappings
+
+After saving credentials, Azure will show the **Mappings** section. You need to configure both user and group mappings.
+
+#### User Attribute Mappings
+
+1. Click **Provision Microsoft Entra ID Users**.
+
+2. Ensure the following mappings are present (these are the minimum required by Phase's SCIM implementation):
+
+   | Microsoft Entra ID Attribute | customappsso Attribute | Mapping Type |
+   |------|-------|------|
+   | `userPrincipalName` | `userName` | Direct |
+   | `Switch([IsSoftDeleted], , "False", "True", "True", "False")` | `active` | Expression |
+   | `mail` | `emails[type eq "work"].value` | Direct |
+   | `displayName` | `displayName` | Direct |
+   | `givenName` | `name.givenName` | Direct |
+   | `surname` | `name.familyName` | Direct |
+
+   <Note>
+     The `mail` → `emails[type eq "work"].value` mapping is important. Phase uses this email to link the SCIM-provisioned account with the SSO login. If your users don't have the `mail` attribute populated in Entra ID, you can map `userPrincipalName` to `emails[type eq "work"].value` instead.
+   </Note>
+
+3. Click **Save**.
+
+#### Group Attribute Mappings
+
+1. Go back to the Provisioning page and click **Provision Microsoft Entra ID Groups**.
+
+2. Ensure the following mappings are present:
+
+   | Microsoft Entra ID Attribute | customappsso Attribute | Mapping Type |
+   |------|-------|------|
+   | `displayName` | `displayName` | Direct |
+   | `objectId` | `externalId` | Direct |
+   | `members` | `members` | Direct |
+
+3. Click **Save**.
+
+### Step 4: Assign Users and Groups
+
+1. Navigate to **Users and groups** in the left sidebar of your Enterprise Application.
+
+2. Click **+ Add user/group**.
+
+3. Select the users and/or groups you want to provision to Phase, then click **Assign**.
+
+<Note>
+  Only users and groups explicitly assigned to the Enterprise Application will be provisioned. The default scope setting is "Sync only assigned users and groups".
+</Note>
+
+### Step 5: Start Provisioning
+
+1. Go back to the **Provisioning** page.
+
+2. Click **Start provisioning** to begin the initial sync.
+
+3. The initial provisioning cycle may take a few minutes. You can monitor progress under **Provisioning logs** in Azure, or in the **SCIM > Provisioning Logs** section of the Phase Console.
+
+4. Once complete, provisioned users will appear on the Phase **Members** page with `SCIM` and `Pending` badges. Groups will appear as **Teams** in Phase.
+
+### Step 6: Test the Flow
+
+1. Verify that provisioned users appear in the Phase Console under **Access** > **Members** with the SCIM and Pending badges.
+
+2. Have a provisioned user log in via SSO (Entra ID OIDC). They will be redirected to the **key ceremony** page to set up their sudo password and recovery phrase.
+
+3. After completing the key ceremony, the user should be able to access secrets in any environments their team has access to.
+
+### Troubleshooting: Microsoft Entra ID
+
+#### Provisioning shows "quarantine" status
+
+This usually means Azure received multiple errors from the SCIM endpoint. Check:
+- The SCIM token hasn't expired (check the Phase Console SCIM page)
+- The Phase instance is accessible from Azure's IP ranges
+- Review the provisioning logs in both Azure and the Phase Console for specific error messages
+
+#### User can't log in after SCIM provisioning
+
+Ensure that:
+1. OIDC SSO is configured for Entra ID (SCIM handles provisioning, OIDC handles login)
+2. The user's email in Entra ID matches between the SCIM provisioning and the OIDC token claims
+3. The user is assigned to both the SCIM Enterprise Application and the OIDC App Registration (or the OIDC app allows all directory users)
+
+#### Re-provisioning a previously deactivated user
+
+If you remove a user from the application and then re-add them, Azure may skip provisioning with a `RedundantSoftDelete` error. To resolve this:
+
+1. Stop provisioning in the Enterprise Application
+2. Ensure the user is assigned under **Users and groups**
+3. Go to **Provisioning** > click **Restart provisioning** (this clears Azure's internal cycle state)
+4. If the issue persists, use **Provision on demand** for the specific user after restarting provisioning
+
+#### Groups not syncing as Teams
+
+Ensure that:
+- Group provisioning is enabled in the attribute mappings
+- The groups are assigned to the Enterprise Application
+- The `displayName` and `members` attributes are mapped correctly
