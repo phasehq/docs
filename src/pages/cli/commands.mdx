@@ -1383,6 +1383,79 @@ DATABASE_URL=postgresql://j_mclaren:6c37810ec6e74ec3228416d2844564fceb99ebd94b29
 
 ---
 
+## Offline mode
+
+The Phase CLI supports offline access to your secrets. After authenticating and fetching secrets at least once, encrypted copies of the API responses are cached locally. If the network becomes unavailable, the CLI can decrypt and serve secrets from this cache.
+
+<Note>
+  The offline cache stores **encrypted** API responses, not plaintext secrets. Decryption happens at read time using key material from your authentication token — the same process as online mode.
+</Note>
+
+### Behavior
+
+| `PHASE_OFFLINE` | Caches on success | Serves from cache | Network errors |
+|-----------------|-------------------|-------------------|----------------|
+| unset           | Yes               | No                | Fail with `PHASE_OFFLINE=1` hint |
+| `1` / `true`    | No (skips network)| Yes               | N/A            |
+| `0` / `false`   | Yes               | No                | Fail with `PHASE_OFFLINE=1` hint |
+
+### How it works
+
+1. **Automatic caching**: Every successful `phase secrets` command transparently caches the encrypted API responses to `~/.phase/secrets/offline/`.
+2. **Explicit offline mode**: Set `PHASE_OFFLINE=1` to skip network requests entirely and serve directly from cache. This is useful in air-gapped environments or when you know you're offline.
+3. **Network errors**: If a network request fails and `PHASE_OFFLINE` is not set, the CLI will display an error with a hint to set `PHASE_OFFLINE=1`. It will **not** silently fall back to cached data.
+
+### Cache location
+
+```
+~/.phase/secrets/offline/{account_id}/
+  userdata.json                                # encrypted user/app/environment metadata
+  secrets/
+    {hash}.json                                # encrypted secrets (one file per environment + path combination)
+```
+
+Running `phase users logout` will automatically delete the offline cache for that account.
+
+### Dynamic secrets
+
+Dynamic secrets (e.g. short-lived database credentials) require server interaction to generate leases and cannot be served from cache. When offline, the CLI will skip dynamic secrets and log a warning:
+
+```
+⚠️ Offline mode: dynamic secret 'my-db-creds' requires network access, skipping
+```
+
+### Write operations
+
+Creating, updating, and deleting secrets require network access. These operations will return an error in offline mode:
+
+```fish
+> PHASE_OFFLINE=1 phase secrets create MY_KEY=my_value
+Error: cannot create secrets in offline mode
+```
+
+### Authentication requirement
+
+Offline caching requires a persistent authenticated session via `phase auth`. This is because the CLI needs a locally stored account identity to scope the cache directory.
+
+When using ad-hoc environment variables (`PHASE_SERVICE_TOKEN` / `PHASE_HOST`) without a prior `phase auth`, caching is not available and `PHASE_OFFLINE=1` will have no effect. This is by design — ad-hoc env var authentication is intended for stateless environments like CI/CD where offline mode is not applicable.
+
+To use offline mode with a service account, authenticate first:
+
+```fish
+> phase auth
+# Enter your service account token when prompted
+# This persists the identity and enables caching
+
+> phase secrets list
+# Secrets are now cached for offline use
+```
+
+### Wrapped key share
+
+Offline decryption requires a wrapped key share, which is stored locally after authentication. If you authenticated before this feature was available, simply re-run `phase auth` to store it****.****
+
+---
+
 ## Environment variables
 
 ### `PHASE_DEBUG`
@@ -1456,5 +1529,20 @@ Example:
 > export PHASE_CONFIG_PARENT_DIR_SEARCH_DEPTH=5
 
 > phase secrets export
+...
+```
+
+### `PHASE_OFFLINE`
+
+Type: Boolean
+
+Description: Skip network requests entirely and serve secrets from the local offline cache. Requires that secrets have been fetched at least once while online. See [Offline mode](#offline-mode) below for details.
+
+Example:
+
+```fish
+> export PHASE_OFFLINE=1
+
+> phase secrets list
 ...
 ```

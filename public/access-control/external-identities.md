@@ -13,7 +13,9 @@ External Identities allow you to use third-party platforms and services to serve
 
 <DocActions /> 
 
-Example use case: Imagine you have a fleet of EC2 instances in an autoscaling group (ASG) that runs an instance of your application. The Phase CLI is configured to inject secrets into your applications at runtime. Instead of manually provisioning access tokens for each client on each machine, you can use External Identities to establish a trusted relationship with an instance profile attached to the ASG.
+Example use cases:
+- **AWS**: You have a fleet of EC2 instances in an autoscaling group (ASG). Instead of manually provisioning access tokens for each machine, you establish a trusted relationship with the instance profile attached to the ASG.
+- **Azure**: You have workloads running on AKS or Azure VMs with Managed Identities. Instead of managing Service Account tokens, you trust the VM's system-assigned managed identity to authenticate automatically.
 
 The authentication flow will be as follows:
 
@@ -55,7 +57,8 @@ Benefits:
 ## Supported External Identity Providers
 Phase currently supports the following external identity providers:
 
-- [**AWS IAM**](#aws-iam): Bind an AWS IAM User to a phase Service Account
+- [**AWS IAM**](#aws-iam): Bind an AWS IAM User to a Phase Service Account
+- [**Azure**](#azure): Bind an Azure Managed Identity or Service Principal to a Phase Service Account
 
 ## Configure an External Identity
 
@@ -103,6 +106,59 @@ For AWS IAM, you will need to provide the following information:
 
 ![configure new identity](/assets/images/console/access-control/external-identities/configure-new-identity.png)
 
+### Azure
+
+For Azure, you will need to provide the following information:
+
+<Properties>
+  <Property name="Tenant ID" type="string">
+    Your Azure AD tenant ID (UUID format). Used to validate the `tid` claim in the JWT and to construct the OIDC discovery URL for key verification.
+  </Property>
+  <Property name="Resource / Audience" type="string">
+    The App ID URI that maps to the IMDS `?resource=` parameter and the JWT `aud` claim. Default: `https://management.azure.com/`. This ensures tokens issued for other Azure resources cannot be reused.
+  </Property>
+  <Property name="Allowed Service Principal IDs" type="comma-separated-string">
+    Azure AD service principal object IDs allowed to authenticate. Matched against the `oid` claim in the JWT. Separate multiple IDs with commas. These are the object IDs of Managed Identities or Service Principals.
+  </Property>
+</Properties>
+
+<Note>
+To find a **Service Principal's** object ID, run: `az ad sp show --id <appId> --query id -o tsv`.
+
+For **Managed Identities** (VMs, AKS, Functions), the principal ID is returned when you enable the identity:
+```bash
+az vm identity assign --resource-group <rg> --name <vm-name>
+# Returns: { "principalId": "dcc518e4-...", ... }
+```
+You can also find it in the Azure Portal under the resource's Identity blade.
+</Note>
+
+<Diagram caption="External Identities authentication with Azure">
+{`
+sequenceDiagram
+  participant Client as Client
+  participant Phase as Phase
+  participant Azure as Azure AD
+
+  Note over Client,Azure: 1. Get Azure AD Access Token
+  Client->>Azure: Request access token (IMDS / Service Principal / az login)
+  Azure-->>Client: Return JWT access token
+
+  Note over Client,Phase: 2. Authenticate
+  Client->>Phase: POST JWT to /identities/external/v1/azure/entra/auth/
+
+  Note over Phase,Azure: 3. Validate JWT
+  Phase->>Azure: Fetch JWKS public keys (cached)
+  Azure-->>Phase: Return signing keys
+
+  Note over Phase: 4. Verify signature, audience, tenant, and allowed service principal ID
+  Phase->>Client: Return Access Token with a specified TTL
+
+  Note over Client,Phase: 5. Authenticate to API with Access Token
+  Client->>Phase: Make authenticated requests using the Access Token
+`}
+</Diagram>
+
 
 ## Manage External Identities
 
@@ -126,32 +182,25 @@ From the dialog, select the External Identity you want to bind to this Service A
 
 ## Authenticate with External Identities
 
-Once you have configured an External Identity and bound it to a Service Account, you can authenticate using the Phase CLI with your AWS credentials.
+Once you have configured an External Identity and bound it to a Service Account, you can authenticate using the Phase CLI or the API.
 
 ### CLI Authentication
 
-To authenticate using an External Identity, use the `phase auth` command with the `--mode aws-iam` option:
+To authenticate using an External Identity, use the `phase auth` command with the appropriate `--mode` option:
 
 ```fish
-# Authenticate using your current AWS identity
+# AWS IAM
 phase auth --mode aws-iam --service-account-id 0f1a2b3c-4d5e-6789-abcd-ef0123456789
-```
 
-You can also specify additional options:
-
-```fish
-# Authenticate with a custom TTL and print token to STDOUT
-phase auth --mode aws-iam --service-account-id 0f1a2b3c-4d5e-6789-abcd-ef0123456789 --ttl 3600 --no-store
+# Azure (Managed Identity, Service Principal, or az login)
+phase auth --mode azure --service-account-id 0f1a2b3c-4d5e-6789-abcd-ef0123456789
 ```
 
 **Options:**
 - `--service-account-id` (Required): The ID of the Service Account that has the External Identity bound to it
 - `--ttl` (Optional): Token TTL in seconds. Defaults to the configured Default TTL of the external identity
 - `--no-store` (Optional): Print the access token & metadata to STDOUT without logging in
-
-<Note>
-The CLI will auto detect the AWS region you are in and use it to authenticate with the AWS API. You can also use `aws configure` to set the region.
-</Note>
+- `--azure-resource` (Optional, Azure only): Azure AD resource/audience for the token request. Default: `https://management.azure.com/`
 
 ### API Authentication
 
