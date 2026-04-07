@@ -46,15 +46,22 @@ When fetching a single role, the full permissions object is included. The permis
 
 <Properties>
   <Property name="permissions" type="object">
-    Organisation-level permissions. Keys are resource names (e.g. `Apps`, `Members`, `Roles`), values are arrays of allowed actions (`create`, `read`, `update`, `delete`).
+    Organisation-level permissions. Keys are resource names, values are arrays of allowed actions (`create`, `read`, `update`, `delete`). Valid resources: `Apps`, `Billing`, `ExternalIdentities`, `IntegrationCredentials`, `Logs`, `MemberPersonalAccessTokens`, `Members`, `NetworkAccessPolicies`, `Organisation`, `Roles`, `ServiceAccountTokens`, `ServiceAccounts`.
   </Property>
-  <Property name="app_permissions" type="object">
-    App-level permissions. Keys are resource names (e.g. `Secrets`, `Environments`), values are arrays of allowed actions.
+  <Property name="appPermissions" type="object">
+    App-level permissions. Keys are resource names, values are arrays of allowed actions. Valid resources: `DynamicSecretLeases`, `EncryptionMode`, `Environments`, `Integrations`, `Lockbox`, `Logs`, `Members`, `Secrets`, `ServiceAccounts`, `Tokens`.
   </Property>
-  <Property name="global_access" type="boolean">
+  <Property name="globalAccess" type="boolean">
     Whether the role grants global access to all Apps and Environments.
   </Property>
+  <Property name="meta" type="object">
+    Metadata with `version` (integer) and `description` (string). Present only on default roles (Owner, Admin, Manager, Developer, Service). Not included for custom roles.
+  </Property>
 </Properties>
+
+<Note>
+Responses use camelCase keys (`appPermissions`, `globalAccess`). When sending permissions on POST or PUT, both camelCase and snake_case (`app_permissions`, `global_access`) are accepted.
+</Note>
 
 ---
 
@@ -172,6 +179,10 @@ When fetching a single role, the full permissions object is included. The permis
         "isDefault": true,
         "createdAt": "2024-01-01T00:00:00Z",
         "permissions": {
+            "meta": {
+                "version": 1,
+                "description": "Development users with limited organisation-level permissions. Requires explicit access to Apps and Environments."
+            },
             "permissions": {
                 "Organisation": [],
                 "Billing": [],
@@ -180,13 +191,13 @@ When fetching a single role, the full permissions object is included. The permis
                 "ServiceAccounts": [],
                 "Roles": ["read"]
             },
-            "app_permissions": {
+            "appPermissions": {
                 "Environments": ["read", "create", "update"],
                 "Secrets": ["create", "read", "update", "delete"],
                 "Tokens": ["read", "create"],
                 "Members": ["read"]
             },
-            "global_access": false
+            "globalAccess": false
         }
     }
     ```
@@ -293,7 +304,7 @@ When fetching a single role, the full permissions object is included. The permis
 
     </CodeGroup>
 
-    ```json {{ title: 'Response' }}
+    ```json {{ title: 'Response', statusCode: '201' }}
     {
         "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
         "name": "Read Only",
@@ -308,11 +319,11 @@ When fetching a single role, the full permissions object is included. The permis
                 "Members": ["read"],
                 "Roles": ["read"]
             },
-            "app_permissions": {
+            "appPermissions": {
                 "Secrets": ["read"],
                 "Environments": ["read"]
             },
-            "global_access": false
+            "globalAccess": false
         }
     }
     ```
@@ -328,6 +339,11 @@ When fetching a single role, the full permissions object is included. The permis
   <Col>
 
     Update a custom role's name, description, color, and/or permissions. At least one field must be provided. Default roles cannot be modified.
+
+    ### Constraints
+
+    - Default roles cannot be modified.
+    - If updating `permissions` to enable `global_access`, the role must not have any service accounts assigned to it.
 
     ### URL parameters
 
@@ -420,12 +436,12 @@ When fetching a single role, the full permissions object is included. The permis
                 "Roles": ["read"],
                 "ServiceAccounts": ["read"]
             },
-            "app_permissions": {
+            "appPermissions": {
                 "Secrets": ["read"],
                 "Environments": ["read"],
                 "Logs": ["read"]
             },
-            "global_access": false
+            "globalAccess": false
         }
     }
     ```

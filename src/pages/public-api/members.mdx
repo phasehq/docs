@@ -170,7 +170,7 @@ Organisation members are human users who belong to your Phase organisation, each
 
     </CodeGroup>
 
-    ```json {{ title: 'Response' }}
+    ```json {{ title: 'Response', statusCode: '201' }}
     {
         "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
         "inviteeEmail": "bob@example.com",
@@ -262,10 +262,12 @@ Organisation members are human users who belong to your Phase organisation, each
 
     ### Constraints
 
+    - The Owner member's role cannot be changed via the API. Use the ownership transfer flow in the console.
+    - Service Account tokens cannot modify members who hold global-access roles (e.g. Admin).
     - You cannot update your own role.
-    - You cannot update a member who holds a global-access role (Owner or Admin) unless you also hold a global-access role.
-    - The Owner role cannot be assigned via this endpoint — use the ownership transfer flow in the console.
-    - Global-access roles (Admin) can only be assigned by a caller who already holds a global-access role. Service Account tokens cannot assign global-access roles.
+    - You cannot update a member who holds a global-access role unless you also hold a global-access role.
+    - The Owner role cannot be assigned to another member via this endpoint.
+    - Global-access roles (e.g. Admin) can only be assigned by a caller who already holds a global-access role. Service Account tokens cannot assign global-access roles.
 
     ### URL parameters
 
@@ -347,6 +349,8 @@ Organisation members are human users who belong to your Phase organisation, each
 
     ### Constraints
 
+    - The Owner cannot be removed via the API. Use the ownership transfer flow in the console.
+    - Service Account tokens cannot remove members who hold global-access roles (e.g. Admin).
     - You cannot remove yourself from the organisation via the API.
 
     ### URL parameters
