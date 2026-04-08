@@ -341,6 +341,16 @@ If you already have an Okta OIDC app for Phase SSO, you can add SCIM provisionin
 - Check that the group push status shows "Active" — if it shows an error, click on it for details
 - Verify that group push is enabled in the SCIM connector settings (**Push Groups** checkbox)
 
+#### User deprovisioned after removing direct assignment, despite being in a pushed group
+
+In Okta, **Push Groups** and **Assignments** are independent:
+- **Assignments** controls user provisioning (who gets a Phase account)
+- **Push Groups** controls group/team syncing (which groups appear as Phase Teams)
+
+If a user is only directly assigned (not via a group assignment), removing that direct assignment deprovisions them — even if they belong to a pushed group. Push Groups does not grant app assignment.
+
+**Fix**: Assign groups under the **Assignments** tab (not just Push Groups). This way, group membership is the single source of truth for both user provisioning and team sync. When a user is removed from the group in Okta, they are automatically deprovisioned and removed from the team.
+
 #### User can't log in after SCIM provisioning
 
 - Ensure OIDC SSO is configured for Okta (SCIM handles provisioning, OIDC handles login)
