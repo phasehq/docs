@@ -22,7 +22,7 @@ A Team is an organisation-level group that contains **members** (human users) an
 When a team is added to an app:
 
 1. You select which environments the team should have access to (e.g. `Development`, `Staging`)
-2. Phase's server automatically wraps `EnvironmentKey`s for every team member using the app's `ServerEnvironmentKey`
+2. Phase automatically provisions environment encryption keys for every team member
 3. Team members can immediately decrypt secrets in those environments
 
 When a member is added to a team that already has app access, keys are provisioned automatically. When a member is removed, their team-granted keys are revoked — unless they also have individual access to the same environment.
@@ -31,12 +31,13 @@ When a member is added to a team that already has app access, keys are provision
 
 | Concept | Description |
 |---------|-------------|
+| **Team ownership** | Each team has an owner who retains full management access regardless of role overrides |
 | **Team membership** | A user or service account belongs to one or more teams |
 | **Team app access** | A team is granted access to an app, scoped to specific environments |
 | **Role overrides** | Teams can optionally override the org role's app-level permissions for their members |
 | **Union semantics** | If a user is in multiple teams with access to the same app, they get the **union** of all team role permissions |
 | **Individual priority** | Individual (direct) app access always uses the org role, not team roles |
-| **Grant tracking** | Phase tracks *why* each `EnvironmentKey` exists (individual vs team grant) so that removing team access doesn't accidentally revoke individually-granted keys |
+| **Access tracking** | Phase tracks *how* each environment key was granted (individual vs team) so that removing team access doesn't accidentally revoke individually-granted keys |
 
 ## Creating a Team
 
@@ -48,7 +49,36 @@ When a member is added to a team that already has app access, keys are provision
 
 4. Optionally set **role overrides** (see [Role overrides](#role-overrides) below). If you skip this, team members will use their org role for app-level permissions.
 
-5. Click **Create**. The team is created with no members or app access — you'll add those next.
+5. Click **Create**. The team is created with no members or app access — you'll add those next. You are automatically set as the team **owner**.
+
+## Team ownership
+
+Each team has an **owner** — a team member with elevated management privileges. The team owner can always manage the team's app access and environment scope, even if their effective role (via a team role override) would not normally grant those permissions.
+
+When a team is created manually, the creator is automatically set as the owner. Teams created via [SCIM provisioning](/access-control/provisioning/scim) start with no owner, since the SCIM specification does not include group ownership information.
+
+### Who can set or transfer ownership
+
+| Action | Who can do it |
+|--------|---------------|
+| **Set owner** (when no owner exists) | Owner or Admin role users |
+| **Transfer ownership** | Current team owner, or Owner/Admin role users |
+
+The new owner must be an existing member of the team.
+
+### Setting or transferring ownership
+
+1. Open the team detail page by clicking on the team name.
+
+2. Scroll to the **Ownership** section near the bottom of the page. If the team has an owner, their name is displayed. If not, you'll see a prompt to assign one.
+
+3. Click **Set owner** or **Transfer ownership**.
+
+4. Select a team member from the list and confirm.
+
+<Note>
+  If a team has no owner, only organisation Owner and Admin roles can assign one. This is relevant for SCIM-managed teams, where the team is created automatically without a designated owner.
+</Note>
 
 ## Managing team members
 
@@ -80,7 +110,7 @@ When a member is added to a team that already has app access, keys are provision
 
 3. Select which **environments** within the app the team should have access to.
 
-4. Click **Add**. Phase provisions environment keys for all team members with an active `identity_key`. Members who haven't completed their key ceremony yet (e.g. SCIM-provisioned users who haven't logged in) will receive keys on their first login.
+4. Click **Add**. Phase provisions environment encryption keys for all active team members. Members who haven't completed their account setup yet (e.g. SCIM-provisioned users who haven't logged in) will receive keys on their first login.
 
 ### Updating environment access
 
@@ -123,7 +153,7 @@ If a user has both **individual** (direct) access and **team** access to the sam
 
 ## SSE requirement
 
-Teams require [Server-Side Encryption (SSE)](/console/apps#encryption-mode) to be enabled on any app they access. This is because the server needs to provision encryption keys on behalf of team members — it unwraps the `ServerEnvironmentKey` and re-wraps the environment seed/salt for each member's public key.
+Teams require [Server-Side Encryption (SSE)](/console/apps#encryption-mode) to be enabled on any app they access. This is because the server needs to provision environment encryption keys on behalf of team members — it uses the server-held copy of the environment key to create individually-wrapped copies for each member.
 
 If an app has SSE disabled, it won't appear in the app selection dialog when adding apps to a team. You can enable SSE on an app from the app's settings page under **Encryption Mode**.
 
@@ -179,12 +209,13 @@ When [SCIM provisioning](/access-control/provisioning/scim) is configured, your 
 - Membership changes must be made in the identity provider
 - A `SCIM` badge is shown next to the team name in the console
 - Role overrides and app access can still be managed from Phase
+- SCIM-managed teams are created without an owner — an Owner or Admin must [assign one](#setting-or-transferring-ownership) to enable owner-level management
 
-## Grant tracking
+## Access tracking
 
-Phase tracks the **reason** each `EnvironmentKey` exists using `EnvironmentKeyGrant` records. Each grant is tagged as either `individual` (direct app access) or `team` (via team membership), with a reference to the specific team.
+Phase tracks **how** each environment key was granted — whether through direct (individual) access or through team membership. Each key grant records its source, including a reference to the specific team when applicable.
 
-This prevents a common pitfall: if a user has both individual and team access to the same environment, removing the team access should *not* revoke the key. Phase only soft-deletes an `EnvironmentKey` when all of its grants have been removed.
+This prevents a common pitfall: if a user has both individual and team access to the same environment, removing the team should *not* revoke their access. Phase only revokes an environment key when all of its access grants have been removed — so individually-granted keys are preserved even after a team is removed.
 
 ## Viewing team access on member and app pages
 
