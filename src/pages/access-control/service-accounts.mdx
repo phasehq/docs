@@ -9,7 +9,16 @@ Service Accounts provide a secure and controlled method for programmatic access 
 
 Service accounts share many of the properties and behavior of human user accounts. Service Accounts follow an Access Policy that can be defined by [Managed Roles](/access-control/roles#managed-roles) or [Custom Roles](/access-control/roles#creating-custom-roles) based on the permissions required. Service accounts are secured with the same security and cryptographic architecture as user accounts, and must be manually provisioned access to Apps and Environments in order to access secrets. 
 
-<DocActions /> 
+<DocActions />
+
+## Org-level vs Team-owned Service Accounts
+
+Service accounts exist in two categories:
+
+- **Org-level** (default): Visible to all organisation members with `ServiceAccounts.read` permission. Created from the organisation-level Service Accounts page. This is the default behavior and works on all plans.
+- **Team-owned**: Created within a [Team](/access-control/teams), visible only to team members and users with global access (Owner/Admin). The service account's lifecycle is tied to the team — if the team is deleted, team-owned SAs are deleted too.
+
+Team-owned service accounts are useful when a team needs dedicated programmatic access for team resources, that is isolated from other teams and users. See [Team-owned service accounts](/access-control/teams#team-owned-service-accounts) for details on creating and managing them.
 
 ## Create a new Service Account
 

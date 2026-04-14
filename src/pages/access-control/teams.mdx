@@ -131,6 +131,46 @@ If an app has SSE disabled, it won't appear in the app selection dialog when add
   Enabling SSE changes the encryption model for the app — the server gains the ability to decrypt secrets. This is required for Teams, all third-party sync integrations, and REST API access. See [Encryption Mode](/console/apps#encryption-mode) for details.
 </Warning>
 
+## Team-owned service accounts
+
+Service accounts can be **owned by a team**, meaning their lifecycle and visibility are tied to that team. This is useful when a team needs dedicated service accounts for programmatic access that only team members can see and manage.
+
+### Creating a team-owned service account
+
+1. On the team detail page, click **Create Team Service Account** in the Service Accounts section.
+
+2. Enter a name for the account. 
+
+3. If the team has a defined Service Account role, the role for this account will be fixed. If there is no defined role for service accounts in the team, select a role for this account. 
+
+4. Click **Create**. The The service account is automatically added as a member of the team and can access all apps and environments that the team is added to.
+
+Team-owned service accounts are visually distinguished with a team badge on both the team detail page and the organisation-level service accounts list.
+
+### Visibility rules
+
+| Account type | Who can see it | Who can manage it |
+|---------|---------------|-------------------|
+| **Org-level** (no team) | Anyone with `ServiceAccounts.read` | Anyone with `ServiceAccounts.update/delete` |
+| **Team-owned** | Team members + Owner/Admin | Team members + Owner/Admin |
+
+Users who are not members of the owning team will not see team-owned service accounts in the organisation-level service accounts list — unless they have global access (Owner/Admin).
+
+### Ownership transfer
+
+Owner and Admin users can transfer a service account between org-level and team ownership:
+
+- **Team → Org-level**: Clears the team ownership. The service account becomes visible org-wide. Existing tokens and team membership are preserved.
+- **Org-level → Team**: Assigns the service account to a team. Visibility narrows to team members and global access users.
+
+### Team deletion
+
+When a team is deleted, all team-owned service accounts are deleted and their tokens are revoked. Org-level service accounts that were added to the team as members are unaffected — they lose team-based app access but remain visible org-wide.
+
+### Removing a team-owned SA from its team
+
+A team-owned service account cannot be removed from its owning team. To dissociate it from the team, either delete the service account or transfer its ownership to the organisation (Owner/Admin only).
+
 ## SCIM-managed teams
 
 When [SCIM provisioning](/access-control/provisioning/scim) is configured, your identity provider can create and manage teams automatically by syncing IdP groups to Phase teams. SCIM-managed teams have the following restrictions:
