@@ -1,0 +1,197 @@
+import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
+
+export const description = 'Organize members and service accounts into Teams with scoped app access and optional role overrides.'
+
+<Tag variant="small">ACCESS CONTROL</Tag>
+
+# Teams
+
+Teams let you group members and service accounts together and grant them access to specific apps and environments. Instead of managing access for each individual, you assign access at the team level — when someone joins the team, they automatically get the right keys.
+
+<DocActions />
+
+<Note>
+  Teams require apps with [Server-Side Encryption (SSE)](/console/apps#encryption-mode) enabled, since the server provisions encryption keys on behalf of team members.
+</Note>
+
+## How it works
+
+A Team is an organisation-level group that contains **members** (human users) and/or **service accounts**. Teams are granted access to one or more apps, scoped to specific environments within each app.
+
+When a team is added to an app:
+
+1. You select which environments the team should have access to (e.g. `Development`, `Staging`)
+2. Phase's server automatically wraps `EnvironmentKey`s for every team member using the app's `ServerEnvironmentKey`
+3. Team members can immediately decrypt secrets in those environments
+
+When a member is added to a team that already has app access, keys are provisioned automatically. When a member is removed, their team-granted keys are revoked — unless they also have individual access to the same environment.
+
+### Key concepts
+
+| Concept | Description |
+|---------|-------------|
+| **Team membership** | A user or service account belongs to one or more teams |
+| **Team app access** | A team is granted access to an app, scoped to specific environments |
+| **Role overrides** | Teams can optionally override the org role's app-level permissions for their members |
+| **Union semantics** | If a user is in multiple teams with access to the same app, they get the **union** of all team role permissions |
+| **Individual priority** | Individual (direct) app access always uses the org role, not team roles |
+| **Grant tracking** | Phase tracks *why* each `EnvironmentKey` exists (individual vs team grant) so that removing team access doesn't accidentally revoke individually-granted keys |
+
+## Creating a Team
+
+1. Navigate to **Access** > **Teams** in the sidebar.
+
+2. Click **Create Team**.
+
+3. Enter a **name** and optional **description** for the team.
+
+4. Optionally set **role overrides** (see [Role overrides](#role-overrides) below). If you skip this, team members will use their org role for app-level permissions.
+
+5. Click **Create**. The team is created with no members or app access — you'll add those next.
+
+## Managing team members
+
+### Adding members
+
+1. Open the team detail page by clicking on the team name.
+
+2. Click **Add members** or **Add service accounts**.
+
+3. Select the members or service accounts you want to add from the list. Only org members who aren't already in the team are shown.
+
+4. Click **Add**. If the team already has app access, encryption keys are provisioned immediately for the new members.
+
+### Removing members
+
+1. On the team detail page, find the member you want to remove.
+
+2. Click the remove button next to their name.
+
+3. Confirm the removal. Phase will revoke the member's team-granted environment keys. If the member also has individual access to the same environments, those keys are preserved.
+
+## Managing team app access
+
+### Adding apps to a team
+
+1. On the team detail page, click **Add apps**.
+
+2. Select the app you want to add. Only SSE-enabled apps are shown — if an app doesn't appear, enable SSE on it first.
+
+3. Select which **environments** within the app the team should have access to.
+
+4. Click **Add**. Phase provisions environment keys for all team members with an active `identity_key`. Members who haven't completed their key ceremony yet (e.g. SCIM-provisioned users who haven't logged in) will receive keys on their first login.
+
+### Updating environment access
+
+After a team has been added to an app, you can change which environments it has access to:
+
+1. Click **Manage** next to the app on the team detail page.
+
+2. Toggle environments on or off.
+
+3. Save. Keys are provisioned for newly added environments and revoked for removed environments.
+
+### Removing an app from a team
+
+1. Click the remove button next to the app on the team detail page.
+
+2. Confirm the removal. All team-granted environment keys for that app are revoked for every team member.
+
+## Role overrides
+
+By default, team members use their **org role's app-level permissions** when accessing team-granted apps. For example, a `Developer` in a team uses the Developer role's app permissions (can read/write secrets, but can't delete environments).
+
+Teams support two optional role overrides that change what permissions members have when accessing apps through that team:
+
+| Override | Applies to | Description |
+|----------|-----------|-------------|
+| **Member role** | Human users | Overrides the org role's app-level permissions for all human members of this team |
+| **Service account role** | Service accounts | Overrides the org role's app-level permissions for all service accounts in this team |
+
+When a role override is set, it replaces the org role's `app_permissions` for resources accessed through that team. Org-level permissions are unaffected.
+
+### Union semantics
+
+If a user belongs to multiple teams that all have access to the same app, Phase takes the **union** of permissions across all applicable team roles. If *any* team role grants a permission, the user has that permission.
+
+**Example:** Alice is in Team A (role: `Developer`) and Team B (role: `Manager`). Both teams have access to App X. Alice gets the union of Developer and Manager app-level permissions for App X.
+
+### Individual access takes priority
+
+If a user has both **individual** (direct) access and **team** access to the same app, the individual access path is used. This means the user's org role determines app-level permissions, regardless of any team role overrides.
+
+## SSE requirement
+
+Teams require [Server-Side Encryption (SSE)](/console/apps#encryption-mode) to be enabled on any app they access. This is because the server needs to provision encryption keys on behalf of team members — it unwraps the `ServerEnvironmentKey` and re-wraps the environment seed/salt for each member's public key.
+
+If an app has SSE disabled, it won't appear in the app selection dialog when adding apps to a team. You can enable SSE on an app from the app's settings page under **Encryption Mode**.
+
+<Warning>
+  Enabling SSE changes the encryption model for the app — the server gains the ability to decrypt secrets. This is required for Teams, all third-party sync integrations, and REST API access. See [Encryption Mode](/console/apps#encryption-mode) for details.
+</Warning>
+
+## Team-owned service accounts
+
+Service accounts can be **owned by a team**, meaning their lifecycle and visibility are tied to that team. This is useful when a team needs dedicated service accounts for programmatic access that only team members can see and manage.
+
+### Creating a team-owned service account
+
+1. On the team detail page, click **Create Team Service Account** in the Service Accounts section.
+
+2. Enter a name for the account. 
+
+3. If the team has a defined Service Account role, the role for this account will be fixed. If there is no defined role for service accounts in the team, select a role for this account. 
+
+4. Click **Create**. The The service account is automatically added as a member of the team and can access all apps and environments that the team is added to.
+
+Team-owned service accounts are visually distinguished with a team badge on both the team detail page and the organisation-level service accounts list.
+
+### Visibility rules
+
+| SA type | Who can see it | Who can manage it |
+|---------|---------------|-------------------|
+| **Org-level** (no team) | Anyone with `ServiceAccounts.read` | Anyone with `ServiceAccounts.update/delete` |
+| **Team-owned** | Team members + Owner/Admin | Team members + Owner/Admin |
+
+Users who are not members of the owning team will not see team-owned service accounts in the organisation-level service accounts list — unless they have global access (Owner/Admin).
+
+### Ownership transfer
+
+Owner and Admin users can transfer a service account between org-level and team ownership:
+
+- **Team → Org-level**: Clears the team association. The service account becomes visible org-wide. Existing tokens and app access are preserved.
+- **Org-level → Team**: Assigns the service account to a team. Visibility narrows to team members and global access users.
+
+### Team deletion
+
+When a team is deleted, all team-owned service accounts are soft-deleted and their tokens are revoked. Org-level service accounts that were added to the team as members are unaffected — they lose team-based app access but remain visible org-wide.
+
+### Removing a team-owned SA from its team
+
+A team-owned service account cannot be removed from its owning team. To dissociate it from the team, either delete the service account or transfer its ownership to the organisation (Owner/Admin only).
+
+## SCIM-managed teams
+
+When [SCIM provisioning](/access-control/provisioning/scim) is configured, your identity provider can create and manage teams automatically by syncing IdP groups to Phase teams. SCIM-managed teams have the following restrictions:
+
+- Cannot be renamed, deleted, or have members manually added/removed from the Phase Console
+- Membership changes must be made in the identity provider
+- A `SCIM` badge is shown next to the team name in the console
+- Role overrides and app access can still be managed from Phase
+
+## Grant tracking
+
+Phase tracks the **reason** each `EnvironmentKey` exists using `EnvironmentKeyGrant` records. Each grant is tagged as either `individual` (direct app access) or `team` (via team membership), with a reference to the specific team.
+
+This prevents a common pitfall: if a user has both individual and team access to the same environment, removing the team access should *not* revoke the key. Phase only soft-deletes an `EnvironmentKey` when all of its grants have been removed.
+
+## Viewing team access on member and app pages
+
+### Member detail page
+
+Each member's detail page (under **Access** > **Members** > member name) shows a **Teams** section listing all teams the member belongs to, along with links to each team's detail page.
+
+### App access page
+
+Each app's **Access** > **Teams** tab shows all teams that have access to the app, the environments they can access, and their role overrides. You can add/remove teams and manage environment scoping directly from this page.
