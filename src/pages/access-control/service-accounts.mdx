@@ -88,11 +88,15 @@ To delete a Service Account, click on the "Delete" button at the bottom of the p
 Each Service Account has its own unique keyring, just like User accounts. KMS modes determine who has access to the service account's keyring and can create and manage tokens for this service account.
 
 #### Client-side KMS
-By default, Service Accounts use **Client-side KMS**. This means only designated users with the required `ServiceAccountTokens` permissions have access to create and manage tokens for this service account. These users are called *Service Account Handlers* and have access the service account's keyring, encrypted with their own keys. 
+By default, org-level Service Accounts use **Client-side KMS**. This means only designated users with the required `ServiceAccountTokens` permissions have access to create and manage tokens for this service account. These users are called *Service Account Handlers* and have access the service account's keyring, encrypted with their own keys.
 
 
 #### Server-side KMS
 You can optionally enable **Server-side KMS** for a Service Account. This grants the Phase backend access to the service account's keyring, effectively making the backend a *Service Account Handler*. Enabling Server-side KMS allows the backend to create and manage tokens on behalf of the Service Account. This is required to use features such as [External Identities](/access-control/external-identities).
+
+<Note>
+  **Team-owned service accounts** always use Server-side KMS. This is enabled automatically when the account is created, so that any team member with the appropriate permissions can generate tokens — without needing to be a designated Service Account Handler. This is important for dynamic team membership, including teams managed via [SCIM provisioning](/access-control/provisioning/scim), where members may join or leave at any time.
+</Note>
 
 #### Manage KMS mode
 
