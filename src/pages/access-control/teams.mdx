@@ -187,20 +187,13 @@ Users who are not members of the owning team will not see team-owned service acc
 
 Management permissions for team-owned service accounts are determined by the team's [role overrides](#role-overrides). If the team has a **Member role** override, that role's permissions are used for actions like creating tokens, updating the account, or managing KMS settings. If no override is set, the member's org role is used. The **team owner** always has full management access regardless of role overrides.
 
-### Ownership transfer
-
-Owner and Admin users can transfer a service account between org-level and team ownership:
-
-- **Team → Org-level**: Clears the team ownership. The service account becomes visible org-wide. Existing tokens and team membership are preserved.
-- **Org-level → Team**: Assigns the service account to a team. Visibility narrows to team members and global access users.
-
 ### Team deletion
 
 When a team is deleted, all team-owned service accounts are deleted and their tokens are revoked. Org-level service accounts that were added to the team as members are unaffected — they lose team-based app access but remain visible org-wide.
 
 ### Removing a team-owned SA from its team
 
-A team-owned service account cannot be removed from its owning team. To dissociate it from the team, either delete the service account or transfer its ownership to the organisation (Owner/Admin only).
+A team-owned service account cannot be removed from its owning team. To dissociate it from the team, delete the service account. Ownership cannot be changed after creation — if you need an organisation-level account instead, create a new service account at the organisation level.
 
 ## SCIM-managed teams
 
