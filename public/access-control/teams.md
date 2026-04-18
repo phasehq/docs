@@ -35,8 +35,7 @@ When a member is added to a team that already has app access, keys are provision
 | **Team membership** | A user or service account belongs to one or more teams |
 | **Team app access** | A team is granted access to an app, scoped to specific environments |
 | **Role overrides** | Teams can optionally override the org role's app-level permissions for their members |
-| **Union semantics** | If a user is in multiple teams with access to the same app, they get the **union** of all team role permissions |
-| **Individual priority** | Individual (direct) app access always uses the org role, not team roles |
+| **Union semantics** | If a user has multiple access grants to the same app (individual, one or more teams), they get the **union** of all applicable permissions |
 | **Access tracking** | Phase tracks *how* each environment key was granted (individual vs team) so that removing team access doesn't accidentally revoke individually-granted keys |
 
 ## Creating a Team
@@ -143,13 +142,11 @@ When a role override is set, it replaces the org role's `app_permissions` for re
 
 ### Union semantics
 
-If a user belongs to multiple teams that all have access to the same app, Phase takes the **union** of permissions across all applicable team roles. If *any* team role grants a permission, the user has that permission.
+When a user has multiple access grants to the same app — whether through individual (direct) access, one or more teams, or a combination — Phase takes the **union** of all applicable permissions. If *any* grant permits an action, the user is allowed to perform it.
 
-**Example:** Alice is in Team A (role: `Developer`) and Team B (role: `Manager`). Both teams have access to App X. Alice gets the union of Developer and Manager app-level permissions for App X.
+Individual access uses the user's org role. Each team uses its role override (or the org role if no override is set).
 
-### Individual access takes priority
-
-If a user has both **individual** (direct) access and **team** access to the same app, the individual access path is used. This means the user's org role determines app-level permissions, regardless of any team role overrides.
+**Example:** Alice has individual access (org role: `Developer`) and is also in Team B (role: `Manager`). Both grant access to App X. Alice gets the union of Developer and Manager app-level permissions for App X.
 
 ## SSE requirement
 
@@ -173,25 +170,22 @@ Service accounts can be **owned by a team**, meaning their lifecycle and visibil
 
 3. If the team has a defined Service Account role, the role for this account will be fixed. If there is no defined role for service accounts in the team, select a role for this account. 
 
-4. Click **Create**. The The service account is automatically added as a member of the team and can access all apps and environments that the team is added to.
+4. Click **Create**. The service account is automatically added as a member of the team and can access all apps and environments that the team has access to.
+
+Team-owned service accounts always use **Server-side KMS**, which is enabled automatically on creation. This allows any team member with the appropriate `ServiceAccountTokens` permissions to generate tokens for the account — without needing to be a designated Service Account Handler. This is essential for dynamic team membership, including [SCIM-managed teams](#scim-managed-teams), where members may join or leave at any time.
 
 Team-owned service accounts are visually distinguished with a team badge on both the team detail page and the organisation-level service accounts list.
 
-### Visibility rules
+### Visibility and management rules
 
 | Account type | Who can see it | Who can manage it |
 |---------|---------------|-------------------|
 | **Org-level** (no team) | Anyone with `ServiceAccounts.read` | Anyone with `ServiceAccounts.update/delete` |
-| **Team-owned** | Team members + Owner/Admin | Team members + Owner/Admin |
+| **Team-owned** | Team members + Owner/Admin | Team members with appropriate permissions + team owner + Owner/Admin |
 
 Users who are not members of the owning team will not see team-owned service accounts in the organisation-level service accounts list — unless they have global access (Owner/Admin).
 
-### Ownership transfer
-
-Owner and Admin users can transfer a service account between org-level and team ownership:
-
-- **Team → Org-level**: Clears the team ownership. The service account becomes visible org-wide. Existing tokens and team membership are preserved.
-- **Org-level → Team**: Assigns the service account to a team. Visibility narrows to team members and global access users.
+Management permissions for team-owned service accounts are determined by the team's [role overrides](#role-overrides). If the team has a **Member role** override, that role's permissions are used for actions like creating tokens, updating the account, or managing KMS settings. If no override is set, the member's org role is used. The **team owner** always has full management access regardless of role overrides.
 
 ### Team deletion
 
@@ -199,7 +193,7 @@ When a team is deleted, all team-owned service accounts are deleted and their to
 
 ### Removing a team-owned SA from its team
 
-A team-owned service account cannot be removed from its owning team. To dissociate it from the team, either delete the service account or transfer its ownership to the organisation (Owner/Admin only).
+A team-owned service account cannot be removed from its owning team. To dissociate it from the team, delete the service account. Ownership cannot be changed after creation — if you need an organisation-level account instead, create a new service account at the organisation level.
 
 ## SCIM-managed teams
 
