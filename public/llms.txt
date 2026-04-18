@@ -27,6 +27,8 @@
 - [access-control/authentication/oauth-sso](https://docs.phase.dev/access-control/authentication/oauth-sso.md)
 - [access-control/authentication/oidc-sso](https://docs.phase.dev/access-control/authentication/oidc-sso.md)
 - [access-control/authentication/tokens](https://docs.phase.dev/access-control/authentication/tokens.md)
+- [access-control/provisioning/scim](https://docs.phase.dev/access-control/provisioning/scim.md)
+- [access-control/teams](https://docs.phase.dev/access-control/teams.md)
 - [access-control/service-accounts](https://docs.phase.dev/access-control/service-accounts.md)
 - [access-control/external-identities](https://docs.phase.dev/access-control/external-identities.md)
 - [access-control/roles](https://docs.phase.dev/access-control/roles.md)
