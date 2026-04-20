@@ -295,6 +295,55 @@ You may have to copy the above code and execute it one line at a time. Given thi
 This procedure should only be used in emergency situations when you've been locked out of your Phase instance. After regaining access, review and reconfigure your network access policies appropriately to ensure proper security.
 </Note>
 
+# SSO Enforcement Recovery
+
+When using [Organisation SSO](/access-control/authentication/org-sso) with enforcement enabled, there's a possibility that every administrator of an organisation becomes unable to sign in — for example, if the SSO provider is misconfigured, the identity provider is temporarily unavailable, or no admin has a working account on the configured provider. If this happens, you can use the `disable_org_sso` management command to restore access without touching the database directly.
+
+## Inspecting SSO State
+
+Before making changes, you can inspect the current SSO state of an organisation:
+
+```fish
+python manage.py disable_org_sso --org <organisation-name> --show
+```
+
+This prints `require_sso`, each configured provider, whether it is enabled, and its ID.
+
+## Emergency SSO Disable
+
+Follow these steps to disable SSO enforcement and regain access:
+
+1. Gain shell access to the backend container:
+
+```fish
+# Via Docker 
+docker exec -it <container_id> /bin/sh
+
+# Via Docker compose
+docker compose exec backend /bin/sh
+
+# Via Kubernetes
+kubectl exec -it <pod_name> -- /bin/sh
+```
+
+2. Run one of the following management commands:
+
+```fish
+# Turn enforcement off (leaves providers configured so members with working SSO accounts can still sign in)
+python manage.py disable_org_sso --org <organisation-name> --disable-enforcement
+
+# Turn enforcement off AND disable all providers (falls the organisation fully back to password login)
+python manage.py disable_org_sso --org <organisation-name> --disable-providers
+```
+
+3. The command prints a confirmation when the change is applied.
+
+4. Administrators can now sign in to the organisation via password or any remaining enabled SSO provider.
+
+<Note>
+This procedure should only be used in emergency situations when an organisation has been locked out of its Phase Console. After regaining access, review the SSO provider configuration in **Access → Single Sign-On** and re-enable enforcement once a working provider is in place.
+</Note>
+
 # Client IP Detection Behind Reverse Proxies
 
 Phase uses the `X-Real-IP` header to identify the actual client IP address for audit logging and network access policies. By default, Nginx detects the real client IP and forwards it to the Phase backend via this header.
