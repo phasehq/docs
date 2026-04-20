@@ -25,9 +25,6 @@ When a file-based secret is present, services will prioritize it over any corres
 
 ## Single sign-on (SSO)
 
-In order to authenticate with the Phase Console, you must enable **at least one** SSO provider.
-Enabling an SSO provider requires adding the provider to the list of `SSO_PROVIDERS` as well as providing valid credentials.
-
 The following providers are available:
 - `google` - Google OAuth 2.0
 - `github` - GitHub OAuth 2.0
@@ -353,11 +350,26 @@ Env(s) required by the following containers:
 
 ---
 
+## Password authentication
+
+Password authentication is available by default with no additional configuration.
+
+<Properties>
+  <Property name="SKIP_EMAIL_VERIFICATION" type="boolean (Optional)">
+    When set to `true`, new accounts created via email/password signup are activated immediately without requiring email verification. Defaults to `false`.
+    If SMTP is not configured, email verification is automatically skipped regardless of this setting.
+
+    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
+  </Property>
+</Properties>
+
+---
+
 ## Application secrets
 
 <Properties>
-  <Property name="NEXTAUTH_SECRET" type="string">
-    A random 32 byte hex string. Can be generated with `openssl rand -hex 32`. Required by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
+  <Property name="NEXTAUTH_SECRET (Deprecated)" type="string">
+    **Deprecated.** No longer read by the application after the NextAuth removal in Console `v2.67.0`. Safe to leave in place for now; it will be dropped from the reference deployment templates in a later release.
   </Property>
   <Property name="SECRET_KEY" type="string">
     A random 32 byte hex string. Can be generated with `openssl rand -hex 32`. Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
@@ -379,13 +391,14 @@ Env(s) required by the following containers:
     The url scheme for your host. Defaults to `https://`. Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend), [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
   <Property name="USER_EMAIL_DOMAIN_WHITELIST" type="string (Optional)">
-    A comma-separated list of domains to restrict logins from. Commented out by default.
+    A comma-separated list of domains to restrict signups and logins.
+    When set, only users with emails matching the specified domains can register or log in.
     To use this feature, set the value to a list of domains to use as a whitelist. For example:
-    ```bash
+    ```fish
     USER_EMAIL_DOMAIN_WHITELIST=mydomain.com,subdomain.mydomain.com
     ```
-    will only allow users with emails `@mydomain.com` or `@subdomain.mydomain.com` to login.
-    Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
+    will only allow users with emails `@mydomain.com` or `@subdomain.mydomain.com` to sign up or login.
+    Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) and [`backend`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
   <Property name="LOGIN_BANNER_TEXT" type="string (Optional)">
     A custom message to display on the login screen. Can be up to 512 characters long.
@@ -497,6 +510,10 @@ Phase uses Redis or Valkey for a synchronous jobs queues, caching and rate limit
 ---
 
 ## Email gateway configuration
+
+<Note>
+SMTP configuration is required for email verification for password-based signup. If SMTP is not configured, new accounts created via email/password are activated immediately without email verification.
+</Note>
 
 <Properties>
   <Property name="SMTP_SERVER" type="string">
@@ -991,12 +1008,12 @@ These variables are not required if using the suggested [docker-compose template
 
     Required by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
   </Property>
-  <Property name="SSO_PROVIDERS" type="string">
-    Comma-separated list of NextAuth providers.
+  <Property name="SSO_PROVIDERS" type="string (Optional)">
+    Comma-separated list of SSO providers.
     
     Example: `google,github,gitlab`
 
-    Required by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
+    Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
   </Property>
   <Property name="NEXT_PUBLIC_NEXTAUTH_PROVIDERS (Legacy)" type="string">
     **This is a legacy variable and is not required if you using Console version >= `v2.50.0`**
