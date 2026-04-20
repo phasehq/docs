@@ -369,14 +369,8 @@ kubectl create secret generic phase-console-secret \
   --from-literal=SECRET_KEY=$(openssl rand -hex 32) \
   --from-literal=SERVER_SECRET=$(openssl rand -hex 32) \
   --from-literal=DATABASE_PASSWORD=$(openssl rand -hex 32) \
-  --from-literal=REDIS_PASSWORD=$(openssl rand -hex 32) \
-  --from-literal=GOOGLE_CLIENT_ID=your_google_client_id \
-  --from-literal=GOOGLE_CLIENT_SECRET=your_google_client_secret
+  --from-literal=REDIS_PASSWORD=$(openssl rand -hex 32)
 ```
-
-<Note>
-Replace the `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` values with your preferred SSO login provider's client ID and secret (e.g., GitHub, GitLab, Microsoft Entra ID, etc).
-</Note>
 
   </TabPanel>
   <TabPanel title="External (RDS + ElastiCache)" slug="external">
@@ -389,16 +383,11 @@ kubectl create secret generic phase-console-secret \
   --from-literal=SECRET_KEY=$(openssl rand -hex 32) \
   --from-literal=SERVER_SECRET=$(openssl rand -hex 32) \
   --from-literal=DATABASE_PASSWORD=your_rds_password \
-  --from-literal=REDIS_PASSWORD=your_elasticache_auth_token \
-  --from-literal=GOOGLE_CLIENT_ID=your_google_client_id \
-  --from-literal=GOOGLE_CLIENT_SECRET=your_google_client_secret
+  --from-literal=REDIS_PASSWORD=your_elasticache_auth_token
 ```
 
 Replace `your_rds_password` and `your_elasticache_auth_token` with the passwords you generated when creating the RDS and ElastiCache instances.
 
-<Note>
-Replace the `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` values with your preferred SSO login provider's client ID and secret (e.g., GitHub, GitLab, Microsoft Entra ID, etc).
-</Note>
 
   </TabPanel>
 </TabGroup>
@@ -414,9 +403,6 @@ Create a file named `phase-values.yaml`:
 global:
   host: "phase.your-domain.com" # 👈 Replace with your domain
   version: "latest" # 👈 Replace with your preferred version https://github.com/phasehq/console/releases
-
-sso:
-  providers: "google" # 👈 The SSO login provider you want to use
 
 phaseSecrets: phase-console-secret
 
@@ -449,9 +435,6 @@ certManager:
 global:
   host: "phase.your-domain.com" # 👈 Replace with your domain
   version: "latest" # 👈 Replace with your preferred version https://github.com/phasehq/console/releases
-
-sso:
-  providers: "google" # 👈 The SSO login provider you want to use
 
 phaseSecrets: phase-console-secret
 

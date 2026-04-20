@@ -120,14 +120,9 @@ kubectl create secret generic phase-console-secret \
   --from-literal=SECRET_KEY=$(openssl rand -hex 32) \
   --from-literal=SERVER_SECRET=$(openssl rand -hex 32) \
   --from-literal=DATABASE_PASSWORD=$(openssl rand -hex 32) \
-  --from-literal=REDIS_PASSWORD=$(openssl rand -hex 32) \
-  --from-literal=GOOGLE_CLIENT_ID=your_google_client_id \
-  --from-literal=GOOGLE_CLIENT_SECRET=your_google_client_secret
+  --from-literal=REDIS_PASSWORD=$(openssl rand -hex 32)
 ```
 
-<Note>
-☝️ Please make sure to replace the `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` secret keys and values with your preferred SSO login provider's client ID and secret (Eg. GitHub, GitLab, Microsoft Entra ID, etc).
-</Note>
 
 Please see the [Secret and deployment configuration](/self-hosting/configuration/envars) for more information on the required secrets. 
 
@@ -140,8 +135,6 @@ global:
   host: "phase.your-domain.com" # 👈 Replace with your domain
   version: "latest" # 👈 Replace with your preferred version https://github.com/phasehq/console/releases
 
-sso:
-  providers: "google" # 👈 The SSO login provider you want to use
 
 phaseSecrets: phase-console-secret # 👈 The name of the secret you have created previously
 
