@@ -365,7 +365,6 @@ Create a secret with auto-generated passwords for in-cluster databases:
 
 ```fish
 kubectl create secret generic phase-console-secret \
-  --from-literal=NEXTAUTH_SECRET=$(openssl rand -hex 32) \
   --from-literal=SECRET_KEY=$(openssl rand -hex 32) \
   --from-literal=SERVER_SECRET=$(openssl rand -hex 32) \
   --from-literal=DATABASE_PASSWORD=$(openssl rand -hex 32) \
@@ -379,7 +378,6 @@ Create a secret using the database passwords you generated earlier:
 
 ```fish
 kubectl create secret generic phase-console-secret \
-  --from-literal=NEXTAUTH_SECRET=$(openssl rand -hex 32) \
   --from-literal=SECRET_KEY=$(openssl rand -hex 32) \
   --from-literal=SERVER_SECRET=$(openssl rand -hex 32) \
   --from-literal=DATABASE_PASSWORD=your_rds_password \

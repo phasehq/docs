@@ -116,7 +116,6 @@ Create a secret named `phase-console-secret` with the following necessary secret
 
 ```fish
 kubectl create secret generic phase-console-secret \
-  --from-literal=NEXTAUTH_SECRET=$(openssl rand -hex 32) \
   --from-literal=SECRET_KEY=$(openssl rand -hex 32) \
   --from-literal=SERVER_SECRET=$(openssl rand -hex 32) \
   --from-literal=DATABASE_PASSWORD=$(openssl rand -hex 32) \
