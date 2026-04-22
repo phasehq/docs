@@ -354,6 +354,12 @@ Env(s) required by the following containers:
 
 Password authentication is available by default with no additional configuration.
 
+### Email verification
+
+When SMTP is configured, new accounts must verify their email address before logging in. The verification email contains a one-time link that expires after 24 hours; if the link expires, users can request a new one from the login page.
+
+If SMTP is not configured, or if `SKIP_EMAIL_VERIFICATION` is set to `true`, accounts are activated immediately at signup without email verification. See the [email gateway configuration](#email-gateway-configuration) section below for how to wire up the mailer.
+
 <Properties>
   <Property name="SKIP_EMAIL_VERIFICATION" type="boolean (Optional)">
     When set to `true`, new accounts created via email/password signup are activated immediately without requiring email verification. Defaults to `false`.
