@@ -14,10 +14,9 @@ Learn how User accounts work in Phase.
 
 ## Account keys & Signup
 
-Phase is end-to-end encrypted, which means that each member of an [Organisation](/console/organisation) has a unique set of encryption keys.
-These keys are used to cryptographically assign or revoke access to specific [Environments](/console/environments) and [Secrets](/console/secrets).
+Phase is end-to-end encrypted, which means that each member of an [Organisation](/console/organisation) has a unique set of encryption keys that only the accoutn Owner has access to.
 
-When you signup or accept an Organisation invite for Phase, you will need to go through a 2-step process to create and secure your account keys.
+You can sign up for Phase using email and password or via an SSO provider (Google, GitHub, GitLab, etc.). Email/password signups on Phase Cloud require email verification before the account is activated.
 
 ### Step 1: Create a sudo password
 
