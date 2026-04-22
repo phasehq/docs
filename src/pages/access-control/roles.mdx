@@ -44,6 +44,7 @@ The organization owner. This role is automatically assigned when a user creates 
 | **Roles** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Integration Credentials** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Network Access Policies** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **SSO** | Full access | ✅ | ✅ | ✅ | ✅ |
 
 #### App-level permissions:
 
@@ -79,6 +80,7 @@ Admin users have access to most resources and permissions, and have global acces
 | **Roles** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Integration Credentials** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Network Access Policies** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **SSO** | Full access | ✅ | ✅ | ✅ | ✅ |
 
 #### App-level permissions:
 
@@ -116,6 +118,7 @@ Management users with broad access to environments, secrets, and service account
 | **Roles** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Integration Credentials** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Network Access Policies** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **SSO** | No access | ❌ | ❌ | ❌ | ❌ |
 
 #### App-level permissions:
 
@@ -151,6 +154,7 @@ Default role for Service Accounts, providing programmatic access to secrets with
 | **Roles** | Read access | ✅ | ❌ | ❌ | ❌ |
 | **Integration Credentials** | Read access | ✅ | ❌ | ❌ | ❌ |
 | **Network Access Policies** | Read access | ✅ | ❌ | ❌ | ❌ |
+| **SSO** | No access | ❌ | ❌ | ❌ | ❌ |
 
 #### App-level permissions:
 
@@ -186,6 +190,7 @@ Developers have limited permissions at the organization level and must be given 
 | **Roles** | Read access | ✅ | ❌ | ❌ | ❌ |
 | **Integration Credentials** | Custom access | ✅ | ✅ | ✅ | ❌ |
 | **Network Access Policies** | Read access | ✅ | ❌ | ❌ | ❌ |
+| **SSO** | No access | ❌ | ❌ | ❌ | ❌ |
 
 #### App-level permissions:
 
