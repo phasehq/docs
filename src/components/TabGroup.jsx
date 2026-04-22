@@ -144,6 +144,20 @@ function useTabGroupProps(availableTabSlugs, groupSlug) {
 
   const { positionRef, preventLayoutShift } = usePreventLayoutShift()
 
+  // When the URL arrives with `?<groupSlug>=<tab>`, scroll the TabGroup into
+  // view on first render so the user actually sees the tab they deep-linked to.
+  // If the URL also carries a hash, defer to the browser's anchor scroll.
+  const didInitialScrollRef = useRef(false)
+  useEffect(() => {
+    if (!router.isReady || didInitialScrollRef.current) return
+    if (typeof window !== 'undefined' && window.location.hash) return
+    const queryTab = router.query[groupSlug]
+    if (queryTab && availableTabSlugs.includes(queryTab) && positionRef.current) {
+      didInitialScrollRef.current = true
+      positionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }, [router.isReady])
+
   return {
     as: 'div',
     ref: positionRef,
@@ -157,27 +171,16 @@ function useTabGroupProps(availableTabSlugs, groupSlug) {
         const queryString = Object.entries(newQuery)
           .map(([key, value]) => `${key}=${value}`)
           .join('&')
-        const newUrl = `${router.pathname}?${queryString}${window.location.hash}`
+        const newUrl = `${router.pathname}?${queryString}`
 
-        router
-          .push(
-            {
-              pathname: router.pathname,
-              query: newQuery,
-            },
-            newUrl,
-            { shallow: true }
-          )
-          .then(() => {
-            // Defer to next tick to ensure DOM is ready
-            if (window.location.hash) {
-              const id = window.location.hash.substring(1)
-              const el = document.getElementById(id)
-              if (el) {
-                el.scrollIntoView({ behavior: 'smooth' }) // Or { block: 'start' } if you prefer
-              }
-            }
-          })
+        router.push(
+          {
+            pathname: router.pathname,
+            query: newQuery,
+          },
+          newUrl,
+          { shallow: true, scroll: false }
+        )
       })
     },
   }
