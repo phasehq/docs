@@ -7,7 +7,9 @@ export const description = 'Authenticating via various OIDC Single sign-on provi
 
 # OpenID Connect (OIDC) Single Sign-On (SSO)
 
-OpenID Connect (OIDC) is an identity layer built on top of OAuth 2.0 that allows applications to verify user identities. It enables secure authentication through trusted identity providers while eliminating the need for separate credentials. Phase supports OIDC-based SSO integration with major providers like Google, allowing seamless and secure access to your applications. Currently, OIDC authentication can be set up only for a Self-hosted Phase deployment.
+OpenID Connect (OIDC) is an identity layer built on top of OAuth 2.0 that allows applications to verify user identities. It enables secure authentication through trusted identity providers while eliminating the need for separate credentials. Phase supports OIDC-based SSO integration with major providers like Google, allowing seamless and secure access to your applications.
+
+This page walks through registering an application with each supported OIDC provider. Once you have the Client ID / Secret / Tenant values, you can plug them into Phase in two ways: the **Per-organisation (recommended)** path — configure SSO from the Console via [SSO](/access-control/authentication/sso) (Microsoft Entra ID and Okta today) — or the **Instance-wide (legacy)** path — inject them as environment variables on a self-hosted deployment. Each provider section below ends with tabs for both paths where available.
 
 <DocActions /> 
 
@@ -233,12 +235,7 @@ You can integrate Microsoft Entra ID (formerly Azure Active Directory) as an OID
 
     ![Copy client secret value](/assets/images/auth/sso/oidc/microsoft-entra-id/10-copy-the-client-secret-value.png)
 
-12. Supply these credentials to your Phase Console deployment as environment variables:
-    - `ENTRA_ID_OIDC_TENANT_ID`
-    - `ENTRA_ID_OIDC_CLIENT_ID`
-    - `ENTRA_ID_OIDC_CLIENT_SECRET`
-
-    Please see [deployment configuration](/self-hosting/configuration/envars#microsoft-entra-id-oidc) for more details.
+12. You now have the three values needed to configure Phase — **Tenant ID**, **Client ID**, and **Client Secret**. See the **Per-organisation** / **Instance-wide** tabs at the end of this section for where to plug them in.
 
 13. (Optional) Configure additional application properties by navigating to **Entra ID** > **Enterprise Applications** > **All applications** > select the app you just created (Phase Console) > under the *Manage* dropdown in the left sidebar, select **Properties**. These settings help customize the appearance and access controls for your application.
 
@@ -259,6 +256,27 @@ You can integrate Microsoft Entra ID (formerly Azure Active Directory) as an OID
 Your Microsoft Entra ID SSO application is now configured! You can now provision user access to your Phase instance by adding the application to individual users in your Microsoft Entra ID directory or to groups of users.
 
 For more detailed information about Microsoft Entra ID application registration and OIDC configuration, refer to the [official Microsoft documentation](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app).
+
+<TabGroup title="Where to plug in the credentials" slug="entra-id-config">
+  <TabPanel title="Per-organisation (recommended)" slug="per-org">
+    Paste the values into the Console at **Access Control → Single Sign-On → Microsoft Entra ID**:
+
+    - **Tenant ID** ← *Directory (tenant) ID*
+    - **Client ID** ← *Application (client) ID*
+    - **Client Secret** ← the client secret value
+
+    Applies to this organisation only. No redeploy needed, and you can [enforce SSO](/access-control/authentication/sso#enforce-sso) so every member must sign in via Entra ID. Full walkthrough: [SSO](/access-control/authentication/sso).
+  </TabPanel>
+  <TabPanel title="Instance-wide (legacy)" slug="instance-wide">
+    Supply the values as environment variables on your self-hosted deployment:
+
+    - `ENTRA_ID_OIDC_TENANT_ID`
+    - `ENTRA_ID_OIDC_CLIENT_ID`
+    - `ENTRA_ID_OIDC_CLIENT_SECRET`
+
+    Applies instance-wide — every organisation on this deployment can sign in via this provider. See the [deployment configuration reference](/self-hosting/configuration/envars#microsoft-entra-id-oidc) for all options.
+  </TabPanel>
+</TabGroup>
 
 ### Troubleshooting: Microsoft Entra ID
 
@@ -345,13 +363,32 @@ You can use Okta as an OIDC provider to set up SSO for your Phase instance. Foll
 
     ![Copy Client Credentials](/assets/images/auth/sso/oidc/okta/6-copy-credentials.png)
 
-7.  To find your Okta domain, click the drop-down in the top right corner. Copy the host listed under your name and email (e.g., `acme-1234567.okta.com`). Supply this domain (prefixed with `https://`) along with the other credentials to your Phase Console deployment as [environment variables](/self-hosting/configuration/envars#okta-oidc).
+7.  To find your Okta domain, click the drop-down in the top right corner. Copy the host listed under your name and email (e.g., `acme-1234567.okta.com`). Prefix it with `https://` — this is your **Issuer URL**.
 
     ![Copy Okta OIDC Issuer Host](/assets/images/auth/sso/oidc/okta/7-copy-okta-oidc-issuer-host.png)
 
-   - `OKTA_OIDC_CLIENT_ID` - Okta OIDC Application Client ID
-   - `OKTA_OIDC_CLIENT_SECRET` - Okta OIDC Application Client Secret
-   - `OKTA_OIDC_ISSUER` - Your Okta domain URL, prefixed with `https://`
-  
-  You can find more detailed information in the [official Okta documentation](https://help.okta.com/oie/en-us/content/topics/apps/apps_app_integration_wizard_oidc.htm).
+You now have the three values needed to configure Phase — **Issuer URL**, **Client ID**, and **Client Secret**. See the **Per-organisation** / **Instance-wide** tabs below for where to plug them in.
+
+<TabGroup title="Where to plug in the credentials" slug="okta-config">
+  <TabPanel title="Per-organisation (recommended)" slug="per-org">
+    Paste the values into the Console at **Access Control → Single Sign-On → Okta**:
+
+    - **Issuer URL** ← `https://<your-okta-domain>`
+    - **Client ID** ← Okta Application Client ID
+    - **Client Secret** ← Okta Application Client Secret
+
+    Applies to this organisation only. No redeploy needed, and you can [enforce SSO](/access-control/authentication/sso#enforce-sso) so every member must sign in via Okta. Full walkthrough: [SSO](/access-control/authentication/sso).
+  </TabPanel>
+  <TabPanel title="Instance-wide (legacy)" slug="instance-wide">
+    Supply the values as environment variables on your self-hosted deployment:
+
+    - `OKTA_OIDC_CLIENT_ID`
+    - `OKTA_OIDC_CLIENT_SECRET`
+    - `OKTA_OIDC_ISSUER` — your Okta domain URL, prefixed with `https://`
+
+    Applies instance-wide — every organisation on this deployment can sign in via this provider. See the [deployment configuration reference](/self-hosting/configuration/envars#okta-oidc) for all options.
+  </TabPanel>
+</TabGroup>
+
+You can find more detailed information in the [official Okta documentation](https://help.okta.com/oie/en-us/content/topics/apps/apps_app_integration_wizard_oidc.htm).
 

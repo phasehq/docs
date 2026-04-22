@@ -36,7 +36,6 @@ You may choose to self-host Phase to meet various compliance requirements, to si
 
 ### Dependencies
 - **Container Runtime**: A container runtime or orchestrator such as Docker, Docker Compose, Nomad, or Kubernetes.
-- **Single Sign-On (SSO)**: You must use an SSO provider. See the [list of supported providers](/access-control/authentication#user-authentication).
 - **TLS Certificate**: You must provision a TLS certificate and access Phase over HTTPS. This can be a self-signed certificate. The default Docker Compose installation will provide a self-signed certificate.
 
 
@@ -81,7 +80,7 @@ graph LR
 When self-hosting Phase services on your own infrastructure, you assume sole responsibility for security, availability, and reliability. It is up to you to set up the following:
 
 - **Security:**
-    - **Single Sign-On (SSO):** You must configure SSO for user authentication using one of the [supported providers](/access-control/authentication#user-authentication).
+    - **Authentication:** Password authentication is available by default. You can optionally configure SSO for user authentication using one of the [supported providers](/access-control/authentication#user-authentication).
     - **TLS Certificates:** Provision a valid TLS certificate to ensure Phase is accessed securely over HTTPS. Self-signed certificates are supported.
     - **Web Application Firewall (WAF):** Implement a WAF to protect against common web exploits.
     - **DDoS Protection & Rate Limiting:** Configure measures to mitigate Distributed Denial of Service attacks and prevent abuse through rate limiting.

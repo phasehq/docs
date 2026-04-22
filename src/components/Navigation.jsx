@@ -254,6 +254,7 @@ export const navigation = [
     links: [
       { title: 'Overview', href: '/access-control' },
       { title: 'Authentication', href: '/access-control/authentication' },
+      { title: 'Single Sign-On (SSO)', href: '/access-control/authentication/sso' },
       { title: 'OAuth 2.0', href: '/access-control/authentication/oauth-sso' },
       {
         title: 'OpenID Connect (OIDC)',

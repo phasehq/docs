@@ -194,16 +194,15 @@ You may:
    - Add **REDIS_HOST**, **REDIS_PORT**, **REDIS_PASSWORD** and set it to your ElastiCache Redis primary endpoint.
    - Modify other environment variables as needed.
 
-   ### Single sign-on (SSO)
+   ### Authentication
 
-   At the very least, you will need to set the `SSO_PROVIDERS` envrionment variable along with the SSO credentials for the provider you wish to use. For more instructions on configuring SSO, please refer to the [authentication documentation](/access-control/authentication).
+   Password authentication works out of the box with no additional configuration. If you want to enable SSO, set the `SSO_PROVIDERS` environment variable along with the SSO credentials for the provider you wish to use. For more instructions on configuring authentication, please refer to the [authentication documentation](/access-control/authentication).
 
    ### Generate secrets
 
    You can use the following command to generate strong random secrets for your `.env` file:
 
    ```fish
-   sed -i.bak "s|NEXTAUTH_SECRET=.*|NEXTAUTH_SECRET=$(openssl rand -hex 32)|g" .env && \
    sed -i.bak "s|SECRET_KEY=.*|SECRET_KEY=$(openssl rand -hex 32)|g" .env && \
    sed -i.bak "s|SERVER_SECRET=.*|SERVER_SECRET=$(openssl rand -hex 32)|g" .env && \
    rm .env.bak

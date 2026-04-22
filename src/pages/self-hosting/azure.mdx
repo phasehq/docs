@@ -206,16 +206,11 @@ You may:
    - Add **REDIS_HOST**, **REDIS_PORT**, and **REDIS_PASSWORD** and set them to your Azure Cache for Redis host, port (6379), and access key.
    - Modify other environment variables as necessary.
 
-   ### Single sign-on (SSO)
-
-   At the very least, you will need to set the `SSO_PROVIDERS` envrionment variable along with the SSO credentials for the provider you wish to use. For more instructions on configuring SSO, please refer to the [authentication documentation](/access-control/authentication).
-
    ### Generate secrets
 
    You can use the following command to generate strong random secrets for your `.env` file:
 
    ```fish
-   sed -i.bak "s|NEXTAUTH_SECRET=.*|NEXTAUTH_SECRET=$(openssl rand -hex 32)|g" .env && \
    sed -i.bak "s|SECRET_KEY=.*|SECRET_KEY=$(openssl rand -hex 32)|g" .env && \
    sed -i.bak "s|SERVER_SECRET=.*|SERVER_SECRET=$(openssl rand -hex 32)|g" .env && \
    rm .env.bak
