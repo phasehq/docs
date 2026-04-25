@@ -5,19 +5,12 @@ import { NextSeo } from 'next-seo';
 import { Layout } from '@/components/Layout'
 import * as mdxComponents from '@/components/mdx'
 import { useMobileNavigationStore } from '@/components/MobileNavigation'
-import dynamic from 'next/dynamic';
+import { PostHogProvider } from 'posthog-js/react'
 import '@/styles/tailwind.css'
 import '@/styles/asciinema-player.css'
 import '@/styles/zoomable-image.css'
 import 'focus-visible'
 import { JetBrains_Mono } from 'next/font/google'
-
-
-// Dynamically import PostHogProvider with SSR turned off
-const PostHogProvider = dynamic(
-  () => import('posthog-js/react').then(mod => mod.PostHogProvider),
-  { ssr: false }
-);
 
 const options = {
   api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
