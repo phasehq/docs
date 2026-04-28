@@ -352,7 +352,29 @@ Env(s) required by the following containers:
 
 ## Password authentication
 
-Password authentication is available by default with no additional configuration.
+Password authentication is **opt-in** for self-hosted instances. By default, Phase runs in SSO-only mode: password signup, login, change-password and password-based recovery are refused, and the login page hides the password UI. Set `ENABLE_PASSWORD_AUTH=true` to allow password sign-up and login alongside SSO.
+
+<Properties>
+  <Property name="ENABLE_PASSWORD_AUTH" type="boolean (Optional)">
+    When set to `true`, password authentication is enabled alongside any configured SSO providers. Defaults to `false` (SSO-only).
+
+    Accepts `true`, `1`, or `yes` (case-insensitive); any other value (or an unset variable) leaves password authentication disabled.
+
+    When disabled:
+    - All password-auth endpoints (register, login, change-password, password-based recovery, email verification, resend-verification) return `403`.
+    - The login page hides the "Create an account" link, and `/signup` redirects to `/login`.
+    - The email field on the login page remains visible -- it is the discovery mechanism for organisation-level SSO (e.g. Microsoft Entra ID), which routes users to their identity provider after they enter their work email.
+    - SSO endpoints and SSO users are unaffected.
+
+    The toggle is reversible at any time without data migration -- password hashes are preserved while disabled, and existing password users regain access if you flip it back on.
+
+    Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) and [`backend`](https://hub.docker.com/r/phasehq/backend) containers.
+  </Property>
+</Properties>
+
+<Note>
+Before enabling SSO-only mode (i.e. leaving `ENABLE_PASSWORD_AUTH` unset on an instance that previously had password users), make sure every member who needs continued access has signed in via SSO at least once -- the SocialAccount link is created on first SSO sign-in, and existing password users will otherwise be locked out. Configure at least one provider in [`SSO_PROVIDERS`](#additional-environment-variables) before disabling password auth, otherwise the instance will have no usable sign-in path.
+</Note>
 
 ### Email verification
 
@@ -364,6 +386,8 @@ If SMTP is not configured, or if `SKIP_EMAIL_VERIFICATION` is set to `true`, acc
   <Property name="SKIP_EMAIL_VERIFICATION" type="boolean (Optional)">
     When set to `true`, new accounts created via email/password signup are activated immediately without requiring email verification. Defaults to `false`.
     If SMTP is not configured, email verification is automatically skipped regardless of this setting.
+
+    Only takes effect when [`ENABLE_PASSWORD_AUTH`](#password-authentication) is enabled.
 
     Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
