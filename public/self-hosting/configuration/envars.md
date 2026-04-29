@@ -350,6 +350,33 @@ Env(s) required by the following containers:
 
 ---
 
+## Sign-ups
+
+Self-service sign-up is **on by default** so a fresh self-hosted instance can be bootstrapped without extra configuration. Once your team is fully onboarded, set `ALLOW_SIGNUPS=false` and restart to close the door on strangers — invites continue to work, and existing users keep signing in normally.
+
+<Properties>
+  <Property name="ALLOW_SIGNUPS" type="boolean (Optional)">
+    Whether new users can sign themselves up. Defaults to `true`.
+
+    Set to `false` (or `0` / `no`) to require an [invite](/access-control/users) for any new account. The gate applies to both password sign-up and first-time SSO sign-in for an unrecognised email — invited emails always pass through, since the invite is the operator's affirmative consent for that address.
+
+    What is **not** affected:
+    - Existing users continue to sign in via password or SSO.
+    - Password change and recovery flows for existing users.
+    - Invite acceptance — the whole point of disabling self-signup is to keep this as your sole on-ramp.
+
+    Frontend behaviour when disabled: the login and sign-up pages render normally. The backend rejects stranger sign-ups with a `403` and the toast message *"Sign-ups are disabled on this instance. Ask an administrator to invite you."* — invitees with a pending invite for that email pass through.
+
+    Reversible at any time without data migration. Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) and [`backend`](https://hub.docker.com/r/phasehq/backend) containers.
+  </Property>
+</Properties>
+
+<Note>
+For org-level access control beyond signup gating — e.g. enforcing that everyone in your organisation must sign in via your IdP — configure [organisation SSO](/access-control/authentication/sso) instead. `ALLOW_SIGNUPS` is the instance-wide gate; SSO enforcement is per-org.
+</Note>
+
+---
+
 ## Password authentication
 
 Password authentication is available by default with no additional configuration.
