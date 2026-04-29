@@ -9,13 +9,12 @@ export const description = 'Deploy the Phase Console Railway template.'
 
 Deploy the Phase Console Railway template. {{ className: 'lead' }}
 
-<DocActions /> 
+<DocActions />
 
 [![Railway deployment template](/assets/images/self-hosting/railway/railway-template.png)](https://railway.app/template/FgdM-Z?referralCode=rG9hj-)
 
 ## Prerequisites
 - A Railway account on the [Hobby](https://railway.app/pricing) tier or better
-- A [Google](/access-control/authentication/oauth-sso#google), [GitHub](/access-control/authentication/oauth-sso#github), or [GitLab](/access-control/authentication/oauth-sso#gitlab) OAuth SSO for authentication
 
 ## Known Issues
 
@@ -45,7 +44,6 @@ Important notes:
 - Read the descriptions for each Environment variable as they contain setup instructions
 - For security and consistency, we do not autogenerate secrets using Railway's secret function syntax. Generate them manually using `openssl` like this: `openssl rand -hex 32`
 - Some Environment variables need to be set across multiple services
-- You'll need to set up a Google, GitHub, or GitLab OAuth Application and provide their credentials as Environment variables. This can be done after setting up a custom domain in [Step 2](/self-hosting/railway#2-deploy-the-template).
 
 For a complete list of all secrets and environment variables with descriptions, see the self-hosting [env vars](/self-hosting/configuration/envars) guide.
 
@@ -95,38 +93,9 @@ Note: If using Cloudflare, disable the Proxy status (orange cloud icon) to avoid
 
 ![Phase Console](/assets/images/self-hosting/railway/deploy/7-phase-console-deployed.png)
 
-### 3. Configure OAuth Credentials
+You should be all set! Head on over to your Railway custom domain and sign up for a Phase Console account. Here's a [quickstart](/quickstart).
 
-Set up a Google, GitHub or GitLab OAuth application. Please refer to the [docs](/self-hosting/configuration/envars#single-sign-on-sso) for instructions on how to set this up for each provider. Then:
-1. In both the `frontend` and `backend` services:
-   - Select **Variables**
-   - Click **+ New Variables**
-   - Add your OAuth provider's `CLIENT_ID` and `CLIENT_SECRET`
-   - You may need to set `SSO_PROVIDERS` in the `frontend` service if not done previously. (Note: use the legacy `NEXT_PUBLIC_NEXTAUTH_PROVIDERS` variable if using a version of the console older than `v2.50.0`)
-   - Click **Add**
-
-Here's what it looks like for the `frontend`:
-![Frontend oauth variables](/assets/images/self-hosting/railway/deploy/8-oauth-credntials-backend.png)
-
-For the `backend`:
-![Backend oauth variables](/assets/images/self-hosting/railway/deploy/9-oauth-credntials-backend.png)
-
-2. Click **Deploy** in the top-left action bar.
-
-![Re-deploy services after variable change](/assets/images/self-hosting/railway/deploy/10-deploy-services-after-chnages.png)
-
-3. After deployment completes, redeploy the `railway-nginx` service:
-   - Navigate to the `railway-nginx` service
-   - Find the latest **Active** deployment
-   - Click the options button next to "View logs"
-   - Select **Redeploy**
-   - Confirm the redeployment
-
-![Redeploy railway-nginx](/assets/images/self-hosting/railway/deploy/11-select-redeploy.png)
-
-![Confirm railway-nginx redeployment](/assets/images/self-hosting/railway/deploy/12-confirm-redeploy.png)
-
-You should be all set! Next, head on over to your Railway custom domain and log into your Phase Console. Here's a [quickstart](/quickstart).
+If you want members to sign in via an identity provider, see [Authentication](/access-control/authentication) — SSO can be configured on your deployment at any time.
 
 ## Troubleshooting
 

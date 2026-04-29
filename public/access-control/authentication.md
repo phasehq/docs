@@ -12,13 +12,27 @@ export const description = 'Authenticating with Phase.'
 
 # Authentication Methods
 
-Phase supports third-party authentication systems for access control. You can delegate authentication and administration to external providers such as Google, AWS IAM, GitHub, Kubernetes, GitLab, or Microsoft Azure to best suit your setup. When choosing an authentication provider, consider whether the access to Phase will be programmatic (machine-access) via REST API, SDK, CLI, etc., or user access (human-access).
+Phase supports native email/password authentication as well as third-party authentication systems for access control. Password authentication works out of the box with no additional configuration. You can also delegate authentication to external providers such as Google, AWS IAM, GitHub, Kubernetes, GitLab, or Microsoft Azure to best suit your setup. When choosing an authentication provider, consider whether the access to Phase will be programmatic (machine-access) via REST API, SDK, CLI, etc., or user access (human-access).
 
 <DocActions /> 
 
 ## User Authentication
 
-User authentication in Phase is designed for seamless and secure web access. Phase supports both OAuth 2.0 and OpenID Connect (OIDC) protocols for Single Sign-On (SSO), allowing organizations to leverage their existing identity providers like Google, GitHub, GitLab, and JumpCloud. We plan to extend support to SCIM (System for Cross-domain Identity Management), which will enable automatic synchronization of user directories with Phase, including automatic provisioning and deprovisioning of user accounts based on changes in your organization's primary identity system.
+User authentication in Phase is designed for seamless and secure web access. Phase supports [native email/password authentication](/access-control/authentication/password) out of the box, as well as both OAuth 2.0 and OpenID Connect (OIDC) protocols for Single Sign-On (SSO), allowing organizations to leverage their existing identity providers like Google, GitHub, GitLab, and JumpCloud. We plan to extend support to SCIM (System for Cross-domain Identity Management), which will enable automatic synchronization of user directories with Phase, including automatic provisioning and deprovisioning of user accounts based on changes in your organization's primary identity system.
+
+### Password Authentication
+
+Email and password authentication is available out of the box on Phase Cloud. On self-hosted deployments it is opt-in via [`ENABLE_PASSWORD_AUTH`](/self-hosting/configuration/envars#password-authentication); instances default to SSO-only mode. Users can sign up with their email address and a password, verify their email, and log in.
+
+
+<div className="not-prose">
+  <Button
+    href="authentication/password"
+    variant="text"
+    arrow="right"
+    children="Explore"
+  />
+</div>
 
 <UserAuthProviders />
 
