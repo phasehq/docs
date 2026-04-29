@@ -24,6 +24,8 @@ User authentication in Phase is designed for seamless and secure web access. Pha
 
 Email and password authentication is available by default with no additional configuration. Users can sign up with their email address and a password, verify their email, and log in.
 
+On self-hosted instances, operators can require an invite for any new account by setting [`ALLOW_SIGNUPS=false`](/self-hosting/configuration/envars#sign-ups). Existing users keep signing in normally; only self-service sign-up is gated.
+
 
 <div className="not-prose">
   <Button
