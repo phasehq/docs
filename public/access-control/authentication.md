@@ -22,7 +22,7 @@ User authentication in Phase is designed for seamless and secure web access. Pha
 
 ### Password Authentication
 
-Email and password authentication is available by default with no additional configuration. Users can sign up with their email address and a password, verify their email, and log in.
+Email and password authentication is available out of the box on Phase Cloud. On self-hosted deployments it is opt-in via [`ENABLE_PASSWORD_AUTH`](/self-hosting/configuration/envars#password-authentication); instances default to SSO-only mode. Users can sign up with their email address and a password, verify their email, and log in.
 
 
 <div className="not-prose">
