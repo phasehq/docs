@@ -549,17 +549,17 @@
   resolved "https://registry.npmjs.org/@pkgjs/parseargs/-/parseargs-0.11.0.tgz"
   integrity sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==
 
-"@posthog/core@1.20.1":
-  version "1.20.1"
-  resolved "https://registry.yarnpkg.com/@posthog/core/-/core-1.20.1.tgz#bb5e291bf59aad4bdecb9ed5d1802d297d809c1d"
-  integrity sha512-uoTmWkYCtLYFpiK37/JCq+BuCA/OZn1qQZn5cPv1EEKt3ni3Zgg48xWCnSEyGFl5KKSXlfCruiRTwnbAtCgrBA==
+"@posthog/core@1.27.8":
+  version "1.27.8"
+  resolved "https://registry.yarnpkg.com/@posthog/core/-/core-1.27.8.tgz#1f37e03113eeff574f3cbf793ab392e8dbb8fa32"
+  integrity sha512-zsfDm8oL8TmHKipCw3/f12up8pI8xitecPfsrtMiRigeAfonvk07CLW/WaiNxRVvrmgXE12xthmaMEaCrziOIQ==
   dependencies:
-    cross-spawn "^7.0.6"
+    "@posthog/types" "1.372.4"
 
-"@posthog/types@1.342.1":
-  version "1.342.1"
-  resolved "https://registry.yarnpkg.com/@posthog/types/-/types-1.342.1.tgz#a4d5f7b44539641e910f36818fd4b6aa41022a2f"
-  integrity sha512-bcyBdO88FWTkd5AVTa4Nu8T7RfY0WJrG7WMCXum/rcvNjYhS3DmOfKf8o/Bt56vA3J3yeU0vbgrmltYVoTAfaA==
+"@posthog/types@1.372.4":
+  version "1.372.4"
+  resolved "https://registry.yarnpkg.com/@posthog/types/-/types-1.372.4.tgz#dcec1864702a757b5933fb0f2f6c2c224443d41d"
+  integrity sha512-BWLXdMbrePQX/Q1hohbbxBr9EHEgnZroUX0ivx42HCzBisbYXDtuHGF4xaojapYVby1LtWVI6pa1CDx1HOZSyA==
 
 "@protobufjs/aspromise@^1.1.1", "@protobufjs/aspromise@^1.1.2":
   version "1.1.2"
@@ -1720,15 +1720,6 @@ cross-spawn@^7.0.0, cross-spawn@^7.0.2:
     shebang-command "^2.0.0"
     which "^2.0.1"
 
-cross-spawn@^7.0.6:
-  version "7.0.6"
-  resolved "https://registry.yarnpkg.com/cross-spawn/-/cross-spawn-7.0.6.tgz#8a58fe78f00dcd70c370451759dfbfaf03e8ee9f"
-  integrity sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==
-  dependencies:
-    path-key "^3.1.0"
-    shebang-command "^2.0.0"
-    which "^2.0.1"
-
 cssesc@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npmjs.org/cssesc/-/cssesc-3.0.0.tgz"
@@ -2211,10 +2202,10 @@ dompurify@^3.2.5:
   optionalDependencies:
     "@types/trusted-types" "^2.0.7"
 
-dompurify@^3.3.1:
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-3.3.1.tgz#c7e1ddebfe3301eacd6c0c12a4af284936dbbb86"
-  integrity sha512-qkdCKzLNtrgPFP1Vo+98FRzJnBRGe4ffyCea9IwHB1fyxPOeNTHpLKYGd4Uk9xvNoH0ZoOjwZxNptyMwqrId1Q==
+dompurify@^3.3.2:
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-3.4.1.tgz#521d04483ac12631b2aedf434a5f5390933b8789"
+  integrity sha512-JahakDAIg1gyOm7dlgWSDjV4n7Ip2PKR55NIT6jrMfIgLFgWo81vdr1/QGqWtFNRqXP9UV71oVePtjqS2ebnPw==
   optionalDependencies:
     "@types/trusted-types" "^2.0.7"
 
@@ -5165,20 +5156,20 @@ postcss@^8.4.31:
     picocolors "^1.1.1"
     source-map-js "^1.2.1"
 
-posthog-js@^1.342.1:
-  version "1.342.1"
-  resolved "https://registry.yarnpkg.com/posthog-js/-/posthog-js-1.342.1.tgz#9c030513104c39a0c7413c54b7e1134bca21a1e5"
-  integrity sha512-mMnQhWuKj4ejFicLtFzr52InmqploOyW1eInqXBkaVqE1DPhczBDmwsd9MSggY8kv0EXm8zgK+2tzBJUKcX5yg==
+posthog-js@^1.372.4:
+  version "1.372.4"
+  resolved "https://registry.yarnpkg.com/posthog-js/-/posthog-js-1.372.4.tgz#cbeb515351f98818b2f1088fef21a4bfdff7fc56"
+  integrity sha512-dQssG6hvRsC7noZYJvU3ETwege6tuLWtIO4hfYyCawbMmrGjGfNiwHXqsaXr7VMUturHZ86OVVkP1awLfn3JLg==
   dependencies:
     "@opentelemetry/api" "^1.9.0"
     "@opentelemetry/api-logs" "^0.208.0"
     "@opentelemetry/exporter-logs-otlp-http" "^0.208.0"
     "@opentelemetry/resources" "^2.2.0"
     "@opentelemetry/sdk-logs" "^0.208.0"
-    "@posthog/core" "1.20.1"
-    "@posthog/types" "1.342.1"
+    "@posthog/core" "1.27.8"
+    "@posthog/types" "1.372.4"
     core-js "^3.38.1"
-    dompurify "^3.3.1"
+    dompurify "^3.3.2"
     fflate "^0.4.8"
     preact "^10.28.2"
     query-selector-shadow-dom "^1.0.1"
