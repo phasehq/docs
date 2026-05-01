@@ -20,13 +20,13 @@ Learn how to authenticate with Phase and manage access with the Access Control s
 
 Phase employs a Role-Based Access Control (RBAC) system to manage permissions for both human users and programmatic access via Service Accounts. 
 
-Phase supports third-party authentication systems for access control. You can delegate authentication and administration to external providers such as Google, AWS IAM, GitHub, Kubernetes, GitLab, or Microsoft Azure to best suit your setup. When choosing an authentication provider, consider whether the access to Phase will be programmatic (machine-access) via REST API, SDK, CLI, etc., or user access (human-access). 
+Phase supports native email/password authentication as well as third-party authentication systems for access control. Password authentication works out of the box with no additional configuration. You can also delegate authentication to external providers such as Google, AWS IAM, GitHub, Kubernetes, GitLab, or Microsoft Azure to best suit your setup. When choosing an authentication provider, consider whether the access to Phase will be programmatic (machine-access) via REST API, SDK, CLI, etc., or user access (human-access). 
 
 Phase's access control system is based on roles that define policies governing the behavior and access of clients, whether they are human Users or Service Accounts. The system allows for fine-grained control over resources at both the organization and application levels.
 
 ## User Authentication
 
-User authentication in Phase is designed for seamless and secure access for human users. Phase supports various Single Sign-On (SSO) providers, allowing organizations to leverage their existing identity management systems.
+User authentication in Phase is designed for seamless and secure access for human users. Phase supports native email/password authentication out of the box, as well as various Single Sign-On (SSO) providers, allowing organizations to leverage their existing identity management systems.
 
 [Read more](/access-control/authentication#user-authentication) about how user accounts can authenticate with the Phase platform.
 

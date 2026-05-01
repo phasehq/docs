@@ -24,6 +24,7 @@
 - [public-api/errors](https://docs.phase.dev/public-api/errors.md)
 - [access-control](https://docs.phase.dev/access-control.md)
 - [access-control/authentication](https://docs.phase.dev/access-control/authentication.md)
+- [access-control/authentication/sso](https://docs.phase.dev/access-control/authentication/sso.md)
 - [access-control/authentication/oauth-sso](https://docs.phase.dev/access-control/authentication/oauth-sso.md)
 - [access-control/authentication/oidc-sso](https://docs.phase.dev/access-control/authentication/oidc-sso.md)
 - [access-control/authentication/tokens](https://docs.phase.dev/access-control/authentication/tokens.md)

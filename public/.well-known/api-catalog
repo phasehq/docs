@@ -1,0 +1,50 @@
+{
+  "linkset": [
+    {
+      "anchor": "https://api.phase.dev/",
+      "service-doc": [
+        {
+          "href": "https://docs.phase.dev/public-api",
+          "type": "text/html",
+          "title": "Phase Public API documentation"
+        }
+      ],
+      "status": [
+        {
+          "href": "https://api.phase.dev/health/",
+          "type": "application/json",
+          "title": "Phase API health check"
+        }
+      ],
+      "help": [
+        {
+          "href": "https://docs.phase.dev",
+          "type": "text/html",
+          "title": "Phase documentation"
+        }
+      ],
+      "describedby": [
+        {
+          "href": "https://docs.phase.dev/public-api/secrets",
+          "type": "text/html",
+          "title": "Secrets API reference"
+        },
+        {
+          "href": "https://docs.phase.dev/public-api/dynamic-secrets",
+          "type": "text/html",
+          "title": "Dynamic secrets API reference"
+        },
+        {
+          "href": "https://docs.phase.dev/public-api/external-identities",
+          "type": "text/html",
+          "title": "External identities API reference"
+        },
+        {
+          "href": "https://docs.phase.dev/public-api/errors",
+          "type": "text/html",
+          "title": "Public API error reference"
+        }
+      ]
+    }
+  ]
+}

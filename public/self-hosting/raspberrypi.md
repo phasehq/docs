@@ -81,15 +81,11 @@ wget -O ./nginx/Dockerfile https://raw.githubusercontent.com/phasehq/console/mai
 
 Modify the `.env` file to match your environment settings. 
 
-### Single sign-on (SSO)
-
-At the very least, you will need to set the `SSO_PROVIDERS` envrionment variable along with the SSO credentials for the provider you wish to use. For more instructions on configuring SSO, please refer to the [authentication documentation](/access-control/authentication). 
 
 ### Generate secrets 
 
 ```fish
 sed -i.bak "s|DATABASE_PASSWORD=.*|DATABASE_PASSWORD=$(openssl rand -hex 32)|g" .env && \
-sed -i.bak "s|NEXTAUTH_SECRET=.*|NEXTAUTH_SECRET=$(openssl rand -hex 32)|g" .env && \
 sed -i.bak "s|SECRET_KEY=.*|SECRET_KEY=$(openssl rand -hex 32)|g" .env && \
 sed -i.bak "s|SERVER_SECRET=.*|SERVER_SECRET=$(openssl rand -hex 32)|g" .env && \
 rm .env.bak

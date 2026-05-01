@@ -46,6 +46,7 @@ The organization owner. This role is automatically assigned when a user creates 
 | **Network Access Policies** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Teams** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **SCIM** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **SSO** | Full access | ✅ | ✅ | ✅ | ✅ |
 
 #### App-level permissions:
 
@@ -84,6 +85,7 @@ Admin users have access to most resources and permissions, and have global acces
 | **Network Access Policies** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Teams** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **SCIM** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **SSO** | Full access | ✅ | ✅ | ✅ | ✅ |
 
 #### App-level permissions:
 
@@ -124,6 +126,7 @@ Management users with broad access to environments, secrets, and service account
 | **Network Access Policies** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Teams** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **SCIM** | No access | ❌ | ❌ | ❌ | ❌ |
+| **SSO** | No access | ❌ | ❌ | ❌ | ❌ |
 
 #### App-level permissions:
 
@@ -162,6 +165,7 @@ Default role for Service Accounts, providing programmatic access to secrets with
 | **Network Access Policies** | Read access | ✅ | ❌ | ❌ | ❌ |
 | **Teams** | No access | ❌ | ❌ | ❌ | ❌ |
 | **SCIM** | No access | ❌ | ❌ | ❌ | ❌ |
+| **SSO** | No access | ❌ | ❌ | ❌ | ❌ |
 
 #### App-level permissions:
 
@@ -200,6 +204,7 @@ Developers have limited permissions at the organization level and must be given 
 | **Network Access Policies** | Read access | ✅ | ❌ | ❌ | ❌ |
 | **Teams** | Read access | ✅ | ❌ | ❌ | ❌ |
 | **SCIM** | No access | ❌ | ❌ | ❌ | ❌ |
+| **SSO** | No access | ❌ | ❌ | ❌ | ❌ |
 
 #### App-level permissions:
 

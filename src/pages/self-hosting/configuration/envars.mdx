@@ -25,9 +25,6 @@ When a file-based secret is present, services will prioritize it over any corres
 
 ## Single sign-on (SSO)
 
-In order to authenticate with the Phase Console, you must enable **at least one** SSO provider.
-Enabling an SSO provider requires adding the provider to the list of `SSO_PROVIDERS` as well as providing valid credentials.
-
 The following providers are available:
 - `google` - Google OAuth 2.0
 - `github` - GitHub OAuth 2.0
@@ -353,11 +350,56 @@ Env(s) required by the following containers:
 
 ---
 
+## Password authentication
+
+Password authentication is **opt-in** for self-hosted instances. By default, Phase runs in SSO-only mode: password signup, login, change-password and password-based recovery are refused, and the login page hides the password UI. Set `ENABLE_PASSWORD_AUTH=true` to allow password sign-up and login alongside SSO.
+
+<Properties>
+  <Property name="ENABLE_PASSWORD_AUTH" type="boolean (Optional)">
+    When set to `true`, password authentication is enabled alongside any configured SSO providers. Defaults to `false` (SSO-only).
+
+    Accepts `true`, `1`, or `yes` (case-insensitive); any other value (or an unset variable) leaves password authentication disabled.
+
+    When disabled:
+    - All password-auth endpoints (register, login, change-password, password-based recovery, email verification, resend-verification) return `403`.
+    - The login page hides the "Create an account" link, and `/signup` redirects to `/login`.
+    - The email field on the login page remains visible -- it is the discovery mechanism for organisation-level SSO (e.g. Microsoft Entra ID), which routes users to their identity provider after they enter their work email.
+    - SSO endpoints and SSO users are unaffected.
+
+    The toggle is reversible at any time without data migration -- password hashes are preserved while disabled, and existing password users regain access if you flip it back on.
+
+    Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) and [`backend`](https://hub.docker.com/r/phasehq/backend) containers.
+  </Property>
+</Properties>
+
+<Note>
+Before enabling SSO-only mode (i.e. leaving `ENABLE_PASSWORD_AUTH` unset on an instance that previously had password users), make sure every member who needs continued access has signed in via SSO at least once -- the SocialAccount link is created on first SSO sign-in, and existing password users will otherwise be locked out. Configure at least one provider in [`SSO_PROVIDERS`](#additional-environment-variables) before disabling password auth, otherwise the instance will have no usable sign-in path.
+</Note>
+
+### Email verification
+
+When SMTP is configured, new accounts must verify their email address before logging in. The verification email contains a one-time link that expires after 24 hours; if the link expires, users can request a new one from the login page.
+
+If SMTP is not configured, or if `SKIP_EMAIL_VERIFICATION` is set to `true`, accounts are activated immediately at signup without email verification. See the [email gateway configuration](#email-gateway-configuration) section below for how to wire up the mailer.
+
+<Properties>
+  <Property name="SKIP_EMAIL_VERIFICATION" type="boolean (Optional)">
+    When set to `true`, new accounts created via email/password signup are activated immediately without requiring email verification. Defaults to `false`.
+    If SMTP is not configured, email verification is automatically skipped regardless of this setting.
+
+    Only takes effect when [`ENABLE_PASSWORD_AUTH`](#password-authentication) is enabled.
+
+    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
+  </Property>
+</Properties>
+
+---
+
 ## Application secrets
 
 <Properties>
-  <Property name="NEXTAUTH_SECRET" type="string">
-    A random 32 byte hex string. Can be generated with `openssl rand -hex 32`. Required by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
+  <Property name="NEXTAUTH_SECRET (Deprecated)" type="string">
+    **Deprecated.** No longer read by the application after the NextAuth removal in Console `v2.67.0`. Safe to leave in place for now; it will be dropped from the reference deployment templates in a later release.
   </Property>
   <Property name="SECRET_KEY" type="string">
     A random 32 byte hex string. Can be generated with `openssl rand -hex 32`. Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
@@ -379,13 +421,14 @@ Env(s) required by the following containers:
     The url scheme for your host. Defaults to `https://`. Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend), [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
   <Property name="USER_EMAIL_DOMAIN_WHITELIST" type="string (Optional)">
-    A comma-separated list of domains to restrict logins from. Commented out by default.
+    A comma-separated list of domains to restrict signups and logins.
+    When set, only users with emails matching the specified domains can register or log in.
     To use this feature, set the value to a list of domains to use as a whitelist. For example:
-    ```bash
+    ```fish
     USER_EMAIL_DOMAIN_WHITELIST=mydomain.com,subdomain.mydomain.com
     ```
-    will only allow users with emails `@mydomain.com` or `@subdomain.mydomain.com` to login.
-    Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
+    will only allow users with emails `@mydomain.com` or `@subdomain.mydomain.com` to sign up or login.
+    Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) and [`backend`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
   <Property name="LOGIN_BANNER_TEXT" type="string (Optional)">
     A custom message to display on the login screen. Can be up to 512 characters long.
@@ -497,6 +540,10 @@ Phase uses Redis or Valkey for a synchronous jobs queues, caching and rate limit
 ---
 
 ## Email gateway configuration
+
+<Note>
+SMTP configuration is required for email verification for password-based signup. If SMTP is not configured, new accounts created via email/password are activated immediately without email verification.
+</Note>
 
 <Properties>
   <Property name="SMTP_SERVER" type="string">
@@ -991,12 +1038,12 @@ These variables are not required if using the suggested [docker-compose template
 
     Required by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
   </Property>
-  <Property name="SSO_PROVIDERS" type="string">
-    Comma-separated list of NextAuth providers.
+  <Property name="SSO_PROVIDERS" type="string (Optional)">
+    Comma-separated list of SSO providers.
     
     Example: `google,github,gitlab`
 
-    Required by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
+    Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
   </Property>
   <Property name="NEXT_PUBLIC_NEXTAUTH_PROVIDERS (Legacy)" type="string">
     **This is a legacy variable and is not required if you using Console version >= `v2.50.0`**
