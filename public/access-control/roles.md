@@ -44,6 +44,8 @@ The organization owner. This role is automatically assigned when a user creates 
 | **Roles** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Integration Credentials** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Network Access Policies** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **Teams** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **SCIM** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **SSO** | Full access | ✅ | ✅ | ✅ | ✅ |
 
 #### App-level permissions:
@@ -60,6 +62,7 @@ The organization owner. This role is automatically assigned when a user creates 
 | **Service Accounts** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Integrations** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Encryption Mode** | Full access | ✅ |  | ✅ |  |
+| **Teams** | Full access | ✅ | ✅ | ✅ | ✅ |
 
 ### Admin
 
@@ -80,6 +83,8 @@ Admin users have access to most resources and permissions, and have global acces
 | **Roles** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Integration Credentials** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Network Access Policies** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **Teams** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **SCIM** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **SSO** | Full access | ✅ | ✅ | ✅ | ✅ |
 
 #### App-level permissions:
@@ -96,6 +101,7 @@ Admin users have access to most resources and permissions, and have global acces
 | **Service Accounts** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Integrations** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Encryption Mode** | Custom access | ✅ |  | ✅ |  |
+| **Teams** | Full access | ✅ | ✅ | ✅ | ✅ |
 
 The `Owner` and `Admin` roles have global access. Learn more about global access [here](/access-control#global-access).
 
@@ -118,6 +124,8 @@ Management users with broad access to environments, secrets, and service account
 | **Roles** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Integration Credentials** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Network Access Policies** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **Teams** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **SCIM** | No access | ❌ | ❌ | ❌ | ❌ |
 | **SSO** | No access | ❌ | ❌ | ❌ | ❌ |
 
 #### App-level permissions:
@@ -134,6 +142,7 @@ Management users with broad access to environments, secrets, and service account
 | **Service Accounts** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Integrations** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Encryption Mode** | Custom access | ✅ | ❌ | ✅ | ❌ |
+| **Teams** | Full access | ✅ | ✅ | ✅ | ✅ |
 
 ### Service
 
@@ -154,6 +163,8 @@ Default role for Service Accounts, providing programmatic access to secrets with
 | **Roles** | Read access | ✅ | ❌ | ❌ | ❌ |
 | **Integration Credentials** | Read access | ✅ | ❌ | ❌ | ❌ |
 | **Network Access Policies** | Read access | ✅ | ❌ | ❌ | ❌ |
+| **Teams** | No access | ❌ | ❌ | ❌ | ❌ |
+| **SCIM** | No access | ❌ | ❌ | ❌ | ❌ |
 | **SSO** | No access | ❌ | ❌ | ❌ | ❌ |
 
 #### App-level permissions:
@@ -170,6 +181,7 @@ Default role for Service Accounts, providing programmatic access to secrets with
 | **Service Accounts** | Read access | ✅ | ❌ | ❌ | ❌ |
 | **Integrations** | Read access | ✅ | ❌ | ❌ | ❌ |
 | **Encryption Mode** | Read access | ✅ | ❌ | ❌ | ❌ |
+| **Teams** | Read access | ✅ | ❌ | ❌ | ❌ |
 
 ### Developer
 
@@ -190,6 +202,8 @@ Developers have limited permissions at the organization level and must be given 
 | **Roles** | Read access | ✅ | ❌ | ❌ | ❌ |
 | **Integration Credentials** | Custom access | ✅ | ✅ | ✅ | ❌ |
 | **Network Access Policies** | Read access | ✅ | ❌ | ❌ | ❌ |
+| **Teams** | Read access | ✅ | ❌ | ❌ | ❌ |
+| **SCIM** | No access | ❌ | ❌ | ❌ | ❌ |
 | **SSO** | No access | ❌ | ❌ | ❌ | ❌ |
 
 #### App-level permissions:
@@ -203,9 +217,10 @@ Developers have limited permissions at the organization level and must be given 
 | **Logs** | Read access | ✅ | ❌ | ❌ | ❌ |
 | **Tokens (Legacy)** | Custom access | ✅ | ✅ | ❌ | ❌ |
 | **Members** | Read access | ✅ | ❌ | ❌ | ❌ |
-| **Service Accounts** | Read access | ✅ | ❌ | ❌ | ❌ |
+| **Service Accounts** | Custom access | ❌ | ✅ | ❌ | ❌ |
 | **Integrations** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Encryption Mode** | Custom access | ✅ |  | ✅ |  |
+| **Teams** | Read access | ✅ | ❌ | ❌ | ❌ |
 
 ## Custom Roles
 
@@ -265,6 +280,12 @@ Some actions require a combination of permissions across multiple resources. Bel
 - To view and delete other users Personal Access Tokens:
     - `MemberPersonalAccessTokens:read`
     - `MemberPersonalAccessTokens:delete`
+- Adding or removing a Team's access to an App:
+    - `Teams:create` or `Teams:delete` (app-level)
+    - `Teams:read` (organisation-level)
+- Managing a Team's environment scope within an App:
+    - `Teams:update` (app-level)
+    - `Teams:read` (organisation-level)
 - To Manage Network Access Policies of a User or Service Account:
     - `Members:read`
     - `Members:update`

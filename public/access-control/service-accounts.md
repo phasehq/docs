@@ -9,7 +9,16 @@ Service Accounts provide a secure and controlled method for programmatic access 
 
 Service accounts share many of the properties and behavior of human user accounts. Service Accounts follow an Access Policy that can be defined by [Managed Roles](/access-control/roles#managed-roles) or [Custom Roles](/access-control/roles#creating-custom-roles) based on the permissions required. Service accounts are secured with the same security and cryptographic architecture as user accounts, and must be manually provisioned access to Apps and Environments in order to access secrets. 
 
-<DocActions /> 
+<DocActions />
+
+## Org-level vs Team-owned Service Accounts
+
+Service accounts exist in two categories:
+
+- **Org-level** (default): Visible to all organisation members with `ServiceAccounts.read` permission. Created from the organisation-level Service Accounts page. This is the default behavior and works on all plans.
+- **Team-owned**: Created within a [Team](/access-control/teams), visible only to team members and users with global access (Owner/Admin). The service account's lifecycle is tied to the team — if the team is deleted, team-owned SAs are deleted too.
+
+Team-owned service accounts are useful when a team needs dedicated programmatic access for team resources, that is isolated from other teams and users. See [Team-owned service accounts](/access-control/teams#team-owned-service-accounts) for details on creating and managing them.
 
 ## Create a new Service Account
 
@@ -79,11 +88,15 @@ To delete a Service Account, click on the "Delete" button at the bottom of the p
 Each Service Account has its own unique keyring, just like User accounts. KMS modes determine who has access to the service account's keyring and can create and manage tokens for this service account.
 
 #### Client-side KMS
-By default, Service Accounts use **Client-side KMS**. This means only designated users with the required `ServiceAccountTokens` permissions have access to create and manage tokens for this service account. These users are called *Service Account Handlers* and have access the service account's keyring, encrypted with their own keys. 
+By default, org-level Service Accounts use **Client-side KMS**. This means only designated users with the required `ServiceAccountTokens` permissions have access to create and manage tokens for this service account. These users are called *Service Account Handlers* and have access the service account's keyring, encrypted with their own keys.
 
 
 #### Server-side KMS
 You can optionally enable **Server-side KMS** for a Service Account. This grants the Phase backend access to the service account's keyring, effectively making the backend a *Service Account Handler*. Enabling Server-side KMS allows the backend to create and manage tokens on behalf of the Service Account. This is required to use features such as [External Identities](/access-control/external-identities).
+
+<Note>
+  **Team-owned service accounts** always use Server-side KMS. This is enabled automatically when the account is created, so that any team member with the appropriate permissions can generate tokens — without needing to be a designated Service Account Handler. This is important for dynamic team membership, including teams managed via [SCIM provisioning](/access-control/provisioning/scim), where members may join or leave at any time.
+</Note>
 
 #### Manage KMS mode
 
