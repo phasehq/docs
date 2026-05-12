@@ -27,8 +27,17 @@ Here is a list of the different categories of status codes returned by the Proto
   <Property name="200">
     A 200 status code indicates a successful response.
   </Property>
+  <Property name="201">
+    A 201 status code indicates that a new resource was created successfully (returned by POST endpoints).
+  </Property>
+  <Property name="204">
+    A 204 status code indicates that the request succeeded with no response body. Used for DELETE endpoints.
+  </Property>
   <Property name="400">
-    A 400 status code indicates a bad request. This is typically due to a request that's missing some data requried to process the request, such as missing `id` fields.
+    A 400 status code indicates a bad request. This is typically due to missing required fields, invalid input types, values exceeding length limits, or invalid email formats.
+  </Property>
+  <Property name="401">
+    A 401 status code indicates that no authentication credentials were provided or the token has expired or been deleted.
   </Property>
   <Property name="403">
     A 403 status code indicates an authentication or access error. Check your [authentication](/public-api#authentication) credentials if you see this error, and make sure the token you're using has the approriate scope for the App and Environment you're trying to access.
@@ -36,8 +45,17 @@ Here is a list of the different categories of status codes returned by the Proto
     This error may also occur due to a [Network Access Policy](/access-control/network#network-access-policies) that restricts access from your IP address. 
     [Read more](https://docs.phase.dev/access-control/network#access-denied-exceptions) about Network Access Policy exceptions.
   </Property>
+  <Property name="404">
+    A 404 status code indicates that the requested resource does not exist, has been soft-deleted, or belongs to a different organisation. The API does not distinguish between these cases to avoid leaking cross-organisation information.
+  </Property>
+  <Property name="405">
+    A 405 status code indicates that the HTTP method is not supported by the endpoint. The Phase API supports `GET`, `POST`, `PUT`, and `DELETE` only — `PATCH` is not supported on any endpoint.
+  </Property>
   <Property name="409">
-    A 409 status code indicates that the requested operation will create a conflict in your secret configuration. This is generally due to attempting to set the `key` of a secret at a given path where this key already exists. 
+    A 409 status code indicates that the requested operation would conflict with the current state of the resource. Examples: attempting to set a secret `key` at a path where it already exists; inviting an email that already has a pending invite; deleting a role that has members or service accounts assigned to it.
+  </Property>
+  <Property name="429">
+    A 429 status code indicates that you have exceeded the rate limit for your plan. The `retry-after` response header indicates how long to wait before retrying. See [rate limits](/public-api#rate-limits) for per-plan thresholds.
   </Property>
   <Property name="5xx">
     A 5xx status code indicates a server error — something went wrong with the Phase API.

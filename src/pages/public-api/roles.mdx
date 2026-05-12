@@ -327,7 +327,7 @@ When fetching a single role, the full permissions object is included. The permis
 <Row>
   <Col>
 
-    Update a custom role's name, description, color, and/or permissions. At least one field must be provided. Default roles cannot be modified.
+    Update a custom role's name, description, color, and/or permissions. At least one field must be provided. Default roles cannot be modified (`403 Forbidden`).
 
     ### URL parameters
 
@@ -339,9 +339,11 @@ When fetching a single role, the full permissions object is included. The permis
 
     ### JSON Body
 
+    When `permissions` is provided, the full object replaces the stored permissions and must contain all three keys: `permissions`, `app_permissions`, and `global_access`. The camelCase variants `appPermissions` and `globalAccess` are also accepted on input.
+
     <Properties>
       <Property name="name" type="string">
-        The new role name. Maximum 64 characters. Must be unique (case-insensitive).
+        The new role name. Maximum 64 characters. Must be unique within the organisation (case-insensitive).
       </Property>
       <Property name="description" type="string">
         The new description. Maximum 500 characters.
@@ -350,7 +352,7 @@ When fetching a single role, the full permissions object is included. The permis
         The new hex color code. Maximum 7 characters.
       </Property>
       <Property name="permissions" type="object">
-        The updated permissions object.
+        The updated permissions object. Replaces the stored permissions in full.
       </Property>
     </Properties>
 
@@ -440,7 +442,10 @@ When fetching a single role, the full permissions object is included. The permis
 <Row>
   <Col>
 
-    Delete a custom role. Default roles cannot be deleted. A role cannot be deleted if it has members or service accounts assigned to it.
+    Delete a custom role.
+
+    - Default roles (Owner, Admin, Manager, Developer, Service) cannot be deleted — returns `403 Forbidden` with `{"error": "Default roles cannot be deleted."}`.
+    - A role with members or service accounts currently assigned to it cannot be deleted — returns `409 Conflict`. Reassign the affected accounts to a different role first.
 
     ### URL parameters
 

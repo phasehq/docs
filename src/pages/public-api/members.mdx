@@ -113,7 +113,12 @@ Organisation members are human users who belong to your Phase organisation, each
 
     - The role must not have global access (i.e. Owner and Admin roles cannot be invited to).
     - The role must not permit creating service account tokens.
-    - The email must not already belong to an active member or a pending invite.
+    - The email is validated against RFC format; whitespace is trimmed and the local + domain parts are lowercased. Invalid emails return `400 Bad Request`.
+    - The email must not already belong to an active member or a pending invite. Duplicate invites return `409 Conflict` with `{"error": "An active invite already exists for '<email>'."}`.
+
+    <Note>
+    The optional `apps` array on an invite is metadata recorded against the pending invite. Because Phase is end-to-end encrypted, no apps or environments can actually be granted to the invitee until they accept the invite and register their identity key — at which point the inviter (or another member with the appropriate permissions) must call the [Manage Access](#manage-access) endpoint.
+    </Note>
 
     ### JSON Body
 
@@ -262,10 +267,10 @@ Organisation members are human users who belong to your Phase organisation, each
 
     ### Constraints
 
-    - You cannot update your own role.
-    - You cannot update a member who holds a global-access role (Owner or Admin) unless you also hold a global-access role.
-    - The Owner role cannot be assigned via this endpoint — use the ownership transfer flow in the console.
-    - Global-access roles (Admin) can only be assigned by a caller who already holds a global-access role. Service Account tokens cannot assign global-access roles.
+    - **The Owner's role is immutable via the API.** Any attempt to PUT the Owner's membership returns `403 Forbidden` with `{"error": "The Owner's role cannot be changed via the API. Use the ownership transfer flow."}`. Ownership transfer is a console-only flow.
+    - Users cannot update their own role (`403`).
+    - User callers cannot update a member who holds a global-access role (e.g. Admin) unless they themselves hold a global-access role (`403`).
+    - Service Account callers cannot update any member who holds a global-access role (`403`), nor can they assign a global-access role to any member (`403`).
 
     ### URL parameters
 
@@ -343,11 +348,13 @@ Organisation members are human users who belong to your Phase organisation, each
 <Row>
   <Col>
 
-    Remove a member from the organisation. This is a soft-delete — the user's account is not deleted, and they can be re-invited later.
+    Remove a member from the organisation. This is a soft-delete — the user's account is not deleted, and they can be re-invited later. Subsequent operations on the deleted member's ID return `404 Not Found`.
 
     ### Constraints
 
-    - You cannot remove yourself from the organisation via the API.
+    - **The Owner cannot be removed via the API** (`403`). Ownership must be transferred first via the console.
+    - Users cannot remove themselves from the organisation (`403`).
+    - Service Account callers cannot remove a member who holds a global-access role (`403`).
 
     ### URL parameters
 
@@ -405,7 +412,9 @@ Organisation members are human users who belong to your Phase organisation, each
     The server handles cryptographic key wrapping for each environment — it re-encrypts environment keys for the member's identity key using server-side encryption.
 
     <Note>
-    This endpoint only works for apps with **Server-side Encryption (SSE) enabled**. SSE can be enabled from the App settings page. The member must also have logged in to the Phase console at least once so their identity key is registered.
+    This endpoint only works for apps with **Server-side Encryption (SSE) enabled**. SSE can be enabled from the App settings page. Non-SSE apps return `400 Bad Request`.
+
+    The target member must also have logged in to the Phase console at least once so their identity key is registered. If the member's identity key is missing or blank, the endpoint returns `400 Bad Request` with `{"error": "Member has not set up their identity key yet. They must log in to the console first."}`.
     </Note>
 
     ### URL parameters
