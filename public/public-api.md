@@ -19,7 +19,9 @@ You can use the Phase public REST API to access and manage secrets via a simple 
 
 The Phase API is organized around [REST](https://en.wikipedia.org/wiki/Representational_State_Transfer). The API accepts data in the request body only in JSON-encoded format. It uses standard HTTP methods and response codes.
 
-The API also returns specific error messages when something goes wrong. Check out the API [errors page](/public-api/errors) for more details.
+Supported HTTP methods are `GET`, `POST`, `PUT`, and `DELETE`. `PATCH` is not supported on any endpoint and returns `405 Method Not Allowed`.
+
+Error responses are always JSON of the form `{"error": "<message>"}`. Check out the API [errors page](/public-api/errors) for more details.
 
 ## Base URL
 

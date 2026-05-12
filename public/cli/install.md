@@ -37,9 +37,19 @@ curl -fsSL https://pkg.phase.dev/install.sh | sh
 # curl -fsSL https://pkg.phase.dev/install.sh | sh -s -- --version 2.0.0
 ```
 
-```fish {{ title: 'Windows' }}
+```fish {{ title: 'Scoop' }}
 scoop bucket add phasehq https://github.com/phasehq/scoop-cli.git
 scoop install phase
+```
+
+```fish {{ title: 'Windows (.exe)' }}
+# Download the latest .exe for your architecture from:
+# https://github.com/phasehq/cli/releases/latest
+#
+#   phase_cli_<version>_windows_amd64.exe   (Intel / AMD 64-bit)
+#   phase_cli_<version>_windows_arm64.exe   (ARM 64-bit)
+#
+# Rename to phase.exe and add it to a directory on your PATH.
 ```
 
 ```fish {{ title: 'Alpine Linux' }}
@@ -73,8 +83,14 @@ brew update && brew upgrade phase
 phase update
 ```
 
-```fish {{ title: 'Windows' }}
+```fish {{ title: 'Scoop' }}
 scoop update phase
+```
+
+```fish {{ title: 'Windows (.exe)' }}
+# Re-download the latest .exe from:
+# https://github.com/phasehq/cli/releases/latest
+# and replace your existing phase.exe.
 ```
 
 ```fish {{ title: 'Alpine Linux' }}
