@@ -46,15 +46,19 @@ When fetching a single role, the full permissions object is included. The permis
 
 <Properties>
   <Property name="permissions" type="object">
-    Organisation-level permissions. Keys are resource names (e.g. `Apps`, `Members`, `Roles`), values are arrays of allowed actions (`create`, `read`, `update`, `delete`).
+    Organisation-level permissions. Keys are resource class names, values are arrays of allowed actions (`create`, `read`, `update`, `delete`). See [Roles & Permissions](/access-control/roles) for the full list of valid resource classes.
   </Property>
-  <Property name="app_permissions" type="object">
-    App-level permissions. Keys are resource names (e.g. `Secrets`, `Environments`), values are arrays of allowed actions.
+  <Property name="appPermissions" type="object">
+    App-level permissions. Keys are resource class names, values are arrays of allowed actions. See [Roles & Permissions](/access-control/roles) for the full list.
   </Property>
-  <Property name="global_access" type="boolean">
-    Whether the role grants global access to all Apps and Environments.
+  <Property name="globalAccess" type="boolean">
+    Whether the role grants global access to all Apps and Environments. This is a property of the managed Owner and Admin roles only.
   </Property>
 </Properties>
+
+<Note>
+Responses use camelCase keys (`appPermissions`, `globalAccess`). On POST and PUT, both camelCase and snake_case (`app_permissions`, `global_access`) are accepted on input.
+</Note>
 
 ---
 
@@ -180,13 +184,13 @@ When fetching a single role, the full permissions object is included. The permis
                 "ServiceAccounts": [],
                 "Roles": ["read"]
             },
-            "app_permissions": {
+            "appPermissions": {
                 "Environments": ["read", "create", "update"],
                 "Secrets": ["create", "read", "update", "delete"],
                 "Tokens": ["read", "create"],
                 "Members": ["read"]
             },
-            "global_access": false
+            "globalAccess": false
         }
     }
     ```
@@ -308,11 +312,11 @@ When fetching a single role, the full permissions object is included. The permis
                 "Members": ["read"],
                 "Roles": ["read"]
             },
-            "app_permissions": {
+            "appPermissions": {
                 "Secrets": ["read"],
                 "Environments": ["read"]
             },
-            "global_access": false
+            "globalAccess": false
         }
     }
     ```
@@ -422,12 +426,12 @@ When fetching a single role, the full permissions object is included. The permis
                 "Roles": ["read"],
                 "ServiceAccounts": ["read"]
             },
-            "app_permissions": {
+            "appPermissions": {
                 "Secrets": ["read"],
                 "Environments": ["read"],
                 "Logs": ["read"]
             },
-            "global_access": false
+            "globalAccess": false
         }
     }
     ```

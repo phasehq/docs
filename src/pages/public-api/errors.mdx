@@ -46,7 +46,7 @@ Here is a list of the different categories of status codes returned by the Proto
     [Read more](https://docs.phase.dev/access-control/network#access-denied-exceptions) about Network Access Policy exceptions.
   </Property>
   <Property name="404">
-    A 404 status code indicates that the requested resource does not exist, has been soft-deleted, or belongs to a different organisation. The API does not distinguish between these cases to avoid leaking cross-organisation information.
+    A 404 status code indicates that the requested resource does not exist, has been deleted, or belongs to a different organisation. The API does not distinguish between these cases to avoid leaking cross-organisation information.
   </Property>
   <Property name="405">
     A 405 status code indicates that the HTTP method is not supported by the endpoint. The Phase API supports `GET`, `POST`, `PUT`, and `DELETE` only — `PATCH` is not supported on any endpoint.
