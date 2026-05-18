@@ -498,7 +498,7 @@ If SMTP is not configured, or if `SKIP_EMAIL_VERIFICATION` is set to `true`, acc
 Phase uses Redis or Valkey for a synchronous jobs queues, caching and rate limiting.
 
 <Note>
-  If your Redis or Valkey instance support ACLs, make sure it's set up with at least `on ~* -@all +@read +@write +ping +multi +exec +discard +watch +unwatch +@scripting` access string (ACL) permissions.
+  If your Redis or Valkey instance support ACLs, make sure it's set up with at least `on ~* -@all +@read +@write +ping +multi +exec +discard +watch +unwatch +@scripting +@pubsub` access string (ACL) permissions.
 </Note>
 
 <Properties>

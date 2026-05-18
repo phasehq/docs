@@ -103,23 +103,23 @@ The new owner must be an existing member of the team.
 
 ### Adding apps to a team
 
-1. On the team detail page, click **Add apps**.
+1. On the team detail page, click **Manage app access**.
 
-2. Select the app you want to add. Only SSE-enabled apps are shown — if an app doesn't appear, enable SSE on it first.
+2. Select the app you want to add. Only SSE-enabled apps appear in the main list — apps without SSE enabled are listed under **N App(s) Unavailable** at the bottom of the picker. Click an unavailable app to open its settings in a new tab and enable SSE first.
 
-3. Select which **environments** within the app the team should have access to.
+3. Select which **environments** within the app the team should have access to. Use **All environments** to toggle every environment at once.
 
-4. Click **Add**. Phase provisions environment encryption keys for all active team members. Members who haven't completed their account setup yet (e.g. SCIM-provisioned users who haven't logged in) will receive keys on their first login.
+4. Click **Save**. Phase provisions environment encryption keys for all active team members. Members who haven't completed their account setup yet (e.g. SCIM-provisioned users who haven't logged in) will receive keys on their first login.
 
 ### Updating environment access
 
 After a team has been added to an app, you can change which environments it has access to:
 
-1. Click **Manage** next to the app on the team detail page.
+1. On the team detail page, click **Manage app access**.
 
-2. Toggle environments on or off.
+2. Find the app in the picker and toggle individual environments — or use **All environments** to grant access to every one at once.
 
-3. Save. Keys are provisioned for newly added environments and revoked for removed environments.
+3. Click **Save**. Keys are provisioned for newly added environments and revoked for removed ones.
 
 ### Removing an app from a team
 

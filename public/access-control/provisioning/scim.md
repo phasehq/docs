@@ -44,7 +44,7 @@ Before configuring your identity provider, enable SCIM in the Phase Console and 
 4. Copy the **SCIM Base URL** shown on the page. It will look like:
 
    ```
-   https://[YOUR_PHASE_HOST]/service/scim/v2/
+   https://[YOUR_PHASE_HOST]/service/v1/scim/v2/
    ```
 
 5. Click **Create token** to generate a SCIM bearer token. Give it a descriptive name (e.g., "Azure Entra ID") and select an expiry period.
@@ -73,7 +73,7 @@ Microsoft Entra ID supports SCIM-based provisioning through Enterprise Applicati
 
 1. Sign in to the [Azure Portal](https://portal.azure.com).
 
-2. Navigate to **Microsoft Entra ID** > **Enterprise applications**.
+2. Navigate to **Microsoft Entra ID**, then expand the **Manage** dropdown in the left sidebar and click **Enterprise applications**.
 
 3. Click **+ New application** at the top.
 
@@ -83,12 +83,12 @@ Microsoft Entra ID supports SCIM-based provisioning through Enterprise Applicati
 
 ### Step 2: Configure Provisioning
 
-1. In your newly created Enterprise Application, select **Provisioning** from the left sidebar under *Manage*.
+1. In your newly created Enterprise Application, expand the **Manage** dropdown in the left sidebar and click **Provisioning**.
 
-2. Click **Get started** or set the **Provisioning Mode** to **Automatic**.
+2. On the Provisioning overview screen, expand the **Manage** dropdown again, click **Provisioning**, set the **Provisioning Mode** to **Automatic**, and click **Save**.
 
 3. Under **Admin Credentials**, enter:
-   - **Tenant URL**: The SCIM Base URL from Phase (e.g., `https://[YOUR_PHASE_HOST]/service/scim/v2/`)
+   - **Tenant URL**: The SCIM Base URL from Phase (e.g., `https://[YOUR_PHASE_HOST]/service/v1/scim/v2/`)
    - **Secret Token**: The SCIM token you generated in Phase
 
 4. Click **Test Connection** to verify connectivity. Azure should report "The supplied credentials are authorized to enable provisioning".
@@ -97,22 +97,24 @@ Microsoft Entra ID supports SCIM-based provisioning through Enterprise Applicati
 
 ### Step 3: Configure Attribute Mappings
 
-After saving credentials, Azure will show the **Mappings** section. You need to configure both user and group mappings.
+After saving credentials, Azure will show the **Mappings** section under the **Manage** dropdown. You need to configure both user and group mappings.
+
+Note: if the attribute mappings remain locked or inaccessible after setting up the provisioning configuration and testing the connection, refresh the page.
 
 #### User Attribute Mappings
 
 1. Click **Provision Microsoft Entra ID Users**.
 
-2. Ensure the following mappings are present (these are the minimum required by Phase's SCIM implementation):
+2. Ensure the following mappings are present (these are the minimum required by Phase):
 
-   | Microsoft Entra ID Attribute | customappsso Attribute | Mapping Type |
-   |------|-------|------|
-   | `userPrincipalName` | `userName` | Direct |
-   | `Switch([IsSoftDeleted], , "False", "True", "True", "False")` | `active` | Expression |
-   | `mail` | `emails[type eq "work"].value` | Direct |
-   | `displayName` | `displayName` | Direct |
-   | `givenName` | `name.givenName` | Direct |
-   | `surname` | `name.familyName` | Direct |
+   | customappsso Attribute | Microsoft Entra ID Attribute | Matching precedence | Mapping Type (click Edit to see) |
+   |------|-------|------|------|
+   | `userName` | `userPrincipalName` | 1 | Direct |
+   | `active` | `Switch([IsSoftDeleted], , "False", "True", "True", "False")` | | Expression |
+   | `emails[type eq "work"].value` | `mail` | | Direct |
+   | `displayName` | `displayName` | | Direct |
+   | `name.givenName` | `givenName` | | Direct |
+   | `name.familyName` | `surname` | | Direct |
 
    <Note>
      The `mail` → `emails[type eq "work"].value` mapping is important. Phase uses this email to link the SCIM-provisioned account with the SSO login. If your users don't have the `mail` attribute populated in Entra ID, you can map `userPrincipalName` to `emails[type eq "work"].value` instead.
@@ -126,17 +128,17 @@ After saving credentials, Azure will show the **Mappings** section. You need to 
 
 2. Ensure the following mappings are present:
 
-   | Microsoft Entra ID Attribute | customappsso Attribute | Mapping Type |
-   |------|-------|------|
-   | `displayName` | `displayName` | Direct |
-   | `objectId` | `externalId` | Direct |
-   | `members` | `members` | Direct |
+   | customappsso Attribute | Microsoft Entra ID Attribute | Matching precedence | Mapping Type (click Edit to see) |
+   |------|-------|------|------|
+   | `displayName` | `displayName` | 1 | Direct |
+   | `externalId` | `objectId` | | Direct |
+   | `members` | `members` | | Direct |
 
 3. Click **Save**.
 
 ### Step 4: Assign Users and Groups
 
-1. Navigate to **Users and groups** in the left sidebar of your Enterprise Application.
+1. Navigate to **Users and groups** in the left sidebar of your Enterprise Application, under the **Manage** dropdown.
 
 2. Click **+ Add user/group**.
 
@@ -150,9 +152,9 @@ After saving credentials, Azure will show the **Mappings** section. You need to 
 
 1. Go back to the **Provisioning** page.
 
-2. Click **Start provisioning** to begin the initial sync.
+2. Find the **Provisioning Status** switch and flip it to **On** to begin the initial sync.
 
-3. The initial provisioning cycle may take a few minutes. You can monitor progress under **Provisioning logs** in Azure, or in the **SCIM > Provisioning Logs** section of the Phase Console.
+3. The initial provisioning cycle may take a few minutes. You can monitor progress under **Provisioning logs** in Azure, or in the **SCIM > Event Logs** section of the Phase Console.
 
 4. Once complete, provisioned users will appear on the Phase **Members** page with `SCIM` and `Pending` badges. Groups will appear as **Teams** in Phase.
 
@@ -171,7 +173,7 @@ After saving credentials, Azure will show the **Mappings** section. You need to 
 This usually means Azure received multiple errors from the SCIM endpoint. When quarantined, Azure exponentially backs off the retry interval (up to several hours between attempts). Check:
 - The SCIM token hasn't expired (check the Phase Console SCIM page)
 - The Phase instance is accessible from Azure's IP ranges
-- Review the provisioning logs in both Azure and the Phase Console for specific error messages
+- Review the provisioning logs in Azure and the **SCIM > Event Logs** section of the Phase Console for specific error messages
 
 To clear a quarantine and resume normal provisioning:
 
@@ -221,42 +223,44 @@ Okta supports SCIM-based provisioning through its application integration platfo
   SCIM provisioning and OIDC SSO are complementary features. SCIM handles account lifecycle (creation, deactivation), while OIDC handles authentication (login). You should configure both for the best experience.
 </Note>
 
-### Step 1: Create a SCIM Application in Okta
+### Step 1: Create a SCIM application in Okta
 
-If you already have an Okta OIDC app for Phase SSO, you can add SCIM provisioning to it. Otherwise, create a new app:
+Okta does not support attaching SCIM provisioning to an OIDC integration ([Okta documentation](https://help.okta.com/oie/en-us/content/topics/apps/apps_app_integration_wizard_scim.htm)). The recommended pattern is two apps: keep your existing OIDC app for SSO, and create a separate SWA app purely to hold the SCIM provisioning configuration. Users continue to sign in through the OIDC app — the SWA app's sign-in flow doesn't need to be operational.
 
 1. Sign in to the [Okta Admin Console](https://admin.okta.com).
 
-2. Navigate to **Applications** > **Applications**.
+2. Navigate to **Applications** > **Applications** and click **Create App Integration**.
 
-3. If adding SCIM to an existing app, click on your Phase OIDC app and skip to Step 2. Otherwise, click **Create App Integration**.
+3. Select **SWA - Secure Web Authentication** and click **Next**.
 
-4. Select **SWA - Secure Web Authentication** (this creates a bookmark app that supports SCIM provisioning), and click **Next**.
+4. Enter a name (e.g., "Phase SCIM") and set the **App's login page URL** to your Phase instance URL.
 
-5. Enter a name (e.g., "Phase Console") and the login URL for your Phase instance. Click **Finish**.
+5. (Optional) Under **App Visibility**, check **Do not display application icon to users** so the SCIM-only app doesn't appear on user dashboards.
 
 <Note>
-  If you already have a separate OIDC app for SSO, you can use a SWA app purely for SCIM provisioning. Users will still authenticate via the OIDC app — the SWA app only handles user/group lifecycle.
+  Sign-in settings (Who sets the credentials, Application username, etc.) only affect the SWA sign-in flow, which you're not using — accept the defaults.
 </Note>
+
+6. Click **Finish**.
 
 ### Step 2: Enable SCIM Provisioning
 
-1. In your application, go to the **General** tab.
+1. In your SCIM application, go to the **General** tab.
 
-2. Click **Edit** on the App Settings panel.
+2. In the **App Settings** section, click **Edit**.
 
 3. Under **Provisioning**, select **SCIM** and click **Save**.
 
-4. A new **Provisioning** tab will appear. Click on it.
+4. A new **Provisioning** tab appears. Click it.
 
-5. Under **SCIM Connection**, click **Edit** and enter:
-   - **SCIM connector base URL**: The SCIM Base URL from Phase (e.g., `https://[YOUR_PHASE_HOST]/service/scim/v2`)
+5. Under **Settings** > **Integration**, click **Edit** and enter:
+   - **SCIM connector base URL**: The SCIM Base URL from Phase (e.g., `https://[YOUR_PHASE_HOST]/service/v1/scim/v2`)
    - **Unique identifier field for users**: `userName`
-   - **Supported provisioning actions**: Check **Push New Users**, **Push Profile Updates**, and **Push Groups**
-   - **Authentication Mode**: `HTTP Header`
-   - **Authorization**: Paste the SCIM bearer token you generated in Phase (the token value only, without the `Bearer` prefix)
+   - **Supported provisioning actions**: check **Push New Users**, **Push Profile Updates**, and **Push Groups**
+   - **Authentication Mode**: select **HTTP Header**
+   - **Authorization**: paste the SCIM bearer token you generated in Phase (token value only — Okta adds the `Bearer ` prefix automatically)
 
-6. Click **Test Connector Configuration** to verify connectivity. Okta should report success for the enabled actions.
+6. Click **Test Connector Configuration**. Okta should show a "Connector configured successfully" dialog listing the actions you selected.
 
 7. Click **Save**.
 
@@ -284,10 +288,6 @@ If you already have an Okta OIDC app for Phase SSO, you can add SCIM provisionin
    | `familyName` | `name.familyName` | `user.lastName` |
    | `email` | `emails[type eq "work"].value` | `user.email` |
    | `displayName` | `displayName` | `user.displayName` |
-
-   <Note>
-     Okta sends many additional attributes by default (phone, address, title, etc.). Phase safely ignores any attributes it doesn't need — you can leave them as-is or remove them if you prefer a minimal mapping.
-   </Note>
 
    <Note>
      Okta uses `userName` (typically the user's email address) as the primary identifier. Ensure that the `userName` in Okta matches the email address used for SSO login, so Phase can link the SCIM-provisioned account with the OIDC identity.
@@ -324,7 +324,7 @@ If you already have an Okta OIDC app for Phase SSO, you can add SCIM provisionin
 
 #### "Error authenticating" when testing the connector
 
-- Verify the SCIM base URL ends with `/scim/v2` (no trailing slash)
+- Verify the SCIM base URL ends with `/v1/scim/v2/`
 - Verify the token is entered without the `Bearer` prefix — Okta adds it automatically
 - Ensure the SCIM token hasn't expired in the Phase Console
 
@@ -333,7 +333,7 @@ If you already have an Okta OIDC app for Phase SSO, you can add SCIM provisionin
 - Check that **Create Users** is enabled under **Provisioning** > **To App**
 - Verify users are assigned to the application under the **Assignments** tab
 - Check the **Tasks** page in Okta for specific error messages
-- Review the SCIM provisioning logs in the Phase Console for request/response details
+- Review the **SCIM > Event Logs** section in the Phase Console for request/response details
 
 #### Groups not syncing as Teams
 
