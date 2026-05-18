@@ -356,6 +356,10 @@ Organisation members are human users who belong to your Phase organisation, each
     - Users cannot remove themselves from the organisation (`403`).
     - Service Account callers cannot remove a member who holds a global-access role (`403`).
 
+    <Note>
+    Members provisioned via SCIM are routed through the SCIM deactivation flow on removal. This revokes all of the member's team-granted environment keys, wipes their wrapped keyring, and detaches their SCIM identity so the next provider sync can cleanly re-adopt them. Org owners cannot be deactivated this way (`403`); transfer ownership first.
+    </Note>
+
     ### URL parameters
 
     <Properties>

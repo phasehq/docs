@@ -133,7 +133,14 @@ When fetching a single service account, additional detail fields are included:
       <Property name="token_name" type="string">
         A name for the initial token. Defaults to `"Default"`.
       </Property>
+      <Property name="team_id" type="string">
+        Bind the service account to a [Team](/public-api/teams). Team-owned service accounts are visible only to team members (plus Owner / Admin), are auto-added as members of the team, are provisioned `EnvironmentKey` records for every SSE-enabled app the team has access to, and cannot later be transferred to a different team or be removed from the owning team's membership. Requires a Pro or Enterprise plan; the caller must be a member of the team (or hold global access).
+      </Property>
     </Properties>
+
+    <Note>
+    Service accounts are visible to all org members with the `ServiceAccounts.read` permission **except** team-owned ones — those are only visible to members of the owning team and to Owner / Admin. The same scoping applies to `GET /v1/service-accounts/` and `GET /v1/service-accounts/:id/`.
+    </Note>
 
   </Col>
   <Col sticky>

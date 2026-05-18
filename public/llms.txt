@@ -25,6 +25,7 @@
 - [public-api/members](https://docs.phase.dev/public-api/members.md)
 - [public-api/invites](https://docs.phase.dev/public-api/invites.md)
 - [public-api/service-accounts](https://docs.phase.dev/public-api/service-accounts.md)
+- [public-api/teams](https://docs.phase.dev/public-api/teams.md)
 - [public-api/roles](https://docs.phase.dev/public-api/roles.md)
 - [public-api/external-identities](https://docs.phase.dev/public-api/external-identities.md)
 - [public-api/errors](https://docs.phase.dev/public-api/errors.md)
