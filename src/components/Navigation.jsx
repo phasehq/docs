@@ -250,6 +250,7 @@ export const navigation = [
       { title: 'Members', href: '/public-api/members' },
       { title: 'Invites', href: '/public-api/invites' },
       { title: 'Service Accounts', href: '/public-api/service-accounts' },
+      { title: 'Teams', href: '/public-api/teams' },
       { title: 'Roles', href: '/public-api/roles' },
       { title: 'External Identities', href: '/public-api/external-identities' },
       { title: 'Errors', href: '/public-api/errors' },
