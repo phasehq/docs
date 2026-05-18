@@ -261,6 +261,11 @@ export const navigation = [
         href: '/access-control/authentication/oidc-sso',
       },
       { title: 'Tokens', href: '/access-control/authentication/tokens' },
+      {
+        title: 'SCIM Provisioning',
+        href: '/access-control/provisioning/scim',
+      },
+      { title: 'Teams', href: '/access-control/teams' },
       { title: 'Service Accounts', href: '/access-control/service-accounts' },
       {
         title: 'External Identities',

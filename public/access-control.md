@@ -34,9 +34,13 @@ User authentication in Phase is designed for seamless and secure access for huma
 
 Programmatic access to secrets in Phase is facilitated by Service Accounts. A Service Account is a special type of account that represents non-human users, such as applications, automation processes, or CI/CD pipelines, that need to interact with Phase programmatically through the API, SDK, or CLI.
 
-[Read more](/access-control/service-accounts) about how service accounts work.  
+[Read more](/access-control/service-accounts) about how service accounts work.
 
+## Teams
 
+Teams let you group members and service accounts together and grant them scoped access to apps and environments. Instead of managing access individually, you assign access at the team level — when someone joins the team, they automatically receive the right encryption keys. Teams support optional role overrides and work with SCIM provisioning for automated group sync.
+
+[Read more](/access-control/teams) about how teams work.
 
 ## Access Control - Key Concepts
 
@@ -78,6 +82,7 @@ Phase's RBAC system allows you to define permissions for Create, Read, Update, a
 | **Members** | Manage user access within the app |
 | **Integrations** | Control setup and management of app integrations |
 | **Encryption Mode** | Manage encryption settings for the app |
+| **Teams** | Manage team-based access within the app |
 
 ## Global Access
 
