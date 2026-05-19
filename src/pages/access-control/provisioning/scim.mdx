@@ -31,6 +31,12 @@ When SCIM is enabled, your identity provider communicates with Phase's SCIM v2 A
 3. **User completes account setup** → User sets up their sudo password and recovery phrase, enabling them to decrypt secrets
 4. **IdP unassigns user** → SCIM deactivates the user, revokes environment keys, and removes them from the organisation
 
+<Warning>
+  **Limitation: users with an existing Phase identity**
+
+  To prevent account takeover, Phase won't silently link a SCIM-provisioned account to an existing Phase user who already has a password, a linked SSO / social login, or an active membership in another organisation. The provision succeeds and the user appears under **Members** with `SCIM` and `Pending` badges, but their first SSO login to the new organisation is refused. A consent-based linking flow is planned as a follow-up.
+</Warning>
+
 ## Enable SCIM in Phase
 
 Before configuring your identity provider, enable SCIM in the Phase Console and create a provisioning token:

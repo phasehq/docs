@@ -1,3 +1,4 @@
+import { isValidElement } from 'react'
 import Link from 'next/link'
 import clsx from 'clsx'
 
@@ -120,7 +121,22 @@ export function MathSymbol({ children }) {
   return (<span className="font-serif font-semibold italic">{children}</span>)
 }
 
-export const img = (props) => (
-  <ZoomableImage {...props} width={props.width || 800} height={props.height || 600} />
-);
+export const img = function Img(props) {
+  return <ZoomableImage {...props} width={props.width || 800} height={props.height || 600} />
+}
+
+export const p = function P({ children, ...rest }) {
+  const arr = Array.isArray(children) ? children : [children]
+  const meaningful = arr.filter(
+    (c) => !(typeof c === 'string' && c.trim() === '')
+  )
+  if (
+    meaningful.length === 1 &&
+    isValidElement(meaningful[0]) &&
+    meaningful[0].type === img
+  ) {
+    return meaningful[0]
+  }
+  return <p {...rest}>{children}</p>
+}
 
