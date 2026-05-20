@@ -54,6 +54,9 @@ The secret model contains the basic key / value pairs that define your environme
   <Property name="path" type="string">
     The absolute path for the secret.
   </Property>
+  <Property name="folder" type="string | null">
+    Unique identifier of the folder that holds this secret, or `null` if the secret lives at the root path (`/`). Derived from `path` — you only set `path` on writes; `folder` is read-only in responses.
+  </Property>
   <Property name="version" type="number">
     The secret version.
   </Property>
@@ -139,7 +142,7 @@ The secret model contains the basic key / value pairs that define your environme
         tags: 'aws,postgres'
     };
 
-    fetch(url + new URLSearchParams(params), {
+    fetch(`${url}?${new URLSearchParams(params)}`, {
         method: 'GET', 
         headers: headers
     })
@@ -183,7 +186,7 @@ The secret model contains the basic key / value pairs that define your environme
     import (
       "fmt"
       "net/http"
-      "io/ioutil"
+      "io"
     )
 
     func main() {
@@ -208,7 +211,7 @@ The secret model contains the basic key / value pairs that define your environme
       }
       defer res.Body.Close()
 
-      body, err := ioutil.ReadAll(res.Body)
+      body, err := io.ReadAll(res.Body)
       if err != nil {
         fmt.Println(err)
         return
@@ -412,7 +415,7 @@ The secret model contains the basic key / value pairs that define your environme
     ]
     })
     headers = {
-    'Authorization': f"Bearer {token} ",
+    'Authorization': f"Bearer {token}",
     'Content-Type': 'application/json'
     }
 
@@ -426,7 +429,7 @@ The secret model contains the basic key / value pairs that define your environme
       "fmt"
       "strings"
       "net/http"
-      "io/ioutil"
+      "io"
     )
 
     func main() {
@@ -470,7 +473,7 @@ The secret model contains the basic key / value pairs that define your environme
       }
       defer res.Body.Close()
 
-      body, err := ioutil.ReadAll(res.Body)
+      body, err := io.ReadAll(res.Body)
       if err != nil {
         fmt.Println(err)
         return
@@ -692,7 +695,7 @@ The secret model contains the basic key / value pairs that define your environme
     ]
     })
     headers = {
-    'Authorization': f"Bearer {token} ",
+    'Authorization': f"Bearer {token}",
     'Content-Type': 'application/json'
     }
 
@@ -706,7 +709,7 @@ The secret model contains the basic key / value pairs that define your environme
       "fmt"
       "strings"
       "net/http"
-      "io/ioutil"
+      "io"
     )
 
     func main() {
@@ -748,7 +751,7 @@ The secret model contains the basic key / value pairs that define your environme
       }
       defer res.Body.Close()
 
-      body, err := ioutil.ReadAll(res.Body)
+      body, err := io.ReadAll(res.Body)
       if err != nil {
         fmt.Println(err)
         return
@@ -919,7 +922,7 @@ The secret model contains the basic key / value pairs that define your environme
       "fmt"
       "strings"
       "net/http"
-      "io/ioutil"
+      "io"
     )
 
     func main() {
@@ -949,7 +952,7 @@ The secret model contains the basic key / value pairs that define your environme
       }
       defer res.Body.Close()
 
-      body, err := ioutil.ReadAll(res.Body)
+      body, err := io.ReadAll(res.Body)
       if err != nil {
         fmt.Println(err)
         return

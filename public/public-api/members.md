@@ -510,7 +510,96 @@ Organisation members are human users who belong to your Phase organisation, each
             "name": "Developer"
         },
         "createdAt": "2024-06-01T12:00:00Z",
-        "updatedAt": "2024-06-03T10:00:00Z"
+        "updatedAt": "2024-06-03T10:00:00Z",
+        "apps": [
+            {
+                "id": "72b9ddd5-8fce-49ab-89d9-c431d53a9552",
+                "name": "My App",
+                "environments": [
+                    {
+                        "id": "af6b7a8e-c268-48c2-967c-032e86e26110",
+                        "name": "Development",
+                        "envType": "dev"
+                    },
+                    {
+                        "id": "c23d4e5f-6789-01bc-def2-3456789012cd",
+                        "name": "Production",
+                        "envType": "prod"
+                    }
+                ]
+            }
+        ]
+    }
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Get Access {{ tag: 'GET', label: '/v1/members/:id/access' }}
+
+<Row>
+  <Col>
+
+    Read the current app and environment access for a member.
+
+    ### URL parameters
+
+    <Properties>
+      <Property name="id" type="string">
+        The unique identifier of the organisation membership.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/v1/members/:id/access">
+
+    ```fish {{ title: 'cURL' }}
+    curl https://api.phase.dev/v1/members/3f2e1d0c-9b8a-7654-3210-fedcba987654/access/ \
+      -H "Authorization: Bearer {token}"
+    ```
+
+    ```python
+    import requests
+
+    member_id = '3f2e1d0c-9b8a-7654-3210-fedcba987654'
+    url = f'https://api.phase.dev/v1/members/{member_id}/access/'
+    headers = {'Authorization': f'Bearer {token}'}
+
+    response = requests.get(url, headers=headers)
+    data = response.json()
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+        "id": "3f2e1d0c-9b8a-7654-3210-fedcba987654",
+        "username": "alice",
+        "fullName": "Alice Smith",
+        "email": "alice@example.com",
+        "role": {
+            "id": "6aec9df5-cd75-4645-a9d0-8b6f6aff78d6",
+            "name": "Developer"
+        },
+        "createdAt": "2024-06-01T12:00:00Z",
+        "updatedAt": "2024-06-03T10:00:00Z",
+        "apps": [
+            {
+                "id": "72b9ddd5-8fce-49ab-89d9-c431d53a9552",
+                "name": "My App",
+                "environments": [
+                    {
+                        "id": "af6b7a8e-c268-48c2-967c-032e86e26110",
+                        "name": "Development",
+                        "envType": "dev"
+                    }
+                ]
+            }
+        ]
     }
     ```
 

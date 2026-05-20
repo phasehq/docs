@@ -14,7 +14,7 @@ export const metadata = {
 Apps are the top-level organizational unit in Phase. Each App contains Environments, which in turn hold Secrets. On this page, we'll look at the Apps API endpoints for listing, creating, updating, and deleting Apps. {{ className: 'lead' }}
 
 <Note>
-The Apps API requires server-side encryption (SSE). Apps created via the API are SSE-enabled by default. Only SSE-enabled Apps are returned by the API.
+Apps created via the API are SSE-enabled by default. The list endpoint returns metadata for all apps you have access to (SSE and E2EE) — check the `sseEnabled` field. Write operations against secrets and environments via the REST API require SSE; E2EE apps return `400 Bad Request`.
 </Note>
 
 <DocActions />
@@ -51,7 +51,7 @@ The Apps API requires server-side encryption (SSE). Apps created via the API are
 <Row>
   <Col>
 
-    Retrieve all SSE-enabled apps that the authenticated account has access to.
+    Retrieve metadata for all apps (SSE and E2EE) that the authenticated account has access to. Use the `sseEnabled` field to distinguish; only SSE apps support secrets and environment writes via the REST API.
 
   </Col>
   <Col sticky>

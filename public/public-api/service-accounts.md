@@ -543,3 +543,143 @@ When fetching a single service account, additional detail fields are included:
 
   </Col>
 </Row>
+
+---
+
+## Create Token {{ tag: 'POST', label: '/v1/service-accounts/:id/tokens' }}
+
+<Row>
+  <Col>
+
+    Mint an additional bearer token for an existing service account. The server uses its keyring to generate the token end-to-end, so the caller only needs to supply a name and optional expiry.
+
+    - Requires the service account to have **server-side key management (SSK)** enabled. SAs created via this API always do; client-side-only SAs return `400 Bad Request`.
+    - The `token` and `bearerToken` values in the response are only ever returned at creation time — store them securely.
+
+    ### URL parameters
+
+    <Properties>
+      <Property name="id" type="string">
+        The unique identifier of the service account.
+      </Property>
+    </Properties>
+
+    ### JSON Body
+
+    #### Required fields
+
+    <Properties>
+      <Property name="name" type="string">
+        A human-readable name for the token. Maximum 64 characters.
+      </Property>
+    </Properties>
+
+    #### Optional fields
+
+    <Properties>
+      <Property name="expiry" type="number">
+        Unix timestamp in milliseconds at which the token should expire. Omit for a non-expiring token.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="POST" label="/v1/service-accounts/:id/tokens">
+
+    ```fish {{ title: 'cURL' }}
+    curl -X POST https://api.phase.dev/v1/service-accounts/8ab27128-02d8-42c1-b893-12acaffbbd4b/tokens/ \
+      -H "Authorization: Bearer {token}" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "name": "CI Token",
+        "expiry": 1767225600000
+      }'
+    ```
+
+    ```python
+    import requests
+
+    sa_id = '8ab27128-02d8-42c1-b893-12acaffbbd4b'
+    url = f'https://api.phase.dev/v1/service-accounts/{sa_id}/tokens/'
+    headers = {
+        'Authorization': f'Bearer {token}',
+        'Content-Type': 'application/json',
+    }
+    payload = {
+        'name': 'CI Token',
+        'expiry': 1767225600000,
+    }
+
+    response = requests.post(url, json=payload, headers=headers)
+    data = response.json()
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response', statusCode: '201' }}
+    {
+        "id": "f8621d1a-6903-4b60-8e8d-2085a2475871",
+        "name": "CI Token",
+        "createdAt": "2024-06-01T12:00:00Z",
+        "expiresAt": "2025-12-31T00:00:00Z",
+        "token": "pss_service:v2:<token>:<saPubKey>:<keyShare0>:<wrapKey>",
+        "bearerToken": "ServiceAccount <token>"
+    }
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Delete Token {{ tag: 'DELETE', label: '/v1/service-accounts/:id/tokens/:token_id' }}
+
+<Row>
+  <Col>
+
+    Revoke a service account token. Any subsequent requests using the token return `401 Unauthorized`.
+
+    Returns `404 Not Found` if the token belongs to a different service account than the `:id` in the path — the API does not reveal token existence across service accounts.
+
+    ### URL parameters
+
+    <Properties>
+      <Property name="id" type="string">
+        The unique identifier of the service account.
+      </Property>
+      <Property name="token_id" type="string">
+        The unique identifier of the token to revoke.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="DELETE" label="/v1/service-accounts/:id/tokens/:token_id">
+
+    ```fish {{ title: 'cURL' }}
+    curl -X DELETE https://api.phase.dev/v1/service-accounts/8ab27128-02d8-42c1-b893-12acaffbbd4b/tokens/f8621d1a-6903-4b60-8e8d-2085a2475871/ \
+      -H "Authorization: Bearer {token}"
+    ```
+
+    ```python
+    import requests
+
+    sa_id = '8ab27128-02d8-42c1-b893-12acaffbbd4b'
+    token_id = 'f8621d1a-6903-4b60-8e8d-2085a2475871'
+    url = f'https://api.phase.dev/v1/service-accounts/{sa_id}/tokens/{token_id}/'
+    headers = {'Authorization': f'Bearer {token}'}
+
+    response = requests.delete(url, headers=headers)
+    # Returns 204 No Content on success
+    ```
+
+    </CodeGroup>
+
+    ```text {{ title: 'Response' }}
+    204 No Content
+    ```
+
+  </Col>
+</Row>
