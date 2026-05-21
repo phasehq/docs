@@ -1,12 +1,11 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 
 const CliDemo = ({ castFile, terminalFontSize}) => {
   const router = useRouter();
   const [playerInitialized, setPlayerInitialized] = useState(false);
 
-  // Generate a unique ID for the player container
-  const uniqueId = `player-container-${Math.random().toString(36).substr(2, 9)}`;
+  const uniqueId = `player-container-${useId()}`;
 
   useEffect(() => {
     const initializeAsciinema = () => {
