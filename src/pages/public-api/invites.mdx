@@ -68,7 +68,7 @@ Invites live under the Members resource — all endpoints are namespaced as `/v1
     - The email must not already belong to an active member or a pending invite. Duplicate invites return `409 Conflict` with `{"error": "An active invite already exists for '<email>'."}`.
 
     <Note>
-    The optional `apps` array on an invite is metadata recorded against the pending invite. Because Phase is end-to-end encrypted, no apps or environments can actually be granted to the invitee until they accept the invite and register their identity key — at which point the inviter (or another member with the appropriate permissions) must call the [Manage Access](/public-api/members#manage-access) endpoint.
+    App and environment access cannot be scoped at invite time. Because Phase is end-to-end encrypted, granting access requires the invitee's identity key, which doesn't exist until they accept the invite and complete their key ceremony. Use [Manage Access](/public-api/members#manage-access) after acceptance. Sending an `apps` field returns `400 Bad Request`.
     </Note>
 
     ### JSON Body
@@ -81,14 +81,6 @@ Invites live under the Members resource — all endpoints are namespaced as `/v1
       </Property>
       <Property name="role_id" type="string">
         The ID of the role to assign on acceptance.
-      </Property>
-    </Properties>
-
-    #### Optional fields
-
-    <Properties>
-      <Property name="apps" type="array">
-        An array of App IDs to pre-scope the invite to. The invited member will be granted access to these apps on acceptance.
       </Property>
     </Properties>
 
