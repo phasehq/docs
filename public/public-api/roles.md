@@ -52,12 +52,12 @@ When fetching a single role, the full permissions object is included. The permis
     App-level permissions. Keys are resource class names, values are arrays of allowed actions. See [Roles & Permissions](/access-control/roles) for the full list.
   </Property>
   <Property name="globalAccess" type="boolean">
-    Whether the role grants global access to all Apps and Environments. This is a property of the managed Owner and Admin roles only.
+    Read-only. Returned as `true` for the built-in `Owner` and `Admin` roles and `false` otherwise. Cannot be set on custom roles — POST and PUT reject requests that include `global_access` (or `globalAccess`) under `permissions`.
   </Property>
 </Properties>
 
 <Note>
-Responses use camelCase keys (`appPermissions`, `globalAccess`). On POST and PUT, both camelCase and snake_case (`app_permissions`, `global_access`) are accepted on input.
+Responses use camelCase keys (`appPermissions`, `globalAccess`). On POST and PUT, `app_permissions` snake_case is also accepted; the `permissions` payload must contain only `permissions` and `app_permissions` keys.
 </Note>
 
 ---
@@ -94,32 +94,34 @@ Responses use camelCase keys (`appPermissions`, `globalAccess`). On POST and PUT
     </CodeGroup>
 
     ```json {{ title: 'Response' }}
-    [
-        {
-            "id": "226bf078-74d5-406e-ba5b-dd68bf23326c",
-            "name": "Owner",
-            "description": null,
-            "color": "",
-            "isDefault": true,
-            "createdAt": "2024-01-01T00:00:00Z"
-        },
-        {
-            "id": "151e4e7b-6e39-4ede-a064-1f7d228723c5",
-            "name": "Admin",
-            "description": null,
-            "color": "",
-            "isDefault": true,
-            "createdAt": "2024-01-01T00:00:00Z"
-        },
-        {
-            "id": "6aec9df5-cd75-4645-a9d0-8b6f6aff78d6",
-            "name": "Developer",
-            "description": null,
-            "color": "",
-            "isDefault": true,
-            "createdAt": "2024-01-01T00:00:00Z"
-        }
-    ]
+    {
+        "data": [
+            {
+                "id": "226bf078-74d5-406e-ba5b-dd68bf23326c",
+                "name": "Owner",
+                "description": null,
+                "color": "",
+                "isDefault": true,
+                "createdAt": "2024-01-01T00:00:00Z"
+            },
+            {
+                "id": "151e4e7b-6e39-4ede-a064-1f7d228723c5",
+                "name": "Admin",
+                "description": null,
+                "color": "",
+                "isDefault": true,
+                "createdAt": "2024-01-01T00:00:00Z"
+            },
+            {
+                "id": "6aec9df5-cd75-4645-a9d0-8b6f6aff78d6",
+                "name": "Developer",
+                "description": null,
+                "color": "",
+                "isDefault": true,
+                "createdAt": "2024-01-01T00:00:00Z"
+            }
+        ]
+    }
     ```
 
   </Col>

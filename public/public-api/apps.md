@@ -78,16 +78,18 @@ Apps created via the API are SSE-enabled by default. The list endpoint returns m
     </CodeGroup>
 
     ```json {{ title: 'Response' }}
-    [
-        {
-            "id": "58006442-007b-4625-b8e2-80f7606484a0",
-            "name": "My App",
-            "description": "Production application",
-            "sseEnabled": true,
-            "createdAt": "2024-06-01T12:00:00Z",
-            "updatedAt": "2024-06-01T12:00:00Z"
-        }
-    ]
+    {
+        "data": [
+            {
+                "id": "58006442-007b-4625-b8e2-80f7606484a0",
+                "name": "My App",
+                "description": "Production application",
+                "sseEnabled": true,
+                "createdAt": "2024-06-01T12:00:00Z",
+                "updatedAt": "2024-06-01T12:00:00Z"
+            }
+        ]
+    }
     ```
 
   </Col>
@@ -174,9 +176,37 @@ Apps created via the API are SSE-enabled by default. The list endpoint returns m
         "description": "A new application",
         "sseEnabled": true,
         "createdAt": "2024-06-01T12:00:00Z",
-        "updatedAt": "2024-06-01T12:00:00Z"
+        "updatedAt": "2024-06-01T12:00:00Z",
+        "environments": [
+            {
+                "id": "e7d9cc21-f83c-441f-8887-8720ceab4c7e",
+                "name": "Development",
+                "envType": "dev",
+                "index": 0,
+                "createdAt": "2024-06-01T12:00:00Z",
+                "updatedAt": "2024-06-01T12:00:00Z"
+            },
+            {
+                "id": "c5b998fb-09cf-48ef-808a-46ed08a1f0ab",
+                "name": "Staging",
+                "envType": "staging",
+                "index": 1,
+                "createdAt": "2024-06-01T12:00:00Z",
+                "updatedAt": "2024-06-01T12:00:00Z"
+            },
+            {
+                "id": "538ac0e3-236a-48af-962f-69fab6449c2e",
+                "name": "Production",
+                "envType": "prod",
+                "index": 2,
+                "createdAt": "2024-06-01T12:00:00Z",
+                "updatedAt": "2024-06-01T12:00:00Z"
+            }
+        ]
     }
     ```
+
+    The `environments` array reflects whatever was created — either the three defaults (Development/Staging/Production) or the custom names from the request body, in request order. Each entry has the same shape as `GET /v1/environments/:id`.
 
   </Col>
 </Row>

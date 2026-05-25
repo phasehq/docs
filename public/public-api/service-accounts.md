@@ -84,18 +84,20 @@ When fetching a single service account, additional detail fields are included:
     </CodeGroup>
 
     ```json {{ title: 'Response' }}
-    [
-        {
-            "id": "8ab27128-02d8-42c1-b893-12acaffbbd4b",
-            "name": "deploy-bot",
-            "role": {
-                "id": "d3a2124c-9770-42d5-abf8-599b4a372e9d",
-                "name": "Service"
-            },
-            "createdAt": "2024-06-01T12:00:00Z",
-            "updatedAt": "2024-06-01T12:00:00Z"
-        }
-    ]
+    {
+        "data": [
+            {
+                "id": "8ab27128-02d8-42c1-b893-12acaffbbd4b",
+                "name": "deploy-bot",
+                "role": {
+                    "id": "d3a2124c-9770-42d5-abf8-599b4a372e9d",
+                    "name": "Service"
+                },
+                "createdAt": "2024-06-01T12:00:00Z",
+                "updatedAt": "2024-06-01T12:00:00Z"
+            }
+        ]
+    }
     ```
 
   </Col>
@@ -111,7 +113,7 @@ When fetching a single service account, additional detail fields are included:
     Create a new service account. The server generates all cryptographic keys and mints an initial authentication token, which is returned in the response.
 
     <Note>
-    The `token` and `bearerToken` fields are only returned once at creation time. Store them securely — they cannot be retrieved again.
+    The `initialToken.token` and `initialToken.bearerToken` strings are only returned once at creation time. Store them securely — they cannot be retrieved again. The token's `id` is returned alongside them so it can be referenced by the [Delete Token](#delete-token) endpoint later.
     </Note>
 
     ### JSON Body
@@ -188,10 +190,18 @@ When fetching a single service account, additional detail fields are included:
         },
         "createdAt": "2024-06-01T12:00:00Z",
         "updatedAt": "2024-06-01T12:00:00Z",
-        "token": "pss_service:v2:<token_value>:<kx_pub>:<share_a>:<wrap_key>",
-        "bearerToken": "ServiceAccount <token_value>"
+        "initialToken": {
+            "id": "f8621d1a-6903-4b60-8e8d-2085a2475871",
+            "name": "Default",
+            "createdAt": "2024-06-01T12:00:00Z",
+            "expiresAt": null,
+            "token": "pss_service:v2:<token_value>:<kx_pub>:<share_a>:<wrap_key>",
+            "bearerToken": "ServiceAccount <token_value>"
+        }
     }
     ```
+
+    The `initialToken.token` and `initialToken.bearerToken` strings are only returned in this response — there's no way to recover them later. The `initialToken.id` is the same identifier used by the [Delete Token](#delete-token) endpoint to revoke this specific token.
 
   </Col>
 </Row>
@@ -551,10 +561,11 @@ When fetching a single service account, additional detail fields are included:
 <Row>
   <Col>
 
-    Mint an additional bearer token for an existing service account. The server uses its keyring to generate the token end-to-end, so the caller only needs to supply a name and optional expiry.
+    Mint an additional bearer token for an existing service account. The server uses its keyring to generate the token end-to-end, so the caller only needs to supply a name and an optional expiry.
 
     - Requires the service account to have **server-side key management (SSK)** enabled. SAs created via this API always do; client-side-only SAs return `400 Bad Request`.
     - The `token` and `bearerToken` values in the response are only ever returned at creation time — store them securely.
+    - Expiry can be set as either an absolute timestamp (`expires_at`) or a relative TTL (`expires_in`). If both are supplied, `expires_at` takes priority. If neither is supplied, the token does not expire.
 
     ### URL parameters
 
@@ -577,8 +588,11 @@ When fetching a single service account, additional detail fields are included:
     #### Optional fields
 
     <Properties>
-      <Property name="expiry" type="number">
-        Unix timestamp in milliseconds at which the token should expire. Omit for a non-expiring token.
+      <Property name="expires_at" type="string">
+        Absolute expiry as an ISO-8601 datetime **with a timezone offset** (e.g. `2026-12-31T23:59:59Z` or `2026-12-31T23:59:59+00:00`). Must be in the future. Naive datetimes (no offset) are rejected.
+      </Property>
+      <Property name="expires_in" type="integer">
+        Token lifetime in seconds (positive integer). The server converts this to an absolute expiry at request time as `now + expires_in`. Ignored if `expires_at` is also supplied.
       </Property>
     </Properties>
 
@@ -593,7 +607,7 @@ When fetching a single service account, additional detail fields are included:
       -H "Content-Type: application/json" \
       -d '{
         "name": "CI Token",
-        "expiry": 1767225600000
+        "expires_at": "2026-12-31T23:59:59Z"
       }'
     ```
 
@@ -608,7 +622,9 @@ When fetching a single service account, additional detail fields are included:
     }
     payload = {
         'name': 'CI Token',
-        'expiry': 1767225600000,
+        'expires_at': '2026-12-31T23:59:59Z',
+        # Or use a relative TTL instead:
+        # 'expires_in': 2592000,  # 30 days
     }
 
     response = requests.post(url, json=payload, headers=headers)

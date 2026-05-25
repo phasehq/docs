@@ -77,20 +77,22 @@ Organisation members are human users who belong to your Phase organisation, each
     </CodeGroup>
 
     ```json {{ title: 'Response' }}
-    [
-        {
-            "id": "3f2e1d0c-9b8a-7654-3210-fedcba987654",
-            "username": "alice",
-            "fullName": "Alice Smith",
-            "email": "alice@example.com",
-            "role": {
-                "id": "6aec9df5-cd75-4645-a9d0-8b6f6aff78d6",
-                "name": "Developer"
-            },
-            "createdAt": "2024-06-01T12:00:00Z",
-            "updatedAt": "2024-06-01T12:00:00Z"
-        }
-    ]
+    {
+        "data": [
+            {
+                "id": "3f2e1d0c-9b8a-7654-3210-fedcba987654",
+                "username": "alice",
+                "fullName": "Alice Smith",
+                "email": "alice@example.com",
+                "role": {
+                    "id": "6aec9df5-cd75-4645-a9d0-8b6f6aff78d6",
+                    "name": "Developer"
+                },
+                "createdAt": "2024-06-01T12:00:00Z",
+                "updatedAt": "2024-06-01T12:00:00Z"
+            }
+        ]
+    }
     ```
 
   </Col>
