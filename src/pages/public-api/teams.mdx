@@ -93,22 +93,24 @@ Server-side Encryption (SSE) is required for an app to be granted to a team — 
     </CodeGroup>
 
     ```json {{ title: 'Response' }}
-    [
-        {
-            "id": "cf3c159d-3edb-4da6-8dbf-0af4959dabf4",
-            "name": "backend-eng",
-            "description": "Backend engineering team",
-            "isScimManaged": false,
-            "memberRole": null,
-            "serviceAccountRole": null,
-            "owner": {
-                "id": "99e37555-108d-4331-a385-6db971bbd617",
-                "email": "alice@example.com"
-            },
-            "createdAt": "2024-06-01T12:00:00Z",
-            "updatedAt": "2024-06-01T12:00:00Z"
-        }
-    ]
+    {
+        "data": [
+            {
+                "id": "cf3c159d-3edb-4da6-8dbf-0af4959dabf4",
+                "name": "backend-eng",
+                "description": "Backend engineering team",
+                "isScimManaged": false,
+                "memberRole": null,
+                "serviceAccountRole": null,
+                "owner": {
+                    "id": "99e37555-108d-4331-a385-6db971bbd617",
+                    "email": "alice@example.com"
+                },
+                "createdAt": "2024-06-01T12:00:00Z",
+                "updatedAt": "2024-06-01T12:00:00Z"
+            }
+        ]
+    }
     ```
 
   </Col>

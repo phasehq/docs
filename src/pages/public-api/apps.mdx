@@ -78,16 +78,18 @@ Apps created via the API are SSE-enabled by default. The list endpoint returns m
     </CodeGroup>
 
     ```json {{ title: 'Response' }}
-    [
-        {
-            "id": "58006442-007b-4625-b8e2-80f7606484a0",
-            "name": "My App",
-            "description": "Production application",
-            "sseEnabled": true,
-            "createdAt": "2024-06-01T12:00:00Z",
-            "updatedAt": "2024-06-01T12:00:00Z"
-        }
-    ]
+    {
+        "data": [
+            {
+                "id": "58006442-007b-4625-b8e2-80f7606484a0",
+                "name": "My App",
+                "description": "Production application",
+                "sseEnabled": true,
+                "createdAt": "2024-06-01T12:00:00Z",
+                "updatedAt": "2024-06-01T12:00:00Z"
+            }
+        ]
+    }
     ```
 
   </Col>

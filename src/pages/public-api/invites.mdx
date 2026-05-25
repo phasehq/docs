@@ -81,38 +81,40 @@ To **send** an invite, use the [Members API](/public-api/members#invite-member) 
     </CodeGroup>
 
     ```json {{ title: 'Response' }}
-    [
-        {
-            "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-            "inviteeEmail": "bob@example.com",
-            "role": {
-                "id": "6aec9df5-cd75-4645-a9d0-8b6f6aff78d6",
-                "name": "Developer"
+    {
+        "data": [
+            {
+                "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                "inviteeEmail": "bob@example.com",
+                "role": {
+                    "id": "6aec9df5-cd75-4645-a9d0-8b6f6aff78d6",
+                    "name": "Developer"
+                },
+                "invitedBy": {
+                    "type": "member",
+                    "email": "alice@example.com"
+                },
+                "createdAt": "2024-06-02T10:00:00Z",
+                "expiresAt": "2024-06-16T10:00:00Z",
+                "valid": true
             },
-            "invitedBy": {
-                "type": "member",
-                "email": "alice@example.com"
-            },
-            "createdAt": "2024-06-02T10:00:00Z",
-            "expiresAt": "2024-06-16T10:00:00Z",
-            "valid": true
-        },
-        {
-            "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
-            "inviteeEmail": "carol@example.com",
-            "role": {
-                "id": "d3a2124c-9770-42d5-abf8-599b4a372e9d",
-                "name": "Manager"
-            },
-            "invitedBy": {
-                "type": "service_account",
-                "name": "deploy-bot"
-            },
-            "createdAt": "2024-06-01T08:00:00Z",
-            "expiresAt": "2024-06-15T08:00:00Z",
-            "valid": true
-        }
-    ]
+            {
+                "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+                "inviteeEmail": "carol@example.com",
+                "role": {
+                    "id": "d3a2124c-9770-42d5-abf8-599b4a372e9d",
+                    "name": "Manager"
+                },
+                "invitedBy": {
+                    "type": "service_account",
+                    "name": "deploy-bot"
+                },
+                "createdAt": "2024-06-01T08:00:00Z",
+                "expiresAt": "2024-06-15T08:00:00Z",
+                "valid": true
+            }
+        ]
+    }
     ```
 
   </Col>

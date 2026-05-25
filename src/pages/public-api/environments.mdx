@@ -89,32 +89,34 @@ The Environments API requires server-side encryption (SSE) to be enabled for the
     </CodeGroup>
 
     ```json {{ title: 'Response' }}
-    [
-        {
-            "id": "af6b7a8e-c268-48c2-967c-032e86e26110",
-            "name": "Development",
-            "envType": "dev",
-            "index": 0,
-            "createdAt": "2024-06-01T12:00:00Z",
-            "updatedAt": "2024-06-01T12:00:00Z"
-        },
-        {
-            "id": "b12c3d4e-5678-90ab-cdef-1234567890ab",
-            "name": "Staging",
-            "envType": "staging",
-            "index": 1,
-            "createdAt": "2024-06-01T12:00:00Z",
-            "updatedAt": "2024-06-01T12:00:00Z"
-        },
-        {
-            "id": "c23d4e5f-6789-01bc-def2-3456789012cd",
-            "name": "Production",
-            "envType": "prod",
-            "index": 2,
-            "createdAt": "2024-06-01T12:00:00Z",
-            "updatedAt": "2024-06-01T12:00:00Z"
-        }
-    ]
+    {
+        "data": [
+            {
+                "id": "af6b7a8e-c268-48c2-967c-032e86e26110",
+                "name": "Development",
+                "envType": "dev",
+                "index": 0,
+                "createdAt": "2024-06-01T12:00:00Z",
+                "updatedAt": "2024-06-01T12:00:00Z"
+            },
+            {
+                "id": "b12c3d4e-5678-90ab-cdef-1234567890ab",
+                "name": "Staging",
+                "envType": "staging",
+                "index": 1,
+                "createdAt": "2024-06-01T12:00:00Z",
+                "updatedAt": "2024-06-01T12:00:00Z"
+            },
+            {
+                "id": "c23d4e5f-6789-01bc-def2-3456789012cd",
+                "name": "Production",
+                "envType": "prod",
+                "index": 2,
+                "createdAt": "2024-06-01T12:00:00Z",
+                "updatedAt": "2024-06-01T12:00:00Z"
+            }
+        ]
+    }
     ```
 
   </Col>
