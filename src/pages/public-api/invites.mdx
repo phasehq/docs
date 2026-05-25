@@ -4,17 +4,17 @@ import { DocActions } from '@/components/DocActions'
 export const metadata = {
   title: 'Invites API',
   description:
-    'Explore the Phase Invites API for listing and cancelling pending organisation member invitations.',
+    'Explore the Phase Invites API for creating, listing, and cancelling pending organisation member invitations.',
 }
 
 <Tag variant="small">API</Tag>
 
 # Invites
 
-Invites are pending membership requests sent to an email address. When an invite is accepted through the Phase console, the recipient becomes an organisation member with the assigned role. On this page, we'll look at the API endpoints for listing and cancelling pending invites. {{ className: 'lead' }}
+Invites are pending membership requests sent to an email address. When an invite is accepted through the Phase console, the recipient becomes an organisation member with the assigned role. On this page, we'll look at the API endpoints for creating, listing, and cancelling pending invites. {{ className: 'lead' }}
 
 <Note>
-To **send** an invite, use the [Members API](/public-api/members#invite-member) (`POST /v1/members/`).
+Invites live under the Members resource — all endpoints are namespaced as `/v1/members/invites/`. The `POST /v1/members/` endpoint is reserved for the future direct-member-creation flow and currently returns `405 Method Not Allowed`.
 </Note>
 
 <DocActions />
@@ -49,7 +49,107 @@ To **send** an invite, use the [Members API](/public-api/members#invite-member) 
 
 ---
 
-## List Invites {{ tag: 'GET', label: '/v1/invites' }}
+## Create Invite {{ tag: 'POST', label: '/v1/members/invites' }}
+
+<Row>
+  <Col>
+
+    Send an invitation to a new member. An invite email is sent to the specified address, and the invite expires after 14 days.
+
+    <Note>
+    This endpoint creates an **invite**, not a direct membership. The invited user must accept the invite via the console to become a member.
+    </Note>
+
+    ### Constraints
+
+    - The role must not have global access (i.e. Owner and Admin roles cannot be invited to).
+    - The role must not permit creating service account tokens.
+    - The email is validated against RFC format; whitespace is trimmed and the local + domain parts are lowercased. Invalid emails return `400 Bad Request`.
+    - The email must not already belong to an active member or a pending invite. Duplicate invites return `409 Conflict` with `{"error": "An active invite already exists for '<email>'."}`.
+
+    <Note>
+    The optional `apps` array on an invite is metadata recorded against the pending invite. Because Phase is end-to-end encrypted, no apps or environments can actually be granted to the invitee until they accept the invite and register their identity key — at which point the inviter (or another member with the appropriate permissions) must call the [Manage Access](/public-api/members#manage-access) endpoint.
+    </Note>
+
+    ### JSON Body
+
+    #### Required fields
+
+    <Properties>
+      <Property name="email" type="string">
+        The email address of the person to invite.
+      </Property>
+      <Property name="role_id" type="string">
+        The ID of the role to assign on acceptance.
+      </Property>
+    </Properties>
+
+    #### Optional fields
+
+    <Properties>
+      <Property name="apps" type="array">
+        An array of App IDs to pre-scope the invite to. The invited member will be granted access to these apps on acceptance.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="POST" label="/v1/members/invites">
+
+    ```fish {{ title: 'cURL' }}
+    curl -X POST https://api.phase.dev/v1/members/invites/ \
+      -H "Authorization: Bearer {token}" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "email": "bob@example.com",
+        "role_id": "6aec9df5-cd75-4645-a9d0-8b6f6aff78d6"
+      }'
+    ```
+
+    ```python
+    import requests
+
+    url = 'https://api.phase.dev/v1/members/invites/'
+    headers = {
+        'Authorization': f'Bearer {token}',
+        'Content-Type': 'application/json'
+    }
+    payload = {
+        'email': 'bob@example.com',
+        'role_id': '6aec9df5-cd75-4645-a9d0-8b6f6aff78d6'
+    }
+
+    response = requests.post(url, json=payload, headers=headers)
+    data = response.json()
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response', statusCode: '201' }}
+    {
+        "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+        "inviteeEmail": "bob@example.com",
+        "role": {
+            "id": "6aec9df5-cd75-4645-a9d0-8b6f6aff78d6",
+            "name": "Developer"
+        },
+        "invitedBy": {
+            "type": "member",
+            "email": "alice@example.com"
+        },
+        "createdAt": "2024-06-02T10:00:00Z",
+        "expiresAt": "2024-06-16T10:00:00Z",
+        "valid": true
+    }
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## List Invites {{ tag: 'GET', label: '/v1/members/invites' }}
 
 <Row>
   <Col>
@@ -59,17 +159,17 @@ To **send** an invite, use the [Members API](/public-api/members#invite-member) 
   </Col>
   <Col sticky>
 
-    <CodeGroup title="Request" tag="GET" label="/v1/invites">
+    <CodeGroup title="Request" tag="GET" label="/v1/members/invites">
 
     ```fish {{ title: 'cURL' }}
-    curl https://api.phase.dev/v1/invites/ \
+    curl https://api.phase.dev/v1/members/invites/ \
       -H "Authorization: Bearer {token}"
     ```
 
     ```python
     import requests
 
-    url = 'https://api.phase.dev/v1/invites/'
+    url = 'https://api.phase.dev/v1/members/invites/'
     headers = {
         'Authorization': f'Bearer {token}'
     }
@@ -122,7 +222,7 @@ To **send** an invite, use the [Members API](/public-api/members#invite-member) 
 
 ---
 
-## Cancel Invite {{ tag: 'DELETE', label: '/v1/invites/:id' }}
+## Cancel Invite {{ tag: 'DELETE', label: '/v1/members/invites/:id' }}
 
 <Row>
   <Col>
@@ -140,10 +240,10 @@ To **send** an invite, use the [Members API](/public-api/members#invite-member) 
   </Col>
   <Col sticky>
 
-    <CodeGroup title="Request" tag="DELETE" label="/v1/invites/:id">
+    <CodeGroup title="Request" tag="DELETE" label="/v1/members/invites/:id">
 
     ```fish {{ title: 'cURL' }}
-    curl -X DELETE https://api.phase.dev/v1/invites/a1b2c3d4-e5f6-7890-abcd-ef1234567890/ \
+    curl -X DELETE https://api.phase.dev/v1/members/invites/a1b2c3d4-e5f6-7890-abcd-ef1234567890/ \
       -H "Authorization: Bearer {token}"
     ```
 
@@ -151,7 +251,7 @@ To **send** an invite, use the [Members API](/public-api/members#invite-member) 
     import requests
 
     invite_id = 'a1b2c3d4-e5f6-7890-abcd-ef1234567890'
-    url = f'https://api.phase.dev/v1/invites/{invite_id}/'
+    url = f'https://api.phase.dev/v1/members/invites/{invite_id}/'
     headers = {
         'Authorization': f'Bearer {token}'
     }
