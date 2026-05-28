@@ -222,7 +222,7 @@ Responses use camelCase keys (`appPermissions`, `globalAccess`). On POST and PUT
         The role name. Maximum 64 characters. Must be unique within the organisation (case-insensitive).
       </Property>
       <Property name="permissions" type="object">
-        The permissions object. Must include `permissions` (org-level), `app_permissions` (app-level), and `global_access` (boolean).
+        The permissions object. Must contain exactly two keys: `permissions` (org-level) and `app_permissions` (app-level). The `global_access` flag cannot be set on custom roles — POST and PUT reject requests that include `global_access` (or `globalAccess`) under `permissions` with `400 Bad Request`.
       </Property>
     </Properties>
 
@@ -260,8 +260,7 @@ Responses use camelCase keys (`appPermissions`, `globalAccess`). On POST and PUT
           "app_permissions": {
             "Secrets": ["read"],
             "Environments": ["read"]
-          },
-          "global_access": false
+          }
         }
       }'
     ```
@@ -289,7 +288,6 @@ Responses use camelCase keys (`appPermissions`, `globalAccess`). On POST and PUT
                 'Secrets': ['read'],
                 'Environments': ['read'],
             },
-            'global_access': False,
         }
     }
 
@@ -345,7 +343,7 @@ Responses use camelCase keys (`appPermissions`, `globalAccess`). On POST and PUT
 
     ### JSON Body
 
-    When `permissions` is provided, the full object replaces the stored permissions and must contain all three keys: `permissions`, `app_permissions`, and `global_access`. The camelCase variants `appPermissions` and `globalAccess` are also accepted on input.
+    When `permissions` is provided, the full object replaces the stored permissions and must contain exactly two keys: `permissions` and `app_permissions`. The camelCase variant `appPermissions` is also accepted on input. Sending `global_access` (or `globalAccess`) under `permissions` returns `400 Bad Request`.
 
     <Properties>
       <Property name="name" type="string">
@@ -386,8 +384,7 @@ Responses use camelCase keys (`appPermissions`, `globalAccess`). On POST and PUT
             "Secrets": ["read"],
             "Environments": ["read"],
             "Logs": ["read"]
-          },
-          "global_access": false
+          }
         }
       }'
     ```
