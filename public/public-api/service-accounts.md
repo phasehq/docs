@@ -377,7 +377,7 @@ When fetching a single service account, additional detail fields are included:
 <Row>
   <Col>
 
-    Delete a service account. All associated tokens are immediately invalidated (subsequent requests with those tokens return `403 Forbidden`), and all app/environment access grants are removed.
+    Delete a service account. All associated tokens are immediately invalidated (subsequent requests with those tokens return `401 Unauthorized` with `{"error": "Token expired or deleted"}`), and all app/environment access grants are removed.
 
     ### URL parameters
 
