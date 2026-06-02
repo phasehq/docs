@@ -11,9 +11,6 @@ Phase supports native email and password authentication out of the box, with no 
 
 <DocActions />
 
-<Note>
-On self-hosted deployments, password authentication is **opt-in**. Operators must set `ENABLE_PASSWORD_AUTH=true` to expose password sign-up and login; instances default to SSO-only mode. See [`ENABLE_PASSWORD_AUTH`](/self-hosting/configuration/envars#password-authentication) in the self-hosting reference.
-</Note>
 
 ## Signup
 
