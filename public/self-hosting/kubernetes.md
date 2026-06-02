@@ -140,18 +140,6 @@ phaseSecrets: phase-console-secret # 👈 The name of the secret you have create
 ingress:
   enabled: true
   className: "nginx"
-  annotations:
-    kubernetes.io/ingress.class: nginx
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
-  hosts:
-    - host: phase.your-domain.com # 👈 Replace with your domain
-      paths:
-        - path: /
-          pathType: Prefix
-  tls:
-    - hosts:
-        - phase.your-domain.com # 👈 Replace with your domain
-      secretName: phase-tls
   annotations: {}
 
 certManager:
@@ -286,7 +274,7 @@ dig A phase.your-domain.com
 3. Describe the Certificate resource to check its status and events:
 
 ```fish
-kubectl describe certificate phase-tls -n your-phase-namespace # Replace with the namespace phase is installed in
+kubectl describe certificate phase-console-tls -n your-phase-namespace # Replace with the namespace phase is installed in
 ```
 
 4. Check NGINX Ingress controller logs in the `ingress-nginx` namespace.
