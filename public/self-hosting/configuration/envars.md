@@ -352,7 +352,7 @@ Env(s) required by the following containers:
 
 ## Password authentication
 
-Password authentication is **opt-in** for self-hosted instances. By default, Phase runs in SSO-only mode: password signup, login, change-password and password-based recovery are refused, and the login page hides the password UI. Set `ENABLE_PASSWORD_AUTH=true` to allow password sign-up and login alongside SSO.
+Password authentication is controlled by the `ENABLE_PASSWORD_AUTH` variable. The official Helm chart and [docker-compose template](https://raw.githubusercontent.com/phasehq/console/main/docker-compose.yml) **enable it by default**, so a standard self-hosted install has password sign-up and login working out of the box alongside any configured SSO. When the variable is unset, the application falls back to SSO-only mode: password signup, login, change-password and password-based recovery are refused, and the login page hides the password UI. Set `ENABLE_PASSWORD_AUTH=false` to run an SSO-only instance.
 
 <Properties>
   <Property name="ENABLE_PASSWORD_AUTH" type="boolean (Optional)">
@@ -373,7 +373,7 @@ Password authentication is **opt-in** for self-hosted instances. By default, Pha
 </Properties>
 
 <Note>
-Before enabling SSO-only mode (i.e. leaving `ENABLE_PASSWORD_AUTH` unset on an instance that previously had password users), make sure every member who needs continued access has signed in via SSO at least once -- the SocialAccount link is created on first SSO sign-in, and existing password users will otherwise be locked out. Configure at least one provider in [`SSO_PROVIDERS`](#additional-environment-variables) before disabling password auth, otherwise the instance will have no usable sign-in path.
+Before enabling SSO-only mode (i.e. setting `ENABLE_PASSWORD_AUTH=false`, or leaving it unset, on an instance that previously had password users), make sure every member who needs continued access has signed in via SSO at least once -- the SocialAccount link is created on first SSO sign-in, and existing password users will otherwise be locked out. Configure at least one provider in [`SSO_PROVIDERS`](#additional-environment-variables) before disabling password auth, otherwise the instance will have no usable sign-in path.
 </Note>
 
 ### Email verification

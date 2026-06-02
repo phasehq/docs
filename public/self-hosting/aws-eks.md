@@ -407,18 +407,7 @@ phaseSecrets: phase-console-secret
 ingress:
   enabled: true
   className: "nginx"
-  annotations:
-    kubernetes.io/ingress.class: nginx
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
-  hosts:
-    - host: phase.your-domain.com # 👈 Replace with your domain
-      paths:
-        - path: /
-          pathType: Prefix
-  tls:
-    - hosts:
-        - phase.your-domain.com # 👈 Replace with your domain
-      secretName: phase-tls
+  annotations: {}
 
 certManager:
   enabled: true
@@ -516,18 +505,7 @@ podDisruptionBudget:
 ingress:
   enabled: true
   className: "nginx"
-  annotations:
-    kubernetes.io/ingress.class: nginx
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
-  hosts:
-    - host: phase.your-domain.com # 👈 Replace with your domain
-      paths:
-        - path: /
-          pathType: Prefix
-  tls:
-    - hosts:
-        - phase.your-domain.com # 👈 Replace with your domain
-      secretName: phase-tls
+  annotations: {}
 
 certManager:
   enabled: true
