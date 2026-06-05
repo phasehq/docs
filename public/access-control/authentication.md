@@ -18,7 +18,7 @@ Phase supports native email/password authentication as well as third-party authe
 
 ## User Authentication
 
-User authentication in Phase is designed for seamless and secure web access. Phase supports [native email/password authentication](/access-control/authentication/password) out of the box, as well as both OAuth 2.0 and OpenID Connect (OIDC) protocols for Single Sign-On (SSO), allowing organizations to leverage their existing identity providers like Google, GitHub, GitLab, and JumpCloud. We plan to extend support to SCIM (System for Cross-domain Identity Management), which will enable automatic synchronization of user directories with Phase, including automatic provisioning and deprovisioning of user accounts based on changes in your organization's primary identity system.
+User authentication in Phase is designed for seamless and secure web access. Phase supports [native email/password authentication](/access-control/authentication/password) out of the box, as well as both OAuth 2.0 and OpenID Connect (OIDC) protocols for Single Sign-On (SSO), allowing organizations to leverage their existing identity providers like Google, GitHub, GitLab, and JumpCloud.
 
 ### Password Authentication
 
@@ -35,6 +35,19 @@ Email and password authentication is available out of the box on Phase Cloud, an
 </div>
 
 <UserAuthProviders />
+
+## User Provisioning
+
+Phase supports the SCIM v2 protocol to automatically synchronize users and groups from your identity provider. SCIM manages the full account lifecycle — automatic provisioning and deprovisioning of users, along with group-to-team mapping — so changes in your directory are reflected in Phase without manual user management. SCIM provisioning is available on the Enterprise tier.
+
+<div className="not-prose">
+  <Button
+    href="provisioning/scim"
+    variant="text"
+    arrow="right"
+    children="Explore supported providers"
+  />
+</div>
 
 ## Programmatic Authentication
 
