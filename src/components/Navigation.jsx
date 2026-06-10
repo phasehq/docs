@@ -325,6 +325,10 @@ export const navigation = [
       },
       { title: 'Kubernetes', href: '/integrations/platforms/kubernetes' },
       {
+        title: 'JetBrains IDEs',
+        href: '/integrations/platforms/jetbrains',
+      },
+      {
         title: 'AWS IAM',
         href: '/integrations/platforms/aws-iam',
       },

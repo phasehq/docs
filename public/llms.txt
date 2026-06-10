@@ -52,6 +52,7 @@
 - [integrations/platforms/docker](https://docs.phase.dev/integrations/platforms/docker.md)
 - [integrations/platforms/docker-compose](https://docs.phase.dev/integrations/platforms/docker-compose.md)
 - [integrations/platforms/kubernetes](https://docs.phase.dev/integrations/platforms/kubernetes.md)
+- [integrations/platforms/jetbrains](https://docs.phase.dev/integrations/platforms/jetbrains.md)
 - [integrations/platforms/aws-iam](https://docs.phase.dev/integrations/platforms/aws-iam.md)
 - [integrations/platforms/aws-elastic-container-service](https://docs.phase.dev/integrations/platforms/aws-elastic-container-service.md)
 - [integrations/platforms/aws-secrets-manager](https://docs.phase.dev/integrations/platforms/aws-secrets-manager.md)
