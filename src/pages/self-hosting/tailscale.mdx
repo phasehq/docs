@@ -1,0 +1,359 @@
+import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
+
+export const description =
+  'Run a private Phase Console on your Tailscale network (tailnet) with Docker Compose.'
+
+<Tag variant="small">SELF-HOSTING</Tag>
+
+# Docker Compose + Tailscale
+
+Run a private Phase Console instance inside your Tailscale network (tailnet) with Docker Compose. {{ className: 'lead' }}
+
+<DocActions />
+
+This guide extends the standard [Docker Compose deployment](/self-hosting/docker-compose) with a Tailscale sidecar container. It gives you:
+
+- **Private ingress**: the Phase Console joins your tailnet as its own machine (e.g. `phase`) and is reachable at `https://phase.<your-tailnet>.ts.net` from any device on your tailnet — with a valid, automatically provisioned TLS certificate via [Tailscale Serve](https://tailscale.com/kb/1312/serve). You don't need Tailscale installed on the Docker host itself. Optionally, you can expose the Console to the public internet through [Tailscale Funnel](https://tailscale.com/kb/1223/funnel) — no reverse proxy, DNS records or certificate management required.
+- **Private egress**: the Phase `backend` and `worker` containers can reach other machines on your tailnet directly. This lets [secret syncs](/integrations) and other integrations talk to private services — a self-hosted GitLab, Kubernetes cluster, an internal LLM gateway, a database — without exposing any of them to the internet.
+
+<Diagram caption="Phase deployed inside a Tailscale Tailnet">
+{`
+%%{init: {"flowchart": {"curve": "stepAfter", "nodeSpacing": 30, "rankSpacing": 70, "subGraphTitleMargin": {"top": 6, "bottom": 10}}, "themeVariables": {"edgeLabelBackground": "#18181b", "clusterBkg": "transparent"}}}%%
+graph LR
+    subgraph Internet["Public internet (Optional)"]
+        OutsideEng("Engineers<br/><small>outside the tailnet</small>")
+    end
+
+    subgraph Tailnet["Your private Tailnet"]
+        Eng("Engineers<br/><small>on the tailnet</small>")
+
+        subgraph Deployment["Docker Compose"]
+            TS("<b>Tailscale sidecar</b><br/><small>Serve · TLS · Funnel</small>")
+            Phase("<b>Phase</b><br/><small>nginx · console · API · workers</small>")
+        end
+
+        subgraph Priv["  Your private services  "]
+            GitLab("GitLab")
+            Kubernetes("Kubernetes")
+            LLM("LLM gateway")
+        end
+    end
+
+    Eng ==>|"https://phase.your-tailnet.ts.net"| TS
+    OutsideEng -.->|"Tailscale Funnel<br/><small>optional public access</small>"| TS
+    TS ==> Phase
+    Phase --> GitLab
+    Phase -->|"integrations<br/><small>link your private services</small>"| Kubernetes
+    Phase --> LLM
+
+    style Internet fill:#71717a12,stroke:#71717a,stroke-width:1.5px,stroke-dasharray:6 4
+    style Tailnet fill:#3b82f60f,stroke:#3b82f6,stroke-width:2px,stroke-dasharray:8 5
+    style Deployment fill:#10b9810f,stroke:#10b981,stroke-width:1.5px
+    style Priv fill:#a855f70d,stroke:#a855f7,stroke-width:1.5px,stroke-dasharray:4 4
+
+    classDef person fill:#1d4ed8,stroke:#60a5fa,stroke-width:1.5px,color:#fff
+    classDef ts fill:#047857,stroke:#34d399,stroke-width:1.5px,color:#fff
+    classDef phase fill:#6d28d9,stroke:#a78bfa,stroke-width:1.5px,color:#fff
+    classDef svc fill:#27272a,stroke:#a1a1aa,stroke-width:1.5px,color:#fafafa
+
+    class OutsideEng,Eng person
+    class TS ts
+    class Phase phase
+    class GitLab,Kubernetes,LLM svc
+
+    linkStyle 0,2 stroke:#10b981,stroke-width:2.5px
+    linkStyle 1 stroke:#f59e0b,stroke-width:2px
+    linkStyle 3,4,5 stroke:#a855f7,stroke-width:2px
+`}
+</Diagram>
+
+## Prerequisites
+
+- A Tailscale network ([tailnet](https://tailscale.com/kb/1136/tailnet)) with:
+  - [MagicDNS](https://tailscale.com/kb/1081/magicdns) enabled (default for new tailnets)
+  - [HTTPS certificates](https://tailscale.com/kb/1153/enabling-https) enabled — required by Tailscale Serve. Enable it in the Tailscale admin console under **DNS → HTTPS Certificates**.
+- Docker and Docker Compose installed on the host (see [Docker Compose](/self-hosting/docker-compose#1-install-docker-on-your-machine) for installation steps).
+
+### Generate a Tailscale auth key
+
+The sidecar authenticates to your tailnet with an [auth key](https://tailscale.com/kb/1085/auth-keys):
+
+1. Open the [Keys page](https://login.tailscale.com/admin/settings/keys) in the Tailscale admin console and click **Generate auth key**.
+2. Leave **Reusable** off (the key authenticates a single machine).
+3. Leave **Ephemeral** **off** — the Phase machine must persist across container restarts.
+4. If your tailnet uses [device approval](https://tailscale.com/kb/1099/device-approval), enable **Pre-approved**.
+5. Copy the generated `tskey-auth-…` key. You'll add it to your `.env` file below.
+
+<Note>
+  The auth key is only used on first boot. The sidecar persists its identity in
+  a Docker volume (`phase-tailscale-state`), so restarts and re-deployments do
+  not consume the key again — even after it expires.
+</Note>
+
+## 1. Download the configuration files
+
+Create a working directory:
+
+```fish
+mkdir -p phase-tailscale/nginx phase-tailscale/tailscale && cd phase-tailscale
+```
+
+**.env** template:
+
+```fish
+wget -O .env https://raw.githubusercontent.com/phasehq/console/main/.env.example
+```
+
+**Docker Compose** template:
+
+You can review the Tailscale docker compose configuration 👉 [here](https://github.com/phasehq/console/blob/main/tailscale-docker-compose.yml).
+
+```fish
+wget -O docker-compose.yml https://raw.githubusercontent.com/phasehq/console/main/tailscale-docker-compose.yml
+```
+
+**Nginx Dockerfile & config**:
+
+```fish
+wget -O ./nginx/Dockerfile https://raw.githubusercontent.com/phasehq/console/main/nginx/Dockerfile && \
+wget -O ./tailscale/nginx.conf https://raw.githubusercontent.com/phasehq/console/main/tailscale/nginx.conf
+```
+
+**Tailscale Serve config** — terminates TLS for your tailnet with a valid certificate and proxies to nginx:
+
+```fish
+wget -O ./tailscale/serve.json https://raw.githubusercontent.com/phasehq/console/main/tailscale/serve.json
+```
+
+## 2. Update your configuration
+
+Set the host and Tailscale-specific values in your `.env`, replacing `<your-tailnet>` with your [tailnet name](https://tailscale.com/kb/1217/tailnet-name) (e.g. `tail1a2b3c.ts.net`):
+
+```fish {{ title: '.env' }}
+HOST=phase.<your-tailnet>.ts.net
+HTTP_PROTOCOL=https://
+
+# Hostnames the backend will accept. 'backend' is required for
+# internal service-to-service calls. Add your host's LAN name if needed.
+ALLOWED_HOSTS=phase.<your-tailnet>.ts.net,localhost,backend
+ALLOWED_ORIGINS=https://phase.<your-tailnet>.ts.net,https://localhost
+
+# Tailscale auth key (see Prerequisites)
+TS_AUTHKEY=tskey-auth-…
+```
+
+### Generate secrets
+
+```fish
+sed -i.bak "s|DATABASE_PASSWORD=.*|DATABASE_PASSWORD=$(openssl rand -hex 32)|g" .env && \
+sed -i.bak "s|SECRET_KEY=.*|SECRET_KEY=$(openssl rand -hex 32)|g" .env && \
+sed -i.bak "s|SERVER_SECRET=.*|SERVER_SECRET=$(openssl rand -hex 32)|g" .env && \
+sed -i.bak "s|NEXTAUTH_SECRET=.*|NEXTAUTH_SECRET=$(openssl rand -hex 32)|g" .env && \
+rm .env.bak
+```
+
+For a complete list of available options, refer to the [environment variables](/self-hosting/configuration/envars) documentation.
+
+## 3. Start services
+
+```fish
+docker compose up -d
+```
+
+On first boot, the `tailscale` service joins your tailnet using `TS_AUTHKEY`. Check that it's connected:
+
+```fish
+docker compose exec tailscale tailscale status
+```
+
+## 4. Configure access
+
+<TabGroup title="Access" subtitle="Choose who can reach your Phase Console." slug="access">
+  <TabPanel title="Private - Tailnet only" slug="private">
+
+This is the default behaviour of the downloaded `serve.json` — the Console is reachable only from devices on your tailnet (subject to your [tailnet ACLs](https://tailscale.com/kb/1018/acls)).
+
+Check that Tailscale Serve is configured:
+
+```fish
+docker compose exec tailscale tailscale serve status
+# https://phase.<your-tailnet>.ts.net (tailnet only)
+# |-- / proxy http://127.0.0.1:80
+```
+
+From any device on your tailnet, check the health endpoints — no certificate-validation flags needed, since Tailscale Serve provisions a valid certificate (the first request after startup can take a few seconds while the certificate is issued):
+
+```fish
+curl https://phase.<your-tailnet>.ts.net/service/health/
+# {"status": "alive", "version": "x.x.x"}
+
+curl https://phase.<your-tailnet>.ts.net/api/health
+# {"status":"alive"}
+```
+
+Open `https://phase.<your-tailnet>.ts.net` in a browser on any tailnet device to create your account.
+
+The Console also remains reachable directly on the Docker host at `https://localhost` (self-signed certificate, so your browser will show a warning and `curl` needs `-k`). For strict tailnet-only access — no ports exposed on the Docker host at all — remove the `ports` section from the `tailscale` service in `docker-compose.yml` and run `docker compose up -d`.
+
+  </TabPanel>
+  <TabPanel title="Public - via Tailscale Funnel" slug="funnel">
+
+[Tailscale Funnel](https://tailscale.com/kb/1223/funnel) publishes the Console to the public internet at `https://phase.<your-tailnet>.ts.net` — Tailscale manages the public DNS record, and TLS still terminates inside your sidecar container (Tailscale's ingress relays encrypted traffic and cannot read it).
+
+<Warning>
+  With Funnel enabled, anyone on the internet can reach your Console's login
+  page. Make sure accounts use strong credentials, and consider restricting
+  signups with `USER_EMAIL_DOMAIN_WHITELIST` or enforcing SSO. Review
+  [your responsibilities](/self-hosting#your-responsibilities) before exposing
+  any deployment publicly.
+</Warning>
+
+Enable Funnel for the serve endpoint by adding an `AllowFunnel` block to `tailscale/serve.json`:
+
+```json {{ title: 'tailscale/serve.json' }}
+{
+  "TCP": {
+    "443": {
+      "HTTPS": true
+    }
+  },
+  "Web": {
+    "${TS_CERT_DOMAIN}:443": {
+      "Handlers": {
+        "/": {
+          "Proxy": "http://127.0.0.1:80"
+        }
+      }
+    }
+  },
+  "AllowFunnel": {
+    "${TS_CERT_DOMAIN}:443": true
+  }
+}
+```
+
+Apply it by recreating the sidecar (and the services that share its network namespace):
+
+```fish
+docker compose up -d --force-recreate tailscale && docker compose up -d
+```
+
+Check that Funnel is on:
+
+```fish
+docker compose exec tailscale tailscale funnel status
+# # Funnel on:
+# #     - https://phase.<your-tailnet>.ts.net
+```
+
+Verify the public path — resolve the hostname against public DNS (it should return Tailscale Funnel ingress IPs, not a `100.x` tailnet address) and check a health endpoint:
+
+```fish
+dig +short @8.8.8.8 phase.<your-tailnet>.ts.net
+
+curl https://phase.<your-tailnet>.ts.net/service/health/
+# {"status": "alive", "version": "x.x.x"}
+```
+
+<Note>
+  Funnel requires the `funnel` [node attribute](https://tailscale.com/kb/1223/funnel#requirements-and-limitations)
+  in your tailnet policy (allowed by default on new tailnets — if not, the
+  `tailscale` container logs print a link to enable it), and only supports
+  ports `443`, `8443` and `10000`.
+</Note>
+
+To turn Funnel off again, remove the `AllowFunnel` block from `tailscale/serve.json` and re-apply:
+
+```fish
+docker compose up -d --force-recreate tailscale && docker compose up -d
+```
+
+  </TabPanel>
+</TabGroup>
+
+## Operations
+
+### Custom machine name
+
+The tailnet machine name comes from the `hostname` of the `tailscale` service. Change `hostname: phase` to e.g. `hostname: secrets` to serve the Console at `https://secrets.<your-tailnet>.ts.net`, and update `HOST`, `ALLOWED_HOSTS` and `ALLOWED_ORIGINS` in your `.env` accordingly.
+
+### Restarting the Tailscale sidecar
+
+The `nginx`, `backend` and `worker` containers live inside the `tailscale` service's network namespace and must re-attach whenever it changes:
+
+- If the `tailscale` container was **restarted** (e.g. crashed and came back): `docker compose restart nginx backend worker`
+- If the `tailscale` container was **recreated** (e.g. after a config change): `docker compose up -d` recreates the dependent services automatically
+
+### Updating
+
+```fish
+docker compose pull && docker compose up -d
+```
+
+The Tailscale machine identity is kept in the `phase-tailscale-state` volume, so updates do not require a new auth key.
+
+### Uninstall
+
+To remove the deployment including all data:
+
+```fish
+docker compose down -v
+```
+
+Then remove the `phase` machine from your tailnet in the [Tailscale admin console](https://login.tailscale.com/admin/machines).
+
+---
+
+## Troubleshooting
+
+### `/dev/net/tun` not available
+
+Kernel-mode networking requires the TUN device on the Docker host. On most Linux hosts it exists by default; if not, load the module with `modprobe tun` and ensure it loads at boot.
+
+### `tailscale` container restarting in a loop
+
+Without a valid `TS_AUTHKEY`, the sidecar's login attempt times out and the container exits and restarts repeatedly — and the services sharing its network namespace lose connectivity. Check the logs:
+
+```fish
+docker compose logs tailscale
+```
+
+If the auth key is invalid or expired, generate a new one, update `.env`, and run:
+
+```fish
+docker compose up -d --force-recreate tailscale && docker compose up -d
+```
+
+### Certificate errors on the tailnet hostname
+
+Tailscale Serve requires **HTTPS Certificates** to be enabled for your tailnet (admin console → **DNS** → **HTTPS Certificates**). The first HTTPS request after startup can take a few seconds while the certificate is provisioned.
+
+### `400 Bad Request` from the backend
+
+The hostname you're using isn't in `ALLOWED_HOSTS`. Add it (comma-separated) in `.env` and run `docker compose up -d` to apply.
+
+### Testing connectivity to services on your tailnet
+
+The `backend` and `worker` containers have transparent access to your tailnet, with MagicDNS resolution — this is what lets [integrations](/integrations) like secret syncs and dynamic secrets reach private services (a self-hosted GitLab, a Kubernetes cluster, an internal LLM gateway) via their tailnet hostnames, without exposing them to the internet. You can verify connectivity from inside the containers:
+
+```fish
+docker compose exec backend curl http://<machine-name>:<port>/
+docker compose exec worker curl http://<machine-name>:<port>/
+```
+
+where `<machine-name>` is any machine on your tailnet (check `tailscale status` for the list).
+
+### Tailnet hostnames don't resolve from backend/worker
+
+MagicDNS inside the shared network namespace requires `TS_ACCEPT_DNS: "true"` on the `tailscale` service. Verify the resolver configuration:
+
+```fish
+docker compose exec backend cat /etc/resolv.conf
+# nameserver 100.100.100.100
+# search <your-tailnet>.ts.net
+```
+
+### Health checks
+
+Identical to the standard deployment — see [Docker Compose troubleshooting](/self-hosting/docker-compose#troubleshooting). On the tailnet hostname, omit `-k` (the certificate is valid); on `https://localhost`, keep it.

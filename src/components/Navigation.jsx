@@ -416,6 +416,7 @@ export const navigation = [
     links: [
       { title: 'Overview', href: '/self-hosting' },
       { title: 'Docker Compose', href: '/self-hosting/docker-compose' },
+      { title: 'Docker Compose + Tailscale', href: '/self-hosting/tailscale' },
       { title: 'Kubernetes', href: '/self-hosting/kubernetes' },
       {
         title: 'AWS Elastic Kubernetes Service',
