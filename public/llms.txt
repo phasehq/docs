@@ -80,6 +80,7 @@
 - [integrations/frameworks](https://docs.phase.dev/integrations/frameworks.md)
 - [self-hosting](https://docs.phase.dev/self-hosting.md)
 - [self-hosting/docker-compose](https://docs.phase.dev/self-hosting/docker-compose.md)
+- [self-hosting/tailscale](https://docs.phase.dev/self-hosting/tailscale.md)
 - [self-hosting/kubernetes](https://docs.phase.dev/self-hosting/kubernetes.md)
 - [self-hosting/aws-eks](https://docs.phase.dev/self-hosting/aws-eks.md)
 - [self-hosting/aws](https://docs.phase.dev/self-hosting/aws.md)
