@@ -15,7 +15,58 @@ Run a private Phase Console instance inside your Tailscale network (tailnet) wit
 This guide extends the standard [Docker Compose deployment](/self-hosting/docker-compose) with a Tailscale sidecar container. It gives you:
 
 - **Private ingress**: the Phase Console joins your tailnet as its own machine (e.g. `phase`) and is reachable at `https://phase.<your-tailnet>.ts.net` from any device on your tailnet — with a valid, automatically provisioned TLS certificate via [Tailscale Serve](https://tailscale.com/kb/1312/serve). You don't need Tailscale installed on the Docker host itself. Optionally, you can expose the Console to the public internet through [Tailscale Funnel](https://tailscale.com/kb/1223/funnel) — no reverse proxy, DNS records or certificate management required.
-- **Private egress**: the Phase `backend` and `worker` containers can reach other machines on your tailnet directly. This lets [secret syncs](/integrations) and other integrations talk to private services — a self-hosted GitLab, HashiCorp Vault, an internal LLM gateway, a database — without exposing any of them to the internet.
+- **Private egress**: the Phase `backend` and `worker` containers can reach other machines on your tailnet directly. This lets [secret syncs](/integrations) and other integrations talk to private services — a self-hosted GitLab, Kubernetes cluster, an internal LLM gateway, a database — without exposing any of them to the internet.
+
+<Diagram caption="Phase deployed inside a Tailscale Tailnet">
+{`
+%%{init: {"flowchart": {"curve": "stepAfter", "nodeSpacing": 30, "rankSpacing": 70, "subGraphTitleMargin": {"top": 6, "bottom": 10}}, "themeVariables": {"edgeLabelBackground": "#18181b", "clusterBkg": "transparent"}}}%%
+graph LR
+    subgraph Internet["Public internet (Optional)"]
+        OutsideEng("Engineers<br/><small>outside the tailnet</small>")
+    end
+
+    subgraph Tailnet["Your private Tailnet"]
+        Eng("Engineers<br/><small>on the tailnet</small>")
+
+        subgraph Deployment["Docker Compose"]
+            TS("<b>Tailscale sidecar</b><br/><small>Serve · TLS · Funnel</small>")
+            Phase("<b>Phase</b><br/><small>nginx · console · API · workers</small>")
+        end
+
+        subgraph Priv["  Your private services  "]
+            GitLab("GitLab")
+            Kubernetes("Kubernetes")
+            LLM("LLM gateway")
+        end
+    end
+
+    Eng ==>|"https://phase.your-tailnet.ts.net"| TS
+    OutsideEng -.->|"Tailscale Funnel<br/><small>optional public access</small>"| TS
+    TS ==> Phase
+    Phase --> GitLab
+    Phase -->|"integrations<br/><small>link your private services</small>"| Kubernetes
+    Phase --> LLM
+
+    style Internet fill:#71717a12,stroke:#71717a,stroke-width:1.5px,stroke-dasharray:6 4
+    style Tailnet fill:#3b82f60f,stroke:#3b82f6,stroke-width:2px,stroke-dasharray:8 5
+    style Deployment fill:#10b9810f,stroke:#10b981,stroke-width:1.5px
+    style Priv fill:#a855f70d,stroke:#a855f7,stroke-width:1.5px,stroke-dasharray:4 4
+
+    classDef person fill:#1d4ed8,stroke:#60a5fa,stroke-width:1.5px,color:#fff
+    classDef ts fill:#047857,stroke:#34d399,stroke-width:1.5px,color:#fff
+    classDef phase fill:#6d28d9,stroke:#a78bfa,stroke-width:1.5px,color:#fff
+    classDef svc fill:#27272a,stroke:#a1a1aa,stroke-width:1.5px,color:#fafafa
+
+    class OutsideEng,Eng person
+    class TS ts
+    class Phase phase
+    class GitLab,Kubernetes,LLM svc
+
+    linkStyle 0,2 stroke:#10b981,stroke-width:2.5px
+    linkStyle 1 stroke:#f59e0b,stroke-width:2px
+    linkStyle 3,4,5 stroke:#a855f7,stroke-width:2px
+`}
+</Diagram>
 
 ## Prerequisites
 
@@ -284,7 +335,7 @@ The hostname you're using isn't in `ALLOWED_HOSTS`. Add it (comma-separated) in 
 
 ### Testing connectivity to services on your tailnet
 
-The `backend` and `worker` containers have transparent access to your tailnet, with MagicDNS resolution — this is what lets [integrations](/integrations) like secret syncs and dynamic secrets reach private services (a self-hosted GitLab, a Vault instance, an internal LLM gateway) via their tailnet hostnames, without exposing them to the internet. You can verify connectivity from inside the containers:
+The `backend` and `worker` containers have transparent access to your tailnet, with MagicDNS resolution — this is what lets [integrations](/integrations) like secret syncs and dynamic secrets reach private services (a self-hosted GitLab, a Kubernetes cluster, an internal LLM gateway) via their tailnet hostnames, without exposing them to the internet. You can verify connectivity from inside the containers:
 
 ```fish
 docker compose exec backend curl http://<machine-name>:<port>/
