@@ -28,7 +28,8 @@ Install the Phase CLI on the platform or operating system of your choice.
 <CodeGroup>
 
 ```fish {{ title: 'MacOS' }}
-brew install phasehq/cli/phase
+brew tap phasehq/cli && brew trust phasehq/cli
+brew install phase
 ```
 
 ```fish {{ title: 'Linux' }}
@@ -76,6 +77,7 @@ docker run phasehq/cli
 <CodeGroup>
 
 ```fish {{ title: 'MacOS' }}
+brew trust phasehq/cli
 brew update && brew upgrade phase
 ```
 
