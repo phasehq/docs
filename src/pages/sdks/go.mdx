@@ -101,6 +101,8 @@ func main() {
     if err != nil {
         log.Fatalf("Failed to initialize Phase client: %v", err)
     }
+
+    _ = p // Use the client to manage secrets: p.Get(...), p.Create(...), etc.
 }
 ```
 
@@ -123,10 +125,21 @@ Phase supports three secret types, available as constants:
 | Constant | Value | Description |
 |---|---|---|
 | `phase.SecretTypeSecret` | `"secret"` | Default — standard encrypted secret |
-| `phase.SecretTypeSealed` | `"sealed"` | Write-only — value cannot be read back after creation |
+| `phase.SecretTypeSealed` | `"sealed"` | Write-only in the Phase Console — value is hidden in the Console UI after creation (still returned by the SDK / API) |
 | `phase.SecretTypeConfig` | `"config"` | Non-sensitive configuration value |
 
 Use `phase.ValidateSecretType(t)` to validate a type string — returns `nil` for valid types (including empty string, which defaults to `"secret"`).
+
+### Secret Lifecycle
+
+The `Lifecycle` field on `SecretResult` indicates how a secret's value is managed, available as constants:
+
+| Constant | Value | Description |
+|---|---|---|
+| `phase.SecretLifecycleStatic` | `"static"` | Default — the value is managed by the user |
+| `phase.SecretLifecycleRotating` | `"rotating"` | The value is automatically rotated by the Phase rotation engine |
+
+Secrets with a `rotating` lifecycle are managed by the Phase rotation engine and cannot be updated or deleted through the SDK — manage them via the rotating-secret controls in the Console. See [Rotating Secrets](/console/rotating-secrets). Dynamic secrets (`IsDynamic: true`) are leased credentials and carry no lifecycle value.
 
 ### Creating Secrets
 
@@ -166,7 +179,7 @@ if err != nil {
     log.Fatalf("Failed to create secret: %v", err)
 }
 
-// Create a sealed secret (write-only)
+// Create a sealed secret (value hidden in the Console after creation)
 err = p.Create(phase.CreateOptions{
     KeyValuePairs: []phase.KeyValuePair{
         {Key: "STRIPE_KEY", Value: "sk_live_..."},
@@ -201,7 +214,7 @@ type GetOptions struct {
     AppName  string // Alternative to AppID
     Keys     []string // Optional: filter by specific key names
     Tag      string   // Optional: filter by tag
-    Path     string   // Optional: filter by path (default: /)
+    Path     string   // Optional: filter by path; empty returns secrets from all paths
     Dynamic  bool     // Optional: include dynamic secrets
     Lease    bool     // Optional: generate leases for dynamic secrets
     LeaseTTL *int     // Optional: lease TTL in seconds
@@ -218,6 +231,7 @@ type SecretResult struct {
     Comment      string
     Path         string
     Type         string       // "secret", "sealed", or "config"
+    Lifecycle    string       // "static" (default) or "rotating" — see Secret Lifecycle
     Application  string
     Environment  string
     Tags         []string
@@ -296,7 +310,7 @@ type UpdateOptions struct {
 ```
 
 ```go
-result, err := p.Update(phase.UpdateOptions{
+err := p.Update(phase.UpdateOptions{
     EnvName: "Production",
     AppID:   "app-id-here", // Or use AppName: "MyApp"
     Key:     "API_KEY",
@@ -384,21 +398,30 @@ err := p.Create(phase.CreateOptions{
     AppID:         "app-id-here",
     OverrideValue: "http://localhost:3000",
 })
+if err != nil {
+    log.Fatalf("Failed to create secret: %v", err)
+}
 
 // Update override for existing secret
-_, err := p.Update(phase.UpdateOptions{
+err = p.Update(phase.UpdateOptions{
     EnvName:  "Development",
     AppID:    "app-id-here",
     Key:      "API_URL",
     Value:    "http://localhost:4000",
     Override: true,
 })
+if err != nil {
+    log.Fatalf("Failed to update override: %v", err)
+}
 
 // Toggle override on/off
-_, err := p.Update(phase.UpdateOptions{
+err = p.Update(phase.UpdateOptions{
     EnvName:        "Development",
     AppID:          "app-id-here",
     Key:            "API_URL",
     ToggleOverride: true,
 })
+if err != nil {
+    log.Fatalf("Failed to toggle override: %v", err)
+}
 ```
