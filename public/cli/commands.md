@@ -601,10 +601,6 @@ Examples:
 
 Update an existing secret with options to input the new value manually, read from stdin, or generate a random value of specified type and length.
 
-<Note>
-  Rotating secrets (`🔄`) are managed by Phase's rotation engine and cannot be updated via the CLI — the request is rejected with a `400`. Their value, path, and key are written only by the engine; manage them from the [Phase Console](/console/rotating-secrets).
-</Note>
-
 Usage:
 
 ```fish
@@ -656,10 +652,6 @@ Examples:
 ### 🗑️ `secrets delete`
 
 Delete one or more secrets from a specified environment, with an option to specify the application.
-
-<Note>
-  Rotating secrets (`🔄`) are managed by Phase's rotation engine and cannot be deleted via the CLI — the request is rejected with a `400`. To remove one, use the **Delete** action in its management dialog in the [Phase Console](/console/rotating-secrets), which also revokes all live credentials at the provider and cancels scheduled rotation jobs.
-</Note>
 
 Usage:
 
