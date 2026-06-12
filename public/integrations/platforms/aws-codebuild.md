@@ -31,13 +31,15 @@ For detailed cli install options, please see: [Installation](/cli/install)
 4. Use `PHASE_SERVICE_TOKEN` as the name and provide its value. Remember the parameter type and KMS key if you use one.
 5. In CodeBuild, grant permission to the service role to access this SSM parameter.
 
+Pin the CLI to a specific version with the `--version` flag for reproducible builds — find the latest version on the [Phase CLI releases page](https://github.com/phasehq/cli/releases).
+
 ```yaml
 version: 0.2
 
 phases:
   pre_build:
     commands:
-      - curl -fsSL https://pkg.phase.dev/install.sh | bash
+      - curl -fsSL https://pkg.phase.dev/install.sh | sh -s -- --version <X.XX.XX>
       - export $(phase secrets export --app "my application name" --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN | xargs)
   build:
     commands:

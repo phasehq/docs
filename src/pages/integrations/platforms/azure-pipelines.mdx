@@ -32,6 +32,8 @@ For detailed cli install options, please see: [Installation](/cli/install)
 
 ## Example:
 
+Pin the CLI to a specific version with the `--version` flag for reproducible builds — find the latest version on the [Phase CLI releases page](https://github.com/phasehq/cli/releases).
+
 ```yaml
 trigger:
   - master
@@ -44,7 +46,7 @@ stages:
     jobs:
       - job: Prepare
         steps:
-          - script: curl -fsSL https://pkg.phase.dev/install.sh | bash
+          - script: curl -fsSL https://pkg.phase.dev/install.sh | sh -s -- --version <X.XX.XX>
             displayName: 'Install phase-cli'
           - script: |
               echo "##vso[task.setvariable variable=DOCKERHUB_USERNAME;]$(phase secrets export --app "my application name" --env prod DOCKERHUB_USERNAME | cut -d '=' -f2)"
