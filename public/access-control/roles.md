@@ -55,6 +55,7 @@ The organization owner. This role is automatically assigned when a user creates 
 | **Environments** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Secrets** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **DynamicSecretLeases** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **RotatingSecrets** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Lockbox** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Logs** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Tokens (Legacy)** | Full access | ✅ | ✅ | ✅ | ✅ |
@@ -94,6 +95,7 @@ Admin users have access to most resources and permissions, and have global acces
 | **Environments** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Secrets** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **DynamicSecretLeases** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **RotatingSecrets** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Lockbox** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Logs** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Tokens (Legacy)** | Full access | ✅ | ✅ | ✅ | ✅ |
@@ -135,6 +137,7 @@ Management users with broad access to environments, secrets, and service account
 | **Environments** | Custom access | ✅ | ✅ | ✅ | ❌ |
 | **Secrets** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **DynamicSecretLeases** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **RotatingSecrets** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Lockbox** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Logs** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Tokens (Legacy)** | Full access | ✅ | ✅ | ✅ | ✅ |
@@ -174,6 +177,7 @@ Default role for Service Accounts, providing programmatic access to secrets with
 | **Environments** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Secrets** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **DynamicSecretLeases** | Full access | ✅ | ✅ | ❌ | ❌ |
+| **RotatingSecrets** | Read access | ✅ | ❌ | ❌ | ❌ |
 | **Lockbox** | No access | ❌ | ❌ | ❌ | ❌ |
 | **Logs** | No access | ❌ | ❌ | ❌ | ❌ |
 | **Tokens (Legacy)** | No access | ❌ | ❌ | ❌ | ❌ |
@@ -213,6 +217,7 @@ Developers have limited permissions at the organization level and must be given 
 | **Environments** | Custom access | ✅ | ✅ | ✅ | ❌ |
 | **Secrets** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **DynamicSecretLeases** | Full access | ✅ | ✅ | ❌ | ❌ |
+| **RotatingSecrets** | Read access | ✅ | ❌ | ❌ | ❌ |
 | **Lockbox** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Logs** | Read access | ✅ | ❌ | ❌ | ❌ |
 | **Tokens (Legacy)** | Custom access | ✅ | ✅ | ❌ | ❌ |
