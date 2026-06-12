@@ -32,6 +32,8 @@ For detailed cli install options, please see: [Installation](/cli/install)
 
 ### Example:
 
+Pin the CLI to a specific version with the `--version` flag for reproducible builds — find the latest version on the [Phase CLI releases page](https://github.com/phasehq/cli/releases).
+
 ```yaml
 image: atlassian/default-image:2
 
@@ -40,7 +42,7 @@ pipelines:
     - step:
         name: Prepare
         script:
-          - curl -fsSL https://pkg.phase.dev/install.sh | bash
+          - curl -fsSL https://pkg.phase.dev/install.sh | sh -s -- --version <X.XX.XX>
           - export $(phase secrets export --app "my application name" --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN | xargs)
     - step:
         name: Build and Push

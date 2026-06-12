@@ -33,11 +33,13 @@ For detailed cli install options, please see: [Installation](/cli/install)
 
 In your `pipeline.yml`:
 
+Pin the CLI to a specific version with the `--version` flag for reproducible builds — find the latest version on the [Phase CLI releases page](https://github.com/phasehq/cli/releases).
+
 ```yaml
 steps:
   - label: 'Prepare'
     command:
-      - 'curl -fsSL https://pkg.phase.dev/install.sh | bash'
+      - 'curl -fsSL https://pkg.phase.dev/install.sh | sh -s -- --version <X.XX.XX>'
       - 'export $(phase secrets export --app "my application name" --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN | xargs)'
 
   - label: 'Build and Push'

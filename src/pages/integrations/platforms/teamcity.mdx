@@ -34,14 +34,14 @@ For detailed cli install options, please see: [Installation](/cli/install)
 
 Create a TeamCity build configuration and add the following build steps:
 
-Create a TeamCity build configuration and add the following build steps:
+Pin the CLI to a specific version with the `--version` flag for reproducible builds — find the latest version on the [Phase CLI releases page](https://github.com/phasehq/cli/releases).
 
 1. **Prepare (Command Line Runner)**:
 
    - Run: `Custom script`
    - Custom script:
      ```fish
-     curl -fsSL https://pkg.phase.dev/install.sh | bash
+     curl -fsSL https://pkg.phase.dev/install.sh | sh -s -- --version <X.XX.XX>
      export $(phase secrets export --app "my application name" --env prod DOCKERHUB_USERNAME DOCKERHUB_TOKEN | xargs)
      ```
 

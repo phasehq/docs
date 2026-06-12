@@ -39,7 +39,7 @@ brew install phasehq/cli/phase
 ```
 
 ```fish {{ title: 'Linux' }}
-curl -fsSL https://pkg.phase.dev/install.sh | bash
+curl -fsSL https://pkg.phase.dev/install.sh | sh
 ```
 
 ```fish {{ title: 'Scoop' }}
@@ -58,7 +58,7 @@ scoop install phase
 ```
 
 ```fish {{ title: 'Alpine Linux' }}
-curl -fsSL https://pkg.phase.dev/install.sh | bash
+curl -fsSL https://pkg.phase.dev/install.sh | sh
 ```
 
 ```fish {{ title: 'NixOS' }}
@@ -77,11 +77,11 @@ docker run phasehq/cli
 ```
 
 ```fish {{ title: 'Raspberry Pi' }}
-curl -fsSL https://pkg.phase.dev/install.sh | bash
+curl -fsSL https://pkg.phase.dev/install.sh | sh
 ```
 
 ```fish {{ title: 'ARM64' }}
-curl -fsSL https://pkg.phase.dev/install.sh | bash
+curl -fsSL https://pkg.phase.dev/install.sh | sh
 ```
 
 </CodeGroup>
