@@ -338,16 +338,6 @@ if len(keysNotFound) > 0 {
 }
 ```
 
-#### Get raw values without resolving references
-
-```go
-secrets, err := p.Get(phase.GetOptions{
-    EnvName: "Production",
-    AppID:   "app-id-here",
-    Raw:     true, // ${REF} syntax is preserved as-is
-})
-```
-
 ### Secret References
 
 `Get()` automatically resolves `${REF}` syntax in secret values before returning results. This includes same-environment (`${KEY}`), cross-environment (`${staging.SECRET_KEY}`), cross-app (`${backend_api::production.API_KEY}`), and path-scoped (`${/backend/config/DB_HOST}`) references.
