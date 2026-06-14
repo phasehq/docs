@@ -42,6 +42,9 @@ The secret model contains the basic key / value pairs that define your environme
   <Property name="type" type="string">
     The secret type. One of `secret` (default), `sealed`, or `config`. Sealed secrets have their values redacted in the Console UI after saving, and their type cannot be changed once saved. Config secrets are non-sensitive values displayed in plaintext by default.
   </Property>
+  <Property name="lifecycle" type="string">
+    Indicates how this secret's value is managed. One of `static` (default — user-managed) or `rotating` (engine-managed, auto-rotated against a third-party provider). `rotating` secrets reject `PUT` and `DELETE` on this endpoint — manage them via the rotating-secret controls in the Console. See [Rotating Secrets](/console/rotating-secrets).
+  </Property>
   <Property name="comment" type="string">
     The comment for the secret, if provided.
   </Property>
@@ -246,6 +249,7 @@ The secret model contains the basic key / value pairs that define your environme
             "key": "DEBUG",
             "value": "False",
             "type": "secret",
+            "lifecycle": "static",
             "comment": "Debug mode for the backend app",
             "tags": ["config"],
             "override": {
@@ -558,6 +562,10 @@ The secret model contains the basic key / value pairs that define your environme
 
     Update one or more secrets in an environment.
 
+    <Note>
+      Secrets with `lifecycle: "rotating"` are managed by the Phase rotation engine and cannot be updated via this endpoint — the request is rejected with `400`. Manage rotating secrets from the Console; only the engine writes their value, path, and key.
+    </Note>
+
     ### Required parameters
 
     <Properties>
@@ -833,6 +841,10 @@ The secret model contains the basic key / value pairs that define your environme
   <Col>
 
     Delete one or more secrets from an environment.
+
+    <Note>
+      Secrets with `lifecycle: "rotating"` are managed by the Phase rotation engine and cannot be deleted via this endpoint — the request is rejected with `400`. To delete a rotating secret, use the **Delete** action in its management dialog in the Console, which also revokes all live credentials at the provider and cancels scheduled rotation jobs.
+    </Note>
 
     ### Required parameters
     

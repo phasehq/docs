@@ -460,6 +460,7 @@ Usage:
 
 - `🔒`: Sealed secret (write-only — value cannot be read back after creation).
 - `🔧`: Config secret (non-sensitive configuration value, stored unencrypted).
+- `🔄`: Rotating secret (value is automatically rotated on a schedule by Phase).
 - `🔗`: Secret references another secret in the same environment.
 - `🌐`: Cross-environment reference (secret from another environment in the same or different application).
 - `🔖`: Tag associated with the secret.
@@ -498,6 +499,8 @@ Example:
     "value": "True",
     "comment": "This is only for local development. NOT to be used in production.",
     "path": "/",
+    "type": "secret",
+    "lifecycle": "static",
     "application": "example-app",
     "environment": "Development",
     "tags": [
@@ -548,6 +551,7 @@ Multiple keys example:
 - The `get` command provides a JSON-formatted output including key details such as the secret value, whether it's overridden, tags associated with it, and any comments.
 - Using the `--tags` option allows you to filter the secret based on specific tags.
 - If you have dynamic secrets configured and try to fetch one by key, the CLI will automatically generate a lease and return the value of the freshly created dynamic secret.
+- The `lifecycle` field is `static` for normal, user-managed secrets and `rotating` for secrets whose value is automatically rotated by Phase against a third-party provider (see [Rotating Secrets](/console/rotating-secrets)).
 - When invoked by an AI agent, sealed and secret-type values are redacted based on `ai.json` configuration.
 
 ### 💳 `secrets create`

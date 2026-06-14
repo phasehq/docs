@@ -219,6 +219,7 @@ export const navigation = [
       { title: 'Environments', href: '/console/environments' },
       { title: 'Secrets', href: '/console/secrets' },
       { title: 'Dynamic Secrets', href: '/console/dynamic-secrets' },
+      { title: 'Rotating Secrets', href: '/console/rotating-secrets' },
     ],
   },
   {
@@ -402,6 +403,14 @@ export const navigation = [
       {
         title: 'Buildkite',
         href: '/integrations/platforms/buildkite',
+      },
+      {
+        title: 'LiteLLM',
+        href: '/integrations/platforms/litellm',
+      },
+      {
+        title: 'OpenAI',
+        href: '/integrations/platforms/openai',
       },
     ],
   },
