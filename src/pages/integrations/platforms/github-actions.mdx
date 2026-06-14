@@ -329,6 +329,8 @@ For detailed CLI installation options, please see: [Installation](/cli/install)
 
 ### Single stage
 
+Pin the CLI to a specific version with the `--version` flag for reproducible builds — find the latest version on the [Phase CLI releases page](https://github.com/phasehq/cli/releases). The install script self-elevates when needed, so `sudo` isn't required.
+
 ```yaml
 name: CI
 
@@ -343,7 +345,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install phase-cli
-        run: curl -fsSL https://pkg.phase.dev/install.sh | sudo bash
+        run: curl -fsSL https://pkg.phase.dev/install.sh | sh -s -- --version <X.XX.XX>
 
       - name: Export and set environment variables
         env:

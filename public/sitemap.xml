@@ -54,6 +54,7 @@
 <url><loc>https://docs.phase.dev/integrations/platforms/hashicorp-terraform</loc><lastmod>2026-06-14T14:25:06.783Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
 <url><loc>https://docs.phase.dev/integrations/platforms/hashicorp-vault</loc><lastmod>2026-06-14T14:25:06.783Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
 <url><loc>https://docs.phase.dev/integrations/platforms/jenkins</loc><lastmod>2026-06-14T14:25:06.783Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://docs.phase.dev/integrations/platforms/jetbrains</loc><lastmod>2026-06-14T14:25:06.783Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
 <url><loc>https://docs.phase.dev/integrations/platforms/kubernetes</loc><lastmod>2026-06-14T14:25:06.783Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
 <url><loc>https://docs.phase.dev/integrations/platforms/litellm</loc><lastmod>2026-06-14T14:25:06.783Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
 <url><loc>https://docs.phase.dev/integrations/platforms/openai</loc><lastmod>2026-06-14T14:25:06.783Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
@@ -95,4 +96,5 @@
 <url><loc>https://docs.phase.dev/self-hosting/maintenance</loc><lastmod>2026-06-14T14:25:06.783Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
 <url><loc>https://docs.phase.dev/self-hosting/railway</loc><lastmod>2026-06-14T14:25:06.783Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
 <url><loc>https://docs.phase.dev/self-hosting/raspberrypi</loc><lastmod>2026-06-14T14:25:06.783Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://docs.phase.dev/self-hosting/tailscale</loc><lastmod>2026-06-14T14:25:06.783Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
 </urlset>

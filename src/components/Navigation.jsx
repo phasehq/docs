@@ -326,6 +326,10 @@ export const navigation = [
       },
       { title: 'Kubernetes', href: '/integrations/platforms/kubernetes' },
       {
+        title: 'JetBrains IDEs',
+        href: '/integrations/platforms/jetbrains',
+      },
+      {
         title: 'AWS IAM',
         href: '/integrations/platforms/aws-iam',
       },
@@ -421,6 +425,7 @@ export const navigation = [
     links: [
       { title: 'Overview', href: '/self-hosting' },
       { title: 'Docker Compose', href: '/self-hosting/docker-compose' },
+      { title: 'Docker Compose + Tailscale', href: '/self-hosting/tailscale' },
       { title: 'Kubernetes', href: '/self-hosting/kubernetes' },
       {
         title: 'AWS Elastic Kubernetes Service',
