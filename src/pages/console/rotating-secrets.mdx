@@ -136,6 +136,28 @@ Chronological log of every lifecycle event — mint attempts, rotations, revoke 
 
 When health flips to `Failed`, the previously-active credential continues to work — your application keeps running on the credential it has — but no new credentials are minted until you resolve the issue and click **Resume**.
 
+### What triggers each state
+
+Phase classifies every provider error before deciding what to do with it.
+
+- **Transient** (network blip, 5xx, 429) — the rotation is marked `Degraded` and the next attempt is scheduled with exponential backoff. After several consecutive transient failures, the rotation escalates to `Failed` and pauses.
+- **Auth** (401, 403 — typically because the saved root credentials were rotated or revoked at the provider) — `Failed` immediately. The rotation pauses; fixing the root credentials and clicking **Resume** picks rotation back up.
+- **Config** (400, validation rejections from the provider — for example a policy field the provider no longer accepts) — `Failed` immediately. Edit the config and resume.
+- **Quota** (plan limits hit at the provider) — `Failed` immediately. Either lift the limit at the provider or change the config to fit within it.
+
+`Failed` always pauses the schedule. `Degraded` keeps the schedule running on backoff.
+
+### Email notifications
+
+Phase emails the relevant people whenever a rotation transitions from `Healthy` into `Degraded` or `Failed`. Recipients:
+
+- All `Owner` and `Admin` members of the organisation.
+- The user who originally configured the rotation, if different.
+
+The email includes the app, environment, provider, consecutive failure count, and the most recent error reason — enough to triage without opening the console. A second email goes out when a `Degraded` rotation escalates to `Failed`; a successful rotation after a failure transitions back to `Healthy` silently (no recovery email — the `Status` tab and the next scheduled rotation indicate things are running again).
+
+Recipients are resolved at send time, so role changes between the failure and the email reaching the queue are reflected.
+
 ## Permissions
 
 Rotating Secrets are gated by two separate [permissions](/access-control/roles):
