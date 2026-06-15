@@ -91,7 +91,39 @@ The sidecar authenticates to your tailnet with an [auth key](https://tailscale.c
   not consume the key again — even after it expires.
 </Note>
 
-## 1. Download the configuration files
+## 1. Install Docker on your machine
+
+First, download the official Docker installation script:
+
+```fish
+curl https://get.docker.com > install.sh && chmod +x install.sh
+```
+
+We recommend reviewing the script before executing it on your system.
+
+Install Docker and Docker Compose:
+
+```fish
+sh install.sh
+```
+
+Add your user to the Docker group:
+
+```fish
+sudo usermod -aG docker $USER
+```
+
+<Note>
+You will need to log out and log back in for the group changes to take effect. You may use `Ctrl + D` to log out and then SSH back in.
+</Note>
+
+Verify that Docker is running:
+
+```fish
+docker ps
+```
+
+## 2. Download the configuration files
 
 Create a working directory:
 
@@ -126,7 +158,7 @@ wget -O ./tailscale/nginx.conf https://raw.githubusercontent.com/phasehq/console
 wget -O ./tailscale/serve.json https://raw.githubusercontent.com/phasehq/console/main/tailscale/serve.json
 ```
 
-## 2. Update your configuration
+## 3. Update your configuration
 
 Set the host and Tailscale-specific values in your `.env`, replacing `<your-tailnet>` with your [tailnet name](https://tailscale.com/kb/1217/tailnet-name) (e.g. `tail1a2b3c.ts.net`):
 
@@ -155,7 +187,7 @@ rm .env.bak
 
 For a complete list of available options, refer to the [environment variables](/self-hosting/configuration/envars) documentation.
 
-## 3. Start services
+## 4. Start services
 
 ```fish
 docker compose up -d
@@ -167,7 +199,7 @@ On first boot, the `tailscale` service joins your tailnet using `TS_AUTHKEY`. Ch
 docker compose exec tailscale tailscale status
 ```
 
-## 4. Configure access
+## 5. Configure access
 
 <TabGroup title="Access" subtitle="Choose who can reach your Phase Console." slug="access">
   <TabPanel title="Private - Tailnet only" slug="private">
