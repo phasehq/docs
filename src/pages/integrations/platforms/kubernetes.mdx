@@ -30,19 +30,73 @@ Add the Phase Helm repository and update it:
 helm repo add phase https://helm.phase.dev && helm repo update
 ```
 
+<TabGroup slug="operator-install">
+  <TabPanel title="New install" slug="fresh-install">
+
 Install the Phase Secrets Operator:
 
 ```fish
-helm install phase-secrets-operator phase/phase-kubernetes-operator --set image.tag=v1.4.1
+helm install phase-secrets-operator phase/phase-kubernetes-operator --set image.tag=v2.0.0
+```
+
+It's best practice to specify the version in production environments to avoid
+unintended upgrades. Find available versions on our [GitHub
+releases](https://github.com/phasehq/kubernetes-secrets-operator/releases).
+
+  </TabPanel>
+  <TabPanel title="Upgrade from v1" slug="upgrade-v1">
+
+Version 2.0 replaces the Python/Kopf operator with a Go/controller-runtime operator. Existing `PhaseSecret` resources and the Kubernetes Secrets they manage are preserved across the upgrade. The `secrets.phase.dev/v1alpha1` API and all legacy fields remain supported.
+
+<Note>
+  A simple `helm upgrade` swaps the operator image but does **not** upgrade the CRD, and it does not remove the finalizer the v1 operator added to your `PhaseSecret` resources. Both are handled manually in the steps below.
+</Note>
+
+#### 1. Apply the v2 CRD
+
+Helm only installs CRDs on first install, so apply the v2 CRD before upgrading. This makes the new fields (`phaseAppId`, `template.metadata`, `redeployLabelSelector`) available and is safe to run while the v1 operator is still running:
+
+```fish
+kubectl apply -f https://raw.githubusercontent.com/phasehq/kubernetes-secrets-operator/v2.0.0/phase-kubernetes-operator/crds/crd-template.yaml
+```
+
+#### 2. Upgrade the Helm release
+
+```fish
+helm repo update phase
+helm upgrade phase-secrets-operator phase/phase-kubernetes-operator --set image.tag=v2.0.0
+```
+
+#### 3. Remove the legacy finalizer from existing resources
+
+The v1 operator added a `kopf.zalando.org/KopfFinalizerMarker` finalizer to every `PhaseSecret`. The v2 operator does not use it, so it is left behind after the upgrade. If it is not removed, deleting a `PhaseSecret` later will hang indefinitely in `Terminating`. Clear it from all existing resources once, after upgrading:
+
+```fish
+kubectl get phasesecrets.secrets.phase.dev -A \
+  -o custom-columns=NS:.metadata.namespace,NAME:.metadata.name --no-headers |
+while read ns name; do
+  kubectl patch phasesecret "$name" -n "$ns" --type=json \
+    -p '[{"op":"remove","path":"/metadata/finalizers"}]'
+done
+```
+
+This clears all finalizers on `PhaseSecret` resources. For the Phase operator the only finalizer is the legacy Kopf marker, so this is safe.
+
+#### 4. Verify
+
+```fish
+kubectl -n <operator-namespace> get pods
+kubectl -n <operator-namespace> logs deploy/phase-secrets-operator-phase-kubernetes-operator | grep "PhaseSecret sync complete"
 ```
 
 <Note>
-  It's best practice to specify the version in production environments to avoid
-  unintended upgrades. Find available versions on our [GitHub
-  releases](https://github.com/phasehq/kubernetes-secrets-operator/releases).
+  Rolling back with `helm rollback` restores the v1 operator. The v2 CRD is backward compatible and is not reverted, so existing resources continue to work.
 </Note>
 
-Too see the full set of configurable Helm chart options, please see: [`values.yaml`](https://github.com/phasehq/kubernetes-secrets-operator/blob/main/phase-kubernetes-operator/values.yaml)
+  </TabPanel>
+</TabGroup>
+
+To see the full set of configurable Helm chart options, please see: [`values.yaml`](https://github.com/phasehq/kubernetes-secrets-operator/blob/main/phase-kubernetes-operator/values.yaml)
 
 ### 2. Create a Service Token Secret in Kubernetes
 
@@ -66,7 +120,7 @@ metadata:
   name: example-phase-secret
   namespace: default
 spec:
-  phaseApp: 'your-application-name' # The name of your Phase application
+  phaseAppId: 'your-application-id' # The Phase application ID
   phaseAppEnv: 'production' # OPTIONAL - The Phase App Environment to fetch secrets from
   phaseAppEnvPath: '/' # OPTIONAL Path within the Phase application environment to fetch secrets from
   phaseHost: 'https://console.phase.dev' # OPTIONAL - URL of a Phase Console instance
@@ -107,8 +161,14 @@ kubectl get secret my-application-secret -o yaml
 ### Properties
 
 <Properties>
-  <Property name="phaseApp" type="required">
-    The name of the Phase application to fetch secrets from.
+  <Property name="phaseApp" type="required unless phaseAppId is set">
+    The name of the Phase application to fetch secrets from. At least one of
+    `phaseApp` or `phaseAppId` is required.
+  </Property>
+  <Property name="phaseAppId" type="optional">
+    The ID of the Phase application to fetch secrets from. This is useful when
+    app names are ambiguous. At least one of `phaseApp` or `phaseAppId` is
+    required, and `phaseAppId` takes precedence over `phaseApp` when set.
   </Property>
   <Property name="phaseAppEnv" type="optional">
     The Phase App Environment to fetch secrets from (e.g., dev, staging, prod).{' '}
@@ -159,13 +219,23 @@ kubectl get secret my-application-secret -o yaml
   <Property name="managedSecretReferences.nameTransformer" type="optional">
     Default name transformer applied to all secret keys in this managed secret.
     Per-key `nameTransformer` set within `processors` takes precedence.
-    Options: `camel`, `upper-camel`, `lower-snake`, `tf-var`, `lower-kebab`.
+    Options: `upper_snake`, `camel`, `upper-camel`, `lower-snake`, `tf-var`,
+    `lower-kebab`.
   </Property>
   <Property name="managedSecretReferences.processors" type="optional">
     Per-key processors to transform secret key names and values during ingestion.
     Each processor can have the following properties:
     `asName` (rename the key), `nameTransformer` (transform the key casing),
     and `type` (`plain` or `base64`). <b>Default</b> for 'type': `plain`.
+  </Property>
+  <Property name="managedSecretReferences.template.metadata" type="optional">
+    Labels and annotations to apply to the managed Kubernetes Secret. Use
+    `template.metadata.labels` and `template.metadata.annotations`.
+  </Property>
+  <Property name="redeployLabelSelector" type="optional">
+    Kubernetes label selector used to limit which Deployments are scanned for
+    auto-redeploy. If omitted, the operator
+    scans all Deployments in the namespace of the managed Secret. Suitable for large deployments.
   </Property>
 </Properties>
 
@@ -219,6 +289,7 @@ managedSecretReferences:
 
 | Type            | Secret stored in Phase | Post transformation |
 | --------------- | ---------------------- | ------------------- |
+| **upper_snake** | SECRET_KEY             | SECRET_KEY          |
 | **camel**       | SECRET_KEY             | secretKey           |
 | **upper-camel** | SECRET_KEY             | SecretKey           |
 | **lower-snake** | SECRET_KEY             | secret_key          |
@@ -275,6 +346,42 @@ spec:
 | ------------------------------ | ----------------------------------- |
 | `PKCS12_PRIVATE_KEY`           | `tls.crt` (base64 encoded)          |
 | `PKCS12_CERTIFICATE`           | `tls.key` (base64 encoded)          |
+
+## Managed Kubernetes Secret metadata
+
+Use `managedSecretReferences[].template.metadata` to copy labels and annotations
+onto the Kubernetes Secret managed by the operator:
+
+```yaml
+managedSecretReferences:
+  - secretName: 'my-application-secret'
+    secretNamespace: 'default'
+    template:
+      metadata:
+        labels:
+          app.kubernetes.io/managed-by: phase
+        annotations:
+          example.com/owner: platform
+```
+
+For existing managed Secrets, metadata is merged. The operator preserves labels
+and annotations that already exist on the Secret, and sets or updates only the
+keys specified in `template.metadata`. Removing a key from `template.metadata`
+does not remove that key from an existing Kubernetes Secret.
+
+For `kubernetes.io/service-account-token` Secrets, Kubernetes requires the
+service account name annotation. Set it through the Secret metadata template:
+
+```yaml
+managedSecretReferences:
+  - secretName: 'my-service-account-token'
+    secretNamespace: 'default'
+    secretType: 'kubernetes.io/service-account-token'
+    template:
+      metadata:
+        annotations:
+          kubernetes.io/service-account.name: my-service-account
+```
 
 ## Using secrets in Kubernetes Deployments
 
@@ -375,6 +482,14 @@ To ensure that deployments are automatically redeployed when their associated se
   The redeployment annotation will only trigger when secrets have been provisioned to a deployment using `secretRef`.
 </Note>
 
+You can set `spec.redeployLabelSelector` on the `PhaseSecret` to narrow which
+Deployments are scanned for auto-redeploy:
+
+```yaml
+spec:
+  redeployLabelSelector: 'app.kubernetes.io/part-of=my-app'
+```
+
 Here's an example deployment manifest incorporating this approach:
 
 ```yaml
@@ -406,11 +521,13 @@ spec:
 
 The operator triggers redeployment in the following case:
 
-1. **Secret Change Detected**: When the operator updates a Kubernetes secret (either creates a new one, updates an existing one, or deletes and recreates one due to type change), it checks for deployments in the same namespace that have the `REDEPLOY_ANNOTATION` set.
+1. **Secret Change Detected**: When the operator updates a Kubernetes secret, it checks for deployments in the same namespace that have the `secrets.phase.dev/redeploy` annotation set.
 
-2. **Annotation Present on Deployment**: If a deployment has the annotation `secrets.phase.dev/redeploy` (the value of `REDEPLOY_ANNOTATION`), it indicates that this deployment is reliant on the secret(s) being managed by the operator.
+2. **Annotation Present on Deployment**: If a deployment has the annotation `secrets.phase.dev/redeploy`, it indicates that this deployment is reliant on the secret(s) being managed by the operator.
 
-3. **Patching the Deployment for Redeployment**: When such a deployment is found, the operator triggers a redeployment by patching the deployment. This is typically done by updating an annotation on the deployment's pod template, which results in Kubernetes redeploying the pods.
+3. **Secret Reference Match**: The deployment must reference the managed Secret through `envFrom.secretRef`.
+
+4. **Patching the Deployment for Redeployment**: When such a deployment is found, the operator triggers a redeployment by updating an annotation on the deployment's pod template, which results in Kubernetes redeploying the pods.
 
 ### When Operator Does Not Trigger Redeployment
 
@@ -420,9 +537,45 @@ The operator does not trigger redeployment in the following cases:
 
 2. **Deployment Lacks Annotation**: If a deployment in the namespace does not have the `secrets.phase.dev/redeploy` annotation, it will not be considered for redeployment by the operator, even if it uses the secrets being managed.
 
-3. **Secret Change Not Affecting Deployments**: If the updated secret is not used by any deployment or if the deployments using the secret do not rely on the operator for updates (i.e., they do not have the redeploy annotation), those deployments will not be redeployed.
+3. **Selector Does Not Match**: If `redeployLabelSelector` is configured and a deployment does not match it, that deployment will not be scanned for redeployment.
 
-4. **Errors During Processing**: If there's an error in processing the secrets (e.g., fetching from Phase service, processing, or updating in Kubernetes), and as a result, the secret update doesn’t happen, then no redeployment will be triggered.
+4. **Secret Change Not Affecting Deployments**: If the updated secret is not used by any deployment or if the deployments using the secret do not rely on the operator for updates (i.e., they do not have the redeploy annotation), those deployments will not be redeployed.
+
+5. **Errors During Processing**: If there's an error in processing the secrets (e.g., fetching from Phase service, processing, or updating in Kubernetes), and as a result, the secret update doesn’t happen, then no redeployment will be triggered.
+
+### Operator Runtime Behavior
+
+The Phase Secrets Operator makes a few deliberate tradeoffs:
+
+- Managed Secrets are updated in place. If Kubernetes rejects an update, the
+  existing Secret is left untouched and the operator retries later; Secret
+  availability is preferred over forced delete/recreate.
+- Changing immutable Secret fields such as `type` may require manually deleting
+  and recreating the Secret.
+- `template.metadata` labels/annotations are merged into existing Secret
+  metadata. Removing a key from the CR does not remove it from an existing
+  Secret.
+- `type: base64` expects a base64 value in Phase and preserves the
+  workload-facing Kubernetes Secret payload.
+- Unresolved `${...}` references are synced as-is by design.
+- Auto-redeploy requires `secrets.phase.dev/redeploy`, an `envFrom.secretRef`
+  match, and a changed managed Secret.
+- Service token and managed Secret namespaces are explicit; auto-redeploy scans
+  Deployments in the `PhaseSecret` namespace.
+
+Transient Phase API failures are retried before the reconcile is requeued. Rate
+limits (`429`) and server errors (`5xx`) use the same retry and backoff settings.
+The operator does not crash on these API errors.
+
+The following Helm values control retry, backoff, and reconcile concurrency:
+
+```yaml
+operator:
+  env:
+    PHASE_OPERATOR_HTTP_RETRIES: '5'
+    PHASE_OPERATOR_HTTP_BACKOFF: '1'
+    PHASE_OPERATOR_MAX_CONCURRENT_RECONCILES: '4'
+```
 
 ### Security Considerations
 
@@ -447,19 +600,13 @@ Example (revoked Service Token):
 
 ```fish
 λ kubectl logs phase-secrets-operator-phase-kubernetes-operator-8b69db6f-f4m8s -f
-[2023-11-20 10:54:07,948] kopf._core.engines.a [INFO    ] Initial authentication has been initiated.
-[2023-11-20 10:54:07,950] kopf.activities.auth [INFO    ] Activity 'login_via_client' succeeded.
-[2023-11-20 10:54:07,951] kopf._core.engines.a [INFO    ] Initial authentication has finished.
-[2023-11-20 10:54:08,047] kopf._core.reactor.o [WARNING ] Not enough permissions to watch for resources: changes (creation/deletion/updates) will not be noticed; the resources are only refreshed on operator restarts.
-[2023-11-20 10:54:08,692] kopf._core.reactor.r [WARNING ] Cleanup activity is not executed at all due to cancellation.
-
-🚫 Not authorized. Token expired or revoked.
-Failed to fetch secrets: The environment 'dev' either does not exist or you do not have access to it.
+ERROR failed to fetch Phase environment metadata
+ERROR failed to fetch Phase secrets
 ```
 
 ### Check Sync Status
 
-The Phase Kubernetes Operator only initiates a secret sync when a change is made in your source environment in Phase. The operator will periodically check for changes and store the timestamp of the last sync in the following format `{namespace}:{cr_name}:{cr_uid}` at `/tmp/phase_sync_status.json` location. This file is will persist across operator restarts. You may choose to delete this file to manually force a full sync.
+The Phase Kubernetes Operator only initiates a full secret sync when a change is made in your source environment in Phase or the `PhaseSecret` spec changes. The operator will periodically check for changes and store the last synced Phase timestamp and spec hash in the following format `{namespace}:{cr_name}:{cr_uid}` at `/tmp/phase_sync_status.json` location. This file is stored in the operator pod filesystem and may be reset when the pod is recreated. You may choose to delete this file to manually force a full sync.
 
 View the sync status to see if the operator is trying to sync secrets that are not present in the Phase Console:
 
@@ -471,7 +618,10 @@ Example output:
 
 ```json
 {
-  "default:example-phase-secret:a6244420-a712-4ac2-b9c2-eae80ea5cdba": "2025-08-13T09:39:21.940863+00:00"
+  "default:example-phase-secret:a6244420-a712-4ac2-b9c2-eae80ea5cdba": {
+    "updated_at": "2025-08-13T09:39:21.940863Z",
+    "spec_hash": "7d4c5b7f0a5d7a9b"
+  }
 }
 ```
 
