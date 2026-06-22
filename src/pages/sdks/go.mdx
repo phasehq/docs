@@ -389,7 +389,7 @@ for _, s := range secrets {
 
 By default, if a reference can't be resolved — the referenced secret doesn't exist, was mistyped, or the lookup fails due to a network, rate-limit, or permissions error — the original `${REF}` text is left in place and resolution continues. This is convenient for inspection tooling, but risky for applications that need fully-resolved configuration.
 
-Set `FailOnReferenceResolutionError: true` to fail fast instead. `Get()` then returns an error the moment any reference can't be resolved, so you never load an unresolved `${...}` placeholder into your app's config:
+Set `FailOnReferenceResolutionError: true` to fail fast instead. `Get()` then returns an error the moment any reference can't be resolved, so you never load an unresolved `${...}` reference string into your app's config:
 
 ```go
 secrets, err := p.Get(phase.GetOptions{
