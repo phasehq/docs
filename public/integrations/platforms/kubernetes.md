@@ -60,6 +60,10 @@ Helm only installs CRDs on first install, so apply the v2 CRD before upgrading. 
 kubectl apply -f https://raw.githubusercontent.com/phasehq/kubernetes-secrets-operator/v2.0.0/phase-kubernetes-operator/crds/crd-template.yaml
 ```
 
+Because the CRD was originally created by Helm, `kubectl apply` prints a one-time
+`missing the kubectl.kubernetes.io/last-applied-configuration annotation` warning and patches it
+automatically. This is expected and safe.
+
 #### 2. Upgrade the Helm release
 
 ```fish
@@ -92,6 +96,12 @@ kubectl -n <operator-namespace> logs deploy/phase-secrets-operator-phase-kuberne
 <Note>
   Rolling back with `helm rollback` restores the v1 operator. The v2 CRD is backward compatible and is not reverted, so existing resources continue to work.
 </Note>
+
+**Reference handling changed in v2.** In v1, unresolved `${...}` references were synced
+as-is. v2 defaults to `onSecretReferenceError: Fail`, which aborts the sync (and records a
+Warning event) so a broken value is never written to a workload. If an environment you sync
+contains an unresolved reference, set `onSecretReferenceError: Warn` on that `PhaseSecret` to
+keep the v1 "sync as-is" behavior.
 
   </TabPanel>
 </TabGroup>
@@ -236,6 +246,13 @@ kubectl get secret my-application-secret -o yaml
     Kubernetes label selector used to limit which Deployments are scanned for
     auto-redeploy. If omitted, the operator
     scans all Deployments in the namespace of the managed Secret. Suitable for large deployments.
+  </Property>
+  <Property name="onSecretReferenceError" type="optional">
+    Policy when a Phase secret reference (`${...}`) cannot be resolved. `Fail`
+    (default) aborts the sync so unresolved values are never written to the managed
+    Secret. `Warn` syncs anyway, leaving unresolved references as their literal
+    `${...}` text. In both cases the operator records a Warning event on the
+    `PhaseSecret` naming the affected secret. Options: `Fail`, `Warn`.
   </Property>
 </Properties>
 
@@ -557,7 +574,10 @@ The Phase Secrets Operator makes a few deliberate tradeoffs:
   Secret.
 - `type: base64` expects a base64 value in Phase and preserves the
   workload-facing Kubernetes Secret payload.
-- Unresolved `${...}` references are synced as-is by design.
+- Unresolved `${...}` references abort the sync by default (`onSecretReferenceError: Fail`),
+  so a broken value is never written to the managed Secret; set `onSecretReferenceError: Warn`
+  to sync the remaining keys with unresolved references left as literal `${...}` text. In both
+  modes a Warning event is recorded on the `PhaseSecret` naming the affected secret.
 - Auto-redeploy requires `secrets.phase.dev/redeploy`, an `envFrom.secretRef`
   match, and a changed managed Secret.
 - Service token and managed Secret namespaces are explicit; auto-redeploy scans
@@ -689,6 +709,9 @@ Remove the operator using Helm:
 ```fish
 helm uninstall phase-secrets-operator
 ```
+
+Deleting a `PhaseSecret`, or uninstalling the operator, does not delete the Kubernetes
+Secrets it created. Remove any managed Secrets you no longer need manually.
 
 <div className="not-prose">
   <Button
