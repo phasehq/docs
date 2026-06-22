@@ -209,16 +209,17 @@ Options:
 
 ```go
 type GetOptions struct {
-    EnvName  string
-    AppID    string
-    AppName  string // Alternative to AppID
-    Keys     []string // Optional: filter by specific key names
-    Tag      string   // Optional: filter by tag
-    Path     string   // Optional: filter by path; empty returns secrets from all paths
-    Dynamic  bool     // Optional: include dynamic secrets
-    Lease    bool     // Optional: generate leases for dynamic secrets
-    LeaseTTL *int     // Optional: lease TTL in seconds
-    Raw      bool     // Optional: skip ${REF} reference resolution
+    EnvName                        string
+    AppID                          string
+    AppName                        string   // Alternative to AppID
+    Keys                           []string // Optional: filter by specific key names
+    Tag                            string   // Optional: filter by tag
+    Path                           string   // Optional: filter by path; empty returns secrets from all paths
+    Dynamic                        bool     // Optional: include dynamic secrets
+    Lease                          bool     // Optional: generate leases for dynamic secrets
+    LeaseTTL                       *int     // Optional: lease TTL in seconds
+    Raw                            bool     // Optional: skip ${REF} reference resolution
+    FailOnReferenceResolutionError bool     // Optional: error if any ${REF} fails to resolve (default: leave it unresolved)
 }
 ```
 
@@ -383,6 +384,28 @@ for _, s := range secrets {
     fmt.Printf("%s=%s\n", s.Key, s.Value)
 }
 ```
+
+#### Fail on unresolved references
+
+By default, if a reference can't be resolved — the referenced secret doesn't exist, was mistyped, or the lookup fails due to a network, rate-limit, or permissions error — the original `${REF}` text is left in place and resolution continues. This is convenient for inspection tooling, but risky for applications that need fully-resolved configuration.
+
+Set `FailOnReferenceResolutionError: true` to fail fast instead. `Get()` then returns an error the moment any reference can't be resolved, so you never load an unresolved `${...}` reference string into your app's config:
+
+```go
+secrets, err := p.Get(phase.GetOptions{
+    EnvName:                        "Production",
+    AppID:                          "app-id-here",
+    FailOnReferenceResolutionError: true,
+})
+if err != nil {
+    // e.g. a referenced secret was deleted, mistyped, or the lookup was rate-limited
+    log.Fatalf("Failed to resolve secret references: %v", err)
+}
+```
+
+<Note>
+  `FailOnReferenceResolutionError` has no effect when `Raw: true`, since raw mode skips reference resolution entirely.
+</Note>
 
 ### Overrides
 
