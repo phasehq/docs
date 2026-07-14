@@ -1,0 +1,9 @@
+# Phase Cloud — egress IP addresses
+#
+# Last updated: 2026-07-14
+# JSON: https://docs.phase.dev/cloud/ips.json
+# Changes are published here in advance of taking effect. Questions: https://slack.phase.dev
+
+63.185.128.28
+63.177.199.216
+63.185.209.40
