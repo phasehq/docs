@@ -118,3 +118,23 @@ Phase has enabled DNSSEC for its domains, adding an extra layer of security to t
 
 Comprehensive logging, monitoring, and alerting across Phase's infrastructure are managed through AWS CloudWatch. This service provides visibility into system performance and security status, facilitating quick anomaly detection and timely incident response. Custom alerts and dashboards are configured to monitor key security metrics and events, allowing for proactive management of potential security issues and ensuring the overall health of the infrastructure.
 
+## Egress IP Addresses
+
+Phase Cloud makes outbound connections from a fixed set of IP addresses. If you restrict inbound access to infrastructure that Phase connects to, allowlist the following:
+
+```
+63.185.128.28
+63.177.199.216
+63.185.209.40
+```
+
+The list is published as a machine-readable source of truth and updated in advance of any change — [ips.txt](https://docs.phase.dev/cloud/ips.txt) (plain text) and [ips.json](https://docs.phase.dev/cloud/ips.json) (JSON):
+
+```bash
+# Plain text — one address per line
+curl -s https://docs.phase.dev/cloud/ips.txt
+
+# JSON — e.g. extract the IPv4 addresses with jq
+curl -s https://docs.phase.dev/cloud/ips.json | jq -r '.egress.ipv4[]'
+```
+

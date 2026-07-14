@@ -4,3 +4,13 @@
 /.well-known/api-catalog
   Content-Type: application/linkset+json
   Cache-Control: public, max-age=3600
+
+/cloud/ips.txt
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=3600
+  Access-Control-Allow-Origin: *
+
+/cloud/ips.json
+  Content-Type: application/json
+  Cache-Control: public, max-age=3600
+  Access-Control-Allow-Origin: *
