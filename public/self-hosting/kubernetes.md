@@ -86,15 +86,22 @@ kubectl apply -f cluster-issuer.yaml
 ```fish
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
-helm install ingress-nginx ingress-nginx/ingress-nginx --set controller.publishService.enabled=true
+helm install ingress-nginx ingress-nginx/ingress-nginx \
+  --namespace ingress-nginx \
+  --create-namespace \
+  --set controller.publishService.enabled=true
 ```
+
+<Note>
+This installs the ingress controller into its own `ingress-nginx` namespace, which is where the [Client IP Forwarding](#client-ip-forwarding) ConfigMap and the troubleshooting steps below expect to find it. If you omit `--namespace`, Helm installs it into whatever namespace your kubectl context currently points at, and those later steps will not match your cluster.
+</Note>
 
 ### 4. Get the LoadBalancer IP
 
 Run the following command to get the external IP of the ingress-nginx-controller service:
 
 ```fish
-kubectl get svc
+kubectl get svc -n ingress-nginx
 ```
 
 Look for the `EXTERNAL-IP` of the `ingress-nginx-controller` service. This may be an IP address or a hostname, depending on your cloud provider.
@@ -174,6 +181,18 @@ This process may take up to 10 minutes to complete. You may run `watch kubectl g
 
 Once DNS propagation is complete and the certificate is issued (which may take a up to tens of minutes), you should be able to access your Phase Console at `https://phase.your-domain.com`.
 
+### 12. Create your first account
+
+The Helm chart enables email and password authentication by default ([`ENABLE_PASSWORD_AUTH`](/self-hosting/configuration/envars#password-authentication)), so no additional configuration is needed to sign in:
+
+1. Go to `https://phase.your-domain.com` and click **Create an account**.
+2. Enter your name, email address and a password. The first account you create becomes the owner of your organisation.
+3. Choose an organisation name, then **copy or download your recovery kit**. The **Finish** button stays disabled until you do — the recovery kit is the only way to regain access if you forget your `sudo` password, and it cannot be retrieved later.
+
+Because no [SMTP server](/self-hosting/configuration/envars#email-gateway-configuration) is configured in this guide, email verification is skipped automatically and the account is active immediately. If you do configure SMTP, new users must verify their email before logging in — set [`SKIP_EMAIL_VERIFICATION`](/self-hosting/configuration/envars#email-verification) to `true` to keep signup instant.
+
+To run an SSO-only instance instead, configure a provider under [`sso.providers`](/self-hosting/configuration/envars#single-sign-on-sso) and set `passwordAuth.enabled: false` in your values file. Make sure at least one SSO provider works before disabling password auth, or the instance will have no usable sign-in path.
+
 ## Upgrading
 
 To upgrade your Phase Console deployment:
@@ -222,7 +241,54 @@ To uninstall Phase Console:
 helm uninstall phase-console
 ```
 
+`helm uninstall` does not remove everything. The following are intentionally left behind, so that your data and certificate survive a reinstall:
+
+```fish
+kubectl get pvc                          # PostgreSQL data — in-cluster database only
+kubectl get secret phase-console-secret  # your SECRET_KEY / SERVER_SECRET / DB passwords
+kubectl get secret phase-console-tls     # the issued TLS certificate
+kubectl get configmap phase-console-config
+```
+
+<Note>
+Deleting `phase-console-secret` destroys your `SERVER_SECRET`, which is required to decrypt existing data. Do not delete it unless you are also discarding the database.
+
+If you ran with **both** an external PostgreSQL *and* an external Redis, also delete the ConfigMap before reinstalling — see [ConfigMap ownership error](#troubleshooting) below for why:
+
+```fish
+kubectl delete configmap phase-console-config
+```
+</Note>
+
 ## Security
+
+### Enforcing HTTPS
+
+The Helm chart sets `nginx.ingress.kubernetes.io/ssl-redirect: "false"` on the ingress by default, so the Console is served over **both** HTTP and HTTPS and plain HTTP requests are *not* redirected. TLS is available, but nothing forces clients onto it.
+
+To redirect all HTTP traffic to HTTPS, add these annotations to your `phase-values.yaml`. Values set under `ingress.annotations` are applied after the chart's defaults, so they take precedence:
+
+```yaml
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+```
+
+Apply the change and verify that HTTP now redirects:
+
+```fish
+helm upgrade phase-console phase/phase -f phase-values.yaml
+curl -sI http://phase.your-domain.com/ | head -2
+# Expected: HTTP/1.1 308 Permanent Redirect
+#           Location: https://phase.your-domain.com/
+```
+
+<Note>
+Only enable this once your certificate has been issued. Let's Encrypt solves the HTTP-01 challenge over plain HTTP, and `force-ssl-redirect` applies to the whole host — turning it on before the certificate exists can prevent issuance or renewal. If you use the DNS-01 solver instead, this does not apply.
+</Note>
 
 ### Client IP Forwarding
 
@@ -306,7 +372,9 @@ kubectl describe certificate phase-console-tls -n your-phase-namespace # Replace
 
 8. **Installation stuck on migrations job**
 
-   If your installation appears to be stuck with a migrations job that won't complete:
+   Database migrations run as a Helm hook job that deletes itself once it succeeds. On a healthy install you will therefore **not** see it in `kubectl get jobs` after the fact — `No resources found` is the normal, expected result and does not indicate a problem.
+
+   The symptom of a genuinely stuck migration is that your `helm install` / `helm upgrade` command itself hangs, because Helm waits for the hook to complete. While it is hanging, check the job's pod from a second terminal:
 
    ```fish
    kubectl get pods
@@ -318,13 +386,21 @@ kubectl describe certificate phase-console-tls -n your-phase-namespace # Replace
    phase-console-migrations-tfz46   0/1     Init:0/2   0          4m34s
    ```
 
-   **Fix**: Delete the stuck migrations job to allow the installation to proceed:
+   The `Init:0/2` status means the job is still waiting on its init containers, which block until Postgres and Redis are reachable. This usually points at database connectivity — a wrong `database.host`, bad `DATABASE_PASSWORD`, or a firewall/security group blocking the cluster. Check why with:
+
+   ```fish
+   kubectl logs job/phase-console-migrations --all-containers
+   ```
+
+   **Fix**: Once you have addressed the underlying cause, delete the stuck job so the install can proceed:
 
    ```fish
    kubectl delete job phase-console-migrations
    ```
 
 9. **ConfigMap ownership error during upgrade**
+
+   This is most commonly hit after running with **both** an external Postgres *and* an external Redis. In that configuration the chart renders `phase-console-config` as a Helm hook, and Helm does not track hook resources as part of the release — so `helm uninstall` leaves the ConfigMap behind. A later install that renders it as a normal resource (for example, moving Postgres or Redis back in-cluster) then fails, because the orphaned ConfigMap has no release ownership metadata.
 
    If you encounter a ConfigMap ownership error when upgrading or reinstalling:
 

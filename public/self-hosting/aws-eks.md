@@ -35,11 +35,19 @@ Both paths share the same cluster setup steps and diverge at the database and de
 Install `eksctl`:
 
 ```fish
+# Set ARCH to match your machine: amd64 (Intel/AMD) or arm64 (Apple Silicon, AWS Graviton)
+ARCH=amd64
+PLATFORM=$(uname -s)_$ARCH
+
 curl --silent --location \
-  "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" \
+  "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_$PLATFORM.tar.gz" \
   | tar xz -C /tmp && \
 sudo mv /tmp/eksctl /usr/local/bin
 ```
+
+<Note>
+Set `ARCH=arm64` if you are on an Apple Silicon Mac or an ARM/Graviton machine — otherwise you will download an x86 binary. You can check with `uname -m` (`arm64` or `aarch64` means ARM).
+</Note>
 
 Install `helm`:
 
@@ -544,6 +552,28 @@ This process may take up to 10 minutes to complete. You may run `watch kubectl g
 
 Once DNS propagation is complete and the certificate is issued (which may take up to several minutes), you should be able to access your Phase Console at `https://phase.your-domain.com`.
 
+You can confirm both services are healthy:
+
+```fish
+curl -s https://phase.your-domain.com/api/health
+# Expected response: {"status":"alive"}
+
+curl -s https://phase.your-domain.com/service/health/
+# Expected response: {"status": "alive", "version": "x.x.x"}
+```
+
+### 15. Create your first account
+
+The Helm chart enables email and password authentication by default ([`ENABLE_PASSWORD_AUTH`](/self-hosting/configuration/envars#password-authentication)), so no additional configuration is needed to sign in:
+
+1. Go to `https://phase.your-domain.com` and click **Create an account**.
+2. Enter your name, email address and a password. The first account you create becomes the owner of your organisation.
+3. Choose an organisation name, then **copy or download your recovery kit**. The **Finish** button stays disabled until you do — the recovery kit is the only way to regain access if you forget your `sudo` password, and it cannot be retrieved later.
+
+Because no [SMTP server](/self-hosting/configuration/envars#email-gateway-configuration) is configured in this guide, email verification is skipped automatically and the account is active immediately. If you configure SMTP (for example via [SES](#irsa-iam-roles-for-service-accounts)), new users must verify their email before logging in — set [`SKIP_EMAIL_VERIFICATION`](/self-hosting/configuration/envars#email-verification) to `true` to keep signup instant.
+
+To run an SSO-only instance instead, configure a provider under [`sso.providers`](/self-hosting/configuration/envars#single-sign-on-sso) and set `passwordAuth.enabled: false` in your values file. Make sure at least one SSO provider works before disabling password auth, or the instance will have no usable sign-in path.
+
 ## Upgrading
 
 To upgrade your Phase Console deployment, first update the Helm repository and then upgrade the release using your `phase-values.yaml` file:
@@ -596,7 +626,56 @@ helm uninstall phase-console
 You may also need to manually delete related resources like PersistentVolumeClaims (EBS volumes) if they are not automatically removed, and clean up DNS records. If using external databases, the RDS instance and ElastiCache cluster must be deleted separately via the AWS Console or CLI.
 </Note>
 
+`helm uninstall` does not remove everything. These are intentionally left behind so that data and certificates survive a reinstall:
+
+```fish
+kubectl get pvc                          # PostgreSQL data (EBS volume) — in-cluster DB only
+kubectl get secret phase-console-secret  # your SECRET_KEY / SERVER_SECRET / DB passwords
+kubectl get secret phase-console-tls     # the issued TLS certificate
+kubectl get configmap phase-console-config
+```
+
+<Note>
+**If you ran with both an external RDS *and* an external ElastiCache**, the `phase-console-config` ConfigMap is rendered as a Helm hook. Helm does not track hook resources as part of the release, so `helm uninstall` leaves it behind. A later install that renders it as a normal resource — for example, moving PostgreSQL or Redis back in-cluster — will then fail with an ownership error. Delete it before reinstalling:
+
+```fish
+kubectl delete configmap phase-console-config
+```
+
+See [ConfigMap ownership error](/self-hosting/kubernetes#troubleshooting) for the full error message and explanation.
+</Note>
+
+Deleting `phase-console-secret` destroys your `SERVER_SECRET`, which is required to decrypt existing data. Do not delete it unless you are also discarding the database.
+
 ## Security
+
+### Enforcing HTTPS
+
+The Helm chart sets `nginx.ingress.kubernetes.io/ssl-redirect: "false"` on the ingress by default, so the Console is served over **both** HTTP and HTTPS and plain HTTP requests are *not* redirected. TLS is available, but nothing forces clients onto it.
+
+To redirect all HTTP traffic to HTTPS, add these annotations to your `phase-values.yaml`. Values set under `ingress.annotations` are applied after the chart's defaults, so they take precedence:
+
+```yaml
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+```
+
+Apply the change and verify that HTTP now redirects:
+
+```fish
+helm upgrade phase-console phase/phase -f phase-values.yaml
+curl -sI http://phase.your-domain.com/ | head -2
+# Expected: HTTP/1.1 308 Permanent Redirect
+#           Location: https://phase.your-domain.com/
+```
+
+<Note>
+Only enable this once your certificate has been issued. Let's Encrypt solves the HTTP-01 challenge over plain HTTP, and `force-ssl-redirect` applies to the whole host — turning it on before the certificate exists can prevent issuance or renewal.
+</Note>
 
 ### Client IP Forwarding
 
@@ -749,11 +828,19 @@ Reference the IRSA service account in your `phase-values.yaml`:
 
 ```yaml
 serviceAccount:
-  create: false  # eksctl already created it
+  create: false  # eksctl already created it, and annotated it with the role ARN
   name: "phase-backend-sa"
-  annotations:
-    eks.amazonaws.com/role-arn: "arn:aws:iam::123456789012:role/phase-backend-role"
 ```
+
+<Note>
+Do not set `serviceAccount.annotations` here when `create: false`. The chart only renders a ServiceAccount (and therefore only applies these annotations) when `serviceAccount.create` is `true` — with `create: false` the annotations are silently ignored. In this flow `eksctl create iamserviceaccount` already created the ServiceAccount *and* attached the `eks.amazonaws.com/role-arn` annotation to it, so the chart just needs the name.
+
+Verify the annotation is present on the ServiceAccount eksctl created:
+
+```fish
+kubectl get serviceaccount phase-backend-sa -o jsonpath='{.metadata.annotations}'
+```
+</Note>
 
 Apply the change:
 
@@ -761,4 +848,6 @@ Apply the change:
 helm upgrade phase-console phase/phase -f phase-values.yaml
 ```
 
-The Helm chart will configure the backend, worker, and migration pods to use this service account, enabling them to assume the associated IAM role. Phase will automatically use the instance credentials — no `AWS_ACCESS_KEY_ID` or `AWS_SECRET_ACCESS_KEY` configuration is needed.
+The Helm chart configures the **backend and worker** pods to use this service account, enabling them to assume the associated IAM role. Phase will automatically use these credentials — no `AWS_ACCESS_KEY_ID` or `AWS_SECRET_ACCESS_KEY` configuration is needed.
+
+The frontend and the migrations job deliberately do not use the service account (they run with `automountServiceAccountToken: false`), since neither needs AWS access.

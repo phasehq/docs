@@ -431,6 +431,10 @@ export const navigation = [
         title: 'AWS Elastic Kubernetes Service',
         href: '/self-hosting/aws-eks',
       },
+      {
+        title: 'Azure Kubernetes Service',
+        href: '/self-hosting/azure-aks',
+      },
       { title: 'AWS EC2 & RDS', href: '/self-hosting/aws' },
       { title: 'Google Cloud Platform', href: '/self-hosting/gcp' },
       { title: 'Azure', href: '/self-hosting/azure' },
