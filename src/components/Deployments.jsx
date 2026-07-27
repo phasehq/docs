@@ -39,6 +39,14 @@ const deployment_methods = [
     available: true,
   },
   {
+    href: '/self-hosting/azure-aks',
+    name: 'Azure AKS',
+    description:
+      'Deploy Phase via Helm on Azure Kubernetes Service (AKS).',
+    logo: logoAzure,
+    available: true,
+  },
+  {
     href: '/self-hosting/aws',
     name: 'AWS EC2 & RDS',
     description: 'Deploy the Phase Console on AWS EC2 and RDS PostgreSQL instance.',

@@ -86,6 +86,7 @@
 - [self-hosting/tailscale](https://docs.phase.dev/self-hosting/tailscale.md)
 - [self-hosting/kubernetes](https://docs.phase.dev/self-hosting/kubernetes.md)
 - [self-hosting/aws-eks](https://docs.phase.dev/self-hosting/aws-eks.md)
+- [self-hosting/azure-aks](https://docs.phase.dev/self-hosting/azure-aks.md)
 - [self-hosting/aws](https://docs.phase.dev/self-hosting/aws.md)
 - [self-hosting/gcp](https://docs.phase.dev/self-hosting/gcp.md)
 - [self-hosting/azure](https://docs.phase.dev/self-hosting/azure.md)
