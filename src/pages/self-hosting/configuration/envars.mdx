@@ -1082,6 +1082,12 @@ These variables are not required if using the suggested [docker-compose template
     
     Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
+  <Property name="LOG_STREAM_WORKERS" type="number (Optional)">
+    The number of worker processes for [Log Stream](/integrations/platforms/datadog) deliveries. Defaults to `2`.
+    Log shipping is network-bound and delivered serially per stream, so useful concurrency roughly equals the number of active Log Streams — raise this if the lag indicator on your streams keeps growing.
+
+    Referenced by the [`worker`](https://hub.docker.com/r/phasehq/backend) container.
+  </Property>
   <Property name="RATE_LIMIT_DEFAULT" type="string">
     Rate limit for API requests.
     Example: `100/minute`. Rate limits can be specified over a period of second, minute, hour or day. The period must be specified after the / separator using s, m, h or d, respectively. For increased clarity, extended units such as second, minute, hour, day or even abbreviations like sec, min, hr are allowed, as only the first character is relevant to identify the rate. 
