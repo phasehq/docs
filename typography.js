@@ -41,6 +41,7 @@ module.exports = ({ theme }) => ({
       color: 'var(--tw-prose-body)',
       fontSize: theme('fontSize.sm')[0],
       lineHeight: theme('lineHeight.7'),
+      overflowWrap: 'break-word',
 
       // Layout
       '> *': {
@@ -214,6 +215,10 @@ module.exports = ({ theme }) => ({
       'img, video, figure': {
         marginTop: theme('spacing.8'),
         marginBottom: theme('spacing.8'),
+        maxWidth: `min(100%, ${theme('maxWidth.2xl')})`,
+        '@screen lg': {
+          maxWidth: `min(100%, ${theme('maxWidth.3xl')})`,
+        },
       },
       'figure > *': {
         marginTop: '0',
