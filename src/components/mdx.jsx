@@ -125,6 +125,14 @@ export const img = function Img(props) {
   return <ZoomableImage {...props} width={props.width || 800} height={props.height || 600} />
 }
 
+export const table = function Table(props) {
+  return (
+    <div className="overflow-x-auto">
+      <table {...props} />
+    </div>
+  )
+}
+
 export const p = function P({ children, ...rest }) {
   const arr = Array.isArray(children) ? children : [children]
   const meaningful = arr.filter(
