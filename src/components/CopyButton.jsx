@@ -9,6 +9,7 @@ export const CopyButton = ({
   buttonVariant,
   title,
   onCopy,
+  className,
 }) => {
   const [copyCount, setCopyCount] = useState(0)
   const copied = copyCount > 0
@@ -41,6 +42,7 @@ export const CopyButton = ({
       variant={variant}
       title={title || 'Copy to clipboard'}
       onClick={handleClick}
+      className={className}
     >
       <div className="relative flex items-center justify-center">
         <div
@@ -52,7 +54,7 @@ export const CopyButton = ({
         >
           {children || (
             <div className="flex items-center gap-0.5">
-              <FaCopy className="h-4 w-4 transition-colors" />
+              <FaCopy className="h-3.5 w-3.5 transition-colors" />
               <span>Copy</span>
             </div>
           )}
@@ -60,7 +62,7 @@ export const CopyButton = ({
         <span
           aria-hidden={!copied}
           className={clsx(
-            'pointer-events-none absolute inset-0 flex items-center justify-center text-emerald-400 transition duration-300',
+            'pointer-events-none absolute inset-0 flex items-center justify-center text-emerald-600 transition duration-300 dark:text-emerald-400',
             !copied && 'translate-y-1.5 opacity-0'
           )}
         >

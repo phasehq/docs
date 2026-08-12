@@ -1,43 +1,53 @@
+/**
+ * Prose typography for the docs in the swiss drafting-sheet language: medium
+ * headings with tight tracking (never bold), hairline rules and table borders,
+ * mono micro-label table headers, square list bullets, flat (radius-less)
+ * inline code chips with a hairline ring, emerald links.
+ *
+ * Two-mode: the DEFAULT block sets the light-mode --tw-prose-* values plus the
+ * --tw-prose-invert-* pair; `dark:prose-invert` flips to the invert vars.
+ * Light hover DARKENS the link (600→700); dark hover LIGHTENS it (400→300).
+ */
 module.exports = ({ theme }) => ({
   DEFAULT: {
     css: {
-      '--tw-prose-body': theme('colors.zinc.700'),
+      '--tw-prose-body': theme('colors.zinc.600'),
       '--tw-prose-headings': theme('colors.zinc.900'),
-      '--tw-prose-links': theme('colors.emerald.500'),
-      '--tw-prose-links-hover': theme('colors.emerald.600'),
-      '--tw-prose-links-underline': theme('colors.emerald.500 / 0.3'),
-      '--tw-prose-bold': theme('colors.zinc.900'),
+      '--tw-prose-links': theme('colors.emerald.600'),
+      '--tw-prose-links-hover': theme('colors.emerald.700'),
+      '--tw-prose-links-underline': theme('colors.emerald.600 / 0.4'),
+      '--tw-prose-bold': theme('colors.zinc.800'),
       '--tw-prose-counters': theme('colors.zinc.500'),
-      '--tw-prose-bullets': theme('colors.zinc.300'),
-      '--tw-prose-hr': theme('colors.zinc.900 / 0.05'),
-      '--tw-prose-quotes': theme('colors.zinc.900'),
-      '--tw-prose-quote-borders': theme('colors.zinc.200'),
+      '--tw-prose-bullets': theme('colors.zinc.400'),
+      '--tw-prose-hr': theme('colors.zinc.200'),
+      '--tw-prose-quotes': theme('colors.zinc.700'),
+      '--tw-prose-quote-borders': theme('colors.zinc.300'),
       '--tw-prose-captions': theme('colors.zinc.500'),
-      '--tw-prose-code': theme('colors.zinc.900'),
-      '--tw-prose-code-bg': theme('colors.zinc.100'),
-      '--tw-prose-code-ring': theme('colors.zinc.300'),
-      '--tw-prose-th-borders': theme('colors.zinc.300'),
+      '--tw-prose-code': theme('colors.zinc.700'),
+      '--tw-prose-code-bg': theme('colors.zinc.900 / 0.03'),
+      '--tw-prose-code-ring': theme('colors.zinc.200'),
+      '--tw-prose-th-borders': theme('colors.zinc.200'),
       '--tw-prose-td-borders': theme('colors.zinc.200'),
 
       '--tw-prose-invert-body': theme('colors.zinc.400'),
-      '--tw-prose-invert-headings': theme('colors.white'),
+      '--tw-prose-invert-headings': theme('colors.zinc.100'),
       '--tw-prose-invert-links': theme('colors.emerald.400'),
-      '--tw-prose-invert-links-hover': theme('colors.emerald.500'),
-      '--tw-prose-invert-links-underline': theme('colors.emerald.500 / 0.3'),
-      '--tw-prose-invert-bold': theme('colors.white'),
-      '--tw-prose-invert-counters': theme('colors.zinc.400'),
+      '--tw-prose-invert-links-hover': theme('colors.emerald.300'),
+      '--tw-prose-invert-links-underline': theme('colors.emerald.400 / 0.4'),
+      '--tw-prose-invert-bold': theme('colors.zinc.200'),
+      '--tw-prose-invert-counters': theme('colors.zinc.500'),
       '--tw-prose-invert-bullets': theme('colors.zinc.600'),
-      '--tw-prose-invert-hr': theme('colors.white / 0.05'),
-      '--tw-prose-invert-quotes': theme('colors.zinc.100'),
+      '--tw-prose-invert-hr': theme('colors.zinc.800'),
+      '--tw-prose-invert-quotes': theme('colors.zinc.300'),
       '--tw-prose-invert-quote-borders': theme('colors.zinc.700'),
-      '--tw-prose-invert-captions': theme('colors.zinc.400'),
-      '--tw-prose-invert-code': theme('colors.white'),
-      '--tw-prose-invert-code-bg': theme('colors.zinc.700 / 0.15'),
-      '--tw-prose-invert-code-ring': theme('colors.white / 0.1'),
-      '--tw-prose-invert-th-borders': theme('colors.zinc.600'),
-      '--tw-prose-invert-td-borders': theme('colors.zinc.700'),
+      '--tw-prose-invert-captions': theme('colors.zinc.500'),
+      '--tw-prose-invert-code': theme('colors.zinc.300'),
+      '--tw-prose-invert-code-bg': theme('colors.white / 0.03'),
+      '--tw-prose-invert-code-ring': theme('colors.zinc.800'),
+      '--tw-prose-invert-th-borders': theme('colors.zinc.800'),
+      '--tw-prose-invert-td-borders': theme('colors.zinc.800'),
 
-      // Base
+      // Base — docs stay one step denser than the marketing site
       color: 'var(--tw-prose-body)',
       fontSize: theme('fontSize.sm')[0],
       lineHeight: theme('lineHeight.7'),
@@ -99,7 +109,8 @@ module.exports = ({ theme }) => ({
         listStyleType: 'decimal',
       },
       ul: {
-        listStyleType: 'disc',
+        // Square bullets — the drafting-sheet tick, not the default disc.
+        listStyleType: 'square',
         marginTop: theme('spacing.5'),
         marginBottom: theme('spacing.5'),
         paddingLeft: '1.625rem',
@@ -112,6 +123,9 @@ module.exports = ({ theme }) => ({
         paddingLeft: theme('spacing[1.5]'),
       },
       'ol > li::marker': {
+        // Ledger numbering: mono counters like the section indices.
+        fontFamily: theme('fontFamily.mono').join(', '),
+        fontSize: theme('fontSize.sm')[0],
         fontWeight: '400',
         color: 'var(--tw-prose-counters)',
       },
@@ -139,57 +153,46 @@ module.exports = ({ theme }) => ({
         marginBottom: theme('spacing.3'),
       },
 
-      // Horizontal rules
+      // Horizontal rules — hairline, spanning the text column only
       hr: {
         borderColor: 'var(--tw-prose-hr)',
         borderTopWidth: 1,
-        marginTop: theme('spacing.16'),
-        marginBottom: theme('spacing.16'),
-        maxWidth: 'none',
-        marginLeft: `calc(-1 * ${theme('spacing.4')})`,
-        marginRight: `calc(-1 * ${theme('spacing.4')})`,
-        '@screen sm': {
-          marginLeft: `calc(-1 * ${theme('spacing.6')})`,
-          marginRight: `calc(-1 * ${theme('spacing.6')})`,
-        },
-        '@screen lg': {
-          marginLeft: `calc(-1 * ${theme('spacing.8')})`,
-          marginRight: `calc(-1 * ${theme('spacing.8')})`,
-        },
+        marginTop: theme('spacing.12'),
+        marginBottom: theme('spacing.12'),
       },
 
-      // Quotes
+      // Quotes — plain hairline-ruled aside, no italics or auto-quotes
       blockquote: {
-        fontWeight: '500',
-        fontStyle: 'italic',
+        fontWeight: '400',
         color: 'var(--tw-prose-quotes)',
-        borderLeftWidth: '0.25rem',
+        borderLeftWidth: '1px',
         borderLeftColor: 'var(--tw-prose-quote-borders)',
-        quotes: '"\\201C""\\201D""\\2018""\\2019"',
         marginTop: theme('spacing.8'),
         marginBottom: theme('spacing.8'),
         paddingLeft: theme('spacing.5'),
       },
-      'blockquote p:first-of-type::before': {
-        content: 'open-quote',
-      },
-      'blockquote p:last-of-type::after': {
-        content: 'close-quote',
+
+      // Code fences — CodeGroup owns the panel chrome; the block text sits a
+      // step below body size
+      pre: {
+        fontSize: theme('fontSize.sm')[0],
       },
 
-      // Headings
+      // Headings — medium weight, tight tracking, never bold
       h1: {
         color: 'var(--tw-prose-headings)',
-        fontWeight: '700',
-        fontSize: theme('fontSize.2xl')[0],
-        ...theme('fontSize.2xl')[1],
+        fontWeight: '500',
+        letterSpacing: '-0.025em',
+        fontSize: theme('fontSize.3xl')[0],
+        ...theme('fontSize.3xl')[1],
         marginBottom: theme('spacing.2'),
       },
       h2: {
         color: 'var(--tw-prose-headings)',
-        fontWeight: '600',
-        fontSize: theme('fontSize.lg')[0],
-        ...theme('fontSize.lg')[1],
+        fontWeight: '500',
+        letterSpacing: '-0.02em',
+        fontSize: theme('fontSize.xl')[0],
+        ...theme('fontSize.xl')[1],
         marginTop: theme('spacing.16'),
         marginBottom: theme('spacing.2'),
       },
@@ -197,7 +200,8 @@ module.exports = ({ theme }) => ({
         color: 'var(--tw-prose-headings)',
         fontSize: theme('fontSize.base')[0],
         ...theme('fontSize.base')[1],
-        fontWeight: '600',
+        fontWeight: '500',
+        letterSpacing: '-0.01em',
         marginTop: theme('spacing.10'),
         marginBottom: theme('spacing.2'),
       },
@@ -205,15 +209,24 @@ module.exports = ({ theme }) => ({
         color: 'var(--tw-prose-headings)',
         fontSize: theme('fontSize.sm')[0],
         ...theme('fontSize.sm')[1],
-        fontWeight: '700',
-        marginTop: theme('spacing.10'),
+        fontWeight: '500',
+        letterSpacing: '-0.01em',
+        marginTop: theme('spacing.8'),
+        marginBottom: theme('spacing.2'),
+      },
+      'h5, h6': {
+        color: 'var(--tw-prose-headings)',
+        fontWeight: '500',
+        marginTop: theme('spacing.8'),
         marginBottom: theme('spacing.2'),
       },
 
-      // Media
+      // Media — the deliberate radius exception: embedded images are product
+      // UI, and the product is rounded
       'img, video, figure': {
         marginTop: theme('spacing.8'),
         marginBottom: theme('spacing.8'),
+        borderRadius: '8px',
       },
       'figure > *': {
         marginTop: '0',
@@ -221,18 +234,21 @@ module.exports = ({ theme }) => ({
       },
       figcaption: {
         color: 'var(--tw-prose-captions)',
-        fontSize: theme('fontSize.xs')[0],
-        ...theme('fontSize.xs')[1],
+        fontFamily: theme('fontFamily.mono').join(', '),
+        fontSize: '11px',
+        letterSpacing: '0.12em',
+        lineHeight: theme('lineHeight.5'),
         marginTop: theme('spacing.2'),
       },
 
-      // Tables
+      // Tables — ledger style: mono micro-label headers, hairline rows
       table: {
         width: '100%',
         tableLayout: 'auto',
         textAlign: 'left',
         marginTop: theme('spacing.8'),
         marginBottom: theme('spacing.8'),
+        fontSize: theme('fontSize.sm')[0],
         lineHeight: theme('lineHeight.6'),
       },
       thead: {
@@ -240,8 +256,12 @@ module.exports = ({ theme }) => ({
         borderBottomColor: 'var(--tw-prose-th-borders)',
       },
       'thead th': {
-        color: 'var(--tw-prose-headings)',
-        fontWeight: '600',
+        color: 'var(--tw-prose-captions)',
+        fontFamily: theme('fontFamily.mono').join(', '),
+        fontSize: '11px',
+        fontWeight: '400',
+        textTransform: 'uppercase',
+        letterSpacing: '0.12em',
         verticalAlign: 'bottom',
         paddingRight: theme('spacing.2'),
         paddingBottom: theme('spacing.2'),
@@ -271,9 +291,9 @@ module.exports = ({ theme }) => ({
         verticalAlign: 'top',
       },
       ':is(tbody, tfoot) td': {
-        paddingTop: theme('spacing.2'),
+        paddingTop: theme('spacing[2.5]'),
         paddingRight: theme('spacing.2'),
-        paddingBottom: theme('spacing.2'),
+        paddingBottom: theme('spacing[2.5]'),
         paddingLeft: theme('spacing.2'),
       },
       ':is(tbody, tfoot) td:first-child': {
@@ -296,28 +316,43 @@ module.exports = ({ theme }) => ({
           textDecorationColor: 'var(--tw-prose-links-underline)',
         },
       },
-      ':is(h1, h2, h3) a': {
+      ':is(h1, h2, h3, h4) a': {
         fontWeight: 'inherit',
       },
       strong: {
         color: 'var(--tw-prose-bold)',
-        fontWeight: '600',
+        fontWeight: '500',
       },
       ':is(a, blockquote, thead th) strong': {
         color: 'inherit',
       },
+      // Inline code — flat chip: no radius, hairline ring. Wrapped chips
+      // clone the ring/padding on each line fragment.
       code: {
         color: 'var(--tw-prose-code)',
-        borderRadius: theme('borderRadius.lg'),
+        borderRadius: '0',
         paddingTop: theme('padding.1'),
         paddingRight: theme('padding[1.5]'),
         paddingBottom: theme('padding.1'),
         paddingLeft: theme('padding[1.5]'),
-        boxShadow: 'inset 0 0 0 1px var(--tw-prose-code-ring)',
         backgroundColor: 'var(--tw-prose-code-bg)',
-        fontSize: theme('fontSize.xs'),
+        boxShadow: 'inset 0 0 0 1px var(--tw-prose-code-ring)',
+        boxDecorationBreak: 'clone',
+        WebkitBoxDecorationBreak: 'clone',
+        fontSize: theme('fontSize.sm')[0],
       },
-      ':is(a, h1, h2, h3, blockquote, thead th) code': {
+      // The chip is for INLINE code only — inside fences CodeGroup owns the
+      // chrome (this mirrors the stock plugin's pre code reset)
+      'pre code': {
+        backgroundColor: 'transparent',
+        boxShadow: 'none',
+        padding: '0',
+        borderRadius: '0',
+        fontSize: 'inherit',
+        color: 'inherit',
+        fontWeight: 'inherit',
+      },
+      ':is(a, h1, h2, h3, h4, blockquote, thead th) code': {
         color: 'inherit',
       },
       'h2 code': {
@@ -325,12 +360,16 @@ module.exports = ({ theme }) => ({
         fontWeight: 'inherit',
       },
       'h3 code': {
-        fontSize: theme('fontSize.base')[0],
+        fontSize: theme('fontSize.sm')[0],
+        fontWeight: 'inherit',
+      },
+      'h4 code': {
+        fontSize: 'inherit',
         fontWeight: 'inherit',
       },
 
       // Overrides
-      ':is(h1, h2, h3) + *': {
+      ':is(h1, h2, h3, h4) + *': {
         marginTop: '0',
       },
       '> :first-child': {

@@ -24,27 +24,13 @@ export const h4 = function H4(props) {
   return <Heading level={4} {...props} />
 }
 
-function InfoIcon(props) {
-  return (
-    <svg viewBox="0 0 16 16" aria-hidden="true" {...props}>
-      <circle cx="8" cy="8" r="8" strokeWidth="0" />
-      <path
-        fill="none"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="1.5"
-        d="M6.75 7.75h1.5v3.5"
-      />
-      <circle cx="8" cy="4" r=".5" fill="none" />
-    </svg>
-  )
-}
-
 export function Note({ children }) {
   return (
-    <div className="my-6 flex gap-2.5 rounded-2xl border border-emerald-500/20 bg-emerald-50/50 p-4 leading-6 text-emerald-900 dark:border-emerald-500/30 dark:bg-emerald-500/5 dark:text-emerald-200 dark:[--tw-prose-links:theme(colors.white)] dark:[--tw-prose-links-hover:theme(colors.emerald.300)]">
-      <InfoIcon className="mt-1 h-4 w-4 flex-none fill-emerald-500 stroke-white dark:fill-emerald-200/20 dark:stroke-emerald-200" />
-      <div className="[&>:first-child]:mt-0 [&>:last-child]:mb-0">
+    <div className="my-6 border border-zinc-200 p-4 dark:border-zinc-800">
+      <div className="font-mono text-[11px] uppercase tracking-[0.12em] text-emerald-600 dark:text-emerald-400">
+        Note
+      </div>
+      <div className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-400 [&>:first-child]:mt-0 [&>:last-child]:mb-0">
         {children}
       </div>
     </div>
@@ -53,9 +39,11 @@ export function Note({ children }) {
 
 export function Warning({ children }) {
   return (
-    <div className="my-6 flex gap-2.5 rounded-2xl border border-red-500/20 bg-red-50/50 p-4 leading-6 text-red-900 dark:border-red-500/30 dark:bg-red-500/5 dark:text-red-200 dark:[--tw-prose-links:theme(colors.white)] dark:[--tw-prose-links-hover:theme(colors.red.300)]">
-      <InfoIcon className="mt-1 h-4 w-4 flex-none fill-red-500 stroke-white dark:fill-red-200/20 dark:stroke-red-200" />
-      <div className="[&>:first-child]:mt-0 [&>:last-child]:mb-0">
+    <div className="my-6 border border-zinc-200 p-4 dark:border-zinc-800">
+      <div className="font-mono text-[11px] uppercase tracking-[0.12em] text-amber-600 dark:text-amber-400">
+        Warning
+      </div>
+      <div className="mt-2 text-sm leading-6 text-zinc-600 dark:text-zinc-400 [&>:first-child]:mt-0 [&>:last-child]:mb-0">
         {children}
       </div>
     </div>
@@ -88,7 +76,7 @@ export function Properties({ children }) {
     <div className="my-6">
       <ul
         role="list"
-        className="m-0 max-w-[calc(theme(maxWidth.xl)-theme(spacing.8))] list-none divide-y divide-zinc-900/5 p-0 dark:divide-white/5"
+        className="m-0 max-w-[calc(theme(maxWidth.xl)-theme(spacing.8))] list-none divide-y divide-zinc-200 p-0 dark:divide-zinc-800"
       >
         {children}
       </ul>

@@ -1,4 +1,3 @@
-import { Card } from '@/components/Card'
 import Link from 'next/link'
 import Image from 'next/image'
 import clsx from 'clsx'
@@ -18,7 +17,7 @@ const deployment_methods = [
     href: '/self-hosting/docker-compose',
     name: 'Docker Compose',
     description:
-      'Seamlessly deploy the Phase Console via Docker Compose on any machine.',
+      'Deploy the Phase Console via Docker Compose on any machine.',
     logo: logoDcoker,
     available: true,
   },
@@ -109,19 +108,24 @@ let arrowIcon = <ArrowIcon className={clsx('mt-0.5 -mr-1 h-5 w-5')} />
 export function Deployments() {
   return (
     <div className="my-16 xl:max-w-none">
-      <div className="not-prose mt-4 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 xl:max-w-none xl:grid-cols-3">
+      {/* Hairline mesh: shared 1px rules via gap-px on the border ground,
+          cells painting the page ground. Fillers complete partial rows. */}
+      <div className="not-prose mt-4 grid grid-cols-1 gap-px border border-zinc-200 bg-zinc-200 sm:grid-cols-2 xl:max-w-none xl:grid-cols-3 dark:border-zinc-800 dark:bg-zinc-800">
         {deployment_methods.map((library) => (
-          <Card key={library.name}>
+          <div
+            key={library.name}
+            className="group relative flex flex-col bg-white p-5 transition-colors duration-150 hover:bg-zinc-50 dark:bg-zinc-925 dark:hover:bg-zinc-900/40"
+          >
             <Link href={library.href} className="flex flex-row-reverse gap-6">
               <div className="flex-auto">
-                <h3 className=" font-semibold text-zinc-900 dark:text-white">
+                <h3 className="font-medium tracking-[-0.01em] text-zinc-900 dark:text-zinc-100">
                   {library.name}
                 </h3>
                 <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
                   {library.description}
                 </p>
                 <div className="mt-4">
-                  <div className="flex items-center text-emerald-500">
+                  <div className="flex items-center text-emerald-600 dark:text-emerald-400">
                     Explore {arrowIcon}
                   </div>
                 </div>
@@ -133,8 +137,11 @@ export function Deployments() {
                 unoptimized
               />
             </Link>
-          </Card>
+          </div>
         ))}
+        {/* 10 cells: 2-col rows complete; +2 fillers complete the 3-col rows. */}
+        <div aria-hidden="true" className="hidden bg-white xl:block dark:bg-zinc-925" />
+        <div aria-hidden="true" className="hidden bg-white xl:block dark:bg-zinc-925" />
       </div>
     </div>
   )

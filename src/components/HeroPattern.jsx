@@ -1,32 +1,33 @@
 import { GridPattern } from '@/components/GridPattern'
 
+// Section-index hero ground: a quiet emerald radial wash with the blueprint
+// spec-sheet rulers over it, in both modes. Spans the FULL page width: the
+// content wrapper in Layout.jsx is deliberately not `relative`, so this
+// absolute layer resolves against the initial containing block (inset-x-0 =
+// viewport edge to edge, behind the opaque sidebar). Masked out by ~18rem;
+// !max-w-none escapes the prose `> *` width cap.
 export function HeroPattern() {
   return (
-    <div className="absolute inset-0 -z-10 mx-0 max-w-none overflow-hidden">
-      <div className="absolute left-1/2 top-0 ml-[-38rem] h-[25rem] w-[81.25rem] dark:[mask-image:linear-gradient(white,transparent)]">
-        <div className="absolute inset-0 bg-gradient-to-r from-[#36b49f] to-[#DBFF75] opacity-40 [mask-image:radial-gradient(farthest-side_at_top,white,transparent)] dark:from-[#36b49f]/30 dark:to-[#DBFF75]/30 dark:opacity-100">
-          <GridPattern
-            width={72}
-            height={56}
-            x="-12"
-            y="4"
-            squares={[
-              [4, 3],
-              [2, 1],
-              [7, 3],
-              [10, 6],
-            ]}
-            className="absolute inset-x-0 inset-y-[-50%] h-[200%] w-full skew-y-[-18deg] fill-black/40 stroke-black/50 mix-blend-overlay dark:fill-white/2.5 dark:stroke-white/5"
-          />
-        </div>
-        <svg
-          viewBox="0 0 1113 440"
-          aria-hidden="true"
-          className="absolute top-0 left-1/2 ml-[-19rem] w-[69.5625rem] fill-white blur-[26px] dark:hidden"
-        >
-          <path d="M.016 439.5s-9.5-300 434-300S882.516 20 882.516 20V0h230.004v439.5H.016Z" />
-        </svg>
-      </div>
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-72 !mx-0 !max-w-none overflow-hidden [mask-image:linear-gradient(to_bottom,white,transparent)]"
+    >
+      <div className="absolute inset-0 bg-[radial-gradient(120%_100%_at_50%_0%,rgb(16_185_129/0.10),transparent_70%)] dark:bg-[radial-gradient(120%_100%_at_50%_0%,rgb(52_211_153/0.18),rgb(16_185_129/0.06)_45%,transparent_75%)]" />
+      {/* Spec-sheet rulers: minor pitch under the major grid, kept faint. */}
+      <GridPattern
+        width={18}
+        height={14}
+        x="50%"
+        y="0"
+        className="absolute inset-0 h-full w-full fill-none stroke-emerald-700/5 dark:stroke-emerald-400/5"
+      />
+      <GridPattern
+        width={72}
+        height={56}
+        x="50%"
+        y="0"
+        className="absolute inset-0 h-full w-full fill-none stroke-emerald-700/15 dark:stroke-emerald-400/10"
+      />
     </div>
   )
 }

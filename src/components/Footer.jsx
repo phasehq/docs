@@ -3,8 +3,20 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Transition } from '@headlessui/react'
 
-import { Button } from '@/components/Button'
 import { navigation } from '@/components/Navigation'
+
+function ArrowIcon(props) {
+  return (
+    <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" {...props}>
+      <path
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="m11.5 6.5 3 3.5m0 0-3 3.5m3-3.5h-9"
+      />
+    </svg>
+  )
+}
 
 function CheckIcon(props) {
   return (
@@ -25,7 +37,7 @@ function FeedbackButton(props) {
   return (
     <button
       type="submit"
-      className="px-3 text-sm font-medium text-zinc-600 transition hover:bg-zinc-900/2.5 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-white/5 dark:hover:text-white"
+      className="px-3 font-mono text-xs uppercase tracking-[0.08em] text-zinc-600 transition-colors duration-150 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-900/40 dark:hover:text-zinc-100"
       {...props}
     />
   )
@@ -58,9 +70,9 @@ const FeedbackForm = forwardRef(function FeedbackForm({ onSubmit }, ref) {
       <p className="text-sm text-zinc-600 dark:text-zinc-400">
         Was this page helpful?
       </p>
-      <div className="group grid h-8 grid-cols-[1fr,1px,1fr] overflow-hidden rounded-full border border-zinc-900/10 dark:border-white/10">
+      <div className="group grid h-8 grid-cols-[1fr,1px,1fr] overflow-hidden rounded-full border border-zinc-300 dark:border-zinc-700">
         <FeedbackButton data-response="yes">Yes</FeedbackButton>
-        <div className="bg-zinc-900/10 dark:bg-white/10" />
+        <div className="bg-zinc-300 dark:bg-zinc-700" />
         <FeedbackButton data-response="no">No</FeedbackButton>
       </div>
     </form>
@@ -81,8 +93,8 @@ const FeedbackThanks = forwardRef(function FeedbackThanks({ onCommentSubmit }, r
       ref={ref}
       className="absolute inset-0 flex flex-col items-start justify-center md:justify-start"
     >
-      <div className="flex items-center gap-3 rounded-full bg-emerald-50/50 py-1 pr-3 pl-1.5 text-sm text-emerald-900 ring-1 ring-inset ring-emerald-500/20 dark:bg-emerald-500/10 dark:text-emerald-200 dark:ring-emerald-500/30">
-        <CheckIcon className="h-5 w-5 flex-none fill-emerald-500 stroke-white dark:fill-emerald-200/20 dark:stroke-emerald-200" />
+      <div className="flex items-center gap-3 rounded-full bg-emerald-500/10 py-1 pl-1.5 pr-3 text-sm text-emerald-700 ring-1 ring-inset ring-emerald-500/30 dark:text-emerald-300">
+        <CheckIcon className="h-5 w-5 flex-none fill-emerald-500 stroke-white dark:fill-emerald-500/20 dark:stroke-emerald-300" />
         Thanks for your feedback!
       </div>
       <form onSubmit={handleSubmit} className="mt-4 w-full max-w-md">
@@ -91,18 +103,17 @@ const FeedbackThanks = forwardRef(function FeedbackThanks({ onCommentSubmit }, r
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             placeholder="Mind telling us more?"
-            className="w-full h-24 rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white pr-20"
+            className="h-24 w-full rounded-none border border-zinc-200 bg-white px-3 py-2 pr-24 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-400 focus:outline-none dark:border-zinc-800 dark:bg-zinc-925 dark:text-zinc-100 dark:focus:border-zinc-600"
           />
-          <Button
+          <button
             type="submit"
-            variant={comment.trim() ? 'primary' : 'secondary'}
-            className="absolute bottom-2 right-2 dark:border dark:border-zinc-600"
+            className="absolute bottom-2 right-2 inline-flex h-7 items-center rounded-full px-3 font-mono text-xs uppercase tracking-[0.08em] text-zinc-600 ring-1 ring-inset ring-zinc-300 transition-colors duration-150 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-300 dark:ring-zinc-700 dark:hover:bg-zinc-900/40 dark:hover:text-zinc-100"
           >
             Submit
-          </Button>
+          </button>
         </div>
       </form>
-      <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400">
+      <p className="mt-2 text-xs text-zinc-500">
         Your feedback will be read by the Phase team.
       </p>
     </div>
@@ -185,8 +196,8 @@ function Feedback() {
         enter="delay-150 duration-300"
       >
         <div className="absolute inset-0 flex items-center justify-center md:justify-start">
-          <div className="flex items-center gap-3 rounded-full bg-emerald-50/50 py-1 pr-3 pl-1.5 text-sm text-emerald-900 ring-1 ring-inset ring-emerald-500/20 dark:bg-emerald-500/10 dark:text-emerald-200 dark:ring-emerald-500/30">
-            <CheckIcon className="h-5 w-5 flex-none fill-emerald-500 stroke-white dark:fill-emerald-200/20 dark:stroke-emerald-200" />
+          <div className="flex items-center gap-3 rounded-full bg-emerald-500/10 py-1 pl-1.5 pr-3 text-sm text-emerald-700 ring-1 ring-inset ring-emerald-500/30 dark:text-emerald-300">
+            <CheckIcon className="h-5 w-5 flex-none fill-emerald-500 stroke-white dark:fill-emerald-500/20 dark:stroke-emerald-300" />
             Thanks for your feedback! Your comment has been submitted.
           </div>
         </div>
@@ -198,19 +209,20 @@ function Feedback() {
 function PageLink({ label, page, previous = false }) {
   return (
     <>
-      <Button
+      <Link
         href={page.href}
         aria-label={`${label}: ${page.title}`}
-        variant="secondary"
-        arrow={previous ? 'left' : 'right'}
+        className="group inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em] text-zinc-500 transition-colors duration-150 hover:text-zinc-900 focus-visible:outline focus-visible:outline-1 focus-visible:outline-zinc-400 dark:hover:text-zinc-200"
       >
+        {previous && <ArrowIcon className="h-4 w-4 rotate-180" />}
         {label}
-      </Button>
+        {!previous && <ArrowIcon className="h-4 w-4" />}
+      </Link>
       <Link
         href={page.href}
         tabIndex={-1}
         aria-hidden="true"
-        className="text-base font-semibold text-zinc-900 transition hover:text-zinc-600 dark:text-white dark:hover:text-zinc-300"
+        className="text-base font-medium text-zinc-900 transition-colors duration-150 hover:text-zinc-600 dark:text-zinc-100 dark:hover:text-zinc-300"
       >
         {page.title}
       </Link>
@@ -252,14 +264,6 @@ function PageNavigation() {
   )
 }
 
-function TwitterIcon(props) {
-  return (
-    <svg viewBox="0 0 20 20" aria-hidden="true" {...props}>
-      <path d="M16.712 6.652c.01.146.01.29.01.436 0 4.449-3.267 9.579-9.242 9.579v-.003a8.963 8.963 0 0 1-4.98-1.509 6.379 6.379 0 0 0 4.807-1.396c-1.39-.027-2.608-.966-3.035-2.337.487.097.99.077 1.467-.059-1.514-.316-2.606-1.696-2.606-3.3v-.041c.45.26.956.404 1.475.42C3.18 7.454 2.74 5.486 3.602 3.947c1.65 2.104 4.083 3.382 6.695 3.517a3.446 3.446 0 0 1 .94-3.217 3.172 3.172 0 0 1 4.596.148 6.38 6.38 0 0 0 2.063-.817 3.357 3.357 0 0 1-1.428 1.861 6.283 6.283 0 0 0 1.865-.53 6.735 6.735 0 0 1-1.62 1.744Z" />
-    </svg>
-  )
-}
-
 function ProductHuntIcon(props) {
   return (
     <svg role="img" viewBox="0 0 24 24" aria-hidden="true" {...props}>
@@ -272,14 +276,6 @@ function GitHubIcon(props) {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" {...props}>
       <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
-    </svg>
-  )
-}
-
-function DiscordIcon(props) {
-  return (
-    <svg viewBox="0 0 20 20" aria-hidden="true" {...props}>
-      <path d="M16.238 4.515a14.842 14.842 0 0 0-3.664-1.136.055.055 0 0 0-.059.027 10.35 10.35 0 0 0-.456.938 13.702 13.702 0 0 0-4.115 0 9.479 9.479 0 0 0-.464-.938.058.058 0 0 0-.058-.027c-1.266.218-2.497.6-3.664 1.136a.052.052 0 0 0-.024.02C1.4 8.023.76 11.424 1.074 14.782a.062.062 0 0 0 .024.042 14.923 14.923 0 0 0 4.494 2.272.058.058 0 0 0 .064-.02c.346-.473.654-.972.92-1.496a.057.057 0 0 0-.032-.08 9.83 9.83 0 0 1-1.404-.669.058.058 0 0 1-.029-.046.058.058 0 0 1 .023-.05c.094-.07.189-.144.279-.218a.056.056 0 0 1 .058-.008c2.946 1.345 6.135 1.345 9.046 0a.056.056 0 0 1 .059.007c.09.074.184.149.28.22a.058.058 0 0 1 .023.049.059.059 0 0 1-.028.046 9.224 9.224 0 0 1-1.405.669.058.058 0 0 0-.033.033.056.056 0 0 0 .002.047c.27.523.58 1.022.92 1.495a.056.056 0 0 0 .062.021 14.878 14.878 0 0 0 4.502-2.272.055.055 0 0 0 .016-.018.056.056 0 0 0 .008-.023c.375-3.883-.63-7.256-2.662-10.246a.046.046 0 0 0-.023-.021Zm-9.223 8.221c-.887 0-1.618-.814-1.618-1.814s.717-1.814 1.618-1.814c.908 0 1.632.821 1.618 1.814 0 1-.717 1.814-1.618 1.814Zm5.981 0c-.887 0-1.618-.814-1.618-1.814s.717-1.814 1.618-1.814c.908 0 1.632.821 1.618 1.814 0 1-.71 1.814-1.618 1.814Z" />
     </svg>
   )
 }
@@ -300,11 +296,6 @@ function XIcon(props) {
   )
 }
 
-;<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-  <title>X</title>
-  <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
-</svg>
-
 function LinkedInIcon(props) {
   return (
     <svg role="img" viewBox="0 0 24 24" aria-hidden="true" {...props}>
@@ -318,15 +309,15 @@ function SocialLink({ href, icon: Icon, children }) {
   return (
     <Link href={href} className="group">
       <span className="sr-only">{children}</span>
-      <Icon className="h-5 w-5 fill-zinc-700 transition group-hover:fill-zinc-900 dark:group-hover:fill-zinc-500" />
+      <Icon className="h-3.5 w-3.5 fill-zinc-500 transition-colors duration-150 group-hover:fill-zinc-700 dark:group-hover:fill-zinc-300" />
     </Link>
   )
 }
 
 function SmallPrint() {
   return (
-    <div className="flex flex-col items-center justify-between gap-5 border-t border-zinc-900/5 pt-8 dark:border-white/5 sm:flex-row">
-      <p className="text-xs text-zinc-600 dark:text-zinc-400">
+    <div className="flex flex-col items-center justify-between gap-5 border-t border-zinc-200 pt-8 dark:border-zinc-800 sm:flex-row">
+      <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-zinc-400 dark:text-zinc-600">
         &copy; {new Date().getFullYear()} Phi Security Inc.
       </p>
       <div className="flex gap-4">
@@ -369,9 +360,9 @@ export function Footer() {
           href={editUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="group inline-flex items-center gap-2 text-sm text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white transition"
+          className="group inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em] text-zinc-500 transition-colors duration-150 hover:text-zinc-900 dark:hover:text-zinc-200"
         >
-          <PencilIcon className="h-4 w-4 stroke-zinc-600 group-hover:stroke-zinc-900 dark:stroke-zinc-400 dark:group-hover:stroke-white" />
+          <PencilIcon className="h-3.5 w-3.5 stroke-current" />
           Edit this page
         </Link>
       </div>
