@@ -21,6 +21,7 @@ Log Streams continuously ship organisation audit logs and secret events from Pha
 - Phase **pushes** events to your destination — no inbound access, agents or polling required. A background engine sweeps every 30 seconds and ships new events in ordered chunks.
 - Delivery is **at-least-once**: a stream's position (cursor) only advances after the destination accepts a chunk, so transient failures can never lose an event — but an event can occasionally be delivered twice. Deduplicate on `event.id`, a stable UUID that is identical across redeliveries.
 - Each stream selects its own **event sources** and destination credentials. You can run multiple streams side by side — each keeps independent cursors, so they never interfere.
+- Streams are **ship-forward only**: a new stream begins delivering from the moment it is created and does not backfill older events. This is a destination-side restriction — log platforms cap how far in the past an ingested event&apos;s timestamp may be (Datadog silently discards anything older than **18 hours**, even when the request is accepted), so backfilling meaningful history over the live intake isn&apos;t possible. A dedicated export feature for historical logs — archiving to S3 in a format compatible with [Datadog Log Rehydration](https://docs.datadoghq.com/logs/log_configuration/rehydrating/) — is coming in a future release.
 - Changes to streams (create, update, pause, resume, delete, retries) are recorded in the organisation audit log under **Logs** → **Log Streams** — and, like any other audit event, they export through the stream itself.
 
 ### Requirements
@@ -38,6 +39,8 @@ Log Streams continuously ship organisation audit logs and secret events from Pha
 Every event is a structured JSON envelope (`schema_version: 1`) aligned with OpenTelemetry semantic conventions. `event.category` is `secrets` or `org_audit`; `event.type` is one of `create`, `read`, `update`, `delete` or `access`. The `actor` block identifies who acted (a `user`, `service_account` with its token, `service_token`, or `phase` for system actions), and `phase.description` carries a human-readable summary of every event.
 
 Secret events carry a `phase.secret` block (id, path, version, type — never the name or value). Organisation audit events instead carry a `phase.resource` block with a readable `type` slug (e.g. `app`, `environment`, `member`, `invite`, `role`, `service_account_token`, `rotating_secret`, `network_access_policy`, `log_stream`), the resource `id` and `metadata`, plus `old_values` / `new_values` for changes.
+
+The example below is shown as it lands in **Datadog**: the `usr`, `network`, `http`, `ddsource`, `service` and `ddtags` fields are Datadog standard-attribute remappings of the neutral envelope&apos;s `user`, `client` and `user_agent` blocks, added by the Datadog adapter at delivery time.
 
 ```json
 {
@@ -75,16 +78,16 @@ To pivot from an exported event back to Phase, copy the `phase.secret.id` (or an
 1. The chunk is retried with exponential backoff, honouring the destination&apos;s `Retry-After`, up to the stream&apos;s configured **retry attempts** (1–10, default 5).
 2. If retries are exhausted, the chunk is recorded as **failed** with its exact event time range, the stream is marked **degraded**, and shipping continues with newer events — one bad chunk never blocks the stream.
 3. If a later successful delivery covers a failed range (for example after an authentication recovery), the failure is **auto-resolved**.
-4. Anything still unresolved appears under the **out of sync** badge on the stream card. Click through to the filtered event history and press **Retry** on a row to re-ship exactly that range. Once a range falls fully outside the destination&apos;s ingestion window, the retry is refused — the destination would accept and silently discard the events, falsely marking the range recovered. Export it with the [REST API](#audit-logs-rest-api) instead. If only the older part of a range has expired, a retry ships the still-live tail and records the expired part as **skipped**.
+4. Anything still unresolved appears under the **out of sync** badge on the stream card. Click through to the filtered event history and press **Retry** on a row to re-ship exactly that range. Once a range falls fully outside the destination&apos;s ingestion window, the retry is refused — the destination would accept and silently discard the events, falsely marking the range recovered. Expired rows are auto-resolved as **Expired** after a grace period, and the events remain queryable in the Console. If only the older part of a range has expired, a retry ships the still-live tail and records the expired part as **skipped**.
 5. **Authentication failures** skip retries entirely and pause the stream (retrying with a dead key is pointless). Fix the credentials, press **Resume**, and shipping continues from the stored cursor with no gap.
 6. **Deleting the stream&apos;s third-party credentials** also pauses it — a stream without credentials can never deliver, so it is paused visibly rather than left looking healthy. Select new credentials in the stream&apos;s configuration, save, and resume.
 
 ### Backfilling missed events
 
-Events always remain in Phase regardless of delivery outcome, so a backfill is always possible:
+Backfilling covers ranges a stream failed to deliver while active. It does not extend to events from before the stream was created — streams are [ship-forward only](#how-it-works). Events always remain in Phase regardless of delivery outcome:
 
 1. For ranges within the destination&apos;s ingestion window: use the **Retry** button on the failed/skipped row — no other steps needed.
-2. For older ranges: export the range from the [audit logs REST API](#audit-logs-rest-api) using the `start`/`end` parameters shown in the delivery row, and re-ingest it with your own tooling if needed. Deduplication on `event.id` makes re-ingestion safe. The REST API covers **organisation audit events**; expired **secret events** have no export endpoint yet, but always remain queryable in each app&apos;s Logs tab in the Console.
+2. Ranges that have fallen outside the ingestion window can no longer be re-shipped — the destination would silently discard them. The events remain queryable in the Console: organisation audit events under **Logs**, and secret events in each app&apos;s **Logs** tab.
 
 ## Managing streams
 
@@ -94,7 +97,7 @@ Events always remain in Phase regardless of delivery outcome, so a backfill is a
 
 ## Datadog
 
-Stream logs to [Datadog](https://www.datadoghq.com/) for monitoring, alerting and Cloud SIEM detection. Works with all Datadog site regions (US1, US3, US5, EU1, AP1, AP2 and US1-FED).
+Stream logs to [Datadog](https://www.datadoghq.com/) for monitoring, alerting and Cloud SIEM detection. Works with all Datadog site regions (US1, US3, US5, EU1, UK1, AP1, AP2, US1-FED and US2-FED).
 
 ### Step 1: Create a Datadog API key
 
@@ -250,29 +253,15 @@ For Cloud SIEM, you can create detection rules over these logs, for example:
 - Secret reads from an IP outside your allowed ranges: `source:phase @event.type:read -@network.client.ip:203.0.113.0/24`
 - A service account token created and used within minutes, or mass secret reads from a single actor in a short window.
 
-<Warning>
+<Note>
   Datadog&apos;s intake silently discards events with timestamps older than **18
-  hours**. If a stream is paused or failing for longer than that, the missed
-  range is recorded as **skipped** in the delivery history, and the cursor
-  jumps forward. Events always remain queryable in Phase — use the audit logs
-  REST API below to export any range manually.
-</Warning>
-
-## Audit logs REST API
-
-Organisation audit events can also be queried directly, for backfills or custom tooling:
-
-```bash
-curl -G "https://api.phase.dev/v1/logs/audit/" \
-  --header "Authorization: Bearer pss_user:v1:..." \
-  --data-urlencode "start=1753862400000" \
-  --data-urlencode "end=1753948800000" \
-  --data-urlencode "limit=200"
-```
-
-The token must be a **user token** whose role has the `Logs: read` permission **and global access** (Owner and Admin roles qualify) — the API returns the unscoped organisation-wide stream. Service account tokens are not supported, since service accounts cannot hold global-access roles. Supported query parameters: `start` / `end` (Unix ms), `resource_type`, `resource_id`, `event_types` (repeatable), `actor_id`, `limit` (max 200) and `offset`. Self-hosted instances use `https://<your-host>/public/v1/logs/audit/`.
-
-To manually re-ingest a range into Datadog, fetch it with the API above, map the fields to your preferred shape, and POST it to Datadog&apos;s [logs intake endpoint](https://docs.datadoghq.com/api/latest/logs/#send-logs) with your own API key.
+  hours**. This is why streams cannot backfill historical data from before
+  they were created, and why a stream that is paused or failing for longer
+  than 18 hours records the missed range as **skipped** in the delivery
+  history and jumps the cursor forward. The events always remain queryable in
+  Phase: organisation audit events under **Logs** in the Console, and secret
+  events in each app&apos;s **Logs** tab.
+</Note>
 
 ## Self-hosting
 

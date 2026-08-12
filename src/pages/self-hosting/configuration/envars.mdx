@@ -1083,7 +1083,7 @@ These variables are not required if using the suggested [docker-compose template
     Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
   <Property name="LOG_STREAM_WORKERS" type="number (Optional)">
-    The number of worker processes for [Log Stream](/integrations/platforms/datadog) deliveries. Defaults to `2`.
+    The number of worker processes for [Log Stream](/console/logstreams) deliveries. Defaults to `2`; values below `1` are clamped to `1`.
     Log shipping is network-bound and delivered serially per stream, so useful concurrency roughly equals the number of active Log Streams — raise this if the lag indicator on your streams keeps growing.
 
     Referenced by the [`worker`](https://hub.docker.com/r/phasehq/backend) container.
