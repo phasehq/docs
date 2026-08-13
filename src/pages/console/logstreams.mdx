@@ -19,7 +19,7 @@ Log Streams continuously ship organisation audit logs and secret events from Pha
 ## How it works
 
 - Phase **pushes** events to your destination — no inbound access, agents or polling required. A background engine sweeps every 30 seconds and ships new events in ordered chunks.
-- Delivery is **at-least-once**: a stream's position (cursor) only advances after the destination accepts a chunk, so transient failures can never lose an event — but an event can occasionally be delivered twice. Deduplicate on `event.id`, a stable UUID that is identical across redeliveries.
+- Delivery is **at-least-once**: a stream's position (cursor) only advances after the destination accepts a chunk, or after a failed chunk's exact range is durably recorded as re-shippable — so a transient failure can never silently lose an event, but an event can occasionally be delivered twice. Deduplicate on `event.id`, a stable UUID that is identical across redeliveries.
 - Each stream selects its own **event sources** and destination credentials. You can run multiple streams side by side — each keeps independent cursors, so they never interfere.
 - Streams are **ship-forward only**: a new stream begins delivering from the moment it is created and does not backfill older events. This is a destination-side restriction — log platforms cap how far in the past an ingested event&apos;s timestamp may be (Datadog silently discards anything older than **18 hours**, even when the request is accepted), so backfilling meaningful history over the live intake isn&apos;t possible. A dedicated export feature for historical logs — archiving to S3 in a format compatible with [Datadog Log Rehydration](https://docs.datadoghq.com/logs/log_configuration/rehydrating/) — is coming in a future release.
 - Changes to streams (create, update, pause, resume, delete, retries) are recorded in the organisation audit log under **Logs** → **Log Streams** — and, like any other audit event, they export through the stream itself.
@@ -55,7 +55,7 @@ The example below is shown as it lands in **Datadog**: the `usr`, `network`, `ht
     "organisation": { "id": "…", "name": "acme" },
     "app": { "id": "…", "name": "backend" },
     "environment": { "id": "…", "name": "Production", "type": "PROD" },
-    "secret": { "id": "…", "path": "/api/payments", "version": 3, "type": "secret" },
+    "secret": { "id": "…", "path": "/api/payments", "version": 3, "type": "SECRET" },
     "description": "Secret read in backend / Production by ci-deploy"
   },
   "ddsource": "phase",
@@ -64,11 +64,11 @@ The example below is shown as it lands in **Datadog**: the `usr`, `network`, `ht
 }
 ```
 
-To pivot from an exported event back to Phase, copy the `phase.secret.id` (or any resource ID) and paste it into the Console&apos;s global search (⌘K) — it resolves directly to the secret&apos;s app, environment and path.
+To pivot from an exported secret event back to Phase, copy the `phase.secret.id` and paste it into the Console&apos;s global search (⌘K) — it resolves directly to the secret&apos;s app, environment and path.
 
 ## Delivery guarantees
 
-- **At-least-once delivery.** Events ship in ordered chunks (up to 500 per request), and a stream's cursor only advances after the destination accepts the chunk — a transient failure can therefore never lose an event, but it can occasionally deliver one twice (for example, if a network timeout hides a successful ingestion). **Deduplicate on `event.id`**.
+- **At-least-once delivery.** Events ship in ordered chunks (up to 500 per request), and a stream's cursor only advances after the destination accepts the chunk, or after a failed chunk's exact range is recorded as a re-shippable failure — a transient failure can therefore never silently lose an event, but one can occasionally be delivered twice (for example, if a network timeout hides a successful ingestion). **Deduplicate on `event.id`**.
 - **Near real-time.** Streams are swept every 30 seconds; a healthy stream delivers new events within about a minute.
 - **Ordering.** Events ship in `(timestamp, id)` order per source. Manual re-ships of failed ranges arrive later than newer events — order by the event&apos;s own `timestamp` in queries, not ingestion time.
 - **Delivery status.** Each stream shows a per-source delivery delay ("Up to date", "26 minutes behind" — the age of the oldest event still waiting to ship). A **Delayed** status means events are queued but deliveries are running late; on self-hosted instances, persistent delay usually means the worker service is down or the pool needs more capacity (see [Self-hosting](#self-hosting)).
@@ -86,7 +86,7 @@ To pivot from an exported event back to Phase, copy the `phase.secret.id` (or an
 
 Backfilling covers ranges a stream failed to deliver while active. It does not extend to events from before the stream was created — streams are [ship-forward only](#how-it-works). Events always remain in Phase regardless of delivery outcome:
 
-1. For ranges within the destination&apos;s ingestion window: use the **Retry** button on the failed/skipped row — no other steps needed.
+1. For ranges within the destination&apos;s ingestion window: use the **Retry** button on the failed row — no other steps needed.
 2. Ranges that have fallen outside the ingestion window can no longer be re-shipped — the destination would silently discard them. The events remain queryable in the Console: organisation audit events under **Logs**, and secret events in each app&apos;s **Logs** tab.
 
 ## Managing streams
@@ -95,7 +95,7 @@ Backfilling covers ranges a stream failed to deliver while active. It does not e
 
   ![Log stream configuration tab with status, pause control and event source toggles](/assets/images/console/log-streams/log-stream-config.png)
 
-- **Events tab**: every delivery is recorded — `Completed`, `Failed` or `Skipped` — with its event count, attempts, exact time range and error detail. Failed and skipped rows stay listed until they are resolved by a successful re-ship, and can be retried individually.
+- **Events tab**: every delivery is recorded — `Completed`, `Failed` or `Skipped` — with its event count, attempts, exact time range and error detail. Failed rows stay listed until they are resolved by a successful re-ship, and can be retried individually. Skipped rows record ranges that fell outside the destination&apos;s ingestion window — they cannot be re-shipped and auto-resolve as **Expired**.
 
   ![Events tab showing the delivery history with status filters](/assets/images/console/log-streams/log-stream-events.png)
 
@@ -288,9 +288,11 @@ For Cloud SIEM, you can create detection rules over these logs, for example:
 <Note>
   Datadog&apos;s intake silently discards events with timestamps older than **18
   hours**. This is why streams cannot backfill historical data from before
-  they were created, and why a stream that is paused or failing for longer
-  than 18 hours records the missed range as **skipped** in the delivery
-  history and jumps the cursor forward. The events always remain queryable in
+  they were created, and why a stream that is paused or failing for that long
+  records the missed range as **skipped** in the delivery history and jumps
+  the cursor forward. The engine skips shortly *before* the 18-hour mark —
+  it keeps a ~40-minute safety margin so events admitted for delivery cannot
+  age past the cutoff mid-flight. The events always remain queryable in
   Phase: organisation audit events under **Logs** in the Console, and secret
   events in each app&apos;s **Logs** tab.
 </Note>
