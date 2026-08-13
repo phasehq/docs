@@ -92,7 +92,13 @@ Backfilling covers ranges a stream failed to deliver while active. It does not e
 ## Managing streams
 
 - **Pause / Resume**: pausing stops all egress; resuming continues from the stored cursor with no gap (subject to the destination&apos;s ingestion window).
+
+  ![Log stream configuration tab with status, pause control and event source toggles](/assets/images/console/log-streams/log-stream-config.png)
+
 - **Events tab**: every delivery is recorded — `Completed`, `Failed` or `Skipped` — with its event count, attempts, exact time range and error detail. Failed and skipped rows stay listed until they are resolved by a successful re-ship, and can be retried individually.
+
+  ![Events tab showing the delivery history with status filters](/assets/images/console/log-streams/log-stream-events.png)
+
 - **Stream options**: a `service` name for the destination (default `phase-console`), free-form tags, and the per-chunk retry limit.
 
 ## Datadog
@@ -102,26 +108,52 @@ Stream logs to [Datadog](https://www.datadoghq.com/) for monitoring, alerting an
 ### Step 1: Create a Datadog API key
 
 1. Log in to Datadog and go to **Organization Settings** → **API Keys**.
-2. Click **+ New Key** and name it, e.g. `phase-log-stream`. Copy the key value.
+
+   ![Datadog API Keys page with the New Key button](/assets/images/console/log-streams/datadog-new-key-button.png)
+
+2. Click **+ New Key** and name it, e.g. `phase-log-stream`.
+
+   ![Datadog New API Key dialog with the key named phase-log-stream](/assets/images/console/log-streams/datadog-new-key-name.png)
+
+3. Copy the key value.
+
+   ![Created Datadog API key with the Copy button](/assets/images/console/log-streams/datadog-new-key-created.png)
 
 Note: API keys are the right credential for log shipping: they are org-level, intake-only by design (they can submit data but cannot read or manage anything), cannot be scoped further, and [remain valid even if the user who created them is later disabled](https://docs.datadoghq.com/account_management/api-app-keys/).
 
-3. Note your Datadog **site** — you can see it in your browser&apos;s address bar, e.g. `us3.datadoghq.com`, `datadoghq.com`, or `datadoghq.eu`.
+4. Note your Datadog **site** — you can see it in your browser&apos;s address bar, e.g. `us3.datadoghq.com`, `datadoghq.com`, or `datadoghq.eu`.
 
 ### Step 2: Add Datadog credentials to Phase
 
-1. In the Phase Console, go to **Integrations** → **Third-party credentials**.
-2. Click the **Datadog** card.
+1. In the Phase Console, go to **Integrations** → **Third-party credentials** and click **+ Add credentials**.
+
+   ![Third-party credentials tab with the Add credentials button](/assets/images/console/log-streams/create-new-cred-button.png)
+
+2. Select the **Datadog** card.
+
+   ![Create new service credentials dialog with the Datadog card](/assets/images/console/log-streams/create-new-cred-datadog-1.png)
+
 3. Enter your **API key** and pick your **site** from the region dropdown. The optional **application key** is not required for log streaming.
 4. Give the credentials a descriptive name and save.
+
+   ![Datadog credential form with API key, site region and name](/assets/images/console/log-streams/create-new-cred-datadog-2.png)
 
 ### Step 3: Create a Log Stream
 
 1. Go to **Integrations** → **Log Streams** and click **Create a Log Stream**.
+
+   ![Log Streams tab with the Create a Log Stream button](/assets/images/console/log-streams/create-a-log-stream-button.png)
+
 2. Select **Datadog**, then your Datadog credentials.
 3. Choose the event sources to ship.
 4. Optionally configure the Datadog `service` name, additional tags and the per-chunk retry limit. Tag values are sanitised to Datadog&apos;s tag rules (lowercased, spaces and special characters become underscores).
 5. Click **Test connection** to validate the API key against Datadog&apos;s key-validation endpoint (no log data is written), then **Create**.
+
+   ![Create a Log Stream dialog with credentials, event sources and Datadog destination options](/assets/images/console/log-streams/create-a-log-stream-dialog.png)
+
+The new stream appears with its health status, per-source delivery state and a deep link to the shipped logs in Datadog:
+
+![Log stream card showing per-source delivery status and the Explore logs in Datadog link](/assets/images/console/log-streams/log-stream-card.png)
 
 Events will appear in the Datadog **Log Explorer** under `source:phase` within about a minute. Example events as they land in Datadog:
 
