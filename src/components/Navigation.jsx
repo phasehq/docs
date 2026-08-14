@@ -220,6 +220,7 @@ export const navigation = [
       { title: 'Secrets', href: '/console/secrets' },
       { title: 'Dynamic Secrets', href: '/console/dynamic-secrets' },
       { title: 'Rotating Secrets', href: '/console/rotating-secrets' },
+      { title: 'Log Streams', href: '/console/logstreams' },
     ],
   },
   {
