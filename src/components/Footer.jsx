@@ -37,7 +37,7 @@ function FeedbackButton(props) {
   return (
     <button
       type="submit"
-      className="px-3 font-mono text-xs uppercase tracking-[0.08em] text-zinc-600 transition-colors duration-150 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-900/40 dark:hover:text-zinc-100"
+      className="px-3 font-mono text-xs font-medium uppercase tracking-[0.08em] text-zinc-600 transition-colors duration-150 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-900/40 dark:hover:text-zinc-100"
       {...props}
     />
   )
@@ -107,7 +107,7 @@ const FeedbackThanks = forwardRef(function FeedbackThanks({ onCommentSubmit }, r
           />
           <button
             type="submit"
-            className="absolute bottom-2 right-2 inline-flex h-7 items-center rounded-full px-3 font-mono text-xs uppercase tracking-[0.08em] text-zinc-600 ring-1 ring-inset ring-zinc-300 transition-colors duration-150 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-300 dark:ring-zinc-700 dark:hover:bg-zinc-900/40 dark:hover:text-zinc-100"
+            className="absolute bottom-2 right-2 inline-flex h-7 items-center rounded-full px-3 font-mono text-xs font-medium uppercase tracking-[0.08em] text-zinc-600 ring-1 ring-inset ring-zinc-300 transition-colors duration-150 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-300 dark:ring-zinc-700 dark:hover:bg-zinc-900/40 dark:hover:text-zinc-100"
           >
             Submit
           </button>

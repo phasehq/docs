@@ -24,7 +24,7 @@ export function Layout({ children, sections = [] }) {
                 className="flex items-center gap-2"
               >
                 <Logo className="h-10 fill-zinc-900 dark:fill-zinc-100" />
-                <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-zinc-500">
+                <span className="font-mono text-sm uppercase tracking-[0.12em] text-zinc-500">
                   docs
                 </span>
               </Link>

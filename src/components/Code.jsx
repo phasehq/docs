@@ -51,7 +51,7 @@ function CodePanelHeader({ tag, label }) {
   }
 
   return (
-    <div className="flex h-8 items-center gap-2 border-b border-zinc-200 px-4 dark:border-zinc-800">
+    <div className="flex h-8 items-center gap-2 border-b border-zinc-200 bg-zinc-100 px-4 dark:border-zinc-800 dark:bg-zinc-800/40">
       {tag && (
         <div className="flex">
           <Tag variant="small">{tag}</Tag>
@@ -99,21 +99,24 @@ function CodeGroupHeader({ title, children, selectedIndex }) {
   }
 
   return (
-    <div className="flex min-h-9 flex-wrap items-center gap-x-4 gap-y-1 border-b border-zinc-200 px-4 py-1.5 dark:border-zinc-800">
+    <div className="flex min-h-8 flex-wrap items-stretch gap-x-4 border-b border-zinc-200 bg-zinc-100 px-4 dark:border-zinc-800 dark:bg-zinc-800/40">
       {title && (
-        <div className="mr-auto font-mono text-[11px] uppercase tracking-[0.12em] text-zinc-500">
+        <div className="mr-auto flex items-center font-mono text-[11px] uppercase leading-none tracking-[0.12em] text-zinc-500">
           {title}
         </div>
       )}
+      {/* Underline tabs matching TabGroup: the active tab's emerald rule
+          sits on the strip's bottom hairline via -mb-px. Sans labels,
+          leading-none keeps the strip compact. */}
       {hasTabs && (
-        <Tab.List className="flex flex-wrap items-center gap-1">
+        <Tab.List className="-mb-px flex flex-wrap items-stretch gap-4">
           {Children.map(children, (child, childIndex) => (
             <Tab
               className={clsx(
-                'inline-flex shrink-0 items-center rounded-md px-2 py-0.5 text-2xs transition-colors duration-150 focus:[&:not(:focus-visible)]:outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-zinc-400',
+                'flex shrink-0 items-center whitespace-nowrap border-b py-2 text-2xs leading-none transition-colors duration-150 focus:[&:not(:focus-visible)]:outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-zinc-400',
                 childIndex === selectedIndex
-                  ? 'bg-zinc-200 text-zinc-700 dark:bg-zinc-800/70 dark:text-zinc-300'
-                  : 'text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'
+                  ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400'
+                  : 'border-transparent text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'
               )}
             >
               {getPanelTitle(child.props)}
@@ -224,7 +227,7 @@ export function CodeGroup({ children, title, ...props }) {
       <Container
         {...containerProps}
         translate="no"
-        className="not-prose my-6 overflow-hidden rounded-lg bg-zinc-50 ring-1 ring-zinc-200 dark:bg-zinc-900 dark:ring-zinc-800"
+        className="not-prose my-6 overflow-hidden bg-zinc-50 ring-1 ring-zinc-200 dark:bg-zinc-900 dark:ring-zinc-800"
       >
         <CodeGroupHeader title={title} {...headerProps}>
           {children}

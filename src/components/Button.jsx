@@ -15,17 +15,20 @@ function ArrowIcon(props) {
 }
 
 // The emerald CTA pill is identical in both modes (no dark: variants needed).
+// h-8 pins every pill to 32px — matching the header Sign in / Launch Console
+// and the search trigger, so there is one button height across the site. All
+// pills are mono uppercase; the emerald fill is the primary's emphasis.
 const emeraldPill =
-  'gap-2 whitespace-nowrap rounded-full bg-emerald-500 px-4 py-2 text-[13px] font-medium text-zinc-950 hover:bg-emerald-400 hover:text-zinc-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400'
+  'h-8 gap-2 whitespace-nowrap rounded-full bg-emerald-500 px-4 font-mono text-xs font-medium uppercase tracking-[0.08em] text-zinc-950 hover:bg-emerald-400 hover:text-zinc-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400'
 
 const variantStyles = {
   primary: emeraldPill,
   filled: emeraldPill,
   secondary:
-    'gap-2 whitespace-nowrap rounded-full bg-zinc-100 px-4 py-2 font-mono text-xs uppercase tracking-[0.08em] text-zinc-700 ring-1 ring-inset ring-zinc-200 hover:bg-zinc-200 hover:text-zinc-900 focus-visible:outline focus-visible:outline-1 focus-visible:outline-zinc-400 dark:bg-zinc-900 dark:text-zinc-300 dark:ring-zinc-800 dark:hover:bg-zinc-800 dark:hover:text-zinc-100',
+    'h-8 gap-2 whitespace-nowrap rounded-full bg-zinc-100 px-4 font-mono text-xs font-medium uppercase tracking-[0.08em] text-zinc-700 ring-1 ring-inset ring-zinc-200 hover:bg-zinc-200 hover:text-zinc-900 focus-visible:outline focus-visible:outline-1 focus-visible:outline-zinc-400 dark:bg-zinc-900 dark:text-zinc-300 dark:ring-zinc-800 dark:hover:bg-zinc-800 dark:hover:text-zinc-100',
   outline:
-    'gap-2 whitespace-nowrap rounded-full px-4 py-2 font-mono text-xs uppercase tracking-[0.08em] text-zinc-600 ring-1 ring-inset ring-zinc-300 hover:bg-zinc-50 hover:text-zinc-900 hover:ring-zinc-400 focus-visible:outline focus-visible:outline-1 focus-visible:outline-zinc-400 dark:text-zinc-300 dark:ring-zinc-700 dark:hover:bg-zinc-900/40 dark:hover:text-zinc-100 dark:hover:ring-zinc-500',
-  text: 'gap-2 font-mono text-[11px] uppercase tracking-[0.12em] text-emerald-600 hover:text-emerald-700 focus-visible:outline focus-visible:outline-1 focus-visible:outline-zinc-400 dark:text-emerald-400 dark:hover:text-emerald-300',
+    'h-8 gap-2 whitespace-nowrap rounded-full px-4 font-mono text-xs font-medium uppercase tracking-[0.08em] text-zinc-600 ring-1 ring-inset ring-zinc-300 hover:bg-zinc-100 hover:text-zinc-900 hover:ring-zinc-400 focus-visible:outline focus-visible:outline-1 focus-visible:outline-zinc-400 dark:text-zinc-300 dark:ring-zinc-700 dark:hover:bg-zinc-800 dark:hover:text-zinc-100 dark:hover:ring-zinc-500',
+  text: 'gap-2 font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-emerald-600 hover:text-emerald-700 focus-visible:outline focus-visible:outline-1 focus-visible:outline-zinc-400 dark:text-emerald-400 dark:hover:text-emerald-300',
 }
 
 export function Button({

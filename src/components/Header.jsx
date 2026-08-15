@@ -55,7 +55,7 @@ export const Header = forwardRef(function Header({ className }, ref) {
         <MobileNavigation />
         <Link href="/" aria-label="Home" className="flex items-center gap-2">
           <Logo className="h-10 fill-zinc-900 dark:fill-zinc-100" />
-          <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-zinc-500">
+          <span className="font-mono text-sm uppercase tracking-[0.12em] text-zinc-500">
             docs
           </span>
         </Link>
@@ -81,7 +81,7 @@ export const Header = forwardRef(function Header({ className }, ref) {
         </div>
         <Link
           href="https://console.phase.dev"
-          className="hidden h-8 shrink-0 items-center whitespace-nowrap rounded-full bg-emerald-500 px-4 text-[13px] font-medium text-zinc-950 transition-colors duration-150 hover:bg-emerald-400 hover:text-zinc-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400 min-[480px]:inline-flex"
+          className="hidden h-8 shrink-0 items-center whitespace-nowrap rounded-full bg-emerald-500 px-4 font-mono text-xs font-medium uppercase tracking-[0.08em] text-zinc-950 transition-colors duration-150 hover:bg-emerald-400 hover:text-zinc-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400 min-[480px]:inline-flex"
         >
           Sign in
         </Link>
