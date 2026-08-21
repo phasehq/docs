@@ -269,6 +269,14 @@ export const navigation = [
         title: 'OpenID Connect (OIDC)',
         href: '/access-control/authentication/oidc-sso',
       },
+      {
+        title: 'Two-Factor Authentication',
+        href: '/access-control/authentication/mfa',
+      },
+      {
+        title: 'Account Management',
+        href: '/access-control/authentication/account',
+      },
       { title: 'Tokens', href: '/access-control/authentication/tokens' },
       {
         title: 'SCIM Provisioning',

@@ -70,6 +70,10 @@ A successful round-trip brings you back to the SSO settings page.
 
 Enforcing SSO disables password login for all members of the organisation and requires every sign-in to go through the configured provider.
 
+<Note>
+Before enforcing, make sure every member can actually sign in through the provider. Members who joined with a different method (for example Google OAuth or a password) should [link the organisation's SSO identity](/access-control/authentication/account#sign-in-methods) from their Account page first — Phase never automatically attaches a new sign-in identity to an existing account based on a matching email. You can track linking progress in the organisation's audit log.
+</Note>
+
 1. Click **Enforce SSO**. A confirmation dialog appears.
 
    ![Enforce SSO dialog — acknowledgement unchecked](/assets/images/auth/sso/org/08-enforce-sso-dialog-unchecked.png)

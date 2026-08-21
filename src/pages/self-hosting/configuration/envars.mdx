@@ -1010,6 +1010,11 @@ Env(s) required by the following containers:
 These variables are not required if using the suggested [docker-compose template](https://raw.githubusercontent.com/phasehq/console/main/docker-compose.yml). However if you are deploying the Phase Console using a custom docker-compose configuration or without docker-compose, make sure the following variables are correctly set. 
 
 <Properties>
+  <Property name="AUTH_FRESHNESS_MAX_AGE_SECONDS" type="number (Optional)">
+    Maximum age, in seconds, of a session's last authentication before sensitive account actions (linking or unlinking sign-in methods, enabling or disabling 2FA, changing the account email, deleting the account) require the user to sign in again. Defaults to `900` (15 minutes).
+
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
+  </Property>
   <Property name="NEXTAUTH_URL" type="string">
     The base console URL for NextAuth. References `${HTTP_PROTOCOL}${HOST}`
     
