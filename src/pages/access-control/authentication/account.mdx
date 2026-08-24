@@ -31,7 +31,7 @@ Identities are matched by the provider's stable account ID, not by email address
 If you see *"An account with this email already exists"* when signing in with a new provider, this is Phase's account takeover protection: a new sign-in identity is never automatically attached to an existing account based on a matching email. Sign in with your existing method and link the new provider from the Account page instead.
 </Note>
 
-Linking an identity that is already attached to a different Phase account is refused. Phase never merges accounts.
+Linking an identity that is already attached to a different Phase account is refused. Phase never merges accounts. Linking is also refused when the provider reports the identity's email as unverified — verify it with your provider first, then try again.
 
 You will receive an email notification whenever a sign-in method is linked to or unlinked from your account.
 
@@ -56,10 +56,10 @@ Your name and profile picture are initially taken from the identity provider you
 Your account email is used for sign-in identification, notifications, and organisation invites. To change it:
 
 1. Click the pencil icon next to your email address on the Account page.
-2. Enter the new address. Phase sends a verification code to it.
+2. Enter the new address. Phase sends a verification code to it. The code is valid for 15 minutes.
 3. Enter the code, along with your password (or sudo password if your account has no login password), to confirm the change.
 
-You can change your email to any address you control — it does not need to match a linked sign-in identity. A security alert is sent to your **old** address whenever the change completes.
+You can change your email to most addresses you control — it does not need to match a linked sign-in identity. On self-hosted instances that set an [email domain allowlist](/self-hosting/configuration/envars), the new address must be in the allowlist, and an address already used by another account is refused. A security alert is sent to your **old** address whenever the change completes.
 
 <Note>
 Your account email is a cryptographic input to your local device key. Confirming the change therefore re-encrypts your account keyrings for **all** of your organisations in one step — this is why your password or sudo password is required. Nothing changes about your organisation keys or secrets; only the encrypted wrapper is rotated.
@@ -78,10 +78,14 @@ Deletion is blocked while:
 - You are the **only owner** of an organisation. [Transfer ownership](/console/organisation) to another member first — organisations with another owner don't block deletion.
 - Your account is **SCIM-provisioned** in any organisation. Ask your administrator to deprovision you from the identity provider instead.
 
+On self-hosted instances, accounts with Django staff or superuser access cannot be deleted from the Console.
+
+When deletion completes, Phase sends a confirmation email to the deleted address.
+
 To confirm deletion, type your email address into the confirmation dialog.
 
 <Note>
-Organisation audit logs are preserved for compliance: events you performed remain in your organisations' logs with the actor anonymised to *"Deleted account"*. Your personal data is removed.
+Organisation audit logs are preserved for compliance: events you performed remain in your organisations' logs, shown with the actor as *"Deleted account"* in the Console. Your account and its personal data are removed, though audit records retained for compliance can still contain identifying fields captured at the time of each event.
 </Note>
 
 Any active dynamic secret leases you hold are revoked at the provider before your account is removed. Existing service account tokens and organisation resources you created (network policies, service tokens) are unaffected — they belong to the organisation, not to you.
