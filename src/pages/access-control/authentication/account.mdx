@@ -7,13 +7,15 @@ export const description = 'Manage your Phase account: linked sign-in methods, e
 
 # Account Management
 
-The Account page lets you manage everything about how you sign in to Phase. It is personal to you and applies across all of your organisations. Open it from the user menu in the top right corner of the Console — click your avatar and select **Account settings**.
+The Account page lets you manage everything about how you sign in to Phase. It is personal to you and applies across all of your organisations. Open it from the user menu in the top right corner of the Console — click your avatar, then click your profile card (your name and email) at the top of the menu.
 
 <DocActions />
 
 ## Sensitive action re-authentication
 
-Changes to your sign-in methods, email address, two-factor authentication, and account deletion require a recently authenticated session. If you signed in more than 15 minutes ago, Phase will ask you to sign in again before making changes. This limits what a stolen or unattended session can do. Self-hosted operators can tune this window with the [`AUTH_FRESHNESS_MAX_AGE_SECONDS`](/self-hosting/configuration/envars#additional-environment-variables) environment variable.
+Changes to your sign-in methods, email address, two-factor authentication, and account deletion require a recently authenticated session. If you signed in more than 15 minutes ago, a **Confirm it's you** dialog appears when you attempt the change — you can cancel, or sign in again to continue. This limits what a stolen or unattended session can do. Self-hosted operators can tune this window with the [`AUTH_FRESHNESS_MAX_AGE_SECONDS`](/self-hosting/configuration/envars#additional-environment-variables) environment variable.
+
+Signing in again does not lose your place: Phase returns you to the Account page with the interrupted flow restored — the same dialog, the same step, and anything you had entered, except codes and passwords, which you re-enter. When a dialog knows a re-authentication will be needed, it shows a heads-up first: *"You'll be asked to confirm it's you before this change is applied."*
 
 ## Sign-in methods
 
@@ -21,8 +23,8 @@ Your account can have multiple sign-in identities linked to it — for example a
 
 ### Linking a new sign-in method
 
-1. On the Account page, find **Sign-in methods**.
-2. Under *Link a sign-in method*, click the provider you want to add. Providers configured on your instance are shown, along with any organisation-level SSO providers for organisations you are a member of.
+1. On the Account page, find **Sign-in methods**. Providers configured on your instance are shown, along with any organisation-level SSO providers for organisations you are a member of. Active methods show a badge — *Linked* for identities, *Enabled* for a password.
+2. Hover the card of an unlinked provider and click **Link**.
 3. Authenticate with the provider. You will be returned to the Account page with the new identity linked.
 
 Identities are matched by the provider's stable account ID, not by email address — **the email on the linked identity does not need to match your Phase account email**. This makes linking the right tool for moving to a new identity provider: for example, if you signed up with Google and your organisation later adopts Microsoft Entra ID SSO, link your Entra ID identity from the Account page and you can sign in with either from then on.
@@ -41,7 +43,7 @@ If your organisation is adopting a new SSO provider and plans to [enforce SSO](/
 
 ### Unlinking a sign-in method
 
-Click **Unlink** next to a linked identity and confirm. You can no longer sign in with that identity afterwards. Unlinking is blocked when:
+Hover the card of a linked identity, click **Unlink**, and confirm. You can no longer sign in with that identity afterwards. Unlinking is blocked when:
 
 - It is your **only** sign-in method (a password counts as a method when password authentication is enabled on the instance).
 - The identity belongs to an organisation SSO provider that is currently **enforced** for an organisation you are a member of.
@@ -71,7 +73,7 @@ On self-hosted instances without an [email gateway](/self-hosting/configuration/
 
 ## Deleting your account
 
-You can permanently delete your Phase account from the **Danger zone** on the Account page. Deletion is immediate and irreversible: your organisation memberships, encryption keys, personal access tokens, and personal data are permanently removed.
+You can permanently delete your Phase account from the **Delete account** section on the Account page. Deletion is immediate and irreversible: your organisation memberships, encryption keys, personal access tokens, and personal data are permanently removed.
 
 Deletion is blocked while:
 
