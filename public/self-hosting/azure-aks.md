@@ -1448,6 +1448,14 @@ proxy range when your network design provides a stable smaller range. Never
 trust `0.0.0.0/0`, especially when Phase IP-based access rules depend on the
 result.
 
+Because TLS terminates at the Tailscale operator proxy on this route, the
+backend validates browser request origins for
+[CSRF protection](/self-hosting/configuration/reverse-proxy#csrf-protection) (Console `v2.75.0`+)
+against the origin derived from `global.host`. Keep it exactly matching the
+hostname users visit. Additional origins require an `ALLOWED_ORIGINS` override
+on the backend deployment. See
+[Load balancers and reverse proxies](/self-hosting/configuration/reverse-proxy#tailscale-serve-funnel).
+
 One optional subnet-level control is the preview
 `service.beta.kubernetes.io/azure-allowed-ip-ranges` load-balancer annotation,
 set through the AKS application-routing

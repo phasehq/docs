@@ -709,6 +709,10 @@ With Proxy Protocol enabled, the NLB embeds the original client IP in the TCP st
 **EKS Auto Mode:** Do not use the `service.beta.kubernetes.io/aws-load-balancer-proxy-protocol` annotation — it is not supported in EKS Auto Mode and will be ignored. Do not manually modify NLB target group attributes via the AWS CLI either, as EKS Auto Mode continuously reconciles target group settings and will revert manual changes. Use the `aws-load-balancer-target-group-attributes` annotation shown above instead.
 </Note>
 
+### Reverse proxy headers
+
+Because the NLB passes TCP through and TLS terminates at the NGINX ingress controller, the controller sets the `X-Forwarded-Proto` and `Host` headers for upstream services by default. The backend relies on these for [CSRF protection](/self-hosting/configuration/reverse-proxy#csrf-protection) from Console `v2.75.0`. No extra configuration is needed for this topology. If you front the cluster with an ALB or another TLS-terminating proxy instead, see [Load balancers and reverse proxies](/self-hosting/configuration/reverse-proxy#kubernetes-with-the-phase-helm-chart).
+
 ## IRSA (IAM Roles for Service Accounts)
 
 If your Phase Console backend needs to access AWS services, you can use [IAM Roles for Service Accounts (IRSA)](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html) to grant fine-grained IAM permissions to Phase pods without managing static AWS credentials.

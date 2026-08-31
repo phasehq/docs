@@ -454,6 +454,10 @@ export const navigation = [
         title: 'Deployment configuration',
         href: '/self-hosting/configuration/envars',
       },
+      {
+        title: 'Load balancers & reverse proxies',
+        href: '/self-hosting/configuration/reverse-proxy',
+      },
     ],
   },
 ]

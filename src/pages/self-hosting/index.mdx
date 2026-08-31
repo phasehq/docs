@@ -82,6 +82,7 @@ When self-hosting Phase services on your own infrastructure, you assume sole res
 - **Security:**
     - **Authentication:** Password authentication is available by default. You can optionally configure SSO for user authentication using one of the [supported providers](/access-control/authentication#user-authentication).
     - **TLS Certificates:** Provision a valid TLS certificate to ensure Phase is accessed securely over HTTPS. Self-signed certificates are supported.
+    - **Reverse Proxy Configuration:** If you add your own reverse proxy, load balancer or CDN in front of Phase, make sure that it preserves the `Host` header and forwards `X-Forwarded-Proto` and the client IP. See [Load balancers and reverse proxies](/self-hosting/configuration/reverse-proxy).
     - **Web Application Firewall (WAF):** Implement a WAF to protect against common web exploits.
     - **DDoS Protection & Rate Limiting:** Configure measures to mitigate Distributed Denial of Service attacks and prevent abuse through rate limiting.
 

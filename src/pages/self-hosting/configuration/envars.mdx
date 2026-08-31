@@ -420,6 +420,17 @@ If SMTP is not configured, or if `SKIP_EMAIL_VERIFICATION` is set to `true`, acc
   <Property name="HTTP_PROTOCOL" type="string">
     The url scheme for your host. Defaults to `https://`. Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend), [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
+  <Property name="TRUST_PROXY_SSL_HEADER" type="boolean (Optional)">
+    Available from Console `v2.75.0`.
+
+    Controls whether the backend trusts the `X-Forwarded-Proto` header from your reverse proxy to detect whether a request was made over HTTPS. This lets [CSRF protection](/self-hosting/configuration/reverse-proxy#csrf-protection) validate browser request origins that are not listed in `ALLOWED_ORIGINS` when TLS is terminated at a proxy in front of the backend, which is the case in all reference deployments. Defaults to `True`.
+
+    The value is considered `True` if the environment variable is set to `"true"` or `"1"` (case-insensitive).
+
+    Set to `False` only if your `backend` container is reachable without passing through a proxy that sets `X-Forwarded-Proto`, to prevent clients from spoofing the header. See [Load balancers and reverse proxies](/self-hosting/configuration/reverse-proxy#disabling-proxy-header-trust).
+
+    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers (only affects request handling in the `backend`).
+  </Property>
   <Property name="USER_EMAIL_DOMAIN_WHITELIST" type="string (Optional)">
     A comma-separated list of domains to restrict signups and logins.
     When set, only users with emails matching the specified domains can register or log in.
@@ -1070,6 +1081,8 @@ These variables are not required if using the suggested [docker-compose template
     Comma-separated list of allowed origins used by the Phase backend. References `${HTTP_PROTOCOL}${HOST}`
 
     Example: `https://[**YOUR_DOMAIN**]`
+
+    From Console `v2.75.0`, this list is also used as the set of trusted origins for [CSRF protection](/self-hosting/configuration/reverse-proxy#csrf-protection). Each entry must match the origin shown in the browser address bar exactly: scheme, host, and port (when non-standard), with no trailing slash.
 
     Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>

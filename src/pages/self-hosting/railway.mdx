@@ -127,6 +127,10 @@ Below is an example of an OAuth redirection error when using GitHub SSO (though 
 
 Similar issues can appear during login. If you check the browser console, you may see errors indicating that requests to a Railway domain have been blocked by the Content Security Policy (CSP) of the Phase Console. This suggests that services (`frontend` or `backend`) are using incorrect or outdated Railway referenced Environment variables. Verify the referenced variables in each service's Environment Variable tab, redeploy them, and then redeploy the `railway-nginx` service.
 
+### CSRF errors (403)
+
+If Console actions fail with `403` errors after you add or change a custom domain, the backend rejects the browser request origin for [CSRF protection](/self-hosting/configuration/reverse-proxy#csrf-protection) (Console `v2.75.0`+). The origin you access the Console at must be reflected in the environment variables that reference the `railway-nginx` domain. The cause is the same stale variables as the OAuth redirection issues above. Make sure that the referenced variables are current, then redeploy the affected services.
+
 ### Redeploying Services
 
 1. Select the service to redeploy.

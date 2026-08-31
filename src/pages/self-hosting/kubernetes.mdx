@@ -304,7 +304,7 @@ metadata:
   namespace: ingress-nginx
 data:
   use-forwarded-headers: "true"
-  compute-real-ip-from: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16" # 👈 Replace with your load balancer / VPC CIDR
+  proxy-real-ip-cidr: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16" # 👈 Replace with your load balancer / VPC CIDR
 ```
 
 Apply the ConfigMap:
@@ -314,10 +314,14 @@ kubectl apply -f ingress-nginx-configmap.yaml
 ```
 
 <Note>
-The `compute-real-ip-from` setting defines which source IPs are trusted to send `X-Forwarded-For` headers. Only headers from IPs matching these CIDRs are trusted — all others are overwritten with the actual TCP source IP, preventing client-side IP spoofing.
+The `proxy-real-ip-cidr` setting defines which source IPs are trusted to send `X-Forwarded-For` headers. Only headers from IPs matching these CIDRs are trusted — all others are overwritten with the actual TCP source IP, preventing client-side IP spoofing. It defaults to `0.0.0.0/0` (trust everyone), so always set it explicitly when enabling `use-forwarded-headers`.
 
-Set this to the CIDR range of your load balancer or VPC. For example, if your cluster VPC uses `10.0.0.0/16`, set `compute-real-ip-from: "10.0.0.0/16"`.
+Set this to the CIDR range of your load balancer or VPC. For example, if your cluster VPC uses `10.0.0.0/16`, set `proxy-real-ip-cidr: "10.0.0.0/16"`.
 </Note>
+
+### Reverse proxy headers
+
+The NGINX ingress controller sets the `X-Forwarded-Proto` and `Host` headers for upstream services automatically, which the backend relies on for [CSRF protection](/self-hosting/configuration/reverse-proxy#csrf-protection) from Console `v2.75.0`. The documented topology needs no extra configuration. If you terminate TLS upstream of the ingress controller, or replace it with a custom ingress, see [Load balancers and reverse proxies](/self-hosting/configuration/reverse-proxy#kubernetes-with-the-phase-helm-chart).
 
 ## Troubleshooting
 

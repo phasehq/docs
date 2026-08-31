@@ -144,6 +144,10 @@ The `nginx` service acts as a reverse proxy for the `frontend` and `backend` ser
 - Requests to `https://<your-host-ip-address>/*` are routed to the `frontend` service at `http://frontend:3000`.
 - Requests to `https://<your-host-ip-address>/service/*` are routed to the `backend` service at `http://backend:8000`, with the `/service` path prefix stripped.
 
+### CSRF errors (403)
+
+If Console actions fail with `403` errors (for example when you save secrets) while the CLI and API work, the backend rejects the browser request origin. This happens when you access the Console at a hostname or IP that is not in your configuration, or when a TLS-terminating proxy in front of `nginx` does not forward the original protocol. See [Load balancers and reverse proxies](/self-hosting/configuration/reverse-proxy#csrf-protection) for configuration and troubleshooting steps.
+
 ### Health Checks
 
 You can check the health of the services using `curl`. Since a self-signed certificate is used by default, you may need to use the `-k` or `--insecure` flag to bypass certificate validation.

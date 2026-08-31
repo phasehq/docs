@@ -97,3 +97,4 @@
 - [self-hosting/digitalocean](https://docs.phase.dev/self-hosting/digitalocean.md)
 - [self-hosting/raspberrypi](https://docs.phase.dev/self-hosting/raspberrypi.md)
 - [self-hosting/configuration/envars](https://docs.phase.dev/self-hosting/configuration/envars.md)
+- [self-hosting/configuration/reverse-proxy](https://docs.phase.dev/self-hosting/configuration/reverse-proxy.md)

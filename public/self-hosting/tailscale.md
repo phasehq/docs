@@ -365,6 +365,10 @@ Tailscale Serve requires **HTTPS Certificates** to be enabled for your tailnet (
 
 The hostname you're using isn't in `ALLOWED_HOSTS`. Add it (comma-separated) in `.env` and run `docker compose up -d` to apply.
 
+### `403` errors on Console actions (CSRF)
+
+The origin you use is not in `ALLOWED_ORIGINS`, so the backend rejects state-changing requests for [CSRF protection](/self-hosting/configuration/reverse-proxy#csrf-protection) (Console `v2.75.0`+). Add the origin (scheme, host, and port if non-standard) to `ALLOWED_ORIGINS` in `.env`, then run `docker compose up -d` to apply. This pairs with `ALLOWED_HOSTS` above: a hostname needs an entry in both.
+
 ### Testing connectivity to services on your tailnet
 
 The `backend` and `worker` containers have transparent access to your tailnet, with MagicDNS resolution — this is what lets [integrations](/integrations) like secret syncs and dynamic secrets reach private services (a self-hosted GitLab, a Kubernetes cluster, an internal LLM gateway) via their tailnet hostnames, without exposing them to the internet. You can verify connectivity from inside the containers:
