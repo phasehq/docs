@@ -260,7 +260,7 @@ Alternatively, you may provision a custom access policy by toggling switches in 
 
 ### Resource Permissions Cheat Sheet
 
-Some actions require a combination of permissions across multiple resources. Below is a list of common actions that require a combination of two of more permissions:
+Some actions require a combination of permissions across multiple resources. Below is a list of common actions that require a combination of two or more permissions:
 
 - To update the role of a user in your Organization: 
     - `Members:update`
@@ -272,7 +272,7 @@ Some actions require a combination of permissions across multiple resources. Bel
 - Updating the third party integration credentials used for a given integration in an App:
     - `Integrations:update`
     - `IntegrationCredentials:read`
-- Creating an new third party integration inside of an App
+- Creating a new third party integration inside of an App
     - `Integrations:create`
     - `Environments:read`
 - Creating a new Service Token:
@@ -282,7 +282,7 @@ Some actions require a combination of permissions across multiple resources. Bel
     - `EncryptionMode:update`
     - `Environments:read`
     - Access to all environments in the App (only to enable SSE)
-- To view and delete other users Personal Access Tokens:
+- To view and delete other users' Personal Access Tokens:
     - `MemberPersonalAccessTokens:read`
     - `MemberPersonalAccessTokens:delete`
 - Adding or removing a Team's access to an App:

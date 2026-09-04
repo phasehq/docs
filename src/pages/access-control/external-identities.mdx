@@ -52,7 +52,7 @@ Benefits:
 
 ## Prerequisites
 - Server-side encryption (SSE) enabled for the Service Account you want to use the External Identity with.
-- A third-party platform or service that supported by Phase
+- A third-party platform or service that is supported by Phase
 
 ## Supported External Identity Providers
 Phase currently supports the following external identity providers:
@@ -97,7 +97,7 @@ For AWS IAM, you will need to provide the following information:
     The ARN(s) of the AWS IAM User(s) to bind to the Phase Service Account. Separate multiple ARNs with commas.
   </Property>
   <Property name="Signature expiry" type="number">
-    The duration (in seconds) for which the signed requests from the AWS IAM User will be valid. Default is 60 seconds. Lower the better. This is to protect against replay attacks.
+    The duration (in seconds) for which the signed requests from the AWS IAM User will be valid. Default is 60 seconds. The lower the better. This is to protect against replay attacks.
   </Property>
   <Property name="STS endpoint" type="string">
     Optionally, specify a custom AWS STS endpoint. If not provided, the default AWS STS endpoint will be used (`https://sts.amazonaws.com`).
@@ -172,7 +172,7 @@ Once an External Identity is created, it will appear in the list on the **Extern
 To use an External Identity, the Service Account must have [Server-side KMS](/access-control/service-accounts#server-side-kms) enabled.
 </Note>
 
-Once you have configured an External Identity, you can bind it to a Phase Service Account. To do this, navigate to the **Service Accounts** page, select the desired Service Account and click **Mange** to open the account detail page. Scroll down to the **External Identities** section and click **Manage External Identities**:
+Once you have configured an External Identity, you can bind it to a Phase Service Account. To do this, navigate to the **Service Accounts** page, select the desired Service Account and click **Manage** to open the account detail page. Scroll down to the **External Identities** section and click **Manage External Identities**:
 
 ![manage external identities button](/assets/images/console/access-control/external-identities/manage-account-identities-button.png)
 

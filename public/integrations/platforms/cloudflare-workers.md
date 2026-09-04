@@ -98,7 +98,7 @@ The sync has been set up! Secrets will automatically be synced from your chosen 
 
 ![Sync created](/assets/images/platform-integrations/cloudflare-workers/sync-created.png)
 
-Each time Phase syncs a secret to Cloudflare Worker, a new deployment is triggered. You will see several deployments in the Cloudflare Workers version history tab depending on the number of secrets synced, with the source being labeled as `API`.
+Each time Phase syncs a secret to a Cloudflare Worker, a new deployment is triggered. You will see several deployments in the Cloudflare Workers version history tab depending on the number of secrets synced, with the source being labeled as `API`.
 
 Additionally, Phase will not overwrite or delete existing plain text environment variables. If a variable with the same name already exists on the destination service, the sync will fail with an error message:
 

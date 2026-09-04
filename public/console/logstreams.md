@@ -1,0 +1,304 @@
+import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
+
+export const description = 'Stream organisation audit logs and secret events from Phase to your SIEM or log management platform in near real-time.'
+
+<Tag variant="small">CONSOLE</Tag>
+
+# Log Streams
+
+Log Streams continuously ship organisation audit logs and secret events from Phase to an external log management platform or SIEM for monitoring, alerting and threat detection. Streams are configured under **Integrations** → **Log Streams**, deliver in near real-time, and expose a per-delivery history with manual retry for anything that fails. Log Streams are available on the **Enterprise** tier.
+
+<DocActions />
+
+<Note>
+  Log Streams ship **metadata only**. Secret values, keys and comments are
+  end-to-end encrypted and never leave Phase.
+</Note>
+
+## How it works
+
+- Phase **pushes** events to your destination — no inbound access, agents or polling required. A background engine sweeps every 30 seconds and ships new events in ordered chunks.
+- Delivery is **at-least-once**: a stream's position (cursor) only advances after the destination accepts a chunk, or after a failed chunk's exact range is durably recorded as re-shippable — so a transient failure can never silently lose an event, but an event can occasionally be delivered twice. Deduplicate on `event.id`, a stable UUID that is identical across redeliveries.
+- Each stream selects its own **event sources** and destination credentials. You can run multiple streams side by side — each keeps independent cursors, so they never interfere.
+- Streams are **ship-forward only**: a new stream begins delivering from the moment it is created and does not backfill older events. This is a destination-side restriction — log platforms cap how far in the past an ingested event&apos;s timestamp may be (Datadog silently discards anything older than **18 hours**, even when the request is accepted), so backfilling meaningful history over the live intake isn&apos;t possible. A dedicated export feature for historical logs — archiving to S3 in a format compatible with [Datadog Log Rehydration](https://docs.datadoghq.com/logs/log_configuration/rehydrating/) — is coming in a future release.
+- Changes to streams (create, update, pause, resume, delete, retries) are recorded in the organisation audit log under **Logs** → **Log Streams** — and, like any other audit event, they export through the stream itself.
+
+### Requirements
+
+- A Phase organisation on the **Enterprise** tier, or a self-hosted instance with an activated license.
+- The `LogStreams` permission in your organisation role, plus **global access** — streams export activity across the whole organisation (Owner and Admin roles qualify by default).
+
+### Event sources
+
+- **Organisation audit events**: organisation-level activity — apps, environments, members, roles, service accounts, tokens, network policies and teams.
+- **Secret events**: create, read, update and delete events for secrets across all apps.
+
+## Exported events
+
+Every event is a structured JSON envelope (`schema_version: 1`) aligned with OpenTelemetry semantic conventions. `event.category` is `secrets` or `org_audit`; `event.type` is one of `create`, `read`, `update`, `delete` or `access`. The `actor` block identifies who acted (a `user`, `service_account` with its token, `service_token`, or `phase` for system actions), and `phase.description` carries a human-readable summary of every event.
+
+Secret events carry a `phase.secret` block (id, path, version, type — never the name or value). Organisation audit events instead carry a `phase.resource` block with a readable `type` slug (e.g. `app`, `environment`, `member`, `invite`, `role`, `service_account_token`, `rotating_secret`, `network_access_policy`, `log_stream`), the resource `id` and `metadata`, plus `old_values` / `new_values` for changes.
+
+The example below is shown as it lands in **Datadog**: the `usr`, `network`, `http`, `ddsource`, `service` and `ddtags` fields are Datadog standard-attribute remappings of the neutral envelope&apos;s `user`, `client` and `user_agent` blocks, added by the Datadog adapter at delivery time.
+
+```json
+{
+  "schema_version": 1,
+  "event": { "id": "…", "category": "secrets", "type": "read" },
+  "timestamp": "2026-07-30T12:00:00+00:00",
+  "actor": { "type": "service_account", "id": "…", "name": "ci-deploy", "token": { "name": "gh-actions" } },
+  "usr": { "id": "…", "name": "Dev Eloper", "email": "dev@example.com" },
+  "network": { "client": { "ip": "203.0.113.7" } },
+  "http": { "useragent": "phase-cli/1.18" },
+  "phase": {
+    "organisation": { "id": "…", "name": "acme" },
+    "app": { "id": "…", "name": "backend" },
+    "environment": { "id": "…", "name": "Production", "type": "PROD" },
+    "secret": { "id": "…", "path": "/api/payments", "version": 3, "type": "SECRET" },
+    "description": "Secret read in backend / Production by ci-deploy"
+  },
+  "ddsource": "phase",
+  "service": "phase-console",
+  "ddtags": "phase_org:acme,phase_stream:datadog-prod"
+}
+```
+
+To pivot from an exported secret event back to Phase, copy the `phase.secret.id` and paste it into the Console&apos;s global search (⌘K) — it resolves directly to the secret&apos;s app, environment and path.
+
+## Delivery guarantees
+
+- **At-least-once delivery.** Events ship in ordered chunks (up to 500 per request), and a stream's cursor only advances after the destination accepts the chunk, or after a failed chunk's exact range is recorded as a re-shippable failure — a transient failure can therefore never silently lose an event, but one can occasionally be delivered twice (for example, if a network timeout hides a successful ingestion). **Deduplicate on `event.id`**.
+- **Near real-time.** Streams are swept every 30 seconds; a healthy stream delivers new events within about a minute.
+- **Ordering.** Events ship in `(timestamp, id)` order per source. Manual re-ships of failed ranges arrive later than newer events — order by the event&apos;s own `timestamp` in queries, not ingestion time.
+- **Delivery status.** Each stream shows a per-source delivery delay ("Up to date", "26 minutes behind" — the age of the oldest event still waiting to ship). A **Delayed** status means events are queued but deliveries are running late; on self-hosted instances, persistent delay usually means the worker service is down or the pool needs more capacity (see [Self-hosting](#self-hosting)).
+
+### When a delivery fails
+
+1. The chunk is retried with exponential backoff, honouring the destination&apos;s `Retry-After`, up to the stream&apos;s configured **retry attempts** (1–10, default 5).
+2. If retries are exhausted, the chunk is recorded as **failed** with its exact event time range, the stream is marked **degraded**, and shipping continues with newer events — one bad chunk never blocks the stream.
+3. If a later successful delivery covers a failed range (for example after an authentication recovery), the failure is **auto-resolved**.
+4. Anything still unresolved appears under the **out of sync** badge on the stream card. Click through to the filtered event history and press **Retry** on a row to re-ship exactly that range. Once a range falls fully outside the destination&apos;s ingestion window, the retry is refused — the destination would accept and silently discard the events, falsely marking the range recovered. Expired rows are auto-resolved as **Expired** after a grace period, and the events remain queryable in the Console. If only the older part of a range has expired, a retry ships the still-live tail and records the expired part as **skipped**.
+5. **Authentication failures** skip retries entirely and pause the stream (retrying with a dead key is pointless). Fix the credentials, press **Resume**, and shipping continues from the stored cursor with no gap.
+6. **Deleting the stream&apos;s third-party credentials** also pauses it — a stream without credentials can never deliver, so it is paused visibly rather than left looking healthy. Select new credentials in the stream&apos;s configuration, save, and resume.
+
+### Backfilling missed events
+
+Backfilling covers ranges a stream failed to deliver while active. It does not extend to events from before the stream was created — streams are [ship-forward only](#how-it-works). Events always remain in Phase regardless of delivery outcome:
+
+1. For ranges within the destination&apos;s ingestion window: use the **Retry** button on the failed row — no other steps needed.
+2. Ranges that have fallen outside the ingestion window can no longer be re-shipped — the destination would silently discard them. The events remain queryable in the Console: organisation audit events under **Logs**, and secret events in each app&apos;s **Logs** tab.
+
+## Managing streams
+
+- **Pause / Resume**: pausing stops all egress; resuming continues from the stored cursor with no gap (subject to the destination&apos;s ingestion window).
+
+  ![Log stream configuration tab with status, pause control and event source toggles](/assets/images/console/log-streams/log-stream-config.png)
+
+- **Events tab**: every delivery is recorded — `Completed`, `Failed` or `Skipped` — with its event count, attempts, exact time range and error detail. Failed rows stay listed until they are resolved by a successful re-ship, and can be retried individually. Skipped rows record ranges that fell outside the destination&apos;s ingestion window — they cannot be re-shipped and auto-resolve as **Expired**.
+
+  ![Events tab showing the delivery history with status filters](/assets/images/console/log-streams/log-stream-events.png)
+
+- **Stream options**: a `service` name for the destination (default `phase-console`), free-form tags, and the per-chunk retry limit.
+
+## Datadog
+
+Stream logs to [Datadog](https://www.datadoghq.com/) for monitoring, alerting and Cloud SIEM detection. Works with all Datadog site regions (US1, US3, US5, EU1, UK1, AP1, AP2, US1-FED and US2-FED).
+
+### Step 1: Create a Datadog API key
+
+1. Log in to Datadog and go to **Organization Settings** → **API Keys**.
+
+   ![Datadog API Keys page with the New Key button](/assets/images/console/log-streams/datadog-new-key-button.png)
+
+2. Click **+ New Key** and name it, e.g. `phase-log-stream`.
+
+   ![Datadog New API Key dialog with the key named phase-log-stream](/assets/images/console/log-streams/datadog-new-key-name.png)
+
+3. Copy the key value.
+
+   ![Created Datadog API key with the Copy button](/assets/images/console/log-streams/datadog-new-key-created.png)
+
+Note: API keys are the right credential for log shipping: they are org-level, intake-only by design (they can submit data but cannot read or manage anything), cannot be scoped further, and [remain valid even if the user who created them is later disabled](https://docs.datadoghq.com/account_management/api-app-keys/).
+
+4. Note your Datadog **site** — you can see it in your browser&apos;s address bar, e.g. `us3.datadoghq.com`, `datadoghq.com`, or `datadoghq.eu`.
+
+### Step 2: Add Datadog credentials to Phase
+
+1. In the Phase Console, go to **Integrations** → **Third-party credentials** and click **+ Add credentials**.
+
+   ![Third-party credentials tab with the Add credentials button](/assets/images/console/log-streams/create-new-cred-button.png)
+
+2. Select the **Datadog** card.
+
+   ![Create new service credentials dialog with the Datadog card](/assets/images/console/log-streams/create-new-cred-datadog-1.png)
+
+3. Enter your **API key** and pick your **site** from the region dropdown. The optional **application key** is not required for log streaming.
+4. Give the credentials a descriptive name and save.
+
+   ![Datadog credential form with API key, site region and name](/assets/images/console/log-streams/create-new-cred-datadog-2.png)
+
+### Step 3: Create a Log Stream
+
+1. Go to **Integrations** → **Log Streams** and click **Create a Log Stream**.
+
+   ![Log Streams tab with the Create a Log Stream button](/assets/images/console/log-streams/create-a-log-stream-button.png)
+
+2. Select **Datadog**, then your Datadog credentials.
+3. Choose the event sources to ship.
+4. Optionally configure the Datadog `service` name, additional tags and the per-chunk retry limit. Tag values are sanitised to Datadog&apos;s tag rules (lowercased, spaces and special characters become underscores).
+5. Click **Test connection** to validate the API key against Datadog&apos;s key-validation endpoint (no log data is written), then **Create**.
+
+   ![Create a Log Stream dialog with credentials, event sources and Datadog destination options](/assets/images/console/log-streams/create-a-log-stream-dialog.png)
+
+The new stream appears with its health status, per-source delivery state and a deep link to the shipped logs in Datadog:
+
+![Log stream card showing per-source delivery status and the Explore logs in Datadog link](/assets/images/console/log-streams/log-stream-card.png)
+
+Events will appear in the Datadog **Log Explorer** under `source:phase` within about a minute. Example events as they land in Datadog:
+
+<CodeGroup title="Example events">
+
+```json {{ title: 'App secret audit log' }}
+// A user read a secret via the REST API using curl
+{
+  "actor": {
+    "id": "4b238ce5-f367-4542-b9b9-d839c89e6a33",
+    "name": "Nimish", // 👈 User
+    "type": "user"
+  },
+  "event": {
+    "category": "secrets",
+    "id": "e62e3a35-81c2-4c9b-aec4-08fdf49451a2",
+    "type": "read"
+  },
+  "http": {
+    "useragent": "curl/8.7.1"  // 👈 Client User agent
+  },
+  "network": {
+    "client": {
+      "ip": "100.18.54.22" // 👈 User IP address
+    }
+  },
+  "phase": {
+    "app": {
+      "id": "50ed8caa-2643-4c62-887b-1ef7cb8339a8",
+      "name": "example-app" // 👈 App name
+    },
+    "description": "Secret read in example-app / Development by QA Nimish",
+    "environment": {
+      "id": "029cca04-b79f-4146-867e-dcb089a08c16",
+      "name": "Development", // 👈 Environment
+      "type": "DEV"
+    },
+    "organisation": {
+      "id": "b081a3bc-4a72-4744-aa9a-b06fcc057ceb",
+      "name": "acme"
+    },
+    "secret": {
+      "id": "861456fc-2b80-422f-9221-a9114584e92d", // 👈 You can look this up in Phase Global Search
+      "path": "/",
+      "type": "SECRET",
+      "version": 1
+    }
+  },
+  "schema_version": 1,
+  "service": "phase-console",
+  "timestamp": "2026-08-03T14:53:51.820499+00:00",
+  "usr": {
+    "email": "nimish@phase.dev",
+    "id": "4b238ce5-f367-4542-b9b9-d839c89e6a33",
+    "name": "QA Nimish"
+  }
+}
+```
+
+```json {{ title: 'Organisation audit event' }}
+// A user invited another user
+{
+  "actor": {
+    "id": "4b238ce5-f367-4542-b9b9-d839c89e6a33",
+    "name": "nimish@phase.dev",
+    "type": "user"
+  },
+  "event": {
+    "category": "org_audit",
+    "id": "fae90a38-a459-4c01-9fdb-e7122c6d221e",
+    "type": "create"
+  },
+  "http": {
+    "useragent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.7778.280 Safari/537.36"
+  },
+  "network": {
+    "client": {
+      "ip": "100.18.54.22"
+    }
+  },
+  "phase": {
+    "description": "Invited 'rohan@phase.dev' with role 'Developer'",
+    "organisation": {
+      "id": "b081a3bc-4a72-4744-aa9a-b06fcc057ceb",
+      "name": "acme"
+    },
+    "resource": {
+      "id": "2b7c7c89-3914-4719-aa26-b005775c423b",
+      "metadata": {
+        "email": "rohan@phase.dev",
+        "role": "Developer"
+      },
+      "type": "invite"
+    }
+  },
+  "schema_version": 1,
+  "service": "phase-console",
+  "timestamp": "2026-08-03T11:33:10.498884+00:00",
+  "usr": {
+    "email": "nimish@phase.dev",
+    "id": "4b238ce5-f367-4542-b9b9-d839c89e6a33",
+    "name": "nimish@phase.dev"
+  }
+}
+```
+
+</CodeGroup>
+
+### Using the logs in Datadog
+
+Since Phase ships structured JSON, every field is parsed automatically. IP addresses, user agents and user identity are mapped to Datadog standard attributes (`network.client.ip`, `http.useragent`, `usr.*`) so they light up native facets with no pipeline configuration. Some useful queries:
+
+```fish
+# 👇 Filter for secret read events
+source:phase @event.category:secrets @event.type:read
+
+# 👇 Filter for organisation audit logs of a specific user
+source:phase @usr.email:dev@example.com
+
+# 👇 Filter for logs from a specific client IPv4 network address
+source:phase @network.client.ip:203.0.113.7
+
+# 👇 Filter secret logs for the Production environment of my backend application
+source:phase @phase.app.name:backend @phase.environment.name:Production
+```
+
+For Cloud SIEM, you can create detection rules over these logs, for example:
+
+- Secret reads from an IP outside your allowed ranges: `source:phase @event.type:read -@network.client.ip:203.0.113.0/24`
+- A service account token created and used within minutes, or mass secret reads from a single actor in a short window.
+
+<Note>
+  Datadog&apos;s intake silently discards events with timestamps older than **18
+  hours**. This is why streams cannot backfill historical data from before
+  they were created, and why a stream that is paused or failing for that long
+  records the missed range as **skipped** in the delivery history and jumps
+  the cursor forward. The engine skips shortly *before* the 18-hour mark —
+  it keeps a ~40-minute safety margin so events admitted for delivery cannot
+  age past the cutoff mid-flight. The events always remain queryable in
+  Phase: organisation audit events under **Logs** in the Console, and secret
+  events in each app&apos;s **Logs** tab.
+</Note>
+
+## Self-hosting
+
+- Log shipping runs on a dedicated `log-streams` queue. The bundled worker (`python manage.py rqworker`) starts a pool for it automatically — size it with the [`LOG_STREAM_WORKERS`](/self-hosting/configuration/envars) environment variable (default: `2`). Shipping is network-bound and serialized per stream, so useful concurrency roughly equals your number of active streams.
+- If you run split workers (e.g. one Deployment per queue on Kubernetes), add a consumer for the `log-streams` queue.
+- See the [self-hosting guide](/self-hosting) and [environment variables reference](/self-hosting/configuration/envars) for full deployment configuration.

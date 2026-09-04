@@ -179,7 +179,7 @@ This process may take up to 10 minutes to complete. You may run `watch kubectl g
 
 ### 11. Access Phase Console
 
-Once DNS propagation is complete and the certificate is issued (which may take a up to tens of minutes), you should be able to access your Phase Console at `https://phase.your-domain.com`.
+Once DNS propagation is complete and the certificate is issued (which may take up to tens of minutes), you should be able to access your Phase Console at `https://phase.your-domain.com`.
 
 ### 12. Create your first account
 

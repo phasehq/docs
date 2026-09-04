@@ -157,7 +157,7 @@ Example output:
 
 Requires: `jq`, `xargs`
 
-List all secrets your your path, fetch them and write them to a `.env` file.
+List all secrets in your path, fetch them and write them to a `.env` file.
 
 ```fish
 vault kv list -namespace="admin/your-namespace" -format=json "your-secret-path" | jq -r '.[]' | \
@@ -206,7 +206,7 @@ Phase can automatically sync secrets to your Hashicorp Vault instance. First, yo
   plaintext.
 </Note>
 
-1. Create an `role_id` and `secret_id` via the Vault CLI. See [Step 2](#step-2-setting-up-app-role-authentication-and-acl-policy) for instructions.
+1. Create a `role_id` and `secret_id` via the Vault CLI. See [Step 2](#step-2-setting-up-app-role-authentication-and-acl-policy) for instructions.
 
 2. Go to **Integrations** from the sidebar and click on **Add credentials** in the 'Service credentials' section
 
@@ -222,7 +222,7 @@ Phase can automatically sync secrets to your Hashicorp Vault instance. First, yo
 
 ![Input Vault credentials](/assets/images/platform-integrations/hashicorp/vault/vault-input-creds.png)
 
-If you are using Hashicorp Cloud Platform (HCP) managed Vault instance you can copy the Public URL by clicking the 📋Public button
+If you are using a Hashicorp Cloud Platform (HCP) managed Vault instance you can copy the Public URL by clicking the 📋Public button
 ![HCL portal vault cluster ](/assets/images/platform-integrations/hashicorp/vault/hcl-vault-portal.png)
 
 Example: https://vault-cluster-public-vault-gbef9712.627dc7e1.z2.hashicorp.cloud:8200

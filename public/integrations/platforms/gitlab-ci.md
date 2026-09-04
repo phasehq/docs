@@ -181,7 +181,7 @@ Fetch secrets directly inside your GitLab CI pipeline during runtime without sto
 
 <Note>
   If you are using a Self-Hosted instance of the Phase Console, you may supply
-  `PHASE_HOST` environment variable with your URL (`https://<HOST>`).
+  the `PHASE_HOST` environment variable with your URL (`https://<HOST>`).
 </Note>
 
 For detailed CLI install options, please see: [Installation](/cli/install)

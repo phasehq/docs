@@ -253,7 +253,7 @@ When using [Network Access Policies](/access-control/network), there's a possibi
 
 ## Emergency Global Policy Reset
 
-Follow these steps to reset all global network access policies across **all organizations** on your instance:
+Follow these steps to reset all global network access policies across **all organisations** on your instance:
 
 1. Gain shell access to the backend container:
 
@@ -289,7 +289,7 @@ You may have to copy the above code and execute it one line at a time. Given thi
 
 5. Exit the Python shell (Ctrl+D or `exit()`) and container shell.
 
-6. You should now be able to log in to your Phase Console and access your organization.
+6. You should now be able to log in to your Phase Console and access your organisation.
 
 <Note>
 This procedure should only be used in emergency situations when you've been locked out of your Phase instance. After regaining access, review and reconfigure your network access policies appropriately to ensure proper security.
@@ -398,4 +398,4 @@ For Amazon ALB, replace `$http_cf_connecting_ip` with the ALB's IP header accord
 
 See the [Cloudflare documentation](https://developers.cloudflare.com/support/troubleshooting/restoring-visitor-ips/restoring-original-visitor-ips/#nginx-1) for more details.
 
-If you're using Traefik or other reverse proxies, adjust the header mapping configuration to match your proxy's client IP header format. You may provide the above nginx config to your favorite AI assistant to help you configure your reverse proxy.
+If you're using Traefik or other reverse proxies, adjust the header mapping configuration to match your proxy's client IP header format. You may provide the above nginx config to your favourite AI assistant to help you configure your reverse proxy.

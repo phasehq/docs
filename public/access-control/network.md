@@ -5,7 +5,7 @@ import { DocActions } from '@/components/DocActions'
 
 # Network
 
-You can control access to resources in Phase from specific IPv4 or IPv6 sources by defining individual IPs or CIDR ranges in a Network Access Policy. You may attach such Network Access Policy to a User and/or Service Accounts individually or enforce it across your entire organization via a Global Policy. This allows you to put an additional layer of security on top of the existing access control mechanisms, by making sure that a client can only gain access to resources in Phase via mediums and/or assets such as the Phase Console, CLI, SDKs, Kubernetes Operator, REST API, etc. while being in the confines of your network.
+You can control access to resources in Phase from specific IPv4 or IPv6 sources by defining individual IPs or CIDR ranges in a Network Access Policy. You may attach such a Network Access Policy to a User and/or Service Accounts individually or enforce it across your entire organization via a Global Policy. This allows you to put an additional layer of security on top of the existing access control mechanisms, by making sure that a client can only gain access to resources in Phase via mediums and/or assets such as the Phase Console, CLI, SDKs, Kubernetes Operator, REST API, etc. while being in the confines of your network.
 
 <DocActions /> 
 

@@ -84,7 +84,7 @@ Your credentials will be encrypted and saved. You can view and manage these cred
 3. Next, configure the source and destination for your secrets. Pick an Environment from your App as the source. To configure the destination for the sync, choose a Railway Project from the list of available Projects, as well as an Environment. You can also optionally select a specific Service to sync secrets to. Leave this field blank to sync secrets as Shared Variables in the selected Railway environment.
 
 <Note>
-   If you choose to sync to a Railway Service, shared Variables automatically provisioned by Railway, including those belonging to a Railway Deployments such as Databases, will be overwritten by Phase. Please import all secrets into Phase before continuing.
+   If you choose to sync to a Railway Service, shared Variables automatically provisioned by Railway, including those belonging to Railway Deployments such as Databases, will be overwritten by Phase. Please import all secrets into Phase before continuing.
 </Note>
 
 ![configure railway sync](/assets/images/platform-integrations/railway/railway-setup-sync.png)
