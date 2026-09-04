@@ -27,9 +27,11 @@ Phase uses an email-first login flow. Enter your email address, and the system w
 - If your account uses a password, you will be prompted to enter it.
 - If your organisation uses SSO, you will be redirected to your identity provider.
 
+If [two-factor authentication](/access-control/authentication/mfa) is enabled on your account, you will also be prompted for a code from your authenticator app. Your email address and other sign-in settings can be managed from the [Account page](/access-control/authentication/account).
+
 ## Password change
 
-You can change your password from **Settings > Account**. Changing your password re-encrypts all organisation keyrings to ensure continued end-to-end encryption with your new credentials.
+You can change your password from **Settings > Account & Security** in any of your organisations. Changing your password re-encrypts all organisation keyrings to ensure continued end-to-end encryption with your new credentials.
 
 ## Account recovery
 

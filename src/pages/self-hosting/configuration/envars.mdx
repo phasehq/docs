@@ -387,7 +387,7 @@ If SMTP is not configured, or if `SKIP_EMAIL_VERIFICATION` is set to `true`, acc
     When set to `true`, new accounts created via email/password signup are activated immediately without requiring email verification. Defaults to `false`.
     If SMTP is not configured, email verification is automatically skipped regardless of this setting.
 
-    Only takes effect when [`ENABLE_PASSWORD_AUTH`](#password-authentication) is enabled.
+    At signup this only takes effect when [`ENABLE_PASSWORD_AUTH`](#password-authentication) is enabled. It also applies to the [account email change](/access-control/authentication/account#changing-your-email-address) flow for every account type: when set (or when SMTP is not configured), the verification code step is skipped there too.
 
     Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
@@ -1010,6 +1010,11 @@ Env(s) required by the following containers:
 These variables are not required if using the suggested [docker-compose template](https://raw.githubusercontent.com/phasehq/console/main/docker-compose.yml). However if you are deploying the Phase Console using a custom docker-compose configuration or without docker-compose, make sure the following variables are correctly set. 
 
 <Properties>
+  <Property name="AUTH_FRESHNESS_MAX_AGE_SECONDS" type="number (Optional)">
+    Maximum age, in seconds, of a session's last authentication before sensitive account actions (linking or unlinking sign-in methods, enabling or disabling 2FA, changing the account email, deleting the account) require the user to sign in again. Defaults to `900` (15 minutes).
+
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
+  </Property>
   <Property name="NEXTAUTH_URL" type="string">
     The base console URL for NextAuth. References `${HTTP_PROTOCOL}${HOST}`
     
@@ -1081,6 +1086,12 @@ These variables are not required if using the suggested [docker-compose template
     If not specified, Phase will automatically calculate the number of workers based on available CPU cores using the formula `(2 * CPUs) + 1`, with a default cap of 8 workers to prevent potential database connection exhaustion.
     
     Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
+  </Property>
+  <Property name="LOG_STREAM_WORKERS" type="number (Optional)">
+    The number of worker processes for [Log Stream](/console/logstreams) deliveries. Defaults to `2`; values below `1` are clamped to `1`.
+    Log shipping is network-bound and delivered serially per stream, so useful concurrency roughly equals the number of active Log Streams — raise this if the lag indicator on your streams keeps growing.
+
+    Referenced by the [`worker`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
   <Property name="RATE_LIMIT_DEFAULT" type="string">
     Rate limit for API requests.

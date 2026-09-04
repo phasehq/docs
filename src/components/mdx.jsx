@@ -128,7 +128,7 @@ export function Property({ name, type, children }) {
     <li className="m-0 px-0 py-4 first:pt-0 last:pb-0">
       <dl className="m-0 flex flex-wrap items-center gap-x-3 gap-y-2">
         <dt className="sr-only">Name</dt>
-        <dd>
+        <dd className="min-w-0">
           <code>{name}</code>
         </dd>
         <dt className="sr-only">Type</dt>
@@ -150,6 +150,14 @@ export function MathSymbol({ children }) {
 
 export const img = function Img(props) {
   return <ZoomableImage {...props} width={props.width || 800} height={props.height || 600} />
+}
+
+export const table = function Table(props) {
+  return (
+    <div className="overflow-x-auto">
+      <table {...props} />
+    </div>
+  )
 }
 
 export const p = function P({ children, ...rest }) {
