@@ -6,18 +6,18 @@ import { Heading } from '@/components/Heading'
 
 const resources = [
   {
-    href: '/console/secrets',
+    href: '/platform/secrets',
     name: 'Secrets',
     description: 'Secrets in Phase are more than just key/value pairs. Explore referencing, overrides and more.',
   },
   {
-    href: '/console/environments',
+    href: '/platform/environments',
     name: 'Environments',
     description:
       'Environments let you manage secrets for different uses, such as development or production.',
   },
   {
-    href: '/console/users',
+    href: '/platform/users',
     name: 'Users',
     description:
       'Learn about how user accounts are set up, secured and granted access to secrets.',
@@ -26,7 +26,7 @@ const resources = [
     href: '/security',
     name: 'Security',
     description:
-      'A sophisticated security architecture is at the heart of Phase. Explore the details to learn more. ',
+      'A sophisticated security architecture is at the heart of Phase. Explore the details to learn more.',
   },
 ]
 

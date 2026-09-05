@@ -66,6 +66,16 @@
 <url><loc>https://docs.phase.dev/integrations/platforms/teamcity</loc><lastmod>2026-09-04T17:10:27.621Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
 <url><loc>https://docs.phase.dev/integrations/platforms/travis-ci</loc><lastmod>2026-09-04T17:10:27.621Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
 <url><loc>https://docs.phase.dev/integrations/platforms/vercel</loc><lastmod>2026-09-04T17:10:27.621Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://docs.phase.dev/platform</loc><lastmod>2026-09-04T17:10:27.620Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://docs.phase.dev/platform/access</loc><lastmod>2026-09-04T17:10:27.620Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://docs.phase.dev/platform/apps</loc><lastmod>2026-09-04T17:10:27.620Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://docs.phase.dev/platform/dynamic-secrets</loc><lastmod>2026-09-04T17:10:27.620Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://docs.phase.dev/platform/environments</loc><lastmod>2026-09-04T17:10:27.620Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://docs.phase.dev/platform/integrations</loc><lastmod>2026-09-04T17:10:27.620Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://docs.phase.dev/platform/organisations</loc><lastmod>2026-09-04T17:10:27.620Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://docs.phase.dev/platform/secrets</loc><lastmod>2026-09-04T17:10:27.620Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://docs.phase.dev/platform/service-accounts</loc><lastmod>2026-09-04T17:10:27.620Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://docs.phase.dev/platform/users</loc><lastmod>2026-09-04T17:10:27.620Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
 <url><loc>https://docs.phase.dev/public-api</loc><lastmod>2026-09-04T17:10:27.621Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
 <url><loc>https://docs.phase.dev/public-api/apps</loc><lastmod>2026-09-04T17:10:27.621Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
 <url><loc>https://docs.phase.dev/public-api/dynamic-secrets</loc><lastmod>2026-09-04T17:10:27.621Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>

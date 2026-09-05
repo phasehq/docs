@@ -18,7 +18,7 @@ Set up your account and start using Phase to manage your application secrets in 
 
 You can login to the <a href="https://console.phase.dev" target="_blank"> Phase Console</a> with email and password, or via SSO with Google, GitHub or GitLab.
 
-[Setup your account](/console/users#account-keys-and-setup) and [create an Organisation](/console/organisation#create-an-organisation).
+[Setup your account](/console/users#account-setup) and [create an Organisation](/console/organisation#create-an-organisation).
 
 ## 1.1 Create an App
 

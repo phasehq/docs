@@ -40,8 +40,8 @@ const resources = [
 export function Platform() {
   return (
     <div className="my-16 xl:max-w-none">
-      <Heading level={2} id="guides">
-        Platform
+      <Heading level={2} id="tools">
+        Tools & Interfaces
       </Heading>
       <div className="not-prose mt-4 grid grid-cols-1 border-t border-zinc-900/10 gap-8 pt-10 sm:grid-cols-2 xl:grid-cols-4 dark:border-white/5">
         {resources.map((resource) => (

@@ -12,7 +12,7 @@ Teams let you group members and service accounts together and grant them access 
 <DocActions />
 
 <Note>
-  Teams require apps with [Server-Side Encryption (SSE)](/console/apps#encryption-mode) enabled, since the server provisions encryption keys on behalf of team members.
+  Teams require apps with [Server-Side Encryption (SSE)](/platform/apps#encryption-modes) enabled, since the server provisions encryption keys on behalf of team members.
 </Note>
 
 ## How it works
@@ -150,12 +150,12 @@ Individual access uses the user's org role. Each team uses its role override (or
 
 ## SSE requirement
 
-Teams require [Server-Side Encryption (SSE)](/console/apps#encryption-mode) to be enabled on any app they access. This is because the server needs to provision environment encryption keys on behalf of team members — it uses the server-held copy of the environment key to create individually-wrapped copies for each member.
+Teams require [Server-Side Encryption (SSE)](/platform/apps#encryption-modes) to be enabled on any app they access. This is because the server needs to provision environment encryption keys on behalf of team members — it uses the server-held copy of the environment key to create individually-wrapped copies for each member.
 
 If an app has SSE disabled, it won't appear in the app selection dialog when adding apps to a team. You can enable SSE on an app from the app's settings page under **Encryption Mode**.
 
 <Warning>
-  Enabling SSE changes the encryption model for the app — the server gains the ability to decrypt secrets. This is required for Teams, all third-party sync integrations, and REST API access. See [Encryption Mode](/console/apps#encryption-mode) for details.
+  Enabling SSE changes the encryption model for the app — the server gains the ability to decrypt secrets. This is required for Teams, all third-party sync integrations, and REST API access. See [Encryption Mode](/platform/apps#encryption-modes) for details.
 </Warning>
 
 ## Team-owned service accounts
