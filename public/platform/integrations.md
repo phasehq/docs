@@ -33,7 +33,7 @@ All sync integrations require [SSE to be enabled](/platform/apps#encryption-mode
 Most integrations require credentials to authenticate with the target service. These are stored as **Integration Credentials** at the Organisation level and can be reused across multiple integrations. Examples include:
 
 - AWS access keys or IAM role ARNs
-- GitHub personal access tokens or app installations
+- GitHub OAuth connections or fine-grained personal access tokens
 - Vercel API tokens
 - Azure service principal credentials
 
@@ -107,7 +107,7 @@ Syncs are triggered automatically whenever secrets in the connected Environment 
 
 ### Failure Handling
 
-If a sync fails (due to invalid credentials, network issues, or unresolvable references), the failure is logged in the App's [audit logs](/platform/apps#audit-logs). The secrets in Phase remain unaffected — a sync failure does not roll back changes to your secrets.
+If a sync fails (due to invalid credentials, network issues, or unresolvable references), the failure is recorded in the sync's logs, which you can view from the sync card in the App's [Syncing tab](/console/apps#syncing). The secrets in Phase remain unaffected — a sync failure does not roll back changes to your secrets.
 
 ### One-Way Sync
 

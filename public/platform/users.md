@@ -24,6 +24,13 @@ This means that granting a user access to an Environment is not just a permissio
 
 ## Account Setup
 
+Accounts are created either by signing up with an email address and password, or through an SSO provider (such as Google, GitHub, or GitLab). On Phase Cloud, email/password signups require email verification before the account is activated. The sign-in methods available depend on how the instance is configured — see [Authentication](/access-control/authentication).
+
+Phase has two distinct passwords with different purposes:
+
+- **Login password** — what you sign in to the Console with, when password authentication is enabled. See [Password authentication](/access-control/authentication/password).
+- **Sudo password** — protects the account encryption keys and gates privileged operations. Every account has one, including accounts that sign in exclusively via SSO. See [Account management](/access-control/authentication/account).
+
 When a user signs up or accepts an Organisation invite, they go through a two-step process:
 
 ### Step 1: Create a Sudo Password
@@ -73,6 +80,26 @@ The sudo password gates access to the user's encrypted keyring. When the keyring
 | **Owner** loses sudo password, has recovery kit | Use the recovery phrase to restore account keys |
 | **Owner** loses sudo password and recovery kit | **Permanent loss of access** — no recovery path exists. Mitigate this risk by [transferring ownership](/console/organisation#transfer-ownership) to a trusted Admin. |
 
+## Account Security
+
+Beyond the sudo password and recovery kit, Phase provides several account-level security controls, managed from the personal Account page:
+
+### Two-Factor Authentication (2FA)
+
+Users can enable TOTP-based 2FA with any standard authenticator app. Once enabled, every Console sign-in — password, OAuth, or SSO — requires a 6-digit code in addition to the primary method, and single-use recovery codes cover the loss of the authenticator device. 2FA protects Console sign-in only; personal access tokens, service tokens, and CLI/API access are unaffected. See [Two-factor authentication](/access-control/authentication/mfa).
+
+### Sensitive Action Re-authentication
+
+Changes to sign-in methods, the account email address, 2FA, and account deletion require a recent sign-in. If the last sign-in is stale, Phase prompts the user to confirm their identity before continuing. The default freshness window is 15 minutes; self-hosted operators can tune it with the `AUTH_FRESHNESS_MAX_AGE_SECONDS` environment variable. See [Sensitive action re-authentication](/access-control/authentication/account#sensitive-action-re-authentication).
+
+### Sign-in Methods
+
+An account can have multiple linked sign-in identities — for example, Google and Microsoft Entra ID — any of which signs in to the same Phase account. Identities are matched by the provider's stable account ID, not by email, so linking is also the tool for migrating to a new identity provider. To protect against account takeover, a new sign-in identity is never automatically attached to an existing account based on a matching email address; the user must sign in with their existing method and link the new one explicitly. Unlinking is blocked if it would leave the account without a sign-in method, if the identity belongs to an enforced organisation SSO provider, or if the user's membership is SCIM-provisioned. See [Sign-in methods](/access-control/authentication/account#sign-in-methods).
+
+### Account Deletion
+
+Users can delete their own account from the Account page. Deletion is immediate and irreversible — it permanently removes organisation memberships, encryption keys, personal access tokens, and personal data. Deletion is blocked while the user is the only Owner of an Organisation (ownership must be transferred first) or while their account is SCIM-provisioned in any Organisation. See [Deleting your account](/access-control/authentication/account#deleting-your-account).
+
 ## Roles
 
 Every user has a role that determines their permissions within the Organisation. Phase provides managed roles and supports custom roles.
@@ -81,7 +108,7 @@ Every user has a role that determines their permissions within the Organisation.
 
 | Role | Scope | Description |
 | ---- | ----- | ----------- |
-| **Owner** | Global | Full control over the Organisation. Can manage billing, transfer ownership, and perform all administrative actions. One per Organisation. |
+| **Owner** | Global | Full control over the Organisation. Can manage billing, transfer ownership, and perform all administrative actions. |
 | **Admin** | Global | Can manage Apps, Environments, Users, and most Organisation settings. Automatically has access to all Environments. |
 | **Manager** | Scoped | Can manage specific Apps and Environments they have access to, including managing members within those Apps. |
 | **Developer** | Scoped | The default role for new members. Can access only the Apps and Environments explicitly granted to them. |
@@ -95,9 +122,9 @@ For a complete breakdown of permissions and custom roles, see [Roles](/access-co
 
 ### Joining an Organisation
 
-Users join an Organisation by accepting an email invitation. After accepting, they go through the account setup process (sudo password + recovery kit). Once setup is complete, they are a member of the Organisation with the Developer role.
+Users join an Organisation by accepting an email invitation, or automatically via [SCIM provisioning](/access-control/provisioning/scim) from an identity provider (Enterprise tier). After joining, they go through the account setup process (sudo password + recovery kit). Once setup is complete, they are a member of the Organisation with their assigned role (the Developer role by default).
 
-Newly joined members do **not** have access to any Apps or Environments. Access must be explicitly provisioned by an Owner or Admin.
+Newly joined members do **not** have access to any Apps or Environments by default. Access can be granted to individual users, or through [Teams](/access-control/teams) — when a member joins a team, environment keys for the team's Apps are provisioned automatically, and revoked when they leave the team unless they also hold individually granted access. SCIM-provisioned users receive their team-provisioned keys on first login.
 
 ### Switching Organisations
 
@@ -105,7 +132,7 @@ A user can belong to multiple Organisations. Switching between them can be done 
 
 ### Leaving or Being Removed
 
-Users can be removed from an Organisation by an Owner or Admin. Removal revokes all cryptographic access to the Organisation's secrets. If a removed user is re-invited, they go through the full setup process again with fresh keys.
+Users can be removed from an Organisation by an Owner or Admin. Removal revokes all cryptographic access to the Organisation's secrets. If a removed user is re-invited, they go through the full setup process again with fresh keys. Users can also [delete their own account](/access-control/authentication/account#deleting-your-account) entirely, which removes them from all Organisations.
 
 ## Managing Users
 

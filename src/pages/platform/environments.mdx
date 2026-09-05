@@ -20,7 +20,7 @@ Environments also serve as the finest-grained unit of access control. Users can 
 
 ## Default Environments
 
-When you create a new App, Phase automatically initializes it with three default Environments:
+When you create a new App, Phase automatically initialises it with three default Environments:
 
 | Environment | Purpose |
 | ----------- | ------- |
@@ -79,7 +79,9 @@ Environment access is the most granular level of access control in Phase:
 - **Developers** are granted access to specific Environments when they are added to an App
 - **Service Accounts** are scoped to specific Environments when added to an App
 
-When a user is added to an App, you select which Environments they can access. This can be updated at any time by an Owner or Admin.
+When a user is added to an App, you select which Environments they can access. This can be updated at any time by users with the required member-management permissions.
+
+Environment access can be granted per-user or collectively via [Teams](/access-control/teams). When a Team is granted access to an App, that access is scoped to specific Environments, and Phase automatically provisions environment keys for every team member — including members and service accounts added to the team later.
 
 ## Environments and Integrations
 

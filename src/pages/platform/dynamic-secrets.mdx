@@ -25,6 +25,10 @@ Static credentials — even when properly encrypted and managed — carry inhere
 - **Eliminating shared credentials** — No more passing around long-lived API keys or database passwords between team members
 - **Automating rotation** — Credentials are always fresh, removing the need for manual rotation schedules
 
+### Dynamic vs Rotating Secrets
+
+Dynamic Secrets mint short-lived credentials on demand — each consumer gets its own lease, which expires or is revoked when no longer needed. [Rotating Secrets](/console/rotating-secrets) instead maintain a single long-lived credential that Phase replaces on a schedule, and are available on Pro and above, while Dynamic Secrets require Enterprise. Use dynamic leases for ephemeral, per-consumer access; use rotation to keep a standing credential fresh.
+
 ## How Dynamic Secrets Work
 
 A Dynamic Secret is a configuration that defines how to generate credentials for a specific third-party service. It lives inside an [Environment](/platform/environments) within an [App](/platform/apps).

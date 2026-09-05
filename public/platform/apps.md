@@ -26,13 +26,13 @@ Every App has:
 
 ## Default Setup
 
-When you create a new App, it is automatically initialized with three default Environments:
+When you create a new App, it is automatically initialised with three default Environments:
 
 - **Development**
 - **Staging**
 - **Production**
 
-You can optionally initialize the App with example secrets to help you get started. You can customize these defaults by adding, renaming, or removing Environments after creation.
+You can optionally initialise the App with example secrets to help you get started. You can customise these defaults by adding, renaming, or removing Environments after creation.
 
 ## Encryption Modes
 
@@ -54,9 +54,11 @@ SSE can be enabled on top of E2EE for Apps that need to use features requiring s
 - A copy of each Environment's root key is stored on the server, encrypted with the server's encryption key
 - This allows the server to decrypt secrets for specific operations
 - SSE is **required** for:
-  - Third-party sync integrations (GitHub Actions, AWS, Vercel, etc.)
+  - Third-party [sync integrations](/platform/integrations) (GitHub Actions, AWS, Vercel, etc.)
   - The [public REST API](/public-api)
   - [Dynamic Secrets](/platform/dynamic-secrets)
+  - [Rotating Secrets](/console/rotating-secrets)
+  - [Teams](/access-control/teams) — Apps without SSE cannot be added to a team
 
 SSE is an additive feature — it does not disable E2EE. Client-side encryption is always active regardless of whether SSE is enabled.
 
@@ -75,6 +77,14 @@ Users must be explicitly added to an App before they can access any of its secre
 ### Environment-Level Access
 
 Within an App, access can be further scoped to specific Environments. When adding a user to an App, you select which Environments they can access. This allows fine-grained control — for example, a developer might have access to Development and Staging, but not Production.
+
+### Team-Level Access
+
+[Teams](/access-control/teams) group Organisation members and service accounts, and can be granted access to an App collectively, scoped to specific Environments. Phase automatically provisions environment keys for every team member, and provisions or revokes keys as members join or leave the team.
+
+<Note>
+Teams are available on Pro and Enterprise plans.
+</Note>
 
 ### Service Accounts
 
@@ -106,6 +116,8 @@ Every App maintains a complete audit trail of all operations on its secrets and 
 - The specific secrets and environments affected
 
 Logs are accessible from the App's Logs tab in the Console, and can be expanded to view detailed information about each event.
+
+Organisation audit logs and secret events can also be continuously shipped to external log management platforms such as Datadog via [Log Streams](/console/logstreams), available on the Enterprise plan.
 
 ## App Readme
 

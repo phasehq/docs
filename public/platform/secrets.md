@@ -18,12 +18,12 @@ Every secret in Phase consists of:
 
 - **Key** — The identifier for the secret (e.g. `DATABASE_URL`, `API_KEY`, `STRIPE_SECRET`)
 - **Value** — The sensitive data itself
-- **Type** — Controls visibility and behavior (Secret, Sealed, or Config)
+- **Type** — Controls visibility and behaviour (Secret, Sealed, or Config)
 - **Tags** — Optional labels for categorisation
 - **Comment** — Optional notes or documentation
 - **Path** — The folder location within the Environment (defaults to `/`)
 
-All secrets are end-to-end encrypted regardless of type. The Phase server never has access to plaintext secret values when E2EE is the active encryption mode.
+All secrets are end-to-end encrypted regardless of type. The Phase server never has access to plaintext secret values unless [SSE](/platform/apps#server-side-encryption-sse) is enabled on the App.
 
 ### Key Naming Convention
 
@@ -31,7 +31,7 @@ Secret keys should follow the `UPPER_SNAKE_CASE` convention (e.g. `DATABASE_URL`
 
 ## Secret Types
 
-Every secret has a type that controls its behavior and visibility in the UI. The type does not affect encryption — all secrets are encrypted the same way regardless of type.
+Every secret has a type that controls its behaviour and visibility in the UI. The type does not affect encryption — all secrets are encrypted the same way regardless of type.
 
 | Type | Description |
 | ---- | ----------- |
@@ -44,6 +44,16 @@ A secret's type can be changed at any time — except for Sealed secrets, which 
 <Warning>
 Once a Sealed secret is saved, its type is permanently locked. You cannot unseal a secret or change it to another type. To replace it, delete the secret and create a new one.
 </Warning>
+
+## Rotating Secrets
+
+Rotating Secrets are secrets whose values Phase re-generates automatically on a schedule. At a configured interval, Phase mints a fresh credential at the third-party provider, exposes it alongside your regular secrets, and revokes the previous credential after an optional delay — so the CLI, SDKs, API clients, and sync integrations pick up rotated values with no application-side changes. This is distinct from [Dynamic Secrets](/platform/dynamic-secrets), which lease short-lived credentials on demand.
+
+Supported providers are [LiteLLM](/integrations/platforms/litellm) and [OpenAI](/integrations/platforms/openai). For rotation strategies, health monitoring, and setup instructions, see [Rotating Secrets](/console/rotating-secrets).
+
+<Note>
+Rotating Secrets are available on the Pro plan and above, and require [SSE](/platform/apps#server-side-encryption-sse) to be enabled on the App.
+</Note>
 
 ## Secret Referencing
 
@@ -71,6 +81,7 @@ DB_NAME=XP1_LM
 | `${staging.DEBUG}` | `staging` | `/` | DEBUG | Cross-environment reference to the root path. |
 | `${production./frontend/SECRET_KEY}` | `production` | `/frontend/` | SECRET_KEY | Cross-environment reference with a specific path. |
 | `${/backend/payments/STRIPE_KEY}` | Same | `/backend/payments/` | STRIPE_KEY | Local reference with a specific path. |
+| `${postgres/DB_USER}` | Same | `/postgres/` | DB_USER | Local reference to a secret in a folder, written without the leading slash. |
 | `${backend_api::production.SECRET_KEY}` | `production` in `backend_api` | `/` | SECRET_KEY | Cross-application reference at root path. |
 | `${backend_api::production./frontend/SECRET_KEY}` | `production` in `backend_api` | `/frontend/` | SECRET_KEY | Cross-application reference with a specific path. |
 

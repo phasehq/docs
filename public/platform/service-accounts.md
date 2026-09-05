@@ -21,12 +21,27 @@ Service Accounts share many properties with [User accounts](/platform/users). Ea
 - **Scoped access** — Service Accounts must be explicitly added to Apps and granted access to specific Environments before they can access any secrets.
 - **Tokens** — Authentication credentials that the Service Account uses to interact with Phase via the CLI, SDKs, or API.
 
+## Org-level vs Team-owned Service Accounts
+
+Service Accounts exist in two categories:
+
+- **Org-level** — The default. Created at the organisation level and visible to any member with the `ServiceAccounts` read permission. Available on all plans.
+- **Team-owned** — Created within a [Team](/access-control/teams). The account is automatically added as a team member and inherits the team's App and Environment access. It is visible only to team members and users with global access (Owner and Admin).
+
+A team-owned Service Account's lifecycle is tied to its team: deleting the team deletes the account and revokes its tokens. Ownership cannot be changed after creation — a team-owned account cannot be moved to another team or converted to an org-level account.
+
+<Note>
+Teams are available on Pro and Enterprise plans, so team-owned Service Accounts require one of these tiers.
+</Note>
+
+See [Team-owned service accounts](/access-control/teams#team-owned-service-accounts) for creation and management details.
+
 ## Service Accounts vs Users
 
 | | Users | Service Accounts |
 | --- | ----- | ---------------- |
 | **Identity** | Human individuals | Applications, pipelines, automation |
-| **Authentication** | Email/password, SSO, sudo password | Service Account Tokens, External Identities |
+| **Authentication** | Email/password, SSO | Service Account Tokens, External Identities |
 | **Cryptographic keys** | Generated during signup | Generated during account creation |
 | **Default role** | Developer | Service |
 | **Access scoping** | Per-App, per-Environment | Per-App, per-Environment |
@@ -52,7 +67,7 @@ Each Service Account's keyring can operate in one of two KMS modes, which determ
 
 ### Client-side KMS
 
-The default mode. The Service Account's keyring is only accessible to designated users (called *Service Account Handlers*) who have the required `ServiceAccountTokens` permissions. The keyring is encrypted with each handler's keys, so only they can create and manage tokens.
+The default mode for org-level Service Accounts. The Service Account's keyring is only accessible to designated users (called *Service Account Handlers*) who have the required `ServiceAccountTokens` permissions. The keyring is encrypted with each handler's keys, so only they can create and manage tokens.
 
 This is the most secure mode — the Phase server never has access to the Service Account's keyring.
 
@@ -60,8 +75,10 @@ This is the most secure mode — the Phase server never has access to the Servic
 
 Optionally, you can grant the Phase backend access to the Service Account's keyring. This allows the server to create and manage tokens on behalf of the Service Account. Server-side KMS is required for:
 
-- [External Identities](/access-control/external-identities) — Allowing external auth providers (AWS IAM, Kubernetes, OIDC, etc.) to authenticate as this Service Account
+- [External Identities](/access-control/external-identities) — Allowing external identity providers (AWS IAM, and Azure Managed Identities or Service Principals) to authenticate as this Service Account
 - Automated token management without requiring a human handler
+
+Team-owned Service Accounts always use Server-side KMS. It is enabled automatically at creation, so any team member with the appropriate `ServiceAccountTokens` permissions can generate tokens without being a designated handler.
 
 <Note>
 Enabling Server-side KMS is an additive operation. The Service Account's keyring remains accessible to existing handlers alongside the server.
@@ -87,6 +104,7 @@ Service Accounts can have [Network Access Policies](/access-control/network) app
 Service Accounts can be created and managed through the [Phase Console](/access-control/service-accounts). From the Console you can:
 
 - Create new accounts with a chosen name and role
+- Create team-owned accounts from within a [Team](/access-control/teams#team-owned-service-accounts)
 - Update account names and roles
 - Switch between Client-side and Server-side KMS
 - Add accounts to Apps with specific Environment access

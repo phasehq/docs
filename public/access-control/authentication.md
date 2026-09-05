@@ -12,7 +12,7 @@ export const description = 'Authenticating with Phase.'
 
 # Authentication Methods
 
-Phase supports native email/password authentication as well as third-party authentication systems for access control. Password authentication works out of the box with no additional configuration. You can also delegate authentication to external providers such as Google, AWS IAM, GitHub, Kubernetes, GitLab, or Microsoft Azure to best suit your setup. When choosing an authentication provider, consider whether the access to Phase will be programmatic (machine-access) via REST API, SDK, CLI, etc., or user access (human-access).
+Phase supports native email/password authentication as well as third-party authentication systems for access control. Password authentication works out of the box with no additional configuration. You can also delegate authentication to external providers such as Google, GitHub, GitLab, Microsoft Entra ID, AWS IAM, or Azure to best suit your setup. When choosing an authentication provider, consider whether the access to Phase will be programmatic (machine-access) via REST API, SDK, CLI, etc., or user access (human-access).
 
 <DocActions /> 
 
@@ -59,7 +59,7 @@ Programmatic authentication enables secure machine-to-machine access to Phase th
 
 When using third-party authentication systems for programmatic access to Phase, you delegate the authentication of a particular accessor to a third party. This delegation is used as an assertion to obtain a Phase Service Token with the correct set of permissions, which can then be used to access secrets. The process works as follows:
 
-1. A service (accessor) attempting to access secrets stored in Phase uses a third-party authentication token (e.g., a JWT service account token for Kubernetes or an AWS IAM v4 Signature for AWS).
+1. A service (accessor) attempting to access secrets stored in Phase uses a third-party authentication token (e.g., an AWS IAM v4 Signature for AWS, or a Microsoft Entra ID token for an Azure Managed Identity).
 2. The accessor sends this token to Phase.
 3. Phase internally validates the token or signature using the third-party authentication system's APIs.
 4. Phase validates the identity of the accessor and returns a Phase Service Token in accordance with the RBAC policy.
@@ -69,4 +69,4 @@ When using third-party authentication systems for programmatic access to Phase, 
 ### External Auth Method Considerations
 
 - To use an external auth provider for programmatic authentication with Phase to access sensitive data (e.g., Secrets) via the Phase API, SDKs, or the Kubernetes Operator, you will need to enable Server-side Encryption (SSE) so that Phase can generate a Service Token on the server side with access to a given application(s) or environment(s).
-- When using an external auth method (e.g., Kubernetes), Phase will call the external service at the time of authentication and for subsequent token renewals. If the status of an entity changes in the external system (e.g., an account expires or is disabled), Phase will deny requests to renew tokens associated with that entity. However, any existing tokens remain valid for their original grant period unless explicitly revoked.
+- When using an external auth method (e.g., AWS IAM), Phase will call the external service at the time of authentication and for subsequent token renewals. If the status of an entity changes in the external system (e.g., an account expires or is disabled), Phase will deny requests to renew tokens associated with that entity. However, any existing tokens remain valid for their original grant period unless explicitly revoked.

@@ -21,15 +21,15 @@ An [Organisation](/platform/organisations) is the top-level entity in Phase. It 
 
 ### Apps
 
-An [App](/platform/apps) maps to a single project, repository, or service. Apps contain Environments, which in turn hold your Secrets. Apps also define the encryption mode (end-to-end or server-side) and control who has access to what.
+An [App](/platform/apps) maps to a single project, repository, or service. Apps contain Environments, which in turn hold your Secrets. Apps also control whether [Server-side Encryption (SSE)](/platform/apps#encryption-modes) is enabled on top of the default end-to-end encryption, and who has access to what.
 
 ### Environments
 
-[Environments](/platform/environments) represent the stages of your development workflow — such as Development, Staging, and Production. Each Environment within an App holds its own set of Secrets, and access can be scoped per-user at the Environment level.
+[Environments](/platform/environments) represent the stages of your development workflow — such as Development, Staging, and Production. Each Environment within an App holds its own set of Secrets, and access can be scoped per user or per [Team](/access-control/teams) at the Environment level.
 
 ### Secrets
 
-[Secrets](/platform/secrets) are the fundamental unit of data in Phase — encrypted key-value pairs that store your application configuration, API keys, database credentials, and other sensitive values. Secrets support multiple types, cross-environment referencing, personal overrides, tagging, comments, sharing, and full version history.
+[Secrets](/platform/secrets) are the fundamental unit of data in Phase — encrypted key-value pairs that store your application configuration, API keys, database credentials, and other sensitive values. Secrets support multiple types, cross-environment referencing, personal overrides, tagging, comments, sharing, full version history, and [automatic rotation on a schedule](/platform/secrets#rotating-secrets).
 
 ### Dynamic Secrets
 
@@ -45,7 +45,7 @@ An [App](/platform/apps) maps to a single project, repository, or service. Apps 
 
 ### Access Control
 
-[Access Control](/platform/access) in Phase is based on a Role-Based Access Control (RBAC) system. Roles define granular permissions across organisation and app-level resources, and access to Apps and Environments can be scoped per-user. Phase provides managed roles (Owner, Admin, Manager, Developer, Service) and supports custom roles.
+[Access Control](/platform/access) in Phase is based on a Role-Based Access Control (RBAC) system. Roles define granular permissions across organisation and app-level resources, and access to Apps and Environments can be granted to individual users or to [Teams](/access-control/teams). Phase provides managed roles (Owner, Admin, Manager, Developer, Service) and supports custom roles.
 
 ### Integrations
 

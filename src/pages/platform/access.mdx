@@ -32,7 +32,7 @@ Phase ships with five managed roles that cover the most common access patterns:
 
 | Role | Access Scope | Description |
 | ---- | ------------ | ----------- |
-| **Owner** | Global | Unrestricted access to everything. One per Organisation. Can manage billing, transfer ownership, and perform all administrative actions. |
+| **Owner** | Global | Unrestricted access to everything. Automatically assigned when the Organisation is created. Can manage billing, transfer ownership, and perform all administrative actions. |
 | **Admin** | Global | Near-full access to all resources. Can manage Apps, Environments, Users, Service Accounts, Roles, and most Organisation settings. |
 | **Manager** | Scoped | Broad management capabilities for Apps and Environments they have access to. Can manage members, service accounts, integrations, and secrets within their scope. |
 | **Developer** | Scoped | The default role. Can read and write secrets, manage integrations, and use Lockbox within Apps and Environments they have been granted access to. Limited organisation-level visibility. |
@@ -69,6 +69,9 @@ These resources exist at the Organisation level and are not scoped to any specif
 | **Roles** | Ability to view, create, or modify roles |
 | **Integration Credentials** | Credentials used by third-party sync integrations |
 | **Network Access Policies** | IP-based access restrictions for users and service accounts |
+| **Teams** | Creating and managing Teams and their membership |
+| **SCIM** | Enabling and managing SCIM provisioning for the Organisation |
+| **SSO** | Configuring organisation-level SSO providers and enforcement |
 
 ### App-Level Resources
 
@@ -78,7 +81,8 @@ These resources are scoped to a specific App and controlled per-Environment wher
 | -------- | ---------------- |
 | **Environments** | Creating, renaming, and deleting Environments within an App |
 | **Secrets** | Reading, creating, updating, and deleting secrets |
-| **Dynamic Secret Leases** | Generating, renewing, and revoking Dynamic Secret leases |
+| **DynamicSecretLeases** | Generating, renewing, and revoking Dynamic Secret leases |
+| **RotatingSecrets** | Setting up and managing automatic rotation of Rotating Secrets |
 | **Lockbox** | Creating and accessing Lockbox share links |
 | **Logs** | Viewing audit logs for secret and environment operations |
 | **Tokens (Legacy)** | Managing legacy service tokens |
@@ -86,6 +90,7 @@ These resources are scoped to a specific App and controlled per-Environment wher
 | **Service Accounts** | Managing which Service Accounts have access to the App |
 | **Integrations** | Setting up and managing third-party sync integrations |
 | **Encryption Mode** | Enabling or modifying the App's encryption mode (E2EE/SSE) |
+| **Teams** | Managing which Teams have access to the App and its Environments |
 
 ## Actions
 
@@ -123,6 +128,8 @@ Users with **Manager**, **Developer**, **Service**, or custom roles have scoped 
 
 This scoping works in conjunction with Phase's end-to-end encryption — granting access involves encrypting the Environment's keys with the user's public key, and revoking access removes the user's ability to decrypt those keys entirely.
 
+Scoped access can also be granted via [Teams](/access-control/teams) — organisation-level groups of users and service accounts. When a Team is granted access to an App, environment keys are automatically provisioned for every team member, and a Team can optionally set a role override that replaces its members' org-role app-level permissions within that Team's scope. When multiple grants apply to the same App — individual access, one or more Teams — the user gets the union of all applicable permissions. With [SCIM provisioning](/access-control/provisioning/scim), identity provider groups map to Teams, so access can be provisioned with no per-user action in Phase.
+
 ## Compound Permissions
 
 Some actions in Phase require permissions across multiple resources. For example:
@@ -137,9 +144,8 @@ For a full cheat sheet of compound permission requirements, see [Resource Permis
 
 The RBAC system works with multiple authentication methods:
 
-- **User accounts** — Authenticated via email/password with sudo password for privileged actions, or via [SSO providers](/access-control/authentication) (Google, GitHub, GitLab, Microsoft)
-- **Service Accounts** — Authenticated via [Service Account Tokens](/access-control/service-accounts) for programmatic access
-- **External Identities** — Authenticated via [external providers](/access-control/external-identities) such as AWS IAM, Kubernetes, or OIDC for machine-to-machine access
+- **User accounts** — Authenticated via email/password (with email verification on Phase Cloud) or via [SSO](/access-control/authentication). Instance-level providers: Google, GitHub, GitLab, Microsoft Entra ID, Okta, JumpCloud, Authentik, and Authelia. Organisations can additionally configure their own SSO provider (Microsoft Entra ID or Okta) in the Console, with optional enforcement — see [Single Sign-On](/access-control/authentication/sso). User lifecycle can be automated with [SCIM provisioning](/access-control/provisioning/scim).
+- **Service Accounts** — Authenticated via [Service Account Tokens](/access-control/service-accounts) for programmatic access, or via [External Identities](/access-control/external-identities) — AWS IAM and Azure (Managed Identity or Service Principal) — which exchange a native cloud identity for a Phase token without a long-lived credential
 
 All authentication methods produce tokens that are bound to a role, and all access checks are performed against the role's permissions regardless of the authentication method used.
 

@@ -51,7 +51,7 @@ Benefits:
 - Centralized management of trust relationships
 
 ## Prerequisites
-- Server-side encryption (SSE) enabled for the Service Account you want to use the External Identity with.
+- Server-side KMS enabled for the Service Account you want to use the External Identity with.
 - A third-party platform or service that is supported by Phase
 
 ## Supported External Identity Providers
