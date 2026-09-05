@@ -27,7 +27,7 @@ Phase is an open-source, end-to-end encrypted platform for creating, managing, a
 
 
 The Phase platform provides powerful secret management features including personal secret overrides, secret versioning & roll-back, secret referencing, RBAC, and much more.
-You can replace .env files with runtime secret inject with a fully-featured [CLI](/cli), deploy secrets to third party services with native integrations, and build your own custom workflows and integrations with [SDKs](/sdks) and [APIs](/public-api). 
+You can replace .env files with runtime secret injection with a fully-featured [CLI](/cli), deploy secrets to third party services with native integrations, and build your own custom workflows and integrations with [SDKs](/sdks) and [APIs](/public-api). 
 
 
 
@@ -38,7 +38,7 @@ The platform is built on a sophisticated [encryption architecture](/security/arc
 
 ## Get started{{ anchor: true }}
 
-Get setup with Phase in minutes by following the Quickstart guide. This Guide will walk you through setting up your account via the [Phase Console](/#phase-console), installing the [CLI](/#phase-cli) and importing your existing secrets.
+Get set up with Phase in minutes by following the Quickstart guide. This Guide will walk you through setting up your account via the [Phase Console](/#phase-console), installing the [CLI](/#phase-cli) and importing your existing secrets.
 
 <div className="not-prose mb-16 mt-6 flex gap-3">
   <Button href="/quickstart" arrow="right" children="Quickstart" />

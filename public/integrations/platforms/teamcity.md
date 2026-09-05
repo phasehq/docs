@@ -7,7 +7,7 @@ export const description = 'Integrate Phase with TeamCity'
 
 # TeamCity
 
-You can use the Phase CLI to effortlessly inject or expose secret inside your CI pipelines or jobs.
+You can use the Phase CLI to effortlessly inject or expose secrets inside your CI pipelines or jobs.
 
 <DocActions />
 
@@ -30,7 +30,7 @@ For detailed cli install options, please see: [Installation](/cli/install)
 3. Select `Parameters` on the left menu.
 4. Click `Add New Parameter`, set its name to `PHASE_SERVICE_TOKEN`, choose the type as `Password`, and input its value.
 
-## Singed staged
+## Single staged
 
 Create a TeamCity build configuration and add the following build steps:
 

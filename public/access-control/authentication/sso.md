@@ -28,7 +28,11 @@ Administrators can configure a Single Sign-On provider for their organisation di
 
    **Entra ID:** register an application in the [Azure Portal](https://portal.azure.com) under *Microsoft Entra ID → App registrations*. Note the **Tenant ID**, **Application (client) ID**, and generate a new **Client secret**.
 
-   **Okta:** create an OIDC *Web Application* in your Okta admin console. Note the **Issuer URL** (your Okta domain, e.g. `https://dev-12345.okta.com`), **Client ID**, and **Client secret**.
+   **Okta:** create an OIDC *Web Application* in your Okta admin console. Note the **Issuer URL** (your Okta org domain, e.g. `https://dev-12345.okta.com`), **Client ID**, and **Client secret**.
+
+   <Note>
+   Use the org domain, not the admin console domain (`…-admin.okta.com`). Okta issues tokens under the org domain, so an admin-domain issuer fails every sign-in. Phase rejects it at save time.
+   </Note>
 
 5. Return to the Console and fill in:
 
@@ -39,7 +43,7 @@ Administrators can configure a Single Sign-On provider for their organisation di
 
    ![Entra ID setup dialog — filled](/assets/images/auth/sso/org/03-entra-setup-dialog-filled.png)
 
-6. Click **Save**. The provider is created but not yet active.
+6. Click **Save**. Phase fetches the provider's OIDC discovery document and makes sure the configured issuer matches the value the provider reports. If they do not match, the save is rejected and the error shows the correct value to use. The provider is created but not yet active.
 
    ![Provider card — saved but inactive](/assets/images/auth/sso/org/04-provider-card-saved.png)
 
@@ -70,6 +74,10 @@ A successful round-trip brings you back to the SSO settings page.
 
 Enforcing SSO disables password login for all members of the organisation and requires every sign-in to go through the configured provider.
 
+<Note>
+Before enforcing, make sure every member can actually sign in through the provider. Members who joined with a different method (for example Google OAuth or a password) must [link the organisation's SSO identity](/access-control/authentication/account#sign-in-methods) from their Account page first. Phase never automatically attaches a new sign-in identity to an existing account based on a matching email. You can track linking progress in the organisation's audit log.
+</Note>
+
 1. Click **Enforce SSO**. A confirmation dialog appears.
 
    ![Enforce SSO dialog — acknowledgement unchecked](/assets/images/auth/sso/org/08-enforce-sso-dialog-unchecked.png)
@@ -86,6 +94,10 @@ If your current session was established via the organisation's SSO provider, enf
 ![SSO enforcement active on provider card](/assets/images/auth/sso/org/10-enforcement-active.png)
 
 Other members' existing sessions remain active for open tabs but will be rejected on the next request. They will be redirected to the lobby where a *"Sign in with provider name"* prompt appears next to the enforced organisation.
+
+### Inviting users to an enforced organisation
+
+New users can sign up and accept their invite entirely through the organisation's SSO provider. Invited users who already have a Phase account follow a one-time bootstrap. Invite **acceptance** is exempt from SSO enforcement: they sign in with their existing method, accept the invite, and become a member. If their identity for the organisation's provider is already linked, the organisation's SSO works immediately after they join. If not, they [link it from their Account page](/access-control/authentication/account#sign-in-methods) first. All other organisation access still requires the organisation's SSO session.
 
 ![Lobby — organisation locked behind SSO](/assets/images/auth/sso/org/15-lobby-sso-lockout.png)
 

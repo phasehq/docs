@@ -11,7 +11,7 @@ Set up your account and start using Phase to manage your application secrets in 
 
 - Create a new account on the [Phase Console](https://console.phase.dev)
 - Create an [App](/console/apps)
-- Link the [Phase CLI](/cli/commands) it to your local project and import [Secrets](/console/secrets)
+- Link the [Phase CLI](/cli/commands) to your local project and import [Secrets](/console/secrets)
 - Inject secrets to your app at runtime
 
 ## 1. Login and create an Organisation
@@ -24,7 +24,7 @@ You can login to the <a href="https://console.phase.dev" target="_blank"> Phase 
 
 In order to use Phase with your application, you'll need to [create an App](/console/apps#create-an-app).
 
-Enter a suitable name for your App, such as  Click "Create".
+Enter a suitable name for your App, such as 'TestApp'. Click "Create".
 
 ![create an app](/assets/images/console/quickstart/quickstart-create-app.png)
 

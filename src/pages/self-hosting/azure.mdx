@@ -12,12 +12,12 @@ Learn how to set up the Phase Console using Azure Virtual Machines and Azure Dat
 
 <DocActions /> 
 
-Keep in mind the steps listed below serve as a rough outline on how to self-hosting Phase Services on your own infrastructure.
+Keep in mind the steps listed below serve as a rough outline on how to self-host Phase Services on your own infrastructure.
 
 You may:
 
 - Choose to run the Phase Console components on managed services (PaaS) or alternative container orchestration tools like Kubernetes instead of Docker Compose.
-- Consider running the Phase Service behind a VPN or a VPC and not to expose it the internet directly.
+- Consider running the Phase Service behind a VPN or a VPC and not to expose it to the internet directly.
 - Need to set up things like TLS certificates, web application firewall, database backups and replication, DDoS protection, rate limiting, SSOs etc.
 
 ## I. Set Up an Azure Virtual Machine (VM)
@@ -28,7 +28,7 @@ You may:
 
 3. **Basics tab**:
 
-   - **Resource Group**: Create a new one or select an existing.
+   - **Resource Group**: Create a new one or select an existing one.
    - **Virtual machine name**: Enter a unique name.
    - **Region**: Choose a preferred region.
    - **Image**: Select **Ubuntu Server 22.04 LTS**.

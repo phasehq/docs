@@ -7,7 +7,7 @@ export const description = 'Integrate Phase with CircleCI'
 
 # CircleCI
 
-You can use the Phase CLI to effortlessly inject or expose secret inside your CI pipelines or jobs.
+You can use the Phase CLI to effortlessly inject or expose secrets inside your CI pipelines or jobs.
 
 <DocActions />
 
@@ -17,7 +17,7 @@ You can use the Phase CLI to effortlessly inject or expose secret inside your CI
 - `PHASE_SERVICE_TOKEN`.
 
 <Note>
-  If you are using a Self-Hosted instance of the Phase Console, you may supply
+  If you are using a Self-Hosted instance of the Phase Console, you may supply the
   `PHASE_HOST` environment variable with your URL (`https://<HOST>`).
 </Note>
 

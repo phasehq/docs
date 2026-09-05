@@ -7,7 +7,7 @@ export const description = 'Integrate Phase with Azure Pipelines'
 
 # Azure Pipelines
 
-You can use the Phase CLI to effortlessly inject or expose secret inside your CI pipelines or jobs.
+You can use the Phase CLI to effortlessly inject or expose secrets inside your CI pipelines or jobs.
 
 <DocActions />
 

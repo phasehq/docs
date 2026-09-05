@@ -8,7 +8,7 @@ export const description =
 
 # JetBrains IDEs
 
-Inject secrets from Phase directly into your JetBrains IDE run configurations — IntelliJ IDEA, PyCharm, GoLand, WebStorm, RubyMine and others — using the [EnvFile](https://plugins.jetbrains.com/plugin/7861-envfile) plugin. No plaintext `.env` on disk, no code changes, and your existing run configuration stays exactly as-is. This is especially useful for users who either don't have their application set up to read secrets from environment variables and or can't start their application stack using a single entrypoint.
+Inject secrets from Phase directly into your JetBrains IDE run configurations — IntelliJ IDEA, PyCharm, GoLand, WebStorm, RubyMine and others — using the [EnvFile](https://plugins.jetbrains.com/plugin/7861-envfile) plugin. No plaintext `.env` on disk, no code changes, and your existing run configuration stays exactly as-is. This is especially useful for users who either don't have their application set up to read secrets from environment variables or can't start their application stack using a single entrypoint.
 
 <DocActions />
 

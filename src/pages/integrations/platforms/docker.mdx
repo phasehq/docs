@@ -13,17 +13,17 @@ You can use Phase run to inject secrets to your application process during runti
 
 ## Prerequisites
 
-- Have signed up for the [Phase Console](https://console.phase.dev) created an application
+- Have signed up for the [Phase Console](https://console.phase.dev) and created an application
 - `PHASE_SERVICE_TOKEN`
 
 <Note>
-  If you are using a Self-Hosted instance of the Phase Console, you may supply
+  If you are using a Self-Hosted instance of the Phase Console, you may supply the
   `PHASE_HOST` environment variable with your URL (`https://<HOST>`).
 </Note>
 
 ## Docker Run
 
-1. Set `PHASE_SERVICE_TOKEN` as a environment variable
+1. Set `PHASE_SERVICE_TOKEN` as an environment variable
 
 ```fish
 export PHASE_SERVICE_TOKEN=<>
