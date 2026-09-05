@@ -40,11 +40,35 @@ function InfoIcon(props) {
   )
 }
 
+function WarningIcon(props) {
+  return (
+    <svg viewBox="0 0 16 16" aria-hidden="true" {...props}>
+      <path
+        strokeWidth="0"
+        d="M8 1 15.5 14.5H.5L8 1Z"
+      />
+      <path
+        fill="none"
+        strokeLinecap="round"
+        strokeWidth="1.5"
+        d="M8 6.5v3M8 11.75v.5"
+        stroke="currentColor"
+      />
+    </svg>
+  )
+}
+
+/* Callouts: variant-tinted ground + hairline in the variant hue, square
+   corners, icon + mono label — loud enough to register against the sheet,
+   still in the drafting grammar. */
 export function Note({ children }) {
   return (
-    <div className="my-6 flex gap-2.5 rounded-2xl border border-emerald-500/20 bg-emerald-50/50 p-4 leading-6 text-emerald-900 dark:border-emerald-500/30 dark:bg-emerald-500/5 dark:text-emerald-200 dark:[--tw-prose-links:theme(colors.white)] dark:[--tw-prose-links-hover:theme(colors.emerald.300)]">
-      <InfoIcon className="mt-1 h-4 w-4 flex-none fill-emerald-500 stroke-white dark:fill-emerald-200/20 dark:stroke-emerald-200" />
-      <div className="min-w-0 [&>:first-child]:mt-0 [&>:last-child]:mb-0">
+    <div className="my-6 border-l-2 border-emerald-500 bg-emerald-500/10 p-4 dark:border-emerald-400 dark:bg-emerald-400/[0.07]">
+      <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em] text-emerald-600 dark:text-emerald-400">
+        <InfoIcon className="size-3.5 fill-emerald-600/20 stroke-emerald-600 dark:fill-emerald-400/20 dark:stroke-emerald-400" />
+        Note
+      </div>
+      <div className="mt-2 text-sm leading-6 text-emerald-900 [&_strong]:text-inherit dark:text-emerald-200/90 [&>:first-child]:mt-0 [&>:last-child]:mb-0">
         {children}
       </div>
     </div>
@@ -53,9 +77,12 @@ export function Note({ children }) {
 
 export function Warning({ children }) {
   return (
-    <div className="my-6 flex gap-2.5 rounded-2xl border border-red-500/20 bg-red-50/50 p-4 leading-6 text-red-900 dark:border-red-500/30 dark:bg-red-500/5 dark:text-red-200 dark:[--tw-prose-links:theme(colors.white)] dark:[--tw-prose-links-hover:theme(colors.red.300)]">
-      <InfoIcon className="mt-1 h-4 w-4 flex-none fill-red-500 stroke-white dark:fill-red-200/20 dark:stroke-red-200" />
-      <div className="min-w-0 [&>:first-child]:mt-0 [&>:last-child]:mb-0">
+    <div className="my-6 border-l-2 border-amber-500 bg-amber-500/10 p-4 dark:border-amber-400 dark:bg-amber-400/[0.07]">
+      <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em] text-amber-600 dark:text-amber-400">
+        <WarningIcon className="size-3.5 fill-amber-600/20 stroke-amber-600 dark:fill-amber-400/20 dark:stroke-amber-400" />
+        Warning
+      </div>
+      <div className="mt-2 text-sm leading-6 text-amber-900 [&_strong]:text-inherit dark:text-amber-200/90 [&>:first-child]:mt-0 [&>:last-child]:mb-0">
         {children}
       </div>
     </div>
@@ -88,7 +115,7 @@ export function Properties({ children }) {
     <div className="my-6">
       <ul
         role="list"
-        className="m-0 max-w-[calc(theme(maxWidth.xl)-theme(spacing.8))] list-none divide-y divide-zinc-900/5 p-0 dark:divide-white/5"
+        className="m-0 max-w-[calc(theme(maxWidth.xl)-theme(spacing.8))] list-none divide-y divide-zinc-200 p-0 dark:divide-zinc-800"
       >
         {children}
       </ul>

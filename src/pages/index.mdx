@@ -1,12 +1,9 @@
 import { PlatformsIntegration } from '@/components/PlatformsIntegration'
 
 import { Deployments } from '@/components/Deployments'
-import { SecurityResources } from '@/components/SecurityResources'
 import { Platform } from '@/components/Platform'
 import { About } from '@/components/AboutPhase'
 import { HeroPattern } from '@/components/HeroPattern'
-import { Tag } from '@/components/Tag'
-import { FaArrowRight } from 'react-icons/fa'
 
 export const description =
   'Phase is an open source & end-to-end encrypted platform for creating, managing, syncing and deploying secrets and environment variables across your infrastructure.'
@@ -50,7 +47,7 @@ Get set up with Phase in minutes by following the Quickstart guide. This Guide w
 
 ## Integrate Phase
 
-Seamlessly work with your preferred tools and platforms.
+Work with your preferred tools and platforms.
 
 <PlatformsIntegration />
 
@@ -84,8 +81,13 @@ Deploy Phase on your own infrastructure, maintain full control over your data.
 
 To get started, create a new application in your [Phase Console](https://console.phase.dev) and set up the [Phase CLI](/cli/usage). {{ className: 'lead' }}
 
-<div className="not-prose mb-16 mt-6 flex gap-3">
-  <Button href="/quickstart" arrow="right" children="Quickstart" />
+<div className="not-prose mb-16 mt-6 flex flex-wrap gap-3">
+  <Button
+    href="/quickstart"
+    variant="secondary"
+    arrow="right"
+    children="Quickstart"
+  />
   <Button
     href="/integrations"
     variant="outline"

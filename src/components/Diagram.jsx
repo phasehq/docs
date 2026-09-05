@@ -117,15 +117,20 @@ export function Diagram({ children, caption }) {
 
   if (!isClient) {
     return (
-      <div className="my-6 flex items-center justify-center rounded-2xl border border-zinc-200 bg-zinc-50 p-8 dark:border-zinc-800 dark:bg-zinc-900/50">
-        <div className="text-sm text-zinc-500">Loading diagram...</div>
+      <div className="my-8 flex items-center justify-center bg-zinc-50 p-8 ring-1 ring-zinc-200 dark:bg-zinc-900 dark:ring-zinc-800">
+        <div className="font-mono text-[11px] uppercase tracking-[0.12em] text-zinc-500">
+          Loading diagram
+        </div>
       </div>
     )
   }
 
   return (
     <figure className="not-prose my-8">
-      <div className="overflow-x-auto rounded-2xl border border-zinc-200 bg-transparent p-6 dark:border-zinc-800">
+      <div
+        translate="no"
+        className="overflow-x-auto bg-zinc-50 p-6 ring-1 ring-zinc-200 dark:bg-zinc-900 dark:ring-zinc-800"
+      >
         <div ref={containerRef} className="flex justify-center" />
       </div>
       {caption && (
