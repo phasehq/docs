@@ -8,13 +8,13 @@ export const description =
 
 # Users
 
-Manage [User accounts](/platform/users) in the Phase Console. This page covers the practical steps for account setup, user management, and access provisioning through the Console UI.
+Manage User accounts in the Phase Console. This page covers the practical steps for account setup, user management, and access provisioning through the Console UI. For a detailed explanation of the account security model — cryptographic identity, the sudo password, and account recovery — see [Platform > Users](/platform/users).
 
 <DocActions />
 
 ## Account Setup
 
-When you sign up or accept an Organisation invite, you will go through a 2-step process to create and secure your account keys. For a detailed explanation of the account security model, see [Platform > Users](/platform/users).
+When you sign up or accept an Organisation invite, you will go through a 2-step process to create and secure your account keys.
 
 You can sign up for Phase using your email and password or via an SSO provider (Google, GitHub, GitLab, etc.). Email/password signups on Phase Cloud require email verification before the account is activated.
 
@@ -32,7 +32,7 @@ By default, the "Remember password on this device" option is turned on. If you a
 
 ### Step 2: Save your account recovery kit
 
-You will be provided with a downloadable recovery kit. You can also copy the entire contents to store as a secure note in a password manager. We recommend both.
+You will be provided with a downloadable recovery kit. Print it and store it somewhere physically safe, or copy the entire contents to store as a secure note in a password manager. We recommend doing both for maximum redundancy.
 
 <Note>
   The recovery phrase in the account recovery kit is read left to right, top to bottom. You may simply highlight all the words and copy paste them in the recovery box. The recovery box will auto detect the order.

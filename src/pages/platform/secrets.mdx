@@ -81,7 +81,7 @@ DB_NAME=XP1_LM
 | `${staging.DEBUG}` | `staging` | `/` | DEBUG | Cross-environment reference to the root path. |
 | `${production./frontend/SECRET_KEY}` | `production` | `/frontend/` | SECRET_KEY | Cross-environment reference with a specific path. |
 | `${/backend/payments/STRIPE_KEY}` | Same | `/backend/payments/` | STRIPE_KEY | Local reference with a specific path. |
-| `${postgres/DB_USER}` | Same | `/postgres/` | DB_USER | Local reference to a secret in a folder, written without the leading slash. |
+| `${postgres/DB_USER}` | Same | `/postgres/` | DB_USER | Local reference to a secret in a folder. The leading slash is optional — equivalent to `${/postgres/DB_USER}`. |
 | `${backend_api::production.SECRET_KEY}` | `production` in `backend_api` | `/` | SECRET_KEY | Cross-application reference at root path. |
 | `${backend_api::production./frontend/SECRET_KEY}` | `production` in `backend_api` | `/frontend/` | SECRET_KEY | Cross-application reference with a specific path. |
 

@@ -31,45 +31,33 @@ Phase has two distinct passwords with different purposes:
 - **Login password** — what you sign in to the Console with, when password authentication is enabled. See [Password authentication](/access-control/authentication/password).
 - **Sudo password** — protects the account encryption keys and gates privileged operations. Every account has one, including accounts that sign in exclusively via SSO. See [Account management](/access-control/authentication/account).
 
-When a user signs up or accepts an Organisation invite, they go through a two-step process:
+When a user signs up or accepts an Organisation invite, account setup happens in two phases: the user first creates a sudo password, and then receives an account recovery kit. Both artifacts exist because of Phase's end-to-end encryption model — the server never holds the material needed to decrypt a user's keys, so the user must hold it instead.
 
-### Step 1: Create a Sudo Password
-
-The sudo password is a strong password that encrypts the user's account keys. It is required for privileged actions such as:
-
-- Creating Apps
-- Managing Environments and Tokens
-- Managing user access
-- Any operation that requires the account keyring
-
-Requirements:
-- Must be 16 characters or longer
-- Must contain both letters and numbers
-- Should be a long, memorable phrase
-
-By default, the sudo password is remembered on the current device for convenience. This can be toggled off on untrusted machines.
-
-### Step 2: Save the Account Recovery Kit
-
-The recovery kit contains a recovery phrase that can restore access to the user's account keys if the sudo password is forgotten. It is provided as a downloadable document that should be:
-
-- Printed and stored physically in a safe location
-- Copied to a secure note in a password manager
-- Both, for maximum redundancy
+- **The sudo password** is used to derive the device key that encrypts the account keyring at rest. The keyring — the set of keys that anchors the user's cryptographic identity — is never stored in plaintext; it can only be decrypted by re-deriving the device key from the sudo password.
+- **The account recovery kit** contains the recovery phrase: a mnemonic encoding of the high-entropy seed from which the account keys are derived. Because Phase cannot decrypt or reset a keyring, the recovery phrase is the only path to restoring the account keys if the sudo password is forgotten — there is no server-side reset.
 
 <Warning>
 The recovery kit is the **only** way to regain access to your account if you forget your sudo password. Store it securely and do not lose it.
 </Warning>
 
+For the step-by-step walkthrough of account setup, see [Console > Users > Account Setup](/console/users#account-setup).
+
 ## The Sudo Password
 
-The sudo password gates access to the user's encrypted keyring. When the keyring is locked, the user can browse the Console but cannot perform privileged operations.
+The sudo password gates access to the user's encrypted keyring. When the keyring is locked, the user can browse the Console but cannot perform privileged operations, such as:
+
+- Creating Apps
+- Managing Environments and Tokens
+- Managing user access
+- Any other operation that requires the account keyring
+
+For the full key derivation scheme, see [Security Architecture](/security/architecture#device-key-and-sudo-password).
 
 ### Unlocking Behaviour
 
-- If "Remember password on this device" is enabled, the keyring unlocks automatically on login
-- Otherwise, the user is prompted to enter the sudo password when they first perform a privileged action in a session
-- Once unlocked, the keyring remains accessible for the duration of the session (until the tab is closed or the page is refreshed)
+- The sudo password can be remembered on a trusted device, in which case the keyring unlocks automatically on login
+- Otherwise, the user is prompted for the sudo password when they first perform a privileged action in a session
+- Once unlocked, the keyring is held in memory for the duration of the session (until the tab is closed or the page is refreshed)
 
 ### Lost Password Recovery
 
@@ -98,7 +86,7 @@ An account can have multiple linked sign-in identities — for example, Google a
 
 ### Account Deletion
 
-Users can delete their own account from the Account page. Deletion is immediate and irreversible — it permanently removes organisation memberships, encryption keys, personal access tokens, and personal data. Deletion is blocked while the user is the only Owner of an Organisation (ownership must be transferred first) or while their account is SCIM-provisioned in any Organisation. See [Deleting your account](/access-control/authentication/account#deleting-your-account).
+Users can delete their own account from the Account page. Deletion is immediate and irreversible — it permanently removes organisation memberships, encryption keys, personal access tokens, and personal data. Deletion is blocked while the user is the Owner of an Organisation (ownership must be transferred first) or while their account is SCIM-provisioned in any Organisation. See [Deleting your account](/access-control/authentication/account#deleting-your-account).
 
 ## Roles
 
@@ -108,7 +96,7 @@ Every user has a role that determines their permissions within the Organisation.
 
 | Role | Scope | Description |
 | ---- | ----- | ----------- |
-| **Owner** | Global | Full control over the Organisation. Can manage billing, transfer ownership, and perform all administrative actions. |
+| **Owner** | Global | Full control over the Organisation. Can manage billing, transfer ownership, and perform all administrative actions. One per Organisation. |
 | **Admin** | Global | Can manage Apps, Environments, Users, and most Organisation settings. Automatically has access to all Environments. |
 | **Manager** | Scoped | Can manage specific Apps and Environments they have access to, including managing members within those Apps. |
 | **Developer** | Scoped | The default role for new members. Can access only the Apps and Environments explicitly granted to them. |

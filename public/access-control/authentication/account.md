@@ -89,7 +89,7 @@ You can permanently delete your Phase account from the **Delete account** sectio
 
 Deletion is blocked while:
 
-- You are the **only owner** of an organisation. [Transfer ownership](/console/organisation) to another member first. Organisations with another owner do not block deletion.
+- You are the **Owner** of an organisation. Each organisation has exactly one Owner, so you must [transfer ownership](/console/organisation#transfer-ownership) to an Admin first.
 - Your account is **SCIM-provisioned** in any organisation. Ask your administrator to deprovision you from the identity provider instead.
 
 On self-hosted instances, accounts with Django staff or superuser access cannot be deleted from the Console.

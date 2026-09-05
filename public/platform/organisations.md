@@ -38,7 +38,7 @@ Organisation members must have a role that determines their permissions. Phase h
 
 | Role | Description |
 | ---- | ----------- |
-| **Owner** | Full control over the Organisation. Can manage billing, transfer ownership, and perform all administrative actions. |
+| **Owner** | Full control over the Organisation. Can manage billing, transfer ownership, and perform all administrative actions. Each Organisation has exactly one Owner. |
 | **Admin** | Can manage Apps, Environments, Users, and most Organisation settings. Admins automatically have access to all Environments. |
 | **Manager** | Can manage specific Apps and Environments they have access to, including managing members within those Apps. |
 | **Developer** | The default role for new members. Developers can access only the specific Apps and Environments they have been granted access to. |
@@ -48,7 +48,7 @@ For a complete breakdown of roles and permissions, see [Roles](/access-control/r
 
 ## Ownership
 
-Every Organisation has an Owner. The Owner has unrestricted access to all resources and is responsible for critical operations such as transferring ownership and managing billing.
+Each Organisation has exactly one Owner. The Owner has unrestricted access to all resources and is responsible for critical operations such as transferring ownership and managing billing.
 
 ### Transferring Ownership
 

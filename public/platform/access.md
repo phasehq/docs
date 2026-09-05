@@ -32,7 +32,7 @@ Phase ships with five managed roles that cover the most common access patterns:
 
 | Role | Access Scope | Description |
 | ---- | ------------ | ----------- |
-| **Owner** | Global | Unrestricted access to everything. Automatically assigned when the Organisation is created. Can manage billing, transfer ownership, and perform all administrative actions. |
+| **Owner** | Global | Unrestricted access to everything. One per Organisation, automatically assigned at creation. Can manage billing, transfer ownership, and perform all administrative actions. |
 | **Admin** | Global | Near-full access to all resources. Can manage Apps, Environments, Users, Service Accounts, Roles, and most Organisation settings. |
 | **Manager** | Scoped | Broad management capabilities for Apps and Environments they have access to. Can manage members, service accounts, integrations, and secrets within their scope. |
 | **Developer** | Scoped | The default role. Can read and write secrets, manage integrations, and use Lockbox within Apps and Environments they have been granted access to. Limited organisation-level visibility. |
@@ -69,9 +69,11 @@ These resources exist at the Organisation level and are not scoped to any specif
 | **Roles** | Ability to view, create, or modify roles |
 | **Integration Credentials** | Credentials used by third-party sync integrations |
 | **Network Access Policies** | IP-based access restrictions for users and service accounts |
+| **Logs** | Viewing organisation-level audit logs |
+| **SSO** | Configuring organisation-level SSO providers and enforcement |
 | **Teams** | Creating and managing Teams and their membership |
 | **SCIM** | Enabling and managing SCIM provisioning for the Organisation |
-| **SSO** | Configuring organisation-level SSO providers and enforcement |
+| **LogStreams** | Managing Log Streams that ship audit logs and secret events to external platforms |
 
 ### App-Level Resources
 
@@ -134,7 +136,7 @@ Scoped access can also be granted via [Teams](/access-control/teams) — organis
 
 Some actions in Phase require permissions across multiple resources. For example:
 
-- **Adding a member to an App** requires `AppMembers:update`, `Members:read`, and `Environments:read`
+- **Adding a member to an App** requires app-level `Members:create`, organisation-level `Members:read`, and `Environments:read`
 - **Enabling SSE** requires `EncryptionMode:update`, `Environments:read`, and access to all Environments in the App
 - **Creating a sync integration** requires `Integrations:create` and `Environments:read`
 
