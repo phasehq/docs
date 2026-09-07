@@ -1,34 +1,34 @@
 import clsx from 'clsx'
 
+// medium = the API method badge: a flat variant-tinted fill, no border.
 const variantStyles = {
-  medium: 'rounded-lg px-1.5 ring-1 ring-inset',
+  medium: 'px-1.5',
 }
 
 const colorStyles = {
   emerald: {
-    small: 'text-emerald-500 dark:text-emerald-400',
+    small: 'text-emerald-600 dark:text-emerald-400',
     medium:
-      'ring-emerald-300 dark:ring-emerald-400/30 bg-emerald-400/10 text-emerald-500 dark:text-emerald-400',
+      'bg-emerald-500/15 text-emerald-700 dark:bg-emerald-400/15 dark:text-emerald-300',
   },
   sky: {
-    small: 'text-sky-500',
-    medium:
-      'ring-sky-300 bg-sky-400/10 text-sky-500 dark:ring-sky-400/30 dark:bg-sky-400/10 dark:text-sky-400',
+    small: 'text-sky-600 dark:text-sky-400',
+    medium: 'bg-sky-500/15 text-sky-700 dark:bg-sky-400/15 dark:text-sky-300',
   },
   amber: {
-    small: 'text-amber-500',
+    small: 'text-amber-600 dark:text-amber-400',
     medium:
-      'ring-amber-300 bg-amber-400/10 text-amber-500 dark:ring-amber-400/30 dark:bg-amber-400/10 dark:text-amber-400',
+      'bg-amber-500/15 text-amber-700 dark:bg-amber-400/15 dark:text-amber-300',
   },
   rose: {
-    small: 'text-red-500 dark:text-rose-500',
+    small: 'text-rose-600 dark:text-rose-400',
     medium:
-      'ring-rose-200 bg-rose-50 text-red-500 dark:ring-rose-500/20 dark:bg-rose-400/10 dark:text-rose-400',
+      'bg-rose-500/15 text-rose-700 dark:bg-rose-400/15 dark:text-rose-300',
   },
   zinc: {
-    small: 'text-zinc-400 dark:text-zinc-500',
+    small: 'text-zinc-500',
     medium:
-      'ring-zinc-200 bg-zinc-50 text-zinc-500 dark:ring-zinc-500/20 dark:bg-zinc-400/10 dark:text-zinc-400',
+      'bg-zinc-500/15 text-zinc-600 dark:bg-zinc-400/15 dark:text-zinc-300',
   },
 }
 
@@ -50,7 +50,7 @@ export function Tag({
   return (
     <span
       className={clsx(
-        'font-mono text-2xs font-semibold leading-6',
+        'font-mono text-2xs font-medium uppercase leading-6 tracking-[0.1em]',
         variantStyles[variant],
         colorStyles[color][variant]
       )}

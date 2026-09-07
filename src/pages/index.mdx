@@ -1,5 +1,6 @@
 import { PhaseAtAGlance } from '@/components/PhaseAtAGlance'
 
+import { Deployments } from '@/components/Deployments'
 import { Platform } from '@/components/Platform'
 import { HeroPattern } from '@/components/HeroPattern'
 
@@ -26,3 +27,53 @@ Get set up with Phase in minutes by following the Quickstart guide. This Guide w
 </div>
 
 <Platform />
+
+## Integrate Phase
+
+Work with your preferred tools and platforms.
+
+<PlatformsIntegration />
+
+<div className="not-prose">
+  <Button
+    href="integrations/platforms/docker"
+    variant="text"
+    arrow="right"
+    children="Explore Platforms Integrations"
+  />
+</div>
+
+## Self-host Phase
+
+Deploy Phase on your own infrastructure, maintain full control over your data.
+
+<Deployments />
+
+<div className="not-prose">
+  <Button
+    href="/self-hosting"
+    variant="text"
+    arrow="right"
+    children="Explore Deployment Options"
+  />
+</div>
+
+---
+
+## Ready to try?{{ anchor: true }}
+
+To get started, create a new application in your [Phase Console](https://console.phase.dev) and set up the [Phase CLI](/cli/usage). {{ className: 'lead' }}
+
+<div className="not-prose mb-16 mt-6 flex flex-wrap gap-3">
+  <Button
+    href="/quickstart"
+    variant="secondary"
+    arrow="right"
+    children="Quickstart"
+  />
+  <Button
+    href="/integrations"
+    variant="outline"
+    children="Explore Integrations"
+  />
+</div>

@@ -10,7 +10,24 @@ import '@/styles/tailwind.css'
 import '@/styles/asciinema-player.css'
 import '@/styles/zoomable-image.css'
 import 'focus-visible'
-import { JetBrains_Mono } from 'next/font/google'
+import { Inter, JetBrains_Mono } from 'next/font/google'
+
+const inter = Inter({
+  weight: 'variable',
+  subsets: ['latin'],
+  adjustFontFallback: false,
+  display: 'swap',
+})
+
+const jetBrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  display: 'swap',
+  // Registered as a CSS variable so Tailwind's `font-mono` resolves to the
+  // actual next/font-hosted JetBrains Mono (next/font registers a hashed
+  // family name, so listing "JetBrains Mono" in the config alone never
+  // matches).
+  variable: '--font-jetbrains-mono',
+})
 
 const options = {
   api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
@@ -36,7 +53,7 @@ export default function App({ Component, pageProps }) {
   let router = useRouter()
 
   return (
-    <>
+    <div className={`${inter.className} ${jetBrainsMono.variable}`}>
       <Head>
         {router.pathname === '/' ? (
           <title>Phase Docs</title>
@@ -88,6 +105,6 @@ export default function App({ Component, pageProps }) {
         </Layout>
       </MDXProvider>
       </PostHogProvider>
-    </>
+    </div>
   )
 }

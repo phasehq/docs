@@ -87,18 +87,18 @@ export function DocActions() {
         <CopyButton
           value={mdUrl}
           title="Copy .md link"
-          className="flex-shrink-0"
+          className="!h-7 !py-0 !px-2 text-2xs flex-shrink-0"
         ><div className="flex items-center gap-1 whitespace-nowrap"><LinkIcon className="h-4 w-4 stroke-zinc-500" /><span className="hidden sm:inline">Copy .md link</span></div></CopyButton>
 
         <CopyButton
           title="Copy for LLM"
-          className="flex-shrink-0"
+          className="!h-7 !py-0 !px-2 text-2xs flex-shrink-0"
           onCopy={async () => {
             let res = await fetch(mdUrl)
             let text = await res.text()
             await navigator.clipboard.writeText(text)
           }}
-        ><div className="flex items-center gap-1 whitespace-nowrap"><MarkdownIcon className="h-4 w-4 stroke-zinc-500" /><span className="hidden sm:inline">Copy for LLM</span></div></CopyButton>
+        ><div className="flex items-center gap-1 whitespace-nowrap"><MarkdownIcon className="h-3.5 w-3.5 text-zinc-500" /><span className="hidden sm:inline">Copy for LLM</span></div></CopyButton>
         
         <Button
           variant="outline"
@@ -108,7 +108,7 @@ export function DocActions() {
           }}
         >
           <span className="flex items-center gap-1">
-            <OpenAIIcon className="h-4 w-4 text-zinc-600 dark:text-zinc-400" />
+            <OpenAIIcon className="h-3.5 w-3.5 text-zinc-500" />
             <span className="hidden sm:inline">Ask ChatGPT</span>
           </span>
         </Button>
@@ -121,7 +121,7 @@ export function DocActions() {
           }}
         >
           <span className="flex items-center gap-1">
-            <CursorIcon className="h-4 w-4 text-zinc-600 dark:text-zinc-400" />
+            <CursorIcon className="h-3.5 w-3.5 text-zinc-500" />
             <span className="hidden sm:inline">Add to Cursor</span>
           </span>
         </Button>
@@ -134,7 +134,7 @@ export function DocActions() {
           }}
         >
           <span className="flex items-center gap-1">
-            <ClaudeIcon className="h-4 w-4 text-zinc-600 dark:text-zinc-400" />
+            <ClaudeIcon className="h-3.5 w-3.5 text-zinc-500" />
             <span className="hidden sm:inline">Ask Claude</span>
           </span>
         </Button>

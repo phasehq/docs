@@ -1,9 +1,7 @@
 import { forwardRef } from 'react'
 import Link from 'next/link'
 import clsx from 'clsx'
-import { motion, useScroll, useTransform } from 'framer-motion'
 
-import { Button } from '@/components/Button'
 import { Logo } from '@/components/Logo'
 import {
   MobileNavigation,
@@ -13,12 +11,13 @@ import { useMobileNavigationStore } from '@/components/MobileNavigation'
 import { ModeToggle } from '@/components/ModeToggle'
 import { MobileSearch, Search } from '@/components/Search'
 
-function TopLevelNavItem({ href, children }) {
+function TopLevelNavItem({ href, children, ...props }) {
   return (
     <li>
       <Link
         href={href}
-        className="text-sm leading-5 text-zinc-600 transition hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
+        className="font-mono text-xs uppercase tracking-[0.08em] text-zinc-500 transition-colors duration-150 hover:text-zinc-900 focus-visible:outline focus-visible:outline-1 focus-visible:outline-zinc-400 dark:hover:text-zinc-200"
+        {...props}
       >
         {children}
       </Link>
@@ -30,44 +29,35 @@ export const Header = forwardRef(function Header({ className }, ref) {
   let { isOpen: mobileNavIsOpen } = useMobileNavigationStore()
   let isInsideMobileNavigation = useIsInsideMobileNavigation()
 
-  let { scrollY } = useScroll()
-  let bgOpacityLight = useTransform(scrollY, [0, 72], [0.5, 0.9])
-  let bgOpacityDark = useTransform(scrollY, [0, 72], [0.2, 0.8])
-
   return (
-    <motion.div
+    <div
       ref={ref}
       className={clsx(
         className,
-        'fixed inset-x-0 top-0 z-50 flex h-14 items-center justify-between gap-12 px-4 transition sm:px-6 lg:left-72 lg:z-30 lg:px-8 xl:left-80',
-        !isInsideMobileNavigation &&
-          'backdrop-blur-sm dark:backdrop-blur lg:left-72 xl:left-80',
+        'fixed inset-x-0 top-0 z-50 flex h-14 items-center justify-between gap-12 px-4 sm:px-6 lg:left-72 lg:z-30 lg:px-8 xl:left-80',
+        !isInsideMobileNavigation && 'backdrop-blur-sm',
         isInsideMobileNavigation
-          ? 'bg-white dark:bg-zinc-900'
-          : 'bg-white/[var(--bg-opacity-light)] dark:bg-zinc-900/[var(--bg-opacity-dark)]'
+          ? 'bg-white dark:bg-zinc-925'
+          : 'bg-white/90 dark:bg-zinc-925/90'
       )}
-      style={{
-        '--bg-opacity-light': bgOpacityLight,
-        '--bg-opacity-dark': bgOpacityDark,
-      }}
     >
       <div
         className={clsx(
-          'absolute inset-x-0 top-full h-px transition',
+          'absolute inset-x-0 top-full h-px',
           (isInsideMobileNavigation || !mobileNavIsOpen) &&
-            'bg-zinc-900/7.5 dark:bg-white/7.5'
+            'bg-zinc-200 dark:bg-zinc-800'
         )}
       />
       <div className="hidden lg:block"></div>
         <Search />
-      
+
       <div className="flex items-center gap-5 lg:hidden">
         <MobileNavigation />
-        <Link href="/" aria-label="Home" className="flex items-center gap-1">
-          <Logo className="h-10 fill-black dark:fill-white" />
-          <div className="flex gap-1 rounded-md border-none bg-emerald-400/10 px-1 font-mono font-semibold uppercase text-emerald-400 md:text-xl">
+        <Link href="/" aria-label="Home" className="flex items-center gap-2">
+          <Logo className="h-10 fill-zinc-900 dark:fill-zinc-100" />
+          <span className="font-mono text-sm uppercase tracking-[0.12em] text-zinc-500">
             docs
-          </div>
+          </span>
         </Link>
       </div>
       <div className="flex items-center gap-2 sm:gap-5">
@@ -84,15 +74,18 @@ export const Header = forwardRef(function Header({ className }, ref) {
             </TopLevelNavItem>
           </ul>
         </nav>
-        <div className="hidden md:block md:h-5 md:w-px md:bg-zinc-900/10 md:dark:bg-white/15" />
+        <div className="hidden md:block md:h-5 md:w-px md:bg-zinc-200 md:dark:bg-zinc-800" />
         <div className="flex gap-2 sm:gap-4">
           <MobileSearch />
           <ModeToggle />
         </div>
-        <div className="hidden min-[480px]:contents">
-          <Button href="https://console.phase.dev" className="whitespace-nowrap">Sign in</Button>
-        </div>
+        <Link
+          href="https://console.phase.dev"
+          className="hidden h-8 shrink-0 items-center whitespace-nowrap rounded-full bg-emerald-500 px-4 font-mono text-xs font-medium uppercase tracking-[0.08em] text-zinc-950 transition-colors duration-150 hover:bg-emerald-400 hover:text-zinc-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400 min-[480px]:inline-flex"
+        >
+          Sign in
+        </Link>
       </div>
-    </motion.div>
+    </div>
   )
 })

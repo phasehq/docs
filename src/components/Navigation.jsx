@@ -4,7 +4,6 @@ import { useRouter } from 'next/router'
 import clsx from 'clsx'
 import { AnimatePresence, motion, useIsPresent } from 'framer-motion'
 
-import { Button } from '@/components/Button'
 import { useIsInsideMobileNavigation } from '@/components/MobileNavigation'
 import { useSectionStore } from '@/components/SectionProvider'
 import { Tag } from '@/components/Tag'
@@ -20,7 +19,7 @@ function TopLevelNavItem({ href, children }) {
     <li className="md:hidden">
       <Link
         href={href}
-        className="block py-1 text-sm text-zinc-600 transition hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
+        className="block py-1 font-mono text-xs uppercase tracking-[0.08em] text-zinc-500 transition-colors duration-150 hover:text-zinc-900 dark:hover:text-zinc-200"
       >
         {children}
       </Link>
@@ -55,8 +54,8 @@ function NavLink({ href, tag, active, isAnchorLink = false, children }) {
         'flex justify-between gap-2 py-1 pr-3 text-sm transition',
         isAnchorLink ? 'pl-7' : 'pl-4',
         active
-          ? 'text-zinc-900 dark:text-white'
-          : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white'
+          ? 'text-zinc-900 dark:text-zinc-100'
+          : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
       )}
     >
       <span className="truncate">{children}</span>
@@ -99,8 +98,10 @@ function VisibleSectionHighlight({ group, pathname }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1, transition: { delay: 0.2 } }}
       exit={{ opacity: 0 }}
-      className="absolute inset-x-0 top-0 bg-zinc-800/2.5 will-change-transform dark:bg-white/2.5"
-      style={{ borderRadius: 8, height, top }}
+      // Surface-tier row wash for the active page + visible sections; the
+      // emerald ActivePageMarker tick paints over it on the rail.
+      className="absolute inset-x-0 top-0 bg-zinc-100 will-change-transform dark:bg-zinc-900"
+      style={{ height, top }}
     />
   )
 }
@@ -114,7 +115,7 @@ function ActivePageMarker({ group, pathname }) {
   return (
     <motion.div
       layout
-      className="absolute left-2 h-6 w-px bg-emerald-500"
+      className="absolute left-2 h-6 w-px bg-emerald-600 dark:bg-emerald-500"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1, transition: { delay: 0.2 } }}
       exit={{ opacity: 0 }}
@@ -140,7 +141,7 @@ function NavigationGroup({ group, className }) {
     <li className={clsx('relative mt-6', className)}>
       <motion.h2
         layout="position"
-        className="text-xs font-semibold text-zinc-900 dark:text-white"
+        className="font-mono text-[11px] uppercase tracking-[0.12em] text-zinc-500"
       >
         {group.title}
       </motion.h2>
@@ -152,7 +153,7 @@ function NavigationGroup({ group, className }) {
         </AnimatePresence>
         <motion.div
           layout
-          className="absolute inset-y-0 left-2 w-px bg-zinc-900/10 dark:bg-white/5"
+          className="absolute inset-y-0 left-2 w-px bg-zinc-200 dark:bg-zinc-800"
         />
         <AnimatePresence initial={false}>
           {isActiveGroup && (
@@ -263,7 +264,10 @@ export const navigation = [
     links: [
       { title: 'Overview', href: '/access-control' },
       { title: 'Authentication', href: '/access-control/authentication' },
-      { title: 'Single Sign-On (SSO)', href: '/access-control/authentication/sso' },
+      {
+        title: 'Single Sign-On (SSO)',
+        href: '/access-control/authentication/sso',
+      },
       { title: 'OAuth 2.0', href: '/access-control/authentication/oauth-sso' },
       {
         title: 'OpenID Connect (OIDC)',
@@ -425,9 +429,7 @@ export const navigation = [
   },
   {
     title: 'Framework Integration',
-    links: [
-      { title: 'Overview', href: '/integrations/frameworks' },
-    ],
+    links: [{ title: 'Overview', href: '/integrations/frameworks' }],
   },
   {
     title: 'Self-Host',
@@ -472,15 +474,14 @@ export function Navigation(props) {
             className={groupIndex === 0 && 'md:mt-0'}
           />
         ))}
-        <li className="sticky bottom-0 z-10 mt-6 min-[416px]:hidden">
-          <Button
+        <li className="sticky bottom-0 z-10 mt-6 border-t border-zinc-200 bg-white pb-2 pt-4 dark:border-zinc-800 dark:bg-zinc-925 min-[416px]:hidden">
+          <Link
             href="https://console.phase.dev"
             target="_blank"
-            variant="filled"
-            className="w-full"
+            className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-emerald-500 px-5 py-2.5 text-[13px] font-medium text-zinc-950 transition-colors duration-150 hover:bg-emerald-400 hover:text-zinc-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400"
           >
             Launch Console
-          </Button>
+          </Link>
         </li>
       </ul>
     </nav>
