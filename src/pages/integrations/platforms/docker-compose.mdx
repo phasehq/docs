@@ -18,7 +18,7 @@ You can use Phase Run to inject secrets to your application process during runti
 
 <Note>
   If you are using a Self-Hosted instance of the Phase Console, you may supply
-  `PHASE_HOST` environment variable with your URL (`https://<HOST>`).
+  the `PHASE_HOST` environment variable with your URL (`https://<HOST>`).
 </Note>
 
 ## Using Phase Run
@@ -143,7 +143,7 @@ phase run --app "my application name" docker compose up -d
 
 ## Using Docker `CMD`
 
-This method uses the Phase CLI running inside each of your Docker containers to inject secrets to your application at runtime. You will need to install the Phase CLI inside each of your Containers and adjust your `CMD` to add the `phase run` command as prefix.
+This method uses the Phase CLI running inside each of your Docker containers to inject secrets to your application at runtime. You will need to install the Phase CLI inside each of your Containers and adjust your `CMD` to add the `phase run` command as a prefix.
 
 1. **Installing the Phase CLI in Your Docker Container**
 
@@ -229,7 +229,7 @@ services:
 
 ## Using `eval`
 
-This method lets you export all secrets stored in Phase as environment variable on the host system which can be used by `docker compose`.
+This method lets you export all secrets stored in Phase as environment variables on the host system which can be used by `docker compose`.
 
 1. Export secrets as environment variables in your shell.
 

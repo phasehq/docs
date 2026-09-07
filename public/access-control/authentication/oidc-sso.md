@@ -78,7 +78,7 @@ Follow these steps to set up Google SSO for your Phase application:
 
 14. In the Application type dropdown, select **Web application**. Enter a recognizable name in the **Name** field, add the **Authorized redirect URI** (e.g., https://[**YOUR_DOMAIN**].com/api/auth/callback/google-oidc), and click **CREATE**.
 
-   You can copy the following path, please make sure to pre-fix it with scheme + your domain.
+   You can copy the following path, please make sure to prefix it with scheme + your domain.
 
    ```
    /api/auth/callback/google-oidc
@@ -129,7 +129,7 @@ You can use JumpCloud as an OIDC provider to set up SSO for your Phase instance.
 
 8. Add your Phase application's **Redirect URI** (e.g., https://[**YOUR_DOMAIN**].com/api/auth/callback/jumpcloud-oidc) and **Login URL**.
 
-   You can copy the following path, please make sure to pre-fix it with scheme + your domain.
+   You can copy the following path, please make sure to prefix it with scheme + your domain.
 
    ```
    /api/auth/callback/jumpcloud-oidc
@@ -141,7 +141,7 @@ You can use JumpCloud as an OIDC provider to set up SSO for your Phase instance.
 
    ![Select Standard Scopes](/assets/images/auth/sso/oidc/jumpcloud/9-select-email-profile-from-standard-scope.png)
 
-10. Click the **Activate** button at the bottom right of screen to enable the application.
+10. Click the **Activate** button at the bottom right of the screen to enable the application.
 
     ![Activate Application](/assets/images/auth/sso/oidc/jumpcloud/10-click-activate.png)
 
@@ -366,6 +366,10 @@ You can use Okta as an OIDC provider to set up SSO for your Phase instance. Foll
 7.  To find your Okta domain, click the drop-down in the top right corner. Copy the host listed under your name and email (e.g., `acme-1234567.okta.com`). Prefix it with `https://` — this is your **Issuer URL**.
 
     ![Copy Okta OIDC Issuer Host](/assets/images/auth/sso/oidc/okta/7-copy-okta-oidc-issuer-host.png)
+
+    <Note>
+    From inside the Okta admin console, the drop-down can show the admin host (`…-admin.okta.com`). Remove the `-admin` suffix: the issuer is the org domain. Okta issues tokens under the org domain, and Phase rejects an admin-host issuer at save time.
+    </Note>
 
 You now have the three values needed to configure Phase — **Issuer URL**, **Client ID**, and **Client Secret**. See the **Per-organisation** / **Instance-wide** tabs below for where to plug them in.
 

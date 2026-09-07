@@ -14,9 +14,9 @@ Learn how User accounts work in Phase.
 
 ## Account keys & Signup
 
-Phase is end-to-end encrypted, which means that each member of an [Organisation](/console/organisation) has a unique set of encryption keys that only the accoutn Owner has access to.
+Phase is end-to-end encrypted, which means that each member of an [Organisation](/console/organisation) has a unique set of encryption keys that only they have access to.
 
-You can sign up for Phase using email and password or via an SSO provider (Google, GitHub, GitLab, etc.). Email/password signups on Phase Cloud require email verification before the account is activated.
+You can sign up for Phase using your email and password or via an SSO provider (Google, GitHub, GitLab, etc.). Email/password signups on Phase Cloud require email verification before the account is activated.
 
 ### Step 1: Create a sudo password
 
@@ -74,7 +74,7 @@ Remember: Your `sudo` password is a critical security measure. Always use a stro
 
 ## Add users to an Organisation
 
-You can add a user as an Organistion member by inviting them from the [Organisation members](/console/organisation#members) screen.
+You can add a user as an Organisation member by inviting them from the [Organisation members](/console/organisation#members) screen.
 
 To invite a new member, click on the "Add a member" button, enter the email of the user you wish to invite. An email invite with a link to join your organisation will be sent to their email address. 
 You will also be shown an invite link that can be copied and shared if required.
@@ -88,10 +88,10 @@ Note: Invited members will not have access to any Apps or Environments after joi
 
 ## Remove a member from an Organisation
 
-You can permanently remove a member from an Organsation from the [Organisation members](/console/organisation#members) screen. To remove a member, click on the "Remove member" button beside their name.
+You can permanently remove a member from an Organisation from the [Organisation members](/console/organisation#members) screen. To remove a member, click on the "Remove member" button beside their name.
 
 ## User Roles
 
-Users in Phase must be given a role. By default, user's are given the managed "Developer" role when they join an Organisation. This role can be changed once they join. 
+Users in Phase must be given a role. By default, users are given the managed "Developer" role when they join an Organisation. This role can be changed once they join. 
 
-[Learn about about how roles work](/access-control/roles).
+[Learn about how roles work](/access-control/roles).

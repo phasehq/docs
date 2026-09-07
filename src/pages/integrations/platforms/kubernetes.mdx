@@ -728,7 +728,7 @@ Secrets it created. Remove any managed Secrets you no longer need manually.
 
 You can easily integrate with your kubernetes workload and inject secrets securely using in memory init containers.
 
-1. Create `PHASE_SERVICE_TOKEN` Kubernetes secret secret.
+1. Create `PHASE_SERVICE_TOKEN` Kubernetes secret.
 
 ```fish
 kubectl create secret generic phase-service-token --from-literal=PHASE_SERVICE_TOKEN=<TOKEN> --namespace=default

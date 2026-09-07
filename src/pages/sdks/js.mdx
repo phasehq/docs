@@ -14,9 +14,9 @@ export const sections = [
 
 # JavaScript SDK
 
-SDK to integrate Phase in client-side Javascript applications.
+SDK to integrate Phase in client-side JavaScript applications.
 
-The JavaScript SDK can be used with any JavaScript client-side application to encrypt data client-side, in your user's browsers.
+The JavaScript SDK can be used with any JavaScript client-side application to encrypt data client-side, in your users' browsers.
 
 - [@phase.dev/phase-js](https://www.npmjs.com/package/@phase.dev/phase-js)
 - [github.com/phasehq/client-js-sdk](https://github.com/phasehq/client-js-sdk)
@@ -77,7 +77,7 @@ Now that you have initialized the SDK, you can use it to encrypt data.
 
 ### Encrypt
 
-The `encrypt` API allows you to encrypt a string. It returns a `Promise` that resolves in a encrypted string in the Phase Ciphertext format, so you need to `await` it.
+The `encrypt` API allows you to encrypt a string. It returns a `Promise` that resolves in an encrypted string in the Phase Ciphertext format, so you need to `await` it.
 
 ```js
 const ciphertext = await phase.encrypt('hello world')

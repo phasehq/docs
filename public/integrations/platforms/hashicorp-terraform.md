@@ -20,7 +20,7 @@ The Phase Terraform Provider allows you to securely manage and retrieve secrets 
 
 ## Demo
 
-A quick demo showing creating 100 secrets inside of production environment across various paths via the terraform provider:
+A quick demo showing creating 100 secrets inside of the production environment across various paths via the terraform provider:
 
 <video src="/assets/images/platform-integrations/hashicorp/terraform/terraform-apply-secrets-create-demo.mp4" controls />
 

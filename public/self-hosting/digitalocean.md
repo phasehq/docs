@@ -7,16 +7,16 @@ export const description = 'Run Phase on your own DigitalOcean infrastructure.'
 
 # DigitalOcean
 
-Learn how to set up the Phase Console using DigitalOcean droplet and managed PostgreSQL via the Docker Compose template. {{ className: 'lead' }}
+Learn how to set up the Phase Console using a DigitalOcean droplet and managed PostgreSQL via the Docker Compose template. {{ className: 'lead' }}
 
 <DocActions /> 
 
-Keep in mind the steps listed below serve as a rough outline on how to self-hosting Phase Services on your own infrastructure.
+Keep in mind the steps listed below serve as a rough outline on how to self-host Phase Services on your own infrastructure.
 
 You may:
 
 - Choose to run the Phase Console components on managed services (PaaS) or alternative container orchestration tools like Kubernetes instead of Docker Compose.
-- Consider running the Phase Service behind a VPN or a VPC and not to expose it the internet directly.
+- Consider running the Phase Service behind a VPN or a VPC and not to expose it to the internet directly.
 - Need to set up things like TLS certificates, web application firewall, database backups and replication, DDoS protection, rate limiting, SSOs etc.
 
 ### I. Set Up a DigitalOcean Droplet

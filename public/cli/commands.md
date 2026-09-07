@@ -87,7 +87,7 @@ To view all available commands and their descriptions, run:
 Authenticate with Phase using the CLI on your own machine. The `phase auth` command lets you log in to either Phase Cloud or a Self-hosted instance of Phase.
 
 <Note>
-Phase CLI will automatically look for `PHASE_HOST` and or `PHASE_SERVICE_TOKEN` environment variables to authenticate with the Phase Service. If any are present, this will override any authentication medum previously chosen.
+Phase CLI will automatically look for `PHASE_HOST` and/or `PHASE_SERVICE_TOKEN` environment variables to authenticate with the Phase Service. If any are present, this will override any authentication medium previously chosen.
 For more details, see [Environment Variables](commands#environment-variables).
 </Note>
 
@@ -110,7 +110,7 @@ Please authenticate via the Phase Console: https://console.phase.dev/webauth/OTM
 This opens the Phase Console in a new tab. Enter your `sudo` password when prompted. The CLI securely receives your credentials via encrypted POST requests to finalize authentication. If you are already authenticated, it will display your email address and provide instructions for switching accounts.
 
 
-2. **Token**: This allows you to authenticate to Phase directly uisng a Personal Access Token (PAT) or a Service Account Token that you may have manually created in the Phase Console.
+2. **Token**: This allows you to authenticate to Phase directly using a Personal Access Token (PAT) or a Service Account Token that you may have manually created in the Phase Console.
 
 For `token` mode, provide the following:
 
@@ -207,7 +207,7 @@ Examples:
 
 ## 🔗 `init`
 
-Link your local application or project to your Phase app. The `phase init` command creates a `.phase.json` file in the root of your projects which holds important contexts for the `phase` cli, so you don't have to pass arguments repetitively. This file does not contain any sensitive information and can be check into your git repo.
+Link your local application or project to your Phase app. The `phase init` command creates a `.phase.json` file in the root of your projects which holds important contexts for the `phase` cli, so you don't have to pass arguments repetitively. This file does not contain any sensitive information and can be checked into your git repo.
 
 Usage:
 
@@ -293,7 +293,7 @@ Usage:
 > phase run [--env ENVIRONMENT] [--app APP_NAME] [--tags TAGS] [command_to_run]
 ```
 
-- `command_to_run`: The command you wish to run, such as `yarn dev`. You can also chain multiple command together by wrapping them in double quotes, example: `phase run "printenv | grep secret"`
+- `command_to_run`: The command you wish to run, such as `yarn dev`. You can also chain multiple commands together by wrapping them in double quotes, example: `phase run "printenv | grep secret"`
 - `--env`: (Optional) Specify the environment (e.g., `dev`, `staging`, `production`). Supports partial string matching eg. `prod` for `production` Default is `development`
 - `--path`: (Optional) Specific path under which to fetch secrets from and inject into your application. Default is '/'. Pass an empty string `""` to fetch secrets from all paths.
 - `--app`: (Optional) Name of your Phase application. Use this if you don't have a `.phase.json` file in your project directory or want to override it.
@@ -344,7 +344,7 @@ Chaining multiple commands:
 
 **Additional Notes**:
 
-- The `phase run` only exposes secrets to your applications runtime and not to the rest of your system for security reasons.
+- The `phase run` only exposes secrets to your application's runtime and not to the rest of your system for security reasons.
 - When specifying tags with `--tags`, only secrets matching these tags will be injected into the environment.
 - Cross-environment and local references in secrets are automatically resolved and injected. Warnings are issued if any references cannot be resolved.
 - Errors during the command execution or secret fetching process will result in an appropriate error message and termination of the process.
@@ -482,7 +482,7 @@ Usage:
 
 - `KEY`: One or more keys to fetch. Single key returns a JSON object; multiple keys returns a JSON array.
 - `--env`: (Optional) Specify the environment in which to search for the secret.
-- `--path`: (Optional) The path from which to fetch the secret from. Default is '/'
+- `--path`: (Optional) The path from which to fetch the secret. Default is '/'
 - `--app`: (Optional) Name of your Phase application. Use this option to override the `.phase.json` file in your project directory or when it's not present.
 - `--app-id`: (Optional) ID of your Phase application. Takes precedence over `--app` if both are provided.
 - `--tags`: (Optional) Comma-separated list of tags to filter secrets.
@@ -1383,7 +1383,7 @@ DATABASE_URL              | 🌐 postgresql://${dev.DB_USER}:${dev.DB_PASSWORD}@
 DATABASE_URL=postgresql://j_mclaren:6c37810ec6e74ec3228416d2844564fceb99ebd94b29f4334c244db011630b0e@mc-laren-prod-db.c9ufzjtplsaq.us-west-1.rds.amazonaws.com:5432/XP1_LM
 ```
 
-**Note**: This is assuming an environment named dev/development exists and has a secrets with the keys `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
+**Note**: This is assuming an environment named dev/development exists and has secrets with the keys `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
 
 ---
 
@@ -1456,7 +1456,7 @@ To use offline mode with a service account, authenticate first:
 
 ### Wrapped key share
 
-Offline decryption requires a wrapped key share, which is stored locally after authentication. If you authenticated before this feature was available, simply re-run `phase auth` to store it****.****
+Offline decryption requires a wrapped key share, which is stored locally after authentication. If you authenticated before this feature was available, simply re-run `phase auth` to store it.
 
 ---
 
@@ -1493,7 +1493,7 @@ Example:
 
 Type: String
 
-Description: A way to authenticate with the Phase Service via tokens, useful for running the cli in an headless environment like CI/CD, Docker containers etc.
+Description: A way to authenticate with the Phase Service via tokens, useful for running the cli in a headless environment like CI/CD, Docker containers etc.
 
 Example:
 
@@ -1510,7 +1510,7 @@ Type: Boolean
 
 Description: A way to temporarily disable TLS certificate verification checks
 
-Note: Disable TLS certificate verification is dangerous and can expose you to risks of [MITM](https://en.wikipedia.org/wiki/Man-in-the-middle_attack) attacks.
+Note: Disabling TLS certificate verification is dangerous and can expose you to risks of [MITM](https://en.wikipedia.org/wiki/Man-in-the-middle_attack) attacks.
 
 Example:
 

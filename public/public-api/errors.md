@@ -11,7 +11,7 @@ export const metadata = {
 
 # Errors
 
-The Phase API will return approriate status codes and error messages when something goes wrong or a request cannot be processed. Let's look at some status codes and error messages you might encounter. {{ className: 'lead' }}
+The Phase API will return appropriate status codes and error messages when something goes wrong or a request cannot be processed. Let's look at some status codes and error messages you might encounter. {{ className: 'lead' }}
 
 You can tell if your request was successful by checking the status code when receiving an API response. If a response comes back unsuccessful, you can use the status code and error message to figure out what has gone wrong and do some rudimentary debugging.
 
@@ -40,7 +40,7 @@ Here is a list of the different categories of status codes returned by the Proto
     A 401 status code indicates that no authentication credentials were provided or the token has expired or been deleted.
   </Property>
   <Property name="403">
-    A 403 status code indicates an authentication or access error. Check your [authentication](/public-api#authentication) credentials if you see this error, and make sure the token you're using has the approriate scope for the App and Environment you're trying to access.
+    A 403 status code indicates an authentication or access error. Check your [authentication](/public-api#authentication) credentials if you see this error, and make sure the token you're using has the appropriate scope for the App and Environment you're trying to access.
 
     This error may also occur due to a [Network Access Policy](/access-control/network#network-access-policies) that restricts access from your IP address. 
     [Read more](https://docs.phase.dev/access-control/network#access-denied-exceptions) about Network Access Policy exceptions.

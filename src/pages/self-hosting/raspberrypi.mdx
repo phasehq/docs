@@ -13,7 +13,7 @@ Learn how to set up the Phase Console using the Docker Compose template on your 
 
 <DocActions /> 
 
-Keep in mind the steps listed below serve as a rough outline on how to self-hosting Phase Services on your own infrastructure.
+Keep in mind the steps listed below serve as a rough outline on how to self-host Phase Services on your own infrastructure.
 
 Note
 - This guide is interchangeable for other ARM-based SBCs that support the `linux/arm64` Docker architecture.

@@ -102,7 +102,7 @@ Here's how it works:
 - **Share Creation**: We generate a random, high-entropy offset key which is equal in length to the `privKey`, `offsetKey0`. One share of the secret `share0` is set to be this `offsetKey0`. The second share `share1` is the ⊕ result of `privKey` and `offsetKey0`.
 - **Secret Reconstruction**: To reconstruct the secret, both shares are required. The original secret `privKey` can be recovered by calculating `share0 ⊕ share1` (i.e., `offsetKey0 ⊕ (privKey ⊕ offsetKey0)`).
 
-The scheme ensures that each share individually provides no information about the original secret; only when combined do they reveal the secret. It's a simple, yet effective, method of secret sharing with symmetric properties - it doesn't matter which share is labeled as `share0` and which as `share1`. As long as they are stored securely, and not used across multiple secrets, this scheme can provide a solid layer of security. Phase Console also encrypts the share that is deployed via the KMS service with a key only you have access to, for a added layer of security. [Read more](/security/architecture#app-keys-and-secret-generation)
+The scheme ensures that each share individually provides no information about the original secret; only when combined do they reveal the secret. It's a simple, yet effective, method of secret sharing with symmetric properties - it doesn't matter which share is labeled as `share0` and which as `share1`. As long as they are stored securely, and not used across multiple secrets, this scheme can provide a solid layer of security. Phase Console also encrypts the share that is deployed via the KMS service with a key only you have access to, for an added layer of security. [Read more](/security/architecture#app-keys-and-secret-generation)
 
 ---
 
@@ -131,7 +131,7 @@ The issue is that the PBKDF2 algorithm doesn't require significant memory to com
 
 [ChaCha20-Poly1305 - Wikipedia](https://en.wikipedia.org/wiki/ChaCha20-Poly1305)
 
-[Ed2551 - Crypto++](https://www.cryptopp.com/wiki/Ed25519)
+[Ed25519 - Crypto++](https://www.cryptopp.com/wiki/Ed25519)
 
 [Ed25519: high-speed high-security signatures - cr.yp.to](https://ed25519.cr.yp.to/)
 

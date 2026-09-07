@@ -95,7 +95,7 @@ Roles
 
 ### Create a `Client Token` via the Nomad web UI:
 
-First, let's start by creating a `ACL Policy`
+First, let's start by creating an `ACL Policy`
 
 Go to `Access Control` -> `Policies` -> `+ Create Policy`
 
@@ -121,11 +121,11 @@ Next, let's create a `Client Token`.
 
 Go to `Access Control` -> `Tokens` -> `+ Create Token`
 
-Enter a descriptive `Token Name`, make sure the `Expiration time` to set to **Never** and the token type in the `Client or Management token?` option is **Client**. Select the policy you previously created from the `Policies` table and click `Save Token`.
+Enter a descriptive `Token Name`, make sure the `Expiration time` is set to **Never** and the token type in the `Client or Management token?` option is **Client**. Select the policy you previously created from the `Policies` table and click `Save Token`.
 
 ![nomad-ui-token-create](/assets/images/platform-integrations/hashicorp/nomad/nomad-ui-token-create.png)
 
-In the following screen you will presented with a `Token Secret` which is the `Client Token`, please select it with your cursor and copy it manually as the copy button that is next to the text box is unreliable and instances of Nomad web UI that are accessed over a non-https connection.
+In the following screen you will be presented with a `Token Secret` which is the `Client Token`, please select it with your cursor and copy it manually as the copy button that is next to the text box is unreliable on instances of Nomad web UI that are accessed over a non-https connection.
 
 ![nomad-ui-token-copy](/assets/images/platform-integrations/hashicorp/nomad/nomad-ui-token-copy.png)
 

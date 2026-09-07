@@ -324,7 +324,7 @@ The secret model contains the basic key / value pairs that define your environme
         The path at which to create this secret. Defaults to `/` if not provided.
       </Property>
       <Property name="override" type="object">
-        A personal secret override to be used in place of the default value. The override must be suppled with fields `value` and `isActive`
+        A personal secret override to be used in place of the default value. The override must be supplied with fields `value` and `isActive`
       </Property>
     </Properties>
 
@@ -612,7 +612,7 @@ The secret model contains the basic key / value pairs that define your environme
         The path for this secret.
       </Property>
       <Property name="override" type="object">
-        A personal secret override to be used in place of the default value. The override must be suppled with fields `value` and `isActive`
+        A personal secret override to be used in place of the default value. The override must be supplied with fields `value` and `isActive`
       </Property>
     </Properties>
 

@@ -38,7 +38,7 @@ You can use Phase to sync secrets with your Vercel projects.
 
 4. Create a new **Token** with a descriptive name (eg. `phase-console-vercel-sync`) , set the **Scope** to `Full Account`, choose an **Expiration** and click **Create**. (Note: If you choose an expiry option other than `No Expiration`, you will need to manually update this token in Phase when it expires.)
 
-Alternatively, you may create a token with a narrower scope to a specific team. Keep in mind that this will affect the Phase Console from being able to list your projects and sync secrets to them.
+Alternatively, you may create a token with a narrower scope to a specific team. Keep in mind that this will prevent the Phase Console from being able to list your projects and sync secrets to them.
 
 ![Vercel dashboard account settings token create](/assets/images/platform-integrations/vercel/3.png)
 
@@ -65,7 +65,7 @@ Alternatively, you may create a token with a narrower scope to a specific team. 
 
 1. Go to your App in the Phase Console and go to the **Syncing** tab. Select **Vercel** under the 'Create a new Sync' menu.
 
-![Set up an vercel secret sync](/assets/images/platform-integrations/vercel/1-create-new-sync-select-vercel.png)
+![Set up a vercel secret sync](/assets/images/platform-integrations/vercel/1-create-new-sync-select-vercel.png)
 
 2. Choose the credentials you added in the previous step as the authentication mode, and click **Next**.
 
@@ -95,7 +95,7 @@ Secrets in Vercel:
 
 
 
-## Reserved environment variables keys by Vercel
+## Reserved environment variable keys by Vercel
 
 The following secret keys are reserved or prepopulated by Vercel for technical reasons on their end that Phase will automatically filter for and not sync with Vercel to avoid errors.
 
@@ -113,7 +113,7 @@ The following secret keys are reserved or prepopulated by Vercel for technical r
 - `LAMBDA_TASK_ROOT`
 - `LAMBDA_RUNTIME_DIR`
 
-### Environment Variables are allowed by Vercel Serverless Function runtimes that Phase will not filter for:
+### Environment Variables that are allowed by Vercel Serverless Function runtimes that Phase will not filter for:
 
 - `AWS_ACCESS_KEY_ID`
 - `AWS_SECRET_ACCESS_KEY`

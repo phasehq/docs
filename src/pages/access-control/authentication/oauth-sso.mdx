@@ -96,10 +96,10 @@ You can find detailed official instructions for setting up SSO with a Google OAu
 
 Follow these steps to set up GitHub SSO for your Phase application:
 
-If you are using GitHub Enterprise Server (self-hosted) instance, you may follow the steps below to set up GitHub SSO for your Phase application as the instructions are nearly identical. The only exception being the Authorization callback URL.
+If you are using a GitHub Enterprise Server (self-hosted) instance, you may follow the steps below to set up GitHub SSO for your Phase application as the instructions are nearly identical. The only exception being the Authorization callback URL.
 
 <Note>
-   GitHub Enterprise Server (self-hosted) instance for OAuth SSO is only available for organizations with an `Enterprise` tier subscription. See [Pricing](https://phase.dev/pricing).
+   A GitHub Enterprise Server (self-hosted) instance for OAuth SSO is only available for organizations with an `Enterprise` tier subscription. See [Pricing](https://phase.dev/pricing).
 </Note>
 
 1. Log in to your GitHub account and go to [OAuth Apps](https://github.com/settings/applications/new) in Developer Settings.
@@ -185,7 +185,7 @@ Make sure the application has the `read_user` scope. This grants read-only acces
 6. Supply these credentials to your Phase Console deployment as [environment variables](/self-hosting/configuration/envars#git-lab-sso).
 
 <Note>
-  You can use user-owned or group-owned applications to login to Phase. If you are running a self-hosted instance, you can also use an instance-wide application.
+  You can use user-owned or group-owned applications to log in to Phase. If you are running a self-hosted instance, you can also use an instance-wide application.
 </Note>
 
 You can find detailed official instructions for setting up SSO with a GitLab OAuth Application [here](https://docs.gitlab.com/ee/integration/oauth_provider.html). 

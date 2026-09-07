@@ -22,7 +22,7 @@ Deploy the Phase Console Railway template. {{ className: 'lead' }}
 
 - **Secret references**: To make configuration easier, the Phase Console Railway deployment template uses numerous secret and variable references. These references are resolved only during a service deployment. Future configuration changes to other services may not reflect immediately until a redeployment is triggered (as mentioned in the previous point).
 
-For example, the Phase `backend` service references an environment variable from the `railway-nginx` service. If a change occurs in the referenced value `${{railway-nginx.RAILWAY_PUBLIC_DOMAIN}}` (e.g., because a new custom domain was added), the `backend` and the `railway-nginx` service needs to be redeployed respectively:
+For example, the Phase `backend` service references an environment variable from the `railway-nginx` service. If a change occurs in the referenced value `${{railway-nginx.RAILWAY_PUBLIC_DOMAIN}}` (e.g., because a new custom domain was added), the `backend` and the `railway-nginx` service need to be redeployed respectively:
 
 ```fish
 ALLOWED_HOSTS=healthcheck.railway.app,${{RAILWAY_PRIVATE_DOMAIN}},${{railway-nginx.RAILWAY_PUBLIC_DOMAIN}}

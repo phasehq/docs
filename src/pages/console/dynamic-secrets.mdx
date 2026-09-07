@@ -18,7 +18,7 @@ Dynamic Secrets can be created manually or automatically through integrations wi
 
 ## Supported Providers
 
-Dynamic Secrets are support for the following providers:
+Dynamic Secrets are supported for the following providers:
 
 - [AWS IAM](/integrations/platforms/aws-iam)
 
@@ -33,13 +33,13 @@ You need to Enable Server-side Encryption (SSE) for the App from the [Settings](
 
 ![create dynamic secret button](/assets/images/console/dynamic-secrets/create-dynamic-secret-button.png)
 
-Choose a provider, and then fill in the required fields. The required configuration will vary for each provider, but all dynamic secrets will required: 
+Choose a provider, and then fill in the required fields. The required configuration will vary for each provider, but all dynamic secrets will require: 
 
 - **Secret Name**: A unique name for the secret.
 - **Description**: A brief description of the secret.
 - **Max TTL**: The maximum time-to-live for the secret. This is the maximum duration that the credentials can be leased or renewed for.
 - **Default TTL**: The default time-to-live for the secret. This is the default duration that the credentials will be leased for when they are created. This value must be less than or equal to the Max TTL.
-- **Outputs**: This is a mapping of secrets or credentials created on the third-party service, and how they will be mapped to secrets in your Phase Environment.. These fields will vary depending on the provider.
+- **Outputs**: This is a mapping of secrets or credentials created on the third-party service, and how they will be mapped to secrets in your Phase Environment. These fields will vary depending on the provider.
 
 ![common config](/assets/images/console/dynamic-secrets/common-config.png)
 
@@ -52,7 +52,7 @@ Finally, click **Finish** to save your configuration and create the Dynamic Secr
 
 ## Leasing credentials
 
-To lease credentials for a Dynamic Secret, click on the **Generate* button for the secret. Provide a name for the lease, a TTL in seconds, and click "Generate". The TTL must be less than or equal to the Max TTL specified in the Dynamic Secret configuration. 
+To lease credentials for a Dynamic Secret, click on the **Generate** button for the secret. Provide a name for the lease, a TTL in seconds, and click "Generate". The TTL must be less than or equal to the Max TTL specified in the Dynamic Secret configuration. 
 
 ![generate lease 1](/assets/images/console/dynamic-secrets/generate-lease-1.png)
 
@@ -96,7 +96,7 @@ To renew a lease, click on the **Renew** button next to the lease in the list. P
 
 ![renew lease](/assets/images/console/dynamic-secrets/renew-lease.png)
 
-### Revoke a Leases
+### Revoke a Lease
 
 To revoke a lease, click on the **Revoke** button next to the lease in the list. Confirm the revocation in the dialog that appears. This will immediately delete the credentials associated with the lease and mark the lease as revoked.
 

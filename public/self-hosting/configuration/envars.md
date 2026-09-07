@@ -387,7 +387,7 @@ If SMTP is not configured, or if `SKIP_EMAIL_VERIFICATION` is set to `true`, acc
     When set to `true`, new accounts created via email/password signup are activated immediately without requiring email verification. Defaults to `false`.
     If SMTP is not configured, email verification is automatically skipped regardless of this setting.
 
-    Only takes effect when [`ENABLE_PASSWORD_AUTH`](#password-authentication) is enabled.
+    At signup this only takes effect when [`ENABLE_PASSWORD_AUTH`](#password-authentication) is enabled. It also applies to the [account email change](/access-control/authentication/account#changing-your-email-address) flow for every account type: when set (or when SMTP is not configured), the verification code step is skipped there too.
 
     Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
@@ -469,7 +469,7 @@ If SMTP is not configured, or if `SKIP_EMAIL_VERIFICATION` is set to `true`, acc
     Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
   <Property name="EXTERNAL_MIGRATION" type="string">
-    Defaults to `false`. This is used to control whether the backend container will run database migrations. In a standalone (monolith) deployment setup, you may set this to `false` or use the default value to automatically run the database migrations. In high availability systems (such as Kubernetes, Docker Swarm, Nomad) where multiple replicas of the service is bring run concurrently, please set it to `true` and handle the migrations in an a dedicated job for a safe and reliable migration setup. 
+    Defaults to `false`. This is used to control whether the backend container will run database migrations. In a standalone (monolith) deployment setup, you may set this to `false` or use the default value to automatically run the database migrations. In high availability systems (such as Kubernetes, Docker Swarm, Nomad) where multiple replicas of the service are being run concurrently, please set it to `true` and handle the migrations in a dedicated job for a safe and reliable migration setup. 
 
     Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
@@ -495,10 +495,10 @@ If SMTP is not configured, or if `SKIP_EMAIL_VERIFICATION` is set to `true`, acc
 
 ## Redis configuration
 
-Phase uses Redis or Valkey for a synchronous jobs queues, caching and rate limiting.
+Phase uses Redis or Valkey for asynchronous job queues, caching and rate limiting.
 
 <Note>
-  If your Redis or Valkey instance support ACLs, make sure it's set up with at least `on ~* -@all +@read +@write +ping +multi +exec +discard +watch +unwatch +@scripting +@pubsub` access string (ACL) permissions.
+  If your Redis or Valkey instance supports ACLs, make sure it's set up with at least `on ~* -@all +@read +@write +ping +multi +exec +discard +watch +unwatch +@scripting +@pubsub` access string (ACL) permissions.
 </Note>
 
 <Properties>
@@ -532,7 +532,7 @@ Phase uses Redis or Valkey for a synchronous jobs queues, caching and rate limit
   <Property name="REDIS_SSL_CA_PATH" type="string (Optional)">
     Path to the CA certificate bundle for verifying Redis SSL certificates. Required if `REDIS_SSL` is set to `True`.
     Example: `/etc/ssl/certs/ca-certificates.crt`
-    If you using a self-signed certificate, you can set this to the path to the certificate bundle. Sames goes for a certificate bundle for a managed service like Redis Cloud which may not be available in the default certificate bundle.
+    If you are using a self-signed certificate, you can set this to the path to the certificate bundle. Same goes for a certificate bundle for a managed service like Redis Cloud which may not be available in the default certificate bundle.
     Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
 </Properties>
@@ -934,7 +934,7 @@ Phase will use these credentials to authenticate with AWS.
 aws iam create-access-key --user-name phase-integration-user
 ```
 
-2.  AWS will return an `AccessKeyId` and a `SecretAccessKey`. You will need to provide them to your Phase instance as following secrets:
+2.  AWS will return an `AccessKeyId` and a `SecretAccessKey`. You will need to provide them to your Phase instance as the following secrets:
 
 <Properties>
   <Property name="AWS_INTEGRATION_ACCESS_KEY_ID" type="string">
@@ -1010,6 +1010,11 @@ Env(s) required by the following containers:
 These variables are not required if using the suggested [docker-compose template](https://raw.githubusercontent.com/phasehq/console/main/docker-compose.yml). However if you are deploying the Phase Console using a custom docker-compose configuration or without docker-compose, make sure the following variables are correctly set. 
 
 <Properties>
+  <Property name="AUTH_FRESHNESS_MAX_AGE_SECONDS" type="number (Optional)">
+    Maximum age, in seconds, of a session's last authentication before sensitive account actions (linking or unlinking sign-in methods, enabling or disabling 2FA, changing the account email, deleting the account) require the user to sign in again. Defaults to `900` (15 minutes).
+
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
+  </Property>
   <Property name="NEXTAUTH_URL" type="string">
     The base console URL for NextAuth. References `${HTTP_PROTOCOL}${HOST}`
     
@@ -1046,7 +1051,7 @@ These variables are not required if using the suggested [docker-compose template
     Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
   </Property>
   <Property name="NEXT_PUBLIC_NEXTAUTH_PROVIDERS (Legacy)" type="string">
-    **This is a legacy variable and is not required if you using Console version >= `v2.50.0`**
+    **This is a legacy variable and is not required if you are using Console version >= `v2.50.0`**
 
     Comma-separated list of NextAuth providers. References `${SSO_PROVIDERS}`
     
@@ -1055,7 +1060,7 @@ These variables are not required if using the suggested [docker-compose template
     Required by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
   </Property>
   <Property name="ALLOWED_HOSTS" type="string">
-    Comma-separated list of allowed hosts used the backend. Default: `${HOST},backend`
+    Comma-separated list of allowed hosts used by the backend. Default: `${HOST},backend`
 
     Example: `[**YOUR_DOMAIN**],backend`
 
@@ -1081,6 +1086,12 @@ These variables are not required if using the suggested [docker-compose template
     If not specified, Phase will automatically calculate the number of workers based on available CPU cores using the formula `(2 * CPUs) + 1`, with a default cap of 8 workers to prevent potential database connection exhaustion.
     
     Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
+  </Property>
+  <Property name="LOG_STREAM_WORKERS" type="number (Optional)">
+    The number of worker processes for [Log Stream](/console/logstreams) deliveries. Defaults to `2`; values below `1` are clamped to `1`.
+    Log shipping is network-bound and delivered serially per stream, so useful concurrency roughly equals the number of active Log Streams — raise this if the lag indicator on your streams keeps growing.
+
+    Referenced by the [`worker`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
   <Property name="RATE_LIMIT_DEFAULT" type="string">
     Rate limit for API requests.

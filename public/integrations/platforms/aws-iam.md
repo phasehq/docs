@@ -16,7 +16,7 @@ You can use Phase to generate dynamic secrets for AWS IAM, allowing you to creat
 - AWS CLI / AWS CloudShell
 - An AWS account with permissions to create IAM users and attach policies
 
-**Note**: If you don't have `aws-cli` installed locally on your system you can AWS CloudShell by logging in to your AWS Console and clicking the terminal icon in the top left.
+**Note**: If you don't have `aws-cli` installed locally on your system you can use AWS CloudShell by logging in to your AWS Console and clicking the terminal icon in the top left.
 
 ![aws-cloudshell](/assets/images/platform-integrations/aws/aws-cloudshell-enable.png)
 
@@ -305,7 +305,7 @@ Copy the `AccessKeyId` and `SecretAccessKey`.
 
 ## Create an AWS IAM Dynamic Secret
 
-AWS IAM Dynamic Secrets allow you to create temporary AWS credentials that can be used to access AWS services. Each time a credential is generated, a new IAM user is created, and credentials are created for this user. Usernames are unique and contain a `{{random}}` string with a prefix or suffic that you can define.
+AWS IAM Dynamic Secrets allow you to create temporary AWS credentials that can be used to access AWS services. Each time a credential is generated, a new IAM user is created, and credentials are created for this user. Usernames are unique and contain a `{{random}}` string with a prefix or suffix that you can define.
 
 To create an AWS IAM Dynamic Secret, you will need to provide the following information:
 

@@ -7,7 +7,7 @@ export const description = 'Integrate Phase with Drone CI'
 
 # Drone CI
 
-You can use the Phase CLI to effortlessly inject or expose secret inside your CI pipelines or jobs.
+You can use the Phase CLI to effortlessly inject or expose secrets inside your CI pipelines or jobs.
 
 <DocActions /> 
 
@@ -18,7 +18,7 @@ You can use the Phase CLI to effortlessly inject or expose secret inside your CI
 
 <Note>
   If you are using a Self-Hosted instance of the Phase Console, you may supply
-  `PHASE_HOST` environment variable with your URL (`https://<HOST>`).
+  the `PHASE_HOST` environment variable with your URL (`https://<HOST>`).
 </Note>
 
 For detailed cli install options, please see: [Installation](/cli/install)

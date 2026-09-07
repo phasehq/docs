@@ -5,7 +5,7 @@ import { DocActions } from '@/components/DocActions'
 
 # Service Accounts
 
-Service Accounts provide a secure and controlled method for programmatic access to the Phase platform. Service accounts are non-human users that can use various authentication mechanisms to access resources such as secrets within the applications and environments it has been granted access to. 
+Service Accounts provide a secure and controlled method for programmatic access to the Phase platform. Service accounts are non-human users that can use various authentication mechanisms to access resources such as secrets within the applications and environments they have been granted access to. 
 
 Service accounts share many of the properties and behavior of human user accounts. Service Accounts follow an Access Policy that can be defined by [Managed Roles](/access-control/roles#managed-roles) or [Custom Roles](/access-control/roles#creating-custom-roles) based on the permissions required. Service accounts are secured with the same security and cryptographic architecture as user accounts, and must be manually provisioned access to Apps and Environments in order to access secrets. 
 
@@ -24,13 +24,13 @@ Team-owned service accounts are useful when a team needs dedicated programmatic 
 
 To create a new Service Account:
 
-1. Navigate to Access Control page from the sidebar and click on the **Service Accounts** tab.
+1. Navigate to the Access Control page from the sidebar and click on the **Service Accounts** tab.
 
 ![Navigate to access control](/assets/images/console/access-control/service-accounts/create-new-service-accounts/1-navigate-to-access-control.png)
 
 ![Click on service accounts tab](/assets/images/console/access-control/service-accounts/create-new-service-accounts/2-click-on-service-accounts-tab.png)
 
-2. Click the **Create Service Account** button in the center of the screen, if you have previously created service accounts you will see in the top right corner of the screen.
+2. Click the **Create Service Account** button in the center of the screen, if you have previously created service accounts you will see it in the top right corner of the screen.
 
 ![Click create service account](/assets/images/console/access-control/service-accounts/create-new-service-accounts/3-click-create-new-service-account.png)
 
@@ -44,7 +44,7 @@ By default, when you create a new Service Account it uses the [Service](/access-
 |----------|--------|------|--------|--------|--------|
 | **Secrets** | Full access | ✅ | ✅ | ✅ | ✅ |
 
-You may choose to select a different Managed role or a Custom role by clicking the one from the dropdown.
+You may choose to select a different Managed role or a Custom role by clicking one from the dropdown.
 
 ![Create new service account](/assets/images/console/access-control/service-accounts/create-new-service-accounts/4-create-new-service-account.png)
 
@@ -88,7 +88,7 @@ To delete a Service Account, click on the "Delete" button at the bottom of the p
 Each Service Account has its own unique keyring, just like User accounts. KMS modes determine who has access to the service account's keyring and can create and manage tokens for this service account.
 
 #### Client-side KMS
-By default, org-level Service Accounts use **Client-side KMS**. This means only designated users with the required `ServiceAccountTokens` permissions have access to create and manage tokens for this service account. These users are called *Service Account Handlers* and have access the service account's keyring, encrypted with their own keys.
+By default, org-level Service Accounts use **Client-side KMS**. This means only designated users with the required `ServiceAccountTokens` permissions have access to create and manage tokens for this service account. These users are called *Service Account Handlers* and have access to the service account's keyring, encrypted with their own keys.
 
 
 #### Server-side KMS
@@ -115,7 +115,7 @@ You can find instructions on how to create a Service Account Token [here](/acces
 
 ## Add a Service Account to an App
 
-You can find instructions on adding Service Account to Apps [here](/console/apps#add-a-service-account-to-an-app).
+You can find instructions on adding a Service Account to Apps [here](/console/apps#add-a-service-account-to-an-app).
 
 
 ## Manage account Network Access Policies

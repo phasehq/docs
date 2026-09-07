@@ -93,7 +93,7 @@ This is only for users who want to integrate their self-managed GitHub Enterpris
 
 Click **Create token** and copy the token.
 
-Next, head back to Phase Console, and paste the token in **Access Token** field, provide a distinct name and click **Save**.
+Next, head back to Phase Console, and paste the token in the **Access Token** field, provide a distinct name and click **Save**.
 
 Alternatively, if you want to use GitHub Enterprise Server, you will need to provide the following information:
 
@@ -145,7 +145,7 @@ This is only for users who want to integrate their self-managed GitHub Enterpris
 
 ![Add GitHub Enterprise Server credentials](/assets/images/platform-integrations/github/add-github-enterprise-server-creds.png)
 
-5. You will be redirected to GitHub to authorize Phase. **Make sure to grant access to any organizations whose repositories that you wish to integrate Phase with**. Click **Authorize** to continue.
+5. You will be redirected to GitHub to authorize Phase. **Make sure to grant access to any organizations whose repositories you wish to integrate Phase with**. Click **Authorize** to continue.
 
 ![Authorize GitHub Phase Integration](/assets/images/platform-integrations/github/github-oauth-consent.png)
 
@@ -172,7 +172,7 @@ This is only for users who want to integrate their self-managed GitHub Enterpris
 
 Click **Create token** and copy the token.
 
-Next, head back to Phase Console, and paste the token in **Access Token** field, provide a distinct name and click **Save**.
+Next, head back to Phase Console, and paste the token in the **Access Token** field, provide a distinct name and click **Save**.
 
 Alternatively, if you want to use GitHub Enterprise Server, you will need to provide the following information:
 
@@ -203,7 +203,7 @@ Now that you have authenticated with GitHub, you can configure syncs for your ap
 ![Choose sync authentication credentials](/assets/images/platform-integrations/github/select-gh-credentials.png)
 
 3. Choose the source and destination to sync secrets. Select the Phase Environment as the source for Secrets.
-   Next, choose a GitHub repository from the dropdown as the destination to sync Secrets to. You may also optionally choose an GitHub Environment to sync Secrets to. Here's how you can create one - [GitHub Docs](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment).
+   Next, choose a GitHub repository from the dropdown as the destination to sync Secrets to. You may also optionally choose a GitHub Environment to sync Secrets to. Here's how you can create one - [GitHub Docs](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment).
 
    <Note>
    For security reasons, secrets in your source Phase Environment will be synced to your GitHub repository as type Secrets, whether it's at a repository level or an Environment level.
@@ -211,7 +211,7 @@ Now that you have authenticated with GitHub, you can configure syncs for your ap
 
 ![Configure a repository sync](/assets/images/platform-integrations/github/gh-actions-configure-sync-repo.png)
 
-Alternatively, you sync secrets directly to your GitHub organization. You can choose between **All repositories**, meaning private and public repositories, or Only **Private repositories**, based on your requirements. Your GitHub repositories will inherit the organization-level secrets automatically. GitHub Actions secret takes the following presidence:
+Alternatively, you can sync secrets directly to your GitHub organization. You can choose between **All repositories**, meaning private and public repositories, or Only **Private repositories**, based on your requirements. Your GitHub repositories will inherit the organization-level secrets automatically. GitHub Actions secret takes the following precedence:
 
 
 - **Environment secret**
