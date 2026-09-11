@@ -24,6 +24,14 @@ You can use Phase to sync secrets to your Supabase project. The secrets are avai
   with this prefix. The sync logs list the skipped keys.
 </Note>
 
+<Note>
+  Supabase allows a maximum of 100 secrets per project. If a sync contains
+  more than 100 secrets, the sync fails before it writes changes to the
+  project. The sync logs show this error. The
+  [Edge Functions limits](https://supabase.com/docs/guides/functions/limits)
+  page lists all limits.
+</Note>
+
 ### Prerequisites
 
 - Sign up for the [Phase Console](/quickstart) and [create an App](/console/apps#create-an-app).
