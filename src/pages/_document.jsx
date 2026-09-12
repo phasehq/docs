@@ -38,11 +38,11 @@ const modeScript = `
 
 export default function Document() {
   return (
-    <Html lang="en">
+    <Html lang="en-US">
       <Head>
         <script dangerouslySetInnerHTML={{ __html: modeScript }} />
       </Head>
-      <body className="bg-white antialiased dark:bg-zinc-900">
+      <body className="bg-white antialiased dark:bg-zinc-925">
         <Main />
         <NextScript />
         <Script

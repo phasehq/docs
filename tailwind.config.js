@@ -21,6 +21,13 @@ module.exports = {
     },
     typography: require('./typography'),
     extend: {
+      colors: {
+        zinc: {
+          // Docs dark ground: softer than zinc-950 (#09090b) for long-form
+          // reading, still darker than the old zinc-900 (#18181b) ground.
+          925: '#101013',
+        },
+      },
       boxShadow: {
         glow: '0 0 4px rgb(0 0 0 / 0.1)',
       },
@@ -38,6 +45,7 @@ module.exports = {
       },
       fontFamily: {
         mono: [
+          'var(--font-jetbrains-mono)',
           'JetBrains Mono',
           'Menlo',
           'Monaco',
