@@ -499,13 +499,6 @@ You first need to set up credentials to use for the sync, and then choose a sour
 
 ### Step 1: Set up your AWS credentials in Phase
 
-<Note>
-  Your credentials are kept secure with robust application-layer encryption.
-  Phase encrypts your credentials directly in the browser and only decrypts them
-  in memory to perform sync operations. Your credentials are never stored in
-  plaintext.
-</Note>
-
 1. Create an `AccessKey` via the AWS Console. See [Step 5](#step-5-create-access-keys) for instructions on creating the key. Note the `AccessKeyId` and `SecretAccessKey`.
 
 2. Go to **Integrations** from the sidebar and click on **Third-party credentials** in the integrations tab.

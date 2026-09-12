@@ -42,13 +42,6 @@ You can use Phase to sync secrets with your Render Services and Environment Grou
 
 ### Store authentication credentials in Phase
 
-<Note>
-  Your credentials are kept secure with robust application-layer encryption.
-  Phase encrypts your credentials directly in the browser and only decrypts them
-  in memory to perform sync operations. Your credentials are never stored in
-  plaintext.
-</Note>
-
 1. Go to **Integrations** from the sidebar and switch to the **Third-party credentials** tab. 
 
 ![Go to integrations](/assets/images/platform-integrations/render/integrations-creds.png)

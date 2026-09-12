@@ -69,13 +69,6 @@ Scroll down and click **Continue to summary**
 
 ### Save your credentials in Phase
 
-<Note>
-  Your credentials are kept secure with robust application-layer encryption.
-  Phase encrypts your credentials directly in the browser and only decrypts them
-  in memory to perform sync operations. Your credentials are never stored in
-  plaintext.
-</Note>
-
 1. Go to **Integrations** from the sidebar and click on **Third-party credentials** in the integrations tab.
 
 ![Go to integrations](/assets/images/platform-integrations/integrations-sidebar.png)
