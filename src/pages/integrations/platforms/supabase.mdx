@@ -17,21 +17,6 @@ You can use Phase to sync secrets to your Supabase project. The secrets are avai
   Import your secrets into Phase before you continue.
 </Warning>
 
-<Note>
-  Supabase reserves secret names that start with `SUPABASE_`, for example
-  `SUPABASE_URL` and `SUPABASE_ANON_KEY`. Supabase manages these secrets for
-  every project. The sync does not delete them and does not push Phase secrets
-  with this prefix. The sync logs list the skipped keys.
-</Note>
-
-<Note>
-  Supabase allows a maximum of 100 secrets per project. If a sync contains
-  more than 100 secrets, the sync fails before it writes changes to the
-  project. The sync logs show this error. The
-  [Edge Functions limits](https://supabase.com/docs/guides/functions/limits)
-  page lists all limits.
-</Note>
-
 ### Prerequisites
 
 - Sign up for the [Phase Console](/quickstart) and [create an App](/console/apps#create-an-app).
@@ -56,12 +41,6 @@ You can use Phase to sync secrets to your Supabase project. The secrets are avai
 </Note>
 
 ### Store authentication credentials in Phase
-
-<Note>
-  Phase protects your credentials with application-layer encryption. Phase
-  encrypts the credentials in your browser and decrypts them only in memory
-  during sync operations. Phase does not store your credentials in plaintext.
-</Note>
 
 1. Go to **Integrations** in the sidebar. Then click **Third-party credentials** in the integrations tab.
 
@@ -95,6 +74,13 @@ Phase encrypts and saves your credentials. You can view and manage them under *S
 
 ![supabase sync card](/assets/images/platform-integrations/supabase/supabase-sync-card.png)
 
+<Note>
+  Supabase reserves secret names that start with `SUPABASE_`, for example
+  `SUPABASE_URL` and `SUPABASE_ANON_KEY`. Supabase manages these secrets for
+  every project. The sync does not delete them and does not push Phase secrets
+  with this prefix. The sync logs list the skipped keys.
+</Note>
+
 Synced secrets are available to your Edge Functions without a redeploy. To see them, open the **Edge Functions → Secrets** page in the Supabase Dashboard, or use the Supabase CLI:
 
 ```fish
@@ -113,3 +99,11 @@ Deno.serve(async () => {
   )
 })
 ```
+
+<Note>
+  Supabase allows a maximum of 100 secrets per project. If a sync contains
+  more than 100 secrets, the sync fails before it writes changes to the
+  project. The sync logs show this error. The
+  [Edge Functions limits](https://supabase.com/docs/guides/functions/limits)
+  page lists all limits.
+</Note>

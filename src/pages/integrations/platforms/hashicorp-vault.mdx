@@ -199,13 +199,6 @@ Phase can automatically sync secrets to your Hashicorp Vault instance. First, yo
 
 ### Step 1: Set up your Vault credentials in Phase
 
-<Note>
-  Your credentials are kept secure with robust application-layer encryption.
-  Phase encrypts your credentials directly in the browser and only decrypts them
-  in memory to perform sync operations. Your credentials are never stored in
-  plaintext.
-</Note>
-
 1. Create a `role_id` and `secret_id` via the Vault CLI. See [Step 2](#step-2-setting-up-app-role-authentication-and-acl-policy) for instructions.
 
 2. Go to **Integrations** from the sidebar and click on **Add credentials** in the 'Service credentials' section
