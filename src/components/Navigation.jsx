@@ -386,6 +386,7 @@ export const navigation = [
       { title: 'Vercel', href: '/integrations/platforms/vercel' },
       { title: 'Railway', href: '/integrations/platforms/railway' },
       { title: 'Render', href: '/integrations/platforms/render' },
+      { title: 'Supabase', href: '/integrations/platforms/supabase' },
       { title: 'Jenkins', href: '/integrations/platforms/jenkins' },
       { title: 'CircleCI', href: '/integrations/platforms/circleci' },
       { title: 'AWS CodeBuild', href: '/integrations/platforms/aws-codebuild' },

@@ -72,6 +72,7 @@
 - [integrations/platforms/vercel](https://docs.phase.dev/integrations/platforms/vercel.md)
 - [integrations/platforms/railway](https://docs.phase.dev/integrations/platforms/railway.md)
 - [integrations/platforms/render](https://docs.phase.dev/integrations/platforms/render.md)
+- [integrations/platforms/supabase](https://docs.phase.dev/integrations/platforms/supabase.md)
 - [integrations/platforms/jenkins](https://docs.phase.dev/integrations/platforms/jenkins.md)
 - [integrations/platforms/circleci](https://docs.phase.dev/integrations/platforms/circleci.md)
 - [integrations/platforms/aws-codebuild](https://docs.phase.dev/integrations/platforms/aws-codebuild.md)
