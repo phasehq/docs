@@ -144,10 +144,10 @@ Server-side Encryption (SSE) is required for an app to be granted to a team — 
         A description for the team. Maximum 10,000 characters.
       </Property>
       <Property name="member_role_id" type="string">
-        Role ID to apply as the team's `memberRole` override. Must reference a role in the same organisation.
+        Role ID to apply as the team's `memberRole` override. Must reference a role in the same organisation. The limit on the permissions a caller can grant does not apply to overrides. Phase adds this override to the permissions of a user caller who creates or updates a team-owned service account.
       </Property>
       <Property name="service_account_role_id" type="string">
-        Role ID to apply as the team's `serviceAccountRole` override. Must reference a role in the same organisation.
+        Role ID to apply as the team's `serviceAccountRole` override. Must reference a role in the same organisation. The limit on the permissions a caller can grant does not apply to overrides. Phase adds this override to the permissions of a service account caller who creates or updates a team-owned service account.
       </Property>
     </Properties>
 
@@ -336,10 +336,10 @@ Server-side Encryption (SSE) is required for an app to be granted to a team — 
         The new description. Maximum 10,000 characters.
       </Property>
       <Property name="member_role_id" type="string">
-        New role override for human members. Pass `""` to clear the existing override.
+        New role override for human members. Pass `""` to clear the existing override. The limit on the permissions a caller can grant does not apply to overrides. Phase adds this override to the permissions of a user caller who creates or updates a team-owned service account.
       </Property>
       <Property name="service_account_role_id" type="string">
-        New role override for service-account members. Pass `""` to clear the existing override.
+        New role override for service-account members. Pass `""` to clear the existing override. The limit on the permissions a caller can grant does not apply to overrides. Phase adds this override to the permissions of a service account caller who creates or updates a team-owned service account.
       </Property>
     </Properties>
 

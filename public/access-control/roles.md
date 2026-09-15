@@ -21,6 +21,10 @@ To assign a role to a user or change a user's role:
 ![3-click-current-role](/assets/images/console/access-control/roles/switch-user-role/3-switch-user-role.png)
 4. Once selected, you will see a toast notification confirming that the role has been updated.
 
+<Note>
+ You can only assign a role whose permissions your own role also has. The dropdown disables roles with permissions that your role does not have. This limit does not apply to users with the `Owner` or `Admin` role.
+</Note>
+
 ## Managed Roles
 
 Phase provides managed roles out of the box to every organization.
@@ -44,9 +48,11 @@ The organization owner. This role is automatically assigned when a user creates 
 | **Roles** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Integration Credentials** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Network Access Policies** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **Logs** | Full access | ✅ |  |  |  |
 | **Teams** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **SCIM** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **SSO** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **Log Streams** | Full access | ✅ | ✅ | ✅ | ✅ |
 
 #### App-level permissions:
 
@@ -84,9 +90,11 @@ Admin users have access to most resources and permissions, and have global acces
 | **Roles** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Integration Credentials** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Network Access Policies** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **Logs** | Full access | ✅ |  |  |  |
 | **Teams** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **SCIM** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **SSO** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **Log Streams** | Full access | ✅ | ✅ | ✅ | ✅ |
 
 #### App-level permissions:
 
@@ -102,7 +110,7 @@ Admin users have access to most resources and permissions, and have global acces
 | **Members** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Service Accounts** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Integrations** | Full access | ✅ | ✅ | ✅ | ✅ |
-| **Encryption Mode** | Custom access | ✅ |  | ✅ |  |
+| **Encryption Mode** | Full access | ✅ |  | ✅ |  |
 | **Teams** | Full access | ✅ | ✅ | ✅ | ✅ |
 
 The `Owner` and `Admin` roles have global access. Learn more about global access [here](/access-control#global-access).
@@ -126,15 +134,17 @@ Management users with broad access to environments, secrets, and service account
 | **Roles** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Integration Credentials** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Network Access Policies** | Full access | ✅ | ✅ | ✅ | ✅ |
+| **Logs** | Full access | ✅ |  |  |  |
 | **Teams** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **SCIM** | No access | ❌ | ❌ | ❌ | ❌ |
 | **SSO** | No access | ❌ | ❌ | ❌ | ❌ |
+| **Log Streams** | No access | ❌ | ❌ | ❌ | ❌ |
 
 #### App-level permissions:
 
 | Resource | Access | Read | Create | Update | Delete |
 |----------|--------|------|--------|--------|--------|
-| **Environments** | Custom access | ✅ | ✅ | ✅ | ❌ |
+| **Environments** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Secrets** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **DynamicSecretLeases** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **RotatingSecrets** | Full access | ✅ | ✅ | ✅ | ✅ |
@@ -144,7 +154,7 @@ Management users with broad access to environments, secrets, and service account
 | **Members** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Service Accounts** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Integrations** | Full access | ✅ | ✅ | ✅ | ✅ |
-| **Encryption Mode** | Custom access | ✅ | ❌ | ✅ | ❌ |
+| **Encryption Mode** | Full access | ✅ |  | ✅ |  |
 | **Teams** | Full access | ✅ | ✅ | ✅ | ✅ |
 
 ### Service
@@ -166,9 +176,11 @@ Default role for Service Accounts, providing programmatic access to secrets with
 | **Roles** | Read access | ✅ | ❌ | ❌ | ❌ |
 | **Integration Credentials** | Read access | ✅ | ❌ | ❌ | ❌ |
 | **Network Access Policies** | Read access | ✅ | ❌ | ❌ | ❌ |
+| **Logs** | No access | ❌ |  |  |  |
 | **Teams** | No access | ❌ | ❌ | ❌ | ❌ |
 | **SCIM** | No access | ❌ | ❌ | ❌ | ❌ |
 | **SSO** | No access | ❌ | ❌ | ❌ | ❌ |
+| **Log Streams** | No access | ❌ | ❌ | ❌ | ❌ |
 
 #### App-level permissions:
 
@@ -176,7 +188,7 @@ Default role for Service Accounts, providing programmatic access to secrets with
 |----------|--------|------|--------|--------|--------|
 | **Environments** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Secrets** | Full access | ✅ | ✅ | ✅ | ✅ |
-| **DynamicSecretLeases** | Full access | ✅ | ✅ | ❌ | ❌ |
+| **DynamicSecretLeases** | Custom access | ✅ | ✅ | ❌ | ❌ |
 | **RotatingSecrets** | Read access | ✅ | ❌ | ❌ | ❌ |
 | **Lockbox** | No access | ❌ | ❌ | ❌ | ❌ |
 | **Logs** | No access | ❌ | ❌ | ❌ | ❌ |
@@ -184,7 +196,7 @@ Default role for Service Accounts, providing programmatic access to secrets with
 | **Members** | Read access | ✅ | ❌ | ❌ | ❌ |
 | **Service Accounts** | Read access | ✅ | ❌ | ❌ | ❌ |
 | **Integrations** | Read access | ✅ | ❌ | ❌ | ❌ |
-| **Encryption Mode** | Read access | ✅ | ❌ | ❌ | ❌ |
+| **Encryption Mode** | Read access | ✅ |  | ❌ |  |
 | **Teams** | Read access | ✅ | ❌ | ❌ | ❌ |
 
 ### Developer
@@ -206,9 +218,11 @@ Developers have limited permissions at the organization level and must be given 
 | **Roles** | Read access | ✅ | ❌ | ❌ | ❌ |
 | **Integration Credentials** | Custom access | ✅ | ✅ | ✅ | ❌ |
 | **Network Access Policies** | Read access | ✅ | ❌ | ❌ | ❌ |
+| **Logs** | Full access | ✅ |  |  |  |
 | **Teams** | Read access | ✅ | ❌ | ❌ | ❌ |
 | **SCIM** | No access | ❌ | ❌ | ❌ | ❌ |
 | **SSO** | No access | ❌ | ❌ | ❌ | ❌ |
+| **Log Streams** | No access | ❌ | ❌ | ❌ | ❌ |
 
 #### App-level permissions:
 
@@ -216,7 +230,7 @@ Developers have limited permissions at the organization level and must be given 
 |----------|--------|------|--------|--------|--------|
 | **Environments** | Custom access | ✅ | ✅ | ✅ | ❌ |
 | **Secrets** | Full access | ✅ | ✅ | ✅ | ✅ |
-| **DynamicSecretLeases** | Full access | ✅ | ✅ | ❌ | ❌ |
+| **DynamicSecretLeases** | Custom access | ✅ | ✅ | ❌ | ❌ |
 | **RotatingSecrets** | Read access | ✅ | ❌ | ❌ | ❌ |
 | **Lockbox** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Logs** | Read access | ✅ | ❌ | ❌ | ❌ |
@@ -224,7 +238,7 @@ Developers have limited permissions at the organization level and must be given 
 | **Members** | Read access | ✅ | ❌ | ❌ | ❌ |
 | **Service Accounts** | Custom access | ❌ | ✅ | ❌ | ❌ |
 | **Integrations** | Full access | ✅ | ✅ | ✅ | ✅ |
-| **Encryption Mode** | Custom access | ✅ |  | ✅ |  |
+| **Encryption Mode** | Full access | ✅ |  | ✅ |  |
 | **Teams** | Read access | ✅ | ❌ | ❌ | ❌ |
 
 ## Custom Roles
@@ -240,6 +254,10 @@ In addition to the managed roles, Phase allows you to create custom roles tailor
 <Warning>
 Please make sure to follow the [Principle of least privilege](https://en.wikipedia.org/wiki/Principle_of_least_privilege) when setting the access policy for roles. Casting a wider scope may inadvertently lead to [Privilege escalation](https://en.wikipedia.org/wiki/Privilege_escalation). 
 </Warning>
+
+<Note>
+ You can only grant permissions that your own role has. Phase disables the toggles for permissions that your role does not have. This limit does not apply to users with the `Owner` or `Admin` role.
+</Note>
 
 1. Navigate to the Access Control page from the sidebar and click on the Roles tab.
 ![1-navigate-to-access-control](/assets/images/console/access-control/roles/create-custom-roles/1-navigate-to-access-control.png)
@@ -308,3 +326,7 @@ Some actions require a combination of permissions across multiple resources. Bel
 3. Modify the role as needed.
 4. Save your changes.
 ![4-save-modified-role](/assets/images/console/access-control/roles/edit-custom-roles/4-save-modified-role.png)
+
+<Note>
+ You can only add permissions that your own role has. If the role already has permissions that your role does not have, you can keep them or remove them, but you cannot add them back. This limit does not apply to users with the `Owner` or `Admin` role.
+</Note>
