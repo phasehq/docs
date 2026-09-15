@@ -175,7 +175,7 @@ To add a new member, send an invite via the [Invites API](/public-api/invites) â
 
     - **The Owner's role is immutable via the API.** Any attempt to PUT the Owner's membership returns `403 Forbidden` with `{"error": "The Owner's role cannot be changed via the API. Use the ownership transfer flow."}`. Ownership transfer is a console-only flow.
     - Users cannot update their own role (`403`).
-    - Callers cannot assign a role that includes permissions their own role does not have (`403`). The error lists each extra permission. Callers with a global-access role are exempt.
+    - Callers cannot assign a role that includes permissions their own role does not have. The request returns `403 Forbidden` with `{"error": "You cannot assign the '<role>' role: it includes permissions your own role does not: <permissions>"}`. Callers with a global-access role are exempt.
     - User callers cannot update a member who holds a global-access role (e.g. Admin) unless they themselves hold a global-access role (`403`).
     - Service Account callers cannot update any member who holds a global-access role (`403`), nor can they assign a global-access role to any member (`403`).
 

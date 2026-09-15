@@ -140,6 +140,8 @@ Teams support two optional role overrides that change what permissions members h
 
 When a role override is set, it replaces the org role's `app_permissions` for resources accessed through that team. Org-level permissions are unaffected.
 
+The [limit on the permissions you can grant](/access-control/roles) does not apply to role overrides. When a team member creates or updates a team-owned service account, Phase adds the **Member role** override permissions to that member's own permissions.
+
 ### Union semantics
 
 When a user has multiple access grants to the same app — whether through individual (direct) access, one or more teams, or a combination — Phase takes the **union** of all applicable permissions. If *any* grant permits an action, the user is allowed to perform it.
@@ -164,6 +166,10 @@ Service accounts can be **owned by a team**, meaning their lifecycle and visibil
 
 ### Creating a team-owned service account
 
+<Note>
+  You can only select a role whose permissions your own role also has. If the team has a **Member role** override, Phase adds the permissions of that override to your own permissions for this check. This limit does not apply to users with the `Owner` or `Admin` role.
+</Note>
+
 1. On the team detail page, click **Create Team Service Account** in the Service Accounts section.
 
 2. Enter a name for the account. 
@@ -171,8 +177,6 @@ Service accounts can be **owned by a team**, meaning their lifecycle and visibil
 3. If the team has a defined Service Account role, the role for this account will be fixed. If there is no defined role for service accounts in the team, select a role for this account. 
 
 4. Click **Create**. The service account is automatically added as a member of the team and can access all apps and environments that the team has access to.
-
-The role of the account can only have permissions that your own role has. If the team has a **Member role** override, Phase adds the permissions of that override to your own permissions for this check. This limit does not apply to users with the Owner or Admin role.
 
 Team-owned service accounts always use **Server-side KMS**, which is enabled automatically on creation. This allows any team member with the appropriate `ServiceAccountTokens` permissions to generate tokens for the account — without needing to be a designated Service Account Handler. This is essential for dynamic team membership, including [SCIM-managed teams](#scim-managed-teams), where members may join or leave at any time.
 

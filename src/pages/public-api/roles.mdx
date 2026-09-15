@@ -335,7 +335,7 @@ Responses use camelCase keys (`appPermissions`, `globalAccess`). On POST and PUT
 
     Update a custom role's name, description, color, and/or permissions. At least one field must be provided. Default roles cannot be modified (`403 Forbidden`).
 
-    - The request can only add permissions that the caller's own role has. Otherwise the request returns `403 Forbidden` with `{"error": "You cannot grant permissions your own role does not include: <permissions>"}`. This limit applies only to the permissions that the request adds. The caller can change `name`, `description` or `color`, or remove permissions that the caller does not have. Callers with a global-access role (Owner or Admin) are exempt.
+    - The request can only add permissions that the caller's own role has. Otherwise the request returns `403 Forbidden` with `{"error": "You cannot grant permissions your own role does not include: <permissions>"}`. This limit applies only to the permissions that the request adds. The caller can change `name`, `description`, or `color`, or remove permissions that the caller does not have. Callers with a global-access role (Owner or Admin) are exempt.
 
     ### URL parameters
 
