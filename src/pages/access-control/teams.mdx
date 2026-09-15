@@ -172,6 +172,8 @@ Service accounts can be **owned by a team**, meaning their lifecycle and visibil
 
 4. Click **Create**. The service account is automatically added as a member of the team and can access all apps and environments that the team has access to.
 
+The role of the account can only have permissions that your own role has. If the team has a **Member role** override, Phase adds the permissions of that override to your own permissions for this check. This limit does not apply to users with the Owner or Admin role.
+
 Team-owned service accounts always use **Server-side KMS**, which is enabled automatically on creation. This allows any team member with the appropriate `ServiceAccountTokens` permissions to generate tokens for the account — without needing to be a designated Service Account Handler. This is essential for dynamic team membership, including [SCIM-managed teams](#scim-managed-teams), where members may join or leave at any time.
 
 Team-owned service accounts are visually distinguished with a team badge on both the team detail page and the organisation-level service accounts list.

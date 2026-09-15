@@ -213,6 +213,8 @@ Responses use camelCase keys (`appPermissions`, `globalAccess`). On POST and PUT
     Custom roles are not available on the Free plan. You must be on a Pro or Enterprise plan to create custom roles.
     </Note>
 
+    - The role can only include permissions that the caller's own role has. Otherwise the request returns `403 Forbidden` with `{"error": "You cannot grant permissions your own role does not include: <permissions>"}`. The error lists each extra permission as `<scope>:<resource>:<action>`, for example `permissions:SSO:create`. Callers with a global-access role (Owner or Admin) are exempt.
+
     ### JSON Body
 
     #### Required fields
@@ -332,6 +334,8 @@ Responses use camelCase keys (`appPermissions`, `globalAccess`). On POST and PUT
   <Col>
 
     Update a custom role's name, description, color, and/or permissions. At least one field must be provided. Default roles cannot be modified (`403 Forbidden`).
+
+    - The request can only add permissions that the caller's own role has. Otherwise the request returns `403 Forbidden` with `{"error": "You cannot grant permissions your own role does not include: <permissions>"}`. This limit applies only to the permissions that the request adds. The caller can change `name`, `description` or `color`, or remove permissions that the caller does not have. Callers with a global-access role (Owner or Admin) are exempt.
 
     ### URL parameters
 

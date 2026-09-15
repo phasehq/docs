@@ -36,6 +36,8 @@ You can also invite new members to your Organisation. To invite a new member, cl
 
 You are limited to selecting a non Global Access role when inviting a new member. This is because the user has not created an account and associated cryptographic keys. For more information on Global Access roles, see [Roles](/access-control#global-access).
 
+When you invite a member or change a member's role, you can only select a role whose permissions your own role also has. This limit does not apply to users with the Owner or Admin role.
+
 ## Settings
 
 This page shows your account and recovery info related to this Organisation. You can view your current role, preferences and download your account recovery kit from this screen. This page will also show you the current billing status of your Organisation.
