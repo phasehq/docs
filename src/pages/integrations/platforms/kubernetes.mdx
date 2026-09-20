@@ -36,7 +36,7 @@ helm repo add phase https://helm.phase.dev && helm repo update
 Install the Phase Secrets Operator:
 
 ```fish
-helm install phase-secrets-operator phase/phase-kubernetes-operator --set image.tag=v2.0.0
+helm install phase-secrets-operator phase/phase-kubernetes-operator --set image.tag=v2.0.1
 ```
 
 It's best practice to specify the version in production environments to avoid
@@ -57,7 +57,7 @@ Version 2.0 replaces the Python/Kopf operator with a Go/controller-runtime opera
 Helm only installs CRDs on first install, so apply the v2 CRD before upgrading. This makes the new fields (`phaseAppId`, `template.metadata`, `redeployLabelSelector`) available and is safe to run while the v1 operator is still running:
 
 ```fish
-kubectl apply -f https://raw.githubusercontent.com/phasehq/kubernetes-secrets-operator/v2.0.0/phase-kubernetes-operator/crds/crd-template.yaml
+kubectl apply -f https://raw.githubusercontent.com/phasehq/kubernetes-secrets-operator/v2.0.1/phase-kubernetes-operator/crds/crd-template.yaml
 ```
 
 Because the CRD was originally created by Helm, `kubectl apply` prints a one-time
@@ -68,7 +68,7 @@ automatically. This is expected and safe.
 
 ```fish
 helm repo update phase
-helm upgrade phase-secrets-operator phase/phase-kubernetes-operator --set image.tag=v2.0.0
+helm upgrade phase-secrets-operator phase/phase-kubernetes-operator --set image.tag=v2.0.1
 ```
 
 #### 3. Remove the legacy finalizer from existing resources
