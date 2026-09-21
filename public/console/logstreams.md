@@ -36,7 +36,7 @@ Log Streams continuously ship organisation audit logs and secret events from Pha
 
 ## Exported events
 
-Every event is a structured JSON envelope (`schema_version: 1`) aligned with OpenTelemetry semantic conventions. `event.category` is `secrets` or `org_audit`; `event.type` is one of `create`, `read`, `update`, `delete` or `access`. The `actor` block identifies who acted (a `user`, `service_account` with its token, `service_token`, or `phase` for system actions), and `phase.description` carries a human-readable summary of every event.
+Every event is a structured JSON envelope (`schema_version: 1`) aligned with OpenTelemetry semantic conventions. `event.category` is `secrets` or `org_audit`; `event.type` is one of `create`, `read`, `update`, `delete` or `access`. The `actor` block identifies who acted (a `user`, `service_account` with its token, `service_token` for historical events from a legacy service token, or `phase` for system actions), and `phase.description` carries a human-readable summary of every event.
 
 Secret events carry a `phase.secret` block (id, path, version, type — never the name or value). Organisation audit events instead carry a `phase.resource` block with a readable `type` slug (e.g. `app`, `environment`, `member`, `invite`, `role`, `service_account_token`, `rotating_secret`, `network_access_policy`, `log_stream`), the resource `id` and `metadata`, plus `old_values` / `new_values` for changes.
 

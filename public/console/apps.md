@@ -148,6 +148,6 @@ Once enabled, the settings page will show you the updated Encryption mode:
 To delete an App, click the "Delete" button in the Settings tab.
 
 <Warning>
- Deleting an App will permanently delete all Environments, Secrets, and Tokens
+ Deleting an App will permanently delete all Environments and Secrets
  associated with it.
 </Warning>
