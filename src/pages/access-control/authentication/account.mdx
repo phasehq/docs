@@ -102,4 +102,4 @@ To confirm deletion, type your email address into the confirmation dialog.
 Organisation audit logs are preserved for compliance. Events you performed remain in your organisations' logs, with the actor shown as *"Deleted account"*. Your account and its personal data are removed. Audit records can still contain identifying fields captured at the time of each event.
 </Note>
 
-Any active dynamic secret leases you hold are revoked at the provider before your account is removed. Existing service account tokens and organisation resources you created (network policies, service tokens) are unaffected: they belong to the organisation, not to you.
+Any active dynamic secret leases you hold are revoked at the provider before your account is removed. Existing service account tokens and organisation resources you created, such as network policies, are unaffected: they belong to the organisation, not to you.

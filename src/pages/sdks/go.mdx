@@ -80,7 +80,7 @@ Before interacting with the Phase service, initialize the SDK with your service 
 
 Parameters:
 
-- `token` type `string`: Your Phase Service Token (`pss_service:v1:...` or `pss_service:v2:...`) or User Token (`pss_user:v1:...`)
+- `token` type `string`: Your Phase Service Token (`pss_service:v2:...`) or User Token (`pss_user:v1:...`)
 - `host` type `string`: The URL of the Phase Console instance. Defaults to `https://console.phase.dev` if empty.
 - `debug` type `bool`: Setting to true will result in a higher level of log verbosity useful when debugging
 
@@ -93,7 +93,7 @@ import (
 )
 
 func main() {
-    token := "pss_service:v1:....."
+    token := "pss_service:v2:....."
     host := "https://console.phase.dev" // Adjust this for a self-hosted instance of Phase
     debug := false // For logging verbosity, disable in production
 
