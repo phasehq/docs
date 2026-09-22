@@ -221,7 +221,7 @@ Responses use camelCase keys (`appPermissions`, `globalAccess`). On POST and PUT
         The role name. Maximum 64 characters. Must be unique within the organisation (case-insensitive).
       </Property>
       <Property name="permissions" type="object">
-        The permissions object. Must contain exactly two keys: `permissions` (org-level) and `app_permissions` (app-level). The `global_access` flag cannot be set on custom roles — POST and PUT reject requests that include `global_access` (or `globalAccess`) under `permissions` with `400 Bad Request`. The retired `Tokens` app permission is accepted for backwards compatibility but ignored — it is dropped when the role is saved.
+        The permissions object. Must contain exactly two keys: `permissions` (org-level) and `app_permissions` (app-level). The `global_access` flag cannot be set on custom roles — POST and PUT reject requests that include `global_access` (or `globalAccess`) under `permissions` with `400 Bad Request`.
       </Property>
     </Properties>
 
@@ -342,7 +342,7 @@ Responses use camelCase keys (`appPermissions`, `globalAccess`). On POST and PUT
 
     ### JSON Body
 
-    When `permissions` is provided, the full object replaces the stored permissions and must contain exactly two keys: `permissions` and `app_permissions`. The camelCase variant `appPermissions` is also accepted on input. Sending `global_access` (or `globalAccess`) under `permissions` returns `400 Bad Request`. The retired `Tokens` app permission is accepted for backwards compatibility but ignored — it is dropped when the role is saved.
+    When `permissions` is provided, the full object replaces the stored permissions and must contain exactly two keys: `permissions` and `app_permissions`. The camelCase variant `appPermissions` is also accepted on input. Sending `global_access` (or `globalAccess`) under `permissions` returns `400 Bad Request`.
 
     <Properties>
       <Property name="name" type="string">
