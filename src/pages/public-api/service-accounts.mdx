@@ -125,7 +125,7 @@ When fetching a single service account, additional detail fields are included:
         The service account name. Maximum 64 characters.
       </Property>
       <Property name="role_id" type="string">
-        The ID of the role to assign. Must not be a role with global access (e.g. Owner or Admin).
+        The ID of the role to assign. Must not be a role with global access (e.g. Owner or Admin). The role can only include permissions that the caller's own role has. Otherwise the request returns `403 Forbidden` and the error lists each extra permission. For a team-owned service account, the caller's permissions also include the team's `memberRole` override (or `serviceAccountRole` for service account callers). Callers with a global-access role are exempt.
       </Property>
     </Properties>
 
@@ -314,7 +314,7 @@ When fetching a single service account, additional detail fields are included:
         The new name. Maximum 64 characters. HTML tags and ASCII control characters are stripped; whitespace is trimmed.
       </Property>
       <Property name="role_id" type="string">
-        The ID of the new role. Must not be a global-access role — service accounts cannot hold roles with `global_access: true`.
+        The ID of the new role. Must not be a global-access role — service accounts cannot hold roles with `global_access: true`. If the role changes, the new role can only include permissions that the caller's own role has. Otherwise the request returns `403 Forbidden` and the error lists each extra permission. For a team-owned service account, the caller's permissions also include the team's `memberRole` override (or `serviceAccountRole` for service account callers). Callers with a global-access role are exempt.
       </Property>
     </Properties>
 

@@ -44,6 +44,8 @@ Here is a list of the different categories of status codes returned by the Proto
 
     This error may also occur due to a [Network Access Policy](/access-control/network#network-access-policies) that restricts access from your IP address. 
     [Read more](https://docs.phase.dev/access-control/network#access-denied-exceptions) about Network Access Policy exceptions.
+
+    When a role holds permissions that the caller's own role does not have, a create or assign request returns this error. Assignment covers members, invites, service accounts, and team role overrides. A request that updates a role returns this error only when the update adds such a permission.
   </Property>
   <Property name="404">
     A 404 status code indicates that the requested resource does not exist, has been deleted, or belongs to a different organisation. The API does not distinguish between these cases to avoid leaking cross-organisation information.

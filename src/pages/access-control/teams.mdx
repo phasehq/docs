@@ -140,6 +140,8 @@ Teams support two optional role overrides that change what permissions members h
 
 When a role override is set, it replaces the org role's `app_permissions` for resources accessed through that team. Org-level permissions are unaffected.
 
+A role override can only include permissions that your own role has. The dropdown disables roles with permissions that your role does not have. This limit does not apply to users with the `Owner` or `Admin` role. When a team member creates or updates a team-owned service account, Phase adds the **Member role** override permissions to that member's own permissions.
+
 ### Union semantics
 
 When a user has multiple access grants to the same app — whether through individual (direct) access, one or more teams, or a combination — Phase takes the **union** of all applicable permissions. If *any* grant permits an action, the user is allowed to perform it.
@@ -163,6 +165,10 @@ If an app has SSE disabled, it won't appear in the app selection dialog when add
 Service accounts can be **owned by a team**, meaning their lifecycle and visibility are tied to that team. This is useful when a team needs dedicated service accounts for programmatic access that only team members can see and manage.
 
 ### Creating a team-owned service account
+
+<Note>
+  You can only select a role whose permissions your own role also has. If the team has a **Member role** override, Phase adds the permissions of that override to your own permissions for this check. This limit does not apply to users with the `Owner` or `Admin` role.
+</Note>
 
 1. On the team detail page, click **Create Team Service Account** in the Service Accounts section.
 
