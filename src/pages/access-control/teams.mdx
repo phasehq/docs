@@ -140,7 +140,7 @@ Teams support two optional role overrides that change what permissions members h
 
 When a role override is set, it replaces the org role's `app_permissions` for resources accessed through that team. Org-level permissions are unaffected.
 
-The [limit on the permissions you can grant](/access-control/roles) does not apply to role overrides. When a team member creates or updates a team-owned service account, Phase adds the **Member role** override permissions to that member's own permissions.
+A role override can only include permissions that your own role has. The dropdown disables roles with permissions that your role does not have. This limit does not apply to users with the `Owner` or `Admin` role. When a team member creates or updates a team-owned service account, Phase adds the **Member role** override permissions to that member's own permissions.
 
 ### Union semantics
 
