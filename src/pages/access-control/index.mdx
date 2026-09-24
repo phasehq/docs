@@ -78,7 +78,6 @@ Phase's RBAC system allows you to define permissions for Create, Read, Update, a
 | **Secrets** | Manage access to app secrets |
 | **Lockbox** | Control access to Lockbox secret sharing |
 | **Logs** | Manage access to app and secret audit logs |
-| **Tokens** | Control creation and management of access tokens |
 | **Members** | Manage user access within the app |
 | **Integrations** | Control setup and management of app integrations |
 | **Encryption Mode** | Manage encryption settings for the app |

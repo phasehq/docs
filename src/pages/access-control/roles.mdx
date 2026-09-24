@@ -64,7 +64,6 @@ The organization owner. This role is automatically assigned when a user creates 
 | **RotatingSecrets** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Lockbox** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Logs** | Full access | ✅ | ✅ | ✅ | ✅ |
-| **Tokens (Legacy)** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Members** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Service Accounts** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Integrations** | Full access | ✅ | ✅ | ✅ | ✅ |
@@ -106,7 +105,6 @@ Admin users have access to most resources and permissions, and have global acces
 | **RotatingSecrets** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Lockbox** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Logs** | Full access | ✅ | ✅ | ✅ | ✅ |
-| **Tokens (Legacy)** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Members** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Service Accounts** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Integrations** | Full access | ✅ | ✅ | ✅ | ✅ |
@@ -150,7 +148,6 @@ Management users with broad access to environments, secrets, and service account
 | **RotatingSecrets** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Lockbox** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Logs** | Full access | ✅ | ✅ | ✅ | ✅ |
-| **Tokens (Legacy)** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Members** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Service Accounts** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Integrations** | Full access | ✅ | ✅ | ✅ | ✅ |
@@ -192,7 +189,6 @@ Default role for Service Accounts, providing programmatic access to secrets with
 | **RotatingSecrets** | Read access | ✅ | ❌ | ❌ | ❌ |
 | **Lockbox** | No access | ❌ | ❌ | ❌ | ❌ |
 | **Logs** | No access | ❌ | ❌ | ❌ | ❌ |
-| **Tokens (Legacy)** | No access | ❌ | ❌ | ❌ | ❌ |
 | **Members** | Read access | ✅ | ❌ | ❌ | ❌ |
 | **Service Accounts** | Read access | ✅ | ❌ | ❌ | ❌ |
 | **Integrations** | Read access | ✅ | ❌ | ❌ | ❌ |
@@ -234,7 +230,6 @@ Developers have limited permissions at the organization level and must be given 
 | **RotatingSecrets** | Read access | ✅ | ❌ | ❌ | ❌ |
 | **Lockbox** | Full access | ✅ | ✅ | ✅ | ✅ |
 | **Logs** | Read access | ✅ | ❌ | ❌ | ❌ |
-| **Tokens (Legacy)** | Custom access | ✅ | ✅ | ❌ | ❌ |
 | **Members** | Read access | ✅ | ❌ | ❌ | ❌ |
 | **Service Accounts** | Custom access | ❌ | ✅ | ❌ | ❌ |
 | **Integrations** | Full access | ✅ | ✅ | ✅ | ✅ |
@@ -292,9 +287,6 @@ Some actions require a combination of permissions across multiple resources. Bel
     - `IntegrationCredentials:read`
 - Creating a new third party integration inside of an App
     - `Integrations:create`
-    - `Environments:read`
-- Creating a new Service Token:
-    - `Tokens:create`
     - `Environments:read`
 - Enable or disable SSE (Server-side Encryption):
     - `EncryptionMode:update`

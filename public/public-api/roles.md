@@ -189,7 +189,6 @@ Responses use camelCase keys (`appPermissions`, `globalAccess`). On POST and PUT
             "appPermissions": {
                 "Environments": ["read", "create", "update"],
                 "Secrets": ["create", "read", "update", "delete"],
-                "Tokens": ["read", "create"],
                 "Members": ["read"]
             },
             "globalAccess": false

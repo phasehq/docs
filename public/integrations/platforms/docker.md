@@ -117,7 +117,7 @@ CMD ["sh", "-c", "phase run \"python manage.py migrate && python manage.py runse
 Ensure the `PHASE_SERVICE_TOKEN` is securely provided to your container for authentication with Phase services.
 
 ```fish
-export PHASE_SERVICE_TOKEN=[pss_env:...]
+export PHASE_SERVICE_TOKEN=pss_service:v2:...
 ```
 
 ```fish

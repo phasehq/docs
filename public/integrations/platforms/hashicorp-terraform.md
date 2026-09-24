@@ -55,7 +55,7 @@ To configure the provider, you need to provide your Phase API credentials. We re
 
 ```hcl
 provider "phase" {
-  phase_token = "pss_service:v1:..." # or "pss_user:v1:..." // A Phase Service Token or a Phase User Token (PAT)
+  phase_token = "pss_service:v2:..." # or "pss_user:v1:..." // A Phase Service Account Token or a Phase User Token (PAT)
   // Alternatively supply a PHASE_TOKEN environment variable 
 }
 ```
@@ -66,7 +66,7 @@ If you are using a self-hosted instance of Phase, you can specify the API host u
 provider "phase" {
   host                 = "https://phase.example.io"
   skip_tls_verification = true # Optional, if your Phase instance is using a self-signed certificate, you can set this to true to skip TLS verification.
-  phase_token          = "pss_service:v1:..." # or "pss_user:v1:..." // A Phase Service Token or a Phase User Token (PAT)
+  phase_token          = "pss_service:v2:..." # or "pss_user:v1:..." // A Phase Service Account Token or a Phase User Token (PAT)
 }
 ```
 
