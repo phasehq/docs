@@ -27,21 +27,20 @@ function TabGroupHeader({ children, selectedIndex }) {
   return (
     <div className="flex min-h-[calc(theme(spacing.12)+1px)] flex-col gap-y-2 py-3 sm:flex-row sm:flex-wrap sm:items-start sm:gap-x-4 sm:gap-y-0">
       {hasTabs && (
-        <Tab.List className="-mb-3 flex w-full gap-3 overflow-x-auto border-b border-zinc-200 text-xs font-medium dark:border-zinc-700 sm:-mb-px sm:gap-4">
+        <Tab.List className="-mb-3 flex w-full gap-4 overflow-x-auto border-b border-zinc-200 dark:border-zinc-800 sm:-mb-px sm:gap-5">
           {Children.map(children, (child, childIndex) => {
             const { title, slug, icon: Icon } = child.props
             return (
               <Tab
                 key={slug || childIndex}
                 className={clsx(
-                  'border-b py-3 transition focus:[&:not(:focus-visible)]:outline-none',
-                  'flex items-center gap-2 whitespace-nowrap',
+                  'flex items-center gap-2 whitespace-nowrap border-b py-3 font-mono text-[11px] uppercase tracking-[0.12em] transition focus:[&:not(:focus-visible)]:outline-none',
                   childIndex === selectedIndex
                     ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400'
-                    : 'border-transparent text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-300'
+                    : 'border-transparent text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'
                 )}
               >
-                {Icon && <Icon className="h-4 w-4 flex-shrink-0" />}
+                {Icon && <Icon className="h-3.5 w-3.5 flex-shrink-0" />}
                 {getPanelTitle({ title, slug })}
               </Tab>
             )

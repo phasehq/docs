@@ -32,6 +32,7 @@
     "next": "14.2.1",
     "next-seo": "^6.0.0",
     "next-sitemap": "^4.2.3",
+    "ogl": "^1.0.11",
     "postcss": "^8.4.31",
     "postcss-focus-visible": "^6.0.4",
     "posthog-js": "^1.392.0",

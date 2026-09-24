@@ -40,13 +40,13 @@ const resources = [
 export function Platform() {
   return (
     <div className="my-16 xl:max-w-none">
-      <Heading level={2} id="guides">
+      <Heading level={2} id="platform">
         Platform
       </Heading>
-      <div className="not-prose mt-4 grid grid-cols-1 border-t border-zinc-900/10 gap-8 pt-10 sm:grid-cols-2 xl:grid-cols-4 dark:border-white/5">
+      <div className="not-prose mt-4 grid grid-cols-1 border-t border-zinc-200 gap-8 pt-10 sm:grid-cols-2 xl:grid-cols-4 dark:border-zinc-800">
         {resources.map((resource) => (
           <div key={resource.href}>
-            <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">
+            <h3 className="text-sm font-medium tracking-[-0.01em] text-zinc-900 dark:text-zinc-100">
               {resource.name}
             </h3>
             <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">

@@ -36,10 +36,10 @@ export function About() {
       <Heading level={2} id="guides">
         About Phase
       </Heading>
-      <div className="not-prose mt-4 grid grid-cols-1 gap-8 border-t border-zinc-900/10 pt-10 dark:border-white/5 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="not-prose mt-4 grid grid-cols-1 gap-8 border-t border-zinc-200 pt-10 dark:border-zinc-800 sm:grid-cols-2 xl:grid-cols-4">
         {resources.map((resource) => (
           <div key={resource.href}>
-            <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">
+            <h3 className="text-sm font-medium tracking-[-0.01em] text-zinc-900 dark:text-zinc-100">
               {resource.name}
             </h3>
             <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
