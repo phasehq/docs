@@ -46,6 +46,10 @@ By default, when you create a new Service Account it uses the [Service](/access-
 
 You may choose to select a different Managed role or a Custom role by clicking one from the dropdown.
 
+<Note>
+ You can only select a role whose permissions your own role also has. The dropdown disables roles with permissions that your role does not have. This limit does not apply to users with the `Owner` or `Admin` role.
+</Note>
+
 ![Create new service account](/assets/images/console/access-control/service-accounts/create-new-service-accounts/4-create-new-service-account.png)
 
 Click "Create service account". This will create a new account with the chosen name and role. 
@@ -72,6 +76,10 @@ To update the name of an account, simply click the account name at the top of th
 ### Update account role
 
 To update an account's role, click the role label to open the dropdown and select a role from the list. The selected role will be applied on selection.
+
+<Note>
+ You can only select a role whose permissions your own role also has. For a team-owned account, Phase also counts the permissions of the team [role override](/access-control/teams#role-overrides). This limit does not apply to users with the `Owner` or `Admin` role.
+</Note>
 
 ![Update service account role](/assets/images/console/access-control/service-accounts/manage-account/service-account-update-role.png)
 

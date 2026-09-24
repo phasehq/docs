@@ -89,6 +89,8 @@ The Phase End-to-End encryption implementation works in conjunction with the acc
 
 Global access is a special type of permission that grants users with a "global access" role implicit access to all Apps and Environments across the organization. Currently, Global access is reserved exclusively for the Phase managed `Owner` and `Admin` roles.
 
+Users can only grant permissions that their own role holds. The `Owner` and `Admin` roles are exempt from this limit. [Read more](/access-control/roles) about how roles work.
+
 ### External Auth Method Considerations
 
 - To use an external auth provider for programmatic authentication with Phase to access sensitive data (e.g., Secrets) via the Phase API, SDKs, or the Kubernetes Operator, you must enable Server-side Encryption (SSE) so that Phase can generate a Service Token on the server side with access to given application(s) or environment(s).

@@ -64,6 +64,7 @@ Invites live under the Members resource — all endpoints are namespaced as `/v1
 
     - The role must not have global access (i.e. Owner and Admin roles cannot be invited to).
     - The role must not permit creating service account tokens.
+    - The role must not include permissions that the caller's own role does not have. Otherwise the request returns `403 Forbidden` with `{"error": "You cannot assign the '<role>' role: it includes permissions your own role does not: <permissions>"}`. Callers with a global-access role are exempt.
     - The email is validated against RFC format; whitespace is trimmed and the local + domain parts are lowercased. Invalid emails return `400 Bad Request`.
     - The email must not already belong to an active member or a pending invite. Duplicate invites return `409 Conflict` with `{"error": "An active invite already exists for '<email>'."}`.
 
