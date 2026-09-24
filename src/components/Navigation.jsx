@@ -355,6 +355,10 @@ export const navigation = [
         href: '/integrations/platforms/azure-key-vault',
       },
       {
+        title: 'GCP Secret Manager',
+        href: '/integrations/platforms/gcp-secret-manager',
+      },
+      {
         title: 'Hashicorp Terraform',
         href: '/integrations/platforms/hashicorp-terraform',
       },
