@@ -14,6 +14,18 @@ import { JetBrains_Mono } from 'next/font/google'
 
 const options = {
   api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
+  // Started in `loaded` below, once the bundled recorder is in place.
+  disable_session_recording: true,
+  loaded: (posthog) => {
+    // Ship the replay recorder as our own chunk. posthog-js would otherwise
+    // lazy-load <api_host>/static/posthog-recorder.js, a filename EasyPrivacy
+    // blocks on any host, so uBlock Origin visitors were never recorded. The
+    // chunk registers itself on window and posthog-js skips the remote fetch;
+    // if the chunk fails to load, posthog-js still falls back to fetching it.
+    import('posthog-js/dist/posthog-recorder')
+      .catch(() => {})
+      .then(() => posthog.startSessionRecording())
+  },
   session_recording: {
     maskAllInputs: false,
     maskTextSelector: "", // Disable text masking
