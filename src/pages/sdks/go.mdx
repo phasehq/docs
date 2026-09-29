@@ -9,6 +9,7 @@ export const sections = [
   { title: 'Import', id: 'import-the-sdk' },
   { title: 'Initialize', id: 'initialize-the-sdk' },
   { title: 'Usage', id: 'usage' },
+  { title: 'Management API', id: 'management-api' },
 ]
 
 <Tag variant="small">RESOURCES</Tag>
@@ -159,9 +160,11 @@ type CreateOptions struct {
 }
 
 type KeyValuePair struct {
-    Key   string
-    Value string
-    Type  string // Per-pair type override; takes precedence over CreateOptions.Type
+    Key     string
+    Value   string
+    Type    string   // Per-pair type override; takes precedence over CreateOptions.Type
+    Comment string   // Optional comment
+    Tags    []string // Optional tag names; tags that do not exist yet are created
 }
 ```
 
@@ -213,7 +216,8 @@ type GetOptions struct {
     AppID                          string
     AppName                        string   // Alternative to AppID
     Keys                           []string // Optional: filter by specific key names
-    Tag                            string   // Optional: filter by tag
+    Tag                            string   // Optional: partial, case-insensitive tag match (client-side)
+    Tags                           []string // Optional: exact tag names, any match (server-side)
     Path                           string   // Optional: filter by path; empty returns secrets from all paths
     Dynamic                        bool     // Optional: include dynamic secrets
     Lease                          bool     // Optional: generate leases for dynamic secrets
@@ -239,6 +243,10 @@ type SecretResult struct {
     Overridden   bool         // true if a personal override is active
     IsDynamic    bool         // true for dynamic secrets
     DynamicGroup string       // provider group label for dynamic secrets
+    ID           string       // server-side identifier of the secret
+    Version      int
+    CreatedAt    string
+    UpdatedAt    string
 }
 ```
 
@@ -299,14 +307,18 @@ Options:
 type UpdateOptions struct {
     EnvName         string
     AppID           string
-    AppName         string // Alternative to AppID
+    AppName         string   // Alternative to AppID
+    ID              string   // Optional: match the secret by ID instead of Key; Key then renames it
     Key             string
-    Value           string
-    SourcePath      string // Path where the secret currently lives
-    DestinationPath string // Optional: move the secret to a new path
-    Override        bool   // Set a personal override
-    ToggleOverride  bool   // Toggle personal override on/off
-    Type            string // "secret", "sealed", or "config" — leave empty to keep existing type
+    Value           string   // Empty keeps the current value unless AllowEmptyValue is set
+    AllowEmptyValue bool     // Write an empty Value instead of keeping the current one
+    SourcePath      string   // Path where the secret currently lives
+    DestinationPath string   // Optional: move the secret to a new path
+    Override        bool     // Set a personal override
+    ToggleOverride  bool     // Toggle personal override on/off
+    Type            string   // "secret", "sealed", or "config" — leave empty to keep existing type
+    Comment         *string  // nil keeps the comment; an empty string clears it
+    Tags            []string // nil keeps the tags; an empty slice clears them
 }
 ```
 
@@ -332,9 +344,10 @@ Options:
 type DeleteOptions struct {
     EnvName      string
     AppID        string
-    AppName      string // Alternative to AppID
+    AppName      string   // Alternative to AppID
     KeysToDelete []string
     Path         string
+    IDs          []string // Optional: secret IDs to delete directly, without a key lookup
 }
 ```
 
@@ -448,3 +461,53 @@ if err != nil {
     log.Fatalf("Failed to toggle override: %v", err)
 }
 ```
+
+### Secret metadata
+
+Each `SecretResult` also carries the server-side `ID`, `Version`, `CreatedAt` and `UpdatedAt` of the secret, so callers that track state (for example the Terraform provider) can target a secret by ID:
+
+```go
+comment := "Rotated monthly"
+err := p.Update(phase.UpdateOptions{
+    EnvName: "Production",
+    AppID:   "app-id-here",
+    ID:      secret.ID,
+    Key:     "API_KEY_V2",          // optional new key name; leave empty to keep it
+    Comment: &comment,              // nil leaves the comment unchanged, "" clears it
+    Tags:    []string{"backend"},   // nil leaves the tags unchanged, an empty slice clears them
+})
+```
+
+`KeyValuePair` accepts `Comment` and `Tags` on create, and `GetOptions.Tags` filters by exact tag names server-side (secrets carrying any of them are returned).
+
+## Management API
+
+Apps, environments, roles, members, invites and service accounts can be managed with the same token through the Phase REST API. These methods exchange plain JSON: the server handles all key wrapping, so apps created this way use [server-side encryption](/console/apps#enable-sse), which the environment and access methods require. A service account token (`pss_service:v2`) or personal access token (`pss_user`) is needed, with a role that grants the corresponding permissions.
+
+```go
+// Apps and environments
+app, err := p.CreateApp(phase.CreateAppOptions{Name: "backend"}) // Development, Staging and Production
+apps, err := p.ListApps()
+env, err := p.CreateEnvironment(app.ID, "qa") // custom environments require a paid plan
+envs, err := p.ListEnvironments(app.ID)
+err = p.DeleteApp(app.ID)
+
+// Service accounts, access and tokens
+roles, err := p.ListRoles()
+sa, err := p.CreateServiceAccount(phase.CreateServiceAccountOptions{Name: "ci", RoleID: roles[0].ID})
+fmt.Println(sa.InitialToken.Token) // the full pss_service:v2 token is only returned once
+_, err = p.SetServiceAccountAccess(sa.ID, []phase.AppAccessInput{{ID: app.ID, EnvironmentIDs: []string{envs[0].ID}}})
+token, err := p.CreateServiceAccountToken(sa.ID, phase.CreateServiceAccountTokenOptions{Name: "deploy", ExpiresIn: 86400})
+err = p.DeleteServiceAccountToken(sa.ID, token.ID)
+
+// Members and invites
+invite, err := p.CreateInvite(phase.CreateInviteOptions{Email: "dev@example.com", RoleID: roles[0].ID})
+members, err := p.ListMembers()
+_, err = p.SetMemberAccess(members[0].ID, []phase.AppAccessInput{{ID: app.ID, EnvironmentIDs: []string{envs[0].ID}}})
+```
+
+Available methods: `ListApps`, `CreateApp`, `GetApp`, `UpdateApp`, `DeleteApp`, `ListEnvironments`, `CreateEnvironment`, `GetEnvironment`, `UpdateEnvironment`, `DeleteEnvironment`, `ListRoles`, `GetRole`, `ListMembers`, `GetMember`, `UpdateMemberRole`, `DeleteMember`, `GetMemberAccess`, `SetMemberAccess`, `ListInvites`, `CreateInvite`, `DeleteInvite`, `ListServiceAccounts`, `CreateServiceAccount`, `GetServiceAccount`, `UpdateServiceAccount`, `DeleteServiceAccount`, `SetServiceAccountAccess`, `CreateServiceAccountToken` and `DeleteServiceAccountToken`. See the [Public API reference](/public-api) for the fields of each object.
+
+<Note>
+  A missing resource is returned as a `*network.APIError` with `StatusCode == 404`; a permission or plan restriction as a `*network.AuthorizationError`.
+</Note>

@@ -28,19 +28,19 @@ Here is a list of the different categories of status codes returned by the Proto
     A 200 status code indicates a successful response.
   </Property>
   <Property name="201">
-    A 201 status code indicates that a new resource was created successfully (returned by POST endpoints).
+    A 201 status code indicates that a new resource was created successfully. Returned by the management POST endpoints (apps, environments, service accounts, tokens, invites, roles, teams); `POST /v1/secrets` returns `200` with the created secrets.
   </Property>
   <Property name="204">
-    A 204 status code indicates that the request succeeded with no response body. Used for DELETE endpoints.
+    A 204 status code indicates that the request succeeded with no response body. Returned by the management DELETE endpoints; `DELETE /v1/secrets` and lease revocation return `200` with a JSON message.
   </Property>
   <Property name="400">
     A 400 status code indicates a bad request. This is typically due to missing required fields, invalid input types, values exceeding length limits, or invalid email formats.
   </Property>
   <Property name="401">
-    A 401 status code indicates that no authentication credentials were provided or the token has expired or been deleted.
+    A 401 status code indicates that no authentication credentials were provided, the token has expired or been deleted, or a service account token does not have access to the requested App or Environment (`Service account cannot access this environment`).
   </Property>
   <Property name="403">
-    A 403 status code indicates an authentication or access error. Check your [authentication](/public-api#authentication) credentials if you see this error, and make sure the token you're using has the appropriate scope for the App and Environment you're trying to access.
+    A 403 status code indicates an authorization error: the token's role lacks the permission, a network access policy or plan restriction applies, or a Personal Access Token does not have access to the requested App or Environment. Check your [authentication](/public-api#authentication) credentials if you see this error.
 
     This error may also occur due to a [Network Access Policy](/access-control/network#network-access-policies) that restricts access from your IP address. 
     [Read more](https://docs.phase.dev/access-control/network#access-denied-exceptions) about Network Access Policy exceptions.
