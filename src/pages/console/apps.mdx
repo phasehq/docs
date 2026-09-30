@@ -49,6 +49,8 @@ You can expand a Secret to view its status in each Environment. Clicking an Envi
 
 The Phase Console has a "One-click access" menu in the top right of the screen when inside of an App. Open this menu and click to copy a one-liner for either the CLI or REST API to fetch secrets from the current environment and path based on the context (this defaults to the first environment and the root / path if in the App home). The ability to access secrets over the REST API requires an SSE (Server-Side Encryption) enabled App.
 
+![One-click access menu inside an App](/assets/images/console/apps/app-one-click-access.png)
+
 Here's a quick demo of how it works:
 
 <video controls autoPlay="true" muted loop><source src="/assets/images/console/apps/one-click-access.mp4" /></video>
@@ -92,6 +94,8 @@ To update the Environments that a specific user can access, click the "Manage us
 
 To remove a member from an App, click the "Remove member" button.
 
+![Remove a member from an App](/assets/images/console/apps/app-member-remove.png)
+
 ## Syncing
 
 Phase offers the ability to automatically sync secrets to various third-party platforms and services. This feature enables seamless deployment of secrets to services like GitHub Actions, Railway, AWS Secrets Manager, and HashiCorp Nomad.
@@ -100,6 +104,8 @@ Phase offers the ability to automatically sync secrets to various third-party pl
 
 1. Server-Side Encryption (SSE) must be enabled for the App to use secret syncing integrations. This allows Phase to securely manage and deploy secrets to external services.
 2. Appropriate permissions and access tokens for the target service must be configured.
+
+![SSE must be enabled before syncing](/assets/images/platform-integrations/secret-syncing-enable.png)
 
 ### Setting Up a Sync
 
@@ -113,6 +119,12 @@ To set up a new sync:
 
 Syncing allows Phase to keep your secrets up-to-date across different platforms automatically. This ensures consistency and reduces manual secret management tasks.
 
+Click **Manage** on a sync card to view its sync history, trigger a sync manually, pause automatic syncing or update the credentials it uses.
+
+![Manage sync dialog](/assets/images/platform-integrations/manage-sync.png)
+
+![Sync history](/assets/images/platform-integrations/manage-sync-history.png)
+
 ## Logs
 
 This screen shows you audit logs for all CRUD events for all Secrets and Environments in this App. You can expand a specific log event to view more information.
@@ -122,6 +134,8 @@ This screen shows you audit logs for all CRUD events for all Secrets and Environ
 ## Settings
 
 This screen shows you metadata for the App and allows you to perform administrative tasks such as changing the encryption mode of the App or deleting it permanently.
+
+![App settings tab](/assets/images/console/apps/app-settings.png)
 
 ### Encryption
 
@@ -133,19 +147,21 @@ Enabling SSE will store a copy of each Environment's root key on the server, enc
 
 To enable SSE for an App, click the "Enable SSE" button under the "Encryption" section of the App Settings tab.
 
-![enable sse button](/assets/images/console/settings/encryption-section-e2ee.webp)
+![enable sse button](/assets/images/console/settings/encryption-section-e2ee.png)
 
 Click "Enable" on the confirmation dialog:
 
-![enable sse dialog](/assets/images/console/settings/enable-sse-dialog.webp)
+![enable sse dialog](/assets/images/console/settings/enable-sse-dialog.png)
 
 Once enabled, the settings page will show you the updated Encryption mode:
 
-![sse enabled](/assets/images/console/settings/sse-enabled.webp)
+![sse enabled](/assets/images/console/settings/sse-enabled.png)
 
 ### Delete an App
 
 To delete an App, click the "Delete" button in the Settings tab.
+
+![Delete an App confirmation dialog](/assets/images/console/apps/app-delete.png)
 
 <Warning>
  Deleting an App will permanently delete all Environments and Secrets

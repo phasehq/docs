@@ -42,6 +42,8 @@ When a member is added to a team that already has app access, keys are provision
 
 1. Navigate to **Access** > **Teams** in the sidebar.
 
+   ![Teams tab](/assets/images/console/access-control/teams/teams-list.png)
+
 2. Click **Create Team**.
 
 3. Enter a **name** and optional **description** for the team.
@@ -49,6 +51,8 @@ When a member is added to a team that already has app access, keys are provision
 4. Optionally set **role overrides** (see [Role overrides](#role-overrides) below). If you skip this, team members will use their org role for app-level permissions.
 
 5. Click **Create**. The team is created with no members or app access — you'll add those next. You are automatically set as the team **owner**.
+
+   ![Create a new Team dialog](/assets/images/console/access-control/teams/2-create-team.png)
 
 ## Team ownership
 
@@ -75,11 +79,15 @@ The new owner must be an existing member of the team.
 
 4. Select a team member from the list and confirm.
 
+   ![Transfer team ownership dialog](/assets/images/console/access-control/teams/5-transfer-ownership.png)
+
 <Note>
   If a team has no owner, only organisation Owner and Admin roles can assign one. This is relevant for SCIM-managed teams, where the team is created automatically without a designated owner.
 </Note>
 
 ## Managing team members
+
+![Team detail page](/assets/images/console/access-control/teams/team-detail.png)
 
 ### Adding members
 
@@ -91,6 +99,10 @@ The new owner must be an existing member of the team.
 
 4. Click **Add**. If the team already has app access, encryption keys are provisioned immediately for the new members.
 
+   ![Add members to team dialog](/assets/images/console/access-control/teams/3-add-members.png)
+
+   ![Add service accounts to team dialog](/assets/images/console/access-control/teams/3-add-service-accounts.png)
+
 ### Removing members
 
 1. On the team detail page, find the member you want to remove.
@@ -98,6 +110,8 @@ The new owner must be an existing member of the team.
 2. Click the remove button next to their name.
 
 3. Confirm the removal. Phase will revoke the member's team-granted environment keys. If the member also has individual access to the same environments, those keys are preserved.
+
+   ![Remove a member from a team](/assets/images/console/access-control/teams/remove-member.png)
 
 ## Managing team app access
 
@@ -110,6 +124,8 @@ The new owner must be an existing member of the team.
 3. Select which **environments** within the app the team should have access to. Use **All environments** to toggle every environment at once.
 
 4. Click **Save**. Phase provisions environment encryption keys for all active team members. Members who haven't completed their account setup yet (e.g. SCIM-provisioned users who haven't logged in) will receive keys on their first login.
+
+   ![Manage app access dialog](/assets/images/console/access-control/teams/4-manage-app-access.png)
 
 ### Updating environment access
 
@@ -127,11 +143,15 @@ After a team has been added to an app, you can change which environments it has 
 
 2. Confirm the removal. All team-granted environment keys for that app are revoked for every team member.
 
+   ![Remove an app from a team](/assets/images/console/access-control/teams/remove-app.png)
+
 ## Role overrides
 
 By default, team members use their **org role's app-level permissions** when accessing team-granted apps. For example, a `Developer` in a team uses the Developer role's app permissions (can read/write secrets, but can't delete environments).
 
 Teams support two optional role overrides that change what permissions members have when accessing apps through that team:
+
+![Team role override dropdown](/assets/images/console/access-control/teams/role-overrides.png)
 
 | Override | Applies to | Description |
 |----------|-----------|-------------|
@@ -178,6 +198,8 @@ Service accounts can be **owned by a team**, meaning their lifecycle and visibil
 
 4. Click **Create**. The service account is automatically added as a member of the team and can access all apps and environments that the team has access to.
 
+   ![Create a Team Service Account dialog](/assets/images/console/access-control/teams/6-create-team-service-account.png)
+
 Team-owned service accounts always use **Server-side KMS**, which is enabled automatically on creation. This allows any team member with the appropriate `ServiceAccountTokens` permissions to generate tokens for the account — without needing to be a designated Service Account Handler. This is essential for dynamic team membership, including [SCIM-managed teams](#scim-managed-teams), where members may join or leave at any time.
 
 Team-owned service accounts are visually distinguished with a team badge on both the team detail page and the organisation-level service accounts list.
@@ -223,6 +245,10 @@ This prevents a common pitfall: if a user has both individual and team access to
 
 Each member's detail page (under **Access** > **Members** > member name) shows a **Teams** section listing all teams the member belongs to, along with links to each team's detail page.
 
+![Teams section on a member page](/assets/images/console/access-control/teams/member-page-teams.png)
+
 ### App access page
 
 Each app's **Access** > **Teams** tab shows all teams that have access to the app, the environments they can access, and their role overrides. You can add/remove teams and manage environment scoping directly from this page.
+
+![Teams tab under App access](/assets/images/console/access-control/teams/app-access-teams-tab.png)

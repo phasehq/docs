@@ -221,6 +221,8 @@ Alternatively, you can sync secrets directly to your GitHub organization. You ca
    The sync has been set up! Secrets will automatically be synced from your chosen Phase Environment to the GitHub repository as Dependabot Secrets.
    You can click on the **Manage** button on the Sync card to view sync logs, pause syncing, or update authentication credentials.
 
+   ![GitHub Dependabot sync card](/assets/images/platform-integrations/github/dependabot/gh-dependabot-sync-card.png)
+
 #### Troubleshooting
 
 - If you are using a self-hosted Phase instance and see a warning message about missing `GITHUB_INTEGRATION_CLIENT_ID` and `GITHUB_INTEGRATION_CLIENT_SECRET` while trying to set up GitHub integration credentials, this means the GitHub integration credentials have not been configured for your self-hosted deployment. Please provision the integration credentials following the [Third-party integrations configuration](/self-hosting/configuration/envars#third-party-integrations-configuration) guide, restart your deployment and then **hard refresh** the page in your browser.

@@ -79,8 +79,16 @@ To pivot from an exported secret event back to Phase, copy the `phase.secret.id`
 2. If retries are exhausted, the chunk is recorded as **failed** with its exact event time range, the stream is marked **degraded**, and shipping continues with newer events — one bad chunk never blocks the stream.
 3. If a later successful delivery covers a failed range (for example after an authentication recovery), the failure is **auto-resolved**.
 4. Anything still unresolved appears under the **out of sync** badge on the stream card. Click through to the filtered event history and press **Retry** on a row to re-ship exactly that range. Once a range falls fully outside the destination&apos;s ingestion window, the retry is refused — the destination would accept and silently discard the events, falsely marking the range recovered. Expired rows are auto-resolved as **Expired** after a grace period, and the events remain queryable in the Console. If only the older part of a range has expired, a retry ships the still-live tail and records the expired part as **skipped**.
+
+   ![Stream card with the out of sync badge](/assets/images/console/log-streams/log-stream-out-of-sync.png)
+
+   ![Unresolved deliveries with the Retry action](/assets/images/console/log-streams/log-stream-retry.png)
 5. **Authentication failures** skip retries entirely and pause the stream (retrying with a dead key is pointless). Fix the credentials, press **Resume**, and shipping continues from the stored cursor with no gap.
+
+   ![Paused stream with the Resume action](/assets/images/console/log-streams/log-stream-paused.png)
 6. **Deleting the stream&apos;s third-party credentials** also pauses it — a stream without credentials can never deliver, so it is paused visibly rather than left looking healthy. Select new credentials in the stream&apos;s configuration, save, and resume.
+
+   ![Paused stream card](/assets/images/console/log-streams/log-stream-paused-card.png)
 
 ### Backfilling missed events
 
@@ -145,6 +153,8 @@ Note: API keys are the right credential for log shipping: they are org-level, in
    ![Log Streams tab with the Create a Log Stream button](/assets/images/console/log-streams/create-a-log-stream-button.png)
 
 2. Select **Datadog**, then your Datadog credentials.
+
+   ![Choose the Datadog provider](/assets/images/console/log-streams/create-a-log-stream-provider.png)
 3. Choose the event sources to ship.
 4. Optionally configure the Datadog `service` name, additional tags and the per-chunk retry limit. Tag values are sanitised to Datadog&apos;s tag rules (lowercased, spaces and special characters become underscores).
 5. Click **Test connection** to validate the API key against Datadog&apos;s key-validation endpoint (no log data is written), then **Create**.

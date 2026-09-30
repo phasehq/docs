@@ -29,6 +29,10 @@ Two-factor authentication protects **Console sign-in** only. Personal access tok
 
 5. Save your **recovery codes**: reveal, copy, or download them before finishing. They are shown only once.
 
+   ![2FA setup: recovery codes](/assets/images/auth/account/totp-recovery-codes.png)
+
+   ![2FA setup: recovery codes revealed](/assets/images/auth/account/totp-recovery-codes-revealed.png)
+
 Once enabled, the Account page shows the TOTP status and your remaining recovery codes.
 
 ![TOTP enabled on the Account page](/assets/images/auth/account/totp-enabled.png)
@@ -38,6 +42,8 @@ Phase sends you an email notification when 2FA is enabled, when it is disabled, 
 ## Signing in with 2FA
 
 After your primary sign-in method succeeds (entering your password, or completing the OAuth/SSO round trip), Phase prompts for a 6-digit code from your authenticator app. The code is accepted with a small clock-skew tolerance (one 30-second step in either direction), and each code can only be used once.
+
+![2FA challenge at sign-in](/assets/images/auth/account/login-2fa.png)
 
 2FA applies uniformly to **all** of your sign-in methods, including organisation-level SSO. If your identity provider also performs its own MFA, you will complete both. Phase does not skip its challenge based on upstream MFA claims.
 
@@ -49,9 +55,15 @@ After 10 incorrect codes, verification is locked until 15 minutes after the firs
 
 When you enable 2FA, Phase generates 10 single-use recovery codes. Each can be used once in place of an authenticator code (including at sign-in via the *Use a recovery code* option) if you lose access to your device.
 
+![Signing in with a recovery code](/assets/images/auth/account/login-2fa-recovery-code.png)
+
 - Store them somewhere safe (a password manager or printed copy). They are displayed only at generation time.
 - Your remaining code count is shown on the Account page, with a warning when you are running low.
 - Regenerate a fresh set at any time from the Account page. Under **Two-factor authentication**, hover the TOTP card and click **Manage**, then **Regenerate recovery codes**. This invalidates all previous codes and requires a current authenticator code or an unused recovery code.
+
+![Manage two-factor authentication dialog](/assets/images/auth/account/totp-manage.png)
+
+![Regenerate recovery codes](/assets/images/auth/account/totp-regenerate.png)
 
 <Note>
 Recovery codes protect your **sign-in**, not your encrypted data. Your secrets remain protected by your sudo password and recovery kit. Keep both independently safe.
@@ -60,6 +72,8 @@ Recovery codes protect your **sign-in**, not your encrypted data. Your secrets r
 ## Disable 2FA
 
 On the Account page, under **Two-factor authentication**, hover the TOTP card and click **Manage**, then **Disable two-factor authentication**. Enter a current authenticator code or an unused recovery code to confirm. Signing in no longer requires a code afterwards, and your remaining recovery codes are invalidated.
+
+![Disable two-factor authentication](/assets/images/auth/account/totp-disable.png)
 
 If you have lost both your authenticator device and your recovery codes, you cannot disable 2FA yourself. Contact your instance administrator (self-hosted) or Phase support (cloud).
 
