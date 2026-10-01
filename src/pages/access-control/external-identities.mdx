@@ -64,7 +64,7 @@ Phase currently supports the following external identity providers:
 
 To set up an External Identity for use with a Phase Service Account, follow these steps. First, navigate to the **Access Control** page from the sidebar, and select **External Identities**. Then, choose a provider:
 
-![external identities page](/assets/images/console/access-control/external-identities/external-identities.png)
+![external identities page](/assets/images/console/access-control/external-identities/external-identities.webp)
 
 Then, enter the required information to configure the external identity. For all providers, you will need to provide basic information about the identity and how tokens are generated:
 
@@ -104,7 +104,7 @@ For AWS IAM, you will need to provide the following information:
   </Property>
 </Properties>
 
-![configure new identity](/assets/images/console/access-control/external-identities/configure-new-identity.png)
+![configure new identity](/assets/images/console/access-control/external-identities/configure-new-identity.webp)
 
 ### Azure
 
@@ -133,7 +133,7 @@ az vm identity assign --resource-group <rg> --name <vm-name>
 You can also find it in the Azure Portal under the resource's Identity blade.
 </Note>
 
-![configure new Azure identity](/assets/images/console/access-control/external-identities/configure-new-identity-azure.png)
+![configure new Azure identity](/assets/images/console/access-control/external-identities/configure-new-identity-azure.webp)
 
 <Diagram caption="External Identities authentication with Azure">
 {`
@@ -166,7 +166,7 @@ sequenceDiagram
 
 Once an External Identity is created, it will appear in the list on the **External Identities** page. From here, you can view details, edit configurations, or delete the identity. 
 
-![external identities list](/assets/images/console/access-control/external-identities/external-identities-list.png)
+![external identities list](/assets/images/console/access-control/external-identities/external-identities-list.webp)
 
 ## Bind an External Identity to a Service Account
 
@@ -176,11 +176,11 @@ To use an External Identity, the Service Account must have [Server-side KMS](/ac
 
 Once you have configured an External Identity, you can bind it to a Phase Service Account. To do this, navigate to the **Service Accounts** page, select the desired Service Account and click **Manage** to open the account detail page. Scroll down to the **External Identities** section and click **Manage External Identities**:
 
-![manage external identities button](/assets/images/console/access-control/external-identities/manage-account-identities-button.png)
+![manage external identities button](/assets/images/console/access-control/external-identities/manage-account-identities-button.webp)
 
 From the dialog, select the External Identity you want to bind to this Service Account and enable it using the toggle switch. Click **Save** to apply the changes:
 
-![add external identity to service account](/assets/images/console/access-control/external-identities/manage-account-identities-dialog.png)
+![add external identity to service account](/assets/images/console/access-control/external-identities/manage-account-identities-dialog.webp)
 
 ## Authenticate with External Identities
 

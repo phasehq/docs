@@ -16,23 +16,23 @@ A Phase App is used to manage [Secrets](/console/secrets) for a single project, 
 Create an App by clicking the "+" button on the Apps screen. Enter a name for your App and your `sudo` password if prompted.
 You can also optionally choose to initialize your App with example secrets. This option is automatically selected for your first App.
 
-![create app](/assets/images/console/apps/app-create.png)
+![create app](/assets/images/console/apps/app-create.webp)
 
 ## App Readme
 
 Each App can have a readme that serves as a space for developer documentation, runbooks, onboarding notes, or any other relevant information. The readme is displayed on the App's **Home** tab and supports full markdown rendering, including headings, lists, links, code blocks, and blockquotes.
 
-![app readme on home tab](/assets/images/console/apps/app-readme-home.png)
+![app readme on home tab](/assets/images/console/apps/app-readme-home.webp)
 
 Click the readme to expand it in a full-screen dialog for easier reading.
 
-![expanded app readme with markdown rendering](/assets/images/console/apps/app-readme-expanded.png)
+![expanded app readme with markdown rendering](/assets/images/console/apps/app-readme-expanded.webp)
 
 ### Editing the readme
 
 To add or edit a readme, go to the App's **Settings** tab. The editor supports a **Write** and **Preview** toggle so you can author Markdown and preview the rendered output before saving.
 
-![app readme editor in settings](/assets/images/console/apps/app-readme-editor.png)
+![app readme editor in settings](/assets/images/console/apps/app-readme-editor.webp)
 
 <Note>
 New organisations are created with an example app that includes a sample readme demonstrating the available Markdown features.
@@ -43,11 +43,13 @@ New organisations are created with an example app that includes a sample readme 
 This screen shows an overview of all Secrets in this App across all Environments. You can explore a specific Environment by clicking the Environment name in the column headers.
 You can expand a Secret to view its status in each Environment. Clicking an Environment name will take you to this Secret in the respective Environment management screen.
 
-![app secrets](/assets/images/console/apps/app-secrets.png)
+![app secrets](/assets/images/console/apps/app-secrets.webp)
 
 ### One-click secret access
 
 The Phase Console has a "One-click access" menu in the top right of the screen when inside of an App. Open this menu and click to copy a one-liner for either the CLI or REST API to fetch secrets from the current environment and path based on the context (this defaults to the first environment and the root / path if in the App home). The ability to access secrets over the REST API requires an SSE (Server-Side Encryption) enabled App.
+
+![One-click access menu inside an App](/assets/images/console/apps/app-one-click-access.webp)
 
 Here's a quick demo of how it works:
 
@@ -65,32 +67,34 @@ You can add a Service Account to any App from the respective App's "Access" tab.
 
 1. Click "Service accounts" on the left, and then "Add service account"
 
-![Add service account to app](/assets/images/console/access-control/service-accounts/manage-account/add-to-app-1.png)
+![Add service account to app](/assets/images/console/access-control/service-accounts/manage-account/add-to-app-1.webp)
 
 2. Select the service account from the list of accounts. Next, select the Environments that this account should have access to. Once you have selected the account and scope, click "Add"
 
-![Add service account to app](/assets/images/console/access-control/service-accounts/manage-account/add-to-app-2.png)
+![Add service account to app](/assets/images/console/access-control/service-accounts/manage-account/add-to-app-2.webp)
 
 3. The account will now have access to the Environments you selected. You can always update the Environment scope for this account or remove it from the App entirely. 
 
-![Add service account to app](/assets/images/console/access-control/service-accounts/manage-account/add-to-app-3.png)
+![Add service account to app](/assets/images/console/access-control/service-accounts/manage-account/add-to-app-3.webp)
 
 ### Add a member to an App
 
 You can add a new user to any App from the respective App's "Access" tab. To add a member to an App, click the "+ Add a member" button. Select an Organization member from the dropdown list, select which Environments to grant them access to, and click "Add".
-![app member add](/assets/images/console/apps/app-access-members-tab.png)
+![app member add](/assets/images/console/apps/app-access-members-tab.webp)
 
-![app member add](/assets/images/console/apps/app-member-add.png)
+![app member add](/assets/images/console/apps/app-member-add.webp)
 
 ### Update Environment access for a member
 
 To update the Environments that a specific user can access, click the "Manage user access" button. Update the Environment selection and click "Save".
 
-![app member manage access](/assets/images/console/apps/app-member-manage.png)
+![app member manage access](/assets/images/console/apps/app-member-manage.webp)
 
 ### Remove a member from an App
 
 To remove a member from an App, click the "Remove member" button.
+
+![Remove a member from an App](/assets/images/console/apps/app-member-remove.webp)
 
 ## Syncing
 
@@ -101,6 +105,8 @@ Phase offers the ability to automatically sync secrets to various third-party pl
 1. Server-Side Encryption (SSE) must be enabled for the App to use secret syncing integrations. This allows Phase to securely manage and deploy secrets to external services.
 2. Appropriate permissions and access tokens for the target service must be configured.
 
+![SSE must be enabled before syncing](/assets/images/platform-integrations/secret-syncing-enable.webp)
+
 ### Setting Up a Sync
 
 To set up a new sync:
@@ -109,19 +115,27 @@ To set up a new sync:
 2. Click on "Create a new sync" and select the desired service.
 3. Follow the prompts to configure the sync, including selecting the Environment and specific secrets to sync.
 
-![secret syncing](/assets/images/console/apps/app-sync.png)
+![secret syncing](/assets/images/console/apps/app-sync.webp)
 
 Syncing allows Phase to keep your secrets up-to-date across different platforms automatically. This ensures consistency and reduces manual secret management tasks.
+
+Click **Manage** on a sync card to view its sync history, trigger a sync manually, pause automatic syncing or update the credentials it uses.
+
+![Manage sync dialog](/assets/images/platform-integrations/manage-sync.webp)
+
+![Sync history](/assets/images/platform-integrations/manage-sync-history.webp)
 
 ## Logs
 
 This screen shows you audit logs for all CRUD events for all Secrets and Environments in this App. You can expand a specific log event to view more information.
 
-![app logs](/assets/images/console/apps/app-logs.png)
+![app logs](/assets/images/console/apps/app-logs.webp)
 
 ## Settings
 
 This screen shows you metadata for the App and allows you to perform administrative tasks such as changing the encryption mode of the App or deleting it permanently.
+
+![App settings tab](/assets/images/console/apps/app-settings.webp)
 
 ### Encryption
 
@@ -146,6 +160,8 @@ Once enabled, the settings page will show you the updated Encryption mode:
 ### Delete an App
 
 To delete an App, click the "Delete" button in the Settings tab.
+
+![Delete an App confirmation dialog](/assets/images/console/apps/app-delete.webp)
 
 <Warning>
  Deleting an App will permanently delete all Environments and Secrets

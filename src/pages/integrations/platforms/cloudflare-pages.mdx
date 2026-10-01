@@ -71,15 +71,15 @@ Scroll down and click **Continue to summary**
 
 1. Go to **Integrations** from the sidebar and click on **Third-party credentials** in the integrations tab.
 
-![Go to integrations](/assets/images/platform-integrations/integrations-sidebar.png)
+![Go to integrations](/assets/images/platform-integrations/integrations-sidebar.webp)
 
 2. Click on **Cloudflare**
 
-![Create Cloudflare credentials](/assets/images/platform-integrations/cloudflare-pages/create-cf-creds-button.png)
+![Create Cloudflare credentials](/assets/images/platform-integrations/cloudflare-pages/create-cf-creds-button.webp)
 
 3. Copy and paste your `Account ID` and `Access token` from the Cloudflare dashboard. Add a descriptive name for these credentials and click **Save**
 
-![Input Cloudflare credentials](/assets/images/platform-integrations/cloudflare-pages/cf-creds-input.png)
+![Input Cloudflare credentials](/assets/images/platform-integrations/cloudflare-pages/cf-creds-input.webp)
 
 ## Step 2: Sync Secrets from Phase
 
@@ -89,11 +89,11 @@ Now that you have set up your Cloudflare account with Phase, you can start creat
 
 1. Select **Cloudflare Pages** under the 'Syncing' tab.
 
-![Create cloudflare pages sync](/assets/images/platform-integrations/cloudflare-pages/phase-console-cloudflare-pages.png)
+![Create cloudflare pages sync](/assets/images/platform-integrations/cloudflare-pages/phase-console-cloudflare-pages.webp)
 
 2. Select the credentials stored in the previous step as the authentication method for this sync, and click **Next**
 
-![Choose sync authentication credentials](/assets/images/platform-integrations/cloudflare-pages/create-sync-choose-creds.png)
+![Choose sync authentication credentials](/assets/images/platform-integrations/cloudflare-pages/create-sync-choose-creds.webp)
 
 <Note>
   If you see an error message and cannot proceed to the next screen, it is most
@@ -105,8 +105,8 @@ Now that you have set up your Cloudflare account with Phase, you can start creat
 3. Choose the source and destination to sync secrets. Select an Environment as the source for secrets along with the Path if you have a specific folder you want to sync from.
    Next, select your Cloudflare Pages project from the 'Cloudflare project' field, and select either the 'Preview' or 'Production' environment. Once you have selected your desired source and destination, click **Create**.
 
-![Choose sync source and destination](/assets/images/platform-integrations/cloudflare-pages/create-sync-source-destination.png)
+![Choose sync source and destination](/assets/images/platform-integrations/cloudflare-pages/create-sync-source-destination.webp)
 
 The sync has been set up! Secrets will automatically be Synced from your chosen Phase Environment to the Cloudflare pages project. You can click on the **Manage** button on the Sync card to view sync logs, pause syncing or update authentication credentials.
 
-![Sync created](/assets/images/platform-integrations/cloudflare-pages/sync-created.png)
+![Sync created](/assets/images/platform-integrations/cloudflare-pages/sync-created.webp)

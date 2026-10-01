@@ -80,15 +80,15 @@ To pivot from an exported secret event back to Phase, copy the `phase.secret.id`
 3. If a later successful delivery covers a failed range (for example after an authentication recovery), the failure is **auto-resolved**.
 4. Anything still unresolved appears under the **out of sync** badge on the stream card. Click through to the filtered event history and press **Retry** on a row to re-ship exactly that range. Once a range falls fully outside the destination&apos;s ingestion window, the retry is refused — the destination would accept and silently discard the events, falsely marking the range recovered. Expired rows are auto-resolved as **Expired** after a grace period, and the events remain queryable in the Console. If only the older part of a range has expired, a retry ships the still-live tail and records the expired part as **skipped**.
 
-   ![Stream card with the out of sync badge](/assets/images/console/log-streams/log-stream-out-of-sync.png)
+   ![Stream card with the out of sync badge](/assets/images/console/log-streams/log-stream-out-of-sync.webp)
 
-   ![Unresolved deliveries with the Retry action](/assets/images/console/log-streams/log-stream-retry.png)
+   ![Unresolved deliveries with the Retry action](/assets/images/console/log-streams/log-stream-retry.webp)
 5. **Authentication failures** skip retries entirely and pause the stream (retrying with a dead key is pointless). Fix the credentials, press **Resume**, and shipping continues from the stored cursor with no gap.
 
-   ![Paused stream with the Resume action](/assets/images/console/log-streams/log-stream-paused.png)
+   ![Paused stream with the Resume action](/assets/images/console/log-streams/log-stream-paused.webp)
 6. **Deleting the stream&apos;s third-party credentials** also pauses it — a stream without credentials can never deliver, so it is paused visibly rather than left looking healthy. Select new credentials in the stream&apos;s configuration, save, and resume.
 
-   ![Paused stream card](/assets/images/console/log-streams/log-stream-paused-card.png)
+   ![Paused stream card](/assets/images/console/log-streams/log-stream-paused-card.webp)
 
 ### Backfilling missed events
 
@@ -101,11 +101,11 @@ Backfilling covers ranges a stream failed to deliver while active. It does not e
 
 - **Pause / Resume**: pausing stops all egress; resuming continues from the stored cursor with no gap (subject to the destination&apos;s ingestion window).
 
-  ![Log stream configuration tab with status, pause control and event source toggles](/assets/images/console/log-streams/log-stream-config.png)
+  ![Log stream configuration tab with status, pause control and event source toggles](/assets/images/console/log-streams/log-stream-config.webp)
 
 - **Events tab**: every delivery is recorded — `Completed`, `Failed` or `Skipped` — with its event count, attempts, exact time range and error detail. Failed rows stay listed until they are resolved by a successful re-ship, and can be retried individually. Skipped rows record ranges that fell outside the destination&apos;s ingestion window — they cannot be re-shipped and auto-resolve as **Expired**.
 
-  ![Events tab showing the delivery history with status filters](/assets/images/console/log-streams/log-stream-events.png)
+  ![Events tab showing the delivery history with status filters](/assets/images/console/log-streams/log-stream-events.webp)
 
 - **Stream options**: a `service` name for the destination (default `phase-console`), free-form tags, and the per-chunk retry limit.
 
@@ -135,35 +135,35 @@ Note: API keys are the right credential for log shipping: they are org-level, in
 
 1. In the Phase Console, go to **Integrations** → **Third-party credentials** and click **+ Add credentials**.
 
-   ![Third-party credentials tab with the Add credentials button](/assets/images/console/log-streams/create-new-cred-button.png)
+   ![Third-party credentials tab with the Add credentials button](/assets/images/console/log-streams/create-new-cred-button.webp)
 
 2. Select the **Datadog** card.
 
-   ![Create new service credentials dialog with the Datadog card](/assets/images/console/log-streams/create-new-cred-datadog-1.png)
+   ![Create new service credentials dialog with the Datadog card](/assets/images/console/log-streams/create-new-cred-datadog-1.webp)
 
 3. Enter your **API key** and pick your **site** from the region dropdown. The optional **application key** is not required for log streaming.
 4. Give the credentials a descriptive name and save.
 
-   ![Datadog credential form with API key, site region and name](/assets/images/console/log-streams/create-new-cred-datadog-2.png)
+   ![Datadog credential form with API key, site region and name](/assets/images/console/log-streams/create-new-cred-datadog-2.webp)
 
 ### Step 3: Create a Log Stream
 
 1. Go to **Integrations** → **Log Streams** and click **Create a Log Stream**.
 
-   ![Log Streams tab with the Create a Log Stream button](/assets/images/console/log-streams/create-a-log-stream-button.png)
+   ![Log Streams tab with the Create a Log Stream button](/assets/images/console/log-streams/create-a-log-stream-button.webp)
 
 2. Select **Datadog**, then your Datadog credentials.
 
-   ![Choose the Datadog provider](/assets/images/console/log-streams/create-a-log-stream-provider.png)
+   ![Choose the Datadog provider](/assets/images/console/log-streams/create-a-log-stream-provider.webp)
 3. Choose the event sources to ship.
 4. Optionally configure the Datadog `service` name, additional tags and the per-chunk retry limit. Tag values are sanitised to Datadog&apos;s tag rules (lowercased, spaces and special characters become underscores).
 5. Click **Test connection** to validate the API key against Datadog&apos;s key-validation endpoint (no log data is written), then **Create**.
 
-   ![Create a Log Stream dialog with credentials, event sources and Datadog destination options](/assets/images/console/log-streams/create-a-log-stream-dialog.png)
+   ![Create a Log Stream dialog with credentials, event sources and Datadog destination options](/assets/images/console/log-streams/create-a-log-stream-dialog.webp)
 
 The new stream appears with its health status, per-source delivery state and a deep link to the shipped logs in Datadog:
 
-![Log stream card showing per-source delivery status and the Explore logs in Datadog link](/assets/images/console/log-streams/log-stream-card.png)
+![Log stream card showing per-source delivery status and the Explore logs in Datadog link](/assets/images/console/log-streams/log-stream-card.webp)
 
 Events will appear in the Datadog **Log Explorer** under `source:phase` within about a minute. Example events as they land in Datadog:
 

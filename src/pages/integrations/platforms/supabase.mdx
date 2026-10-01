@@ -44,15 +44,15 @@ You can use Phase to sync secrets to your Supabase project. The secrets are avai
 
 1. Go to **Integrations** in the sidebar. Then click **Third-party credentials** in the integrations tab.
 
-![Go to integrations](/assets/images/platform-integrations/integrations-sidebar.png)
+![Go to integrations](/assets/images/platform-integrations/integrations-sidebar.webp)
 
 2. Click **Supabase**.
 
-![supabase-create-creds](/assets/images/platform-integrations/supabase/add-credentials-supabase-1.png)
+![supabase-create-creds](/assets/images/platform-integrations/supabase/add-credentials-supabase-1.webp)
 
 3. Enter your Supabase `Access Token` from the previous step. Enter a descriptive name and click **Save**.
 
-![supabase-input-creds](/assets/images/platform-integrations/supabase/add-credentials-supabase-2.png)
+![supabase-input-creds](/assets/images/platform-integrations/supabase/add-credentials-supabase-2.webp)
 
 Phase encrypts and saves your credentials. You can view and manage them under *Service Credentials* in the *Integrations* screen.
 
@@ -60,19 +60,19 @@ Phase encrypts and saves your credentials. You can view and manage them under *S
 
 1. Open your App in the Phase Console and go to the **Syncing** tab. Select **Supabase Edge Functions** in the 'Create a new Sync' menu.
 
-![create supabase sync](/assets/images/platform-integrations/supabase/create-sync-supabase-1.png)
+![create supabase sync](/assets/images/platform-integrations/supabase/create-sync-supabase-1.webp)
 
 2. Select the credentials that you added in the previous step. Then click **Next**.
 
-![select supabase creds](/assets/images/platform-integrations/supabase/create-sync-supabase-2.png)
+![select supabase creds](/assets/images/platform-integrations/supabase/create-sync-supabase-2.webp)
 
 3. Configure the source and destination for your secrets. Select an Environment from your App as the source. If you want to sync from a specific folder, set the Path. Then select a Supabase project from the dropdown and click **Create**.
 
-![configure supabase sync](/assets/images/platform-integrations/supabase/create-sync-supabase-3.png)
+![configure supabase sync](/assets/images/platform-integrations/supabase/create-sync-supabase-3.webp)
 
 4. Phase now syncs your secrets to the selected Supabase project automatically. You can manage the sync from the *Syncing* tab of your App or from the *Integrations* screen.
 
-![supabase sync card](/assets/images/platform-integrations/supabase/supabase-sync-card.png)
+![supabase sync card](/assets/images/platform-integrations/supabase/supabase-sync-card.webp)
 
 <Note>
   Supabase reserves secret names that start with `SUPABASE_`, for example

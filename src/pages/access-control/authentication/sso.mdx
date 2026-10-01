@@ -17,12 +17,12 @@ Administrators can configure a Single Sign-On provider for their organisation di
 
 1. In the Console, go to **Access → Single Sign-On**.
 
-   ![SSO settings empty state](/assets/images/auth/sso/org/01-settings-empty-state.png)
+   ![SSO settings empty state](/assets/images/auth/sso/org/01-settings-empty-state.webp)
 
 2. Click the provider card for **Microsoft Entra ID** or **Okta**.
 3. A setup dialog opens with a **Redirect URI** shown at the top — copy this value; you will register it in your identity provider as an authorised redirect URI.
 
-   ![Entra ID setup dialog — empty](/assets/images/auth/sso/org/02-entra-setup-dialog-empty.png)
+   ![Entra ID setup dialog — empty](/assets/images/auth/sso/org/02-entra-setup-dialog-empty.webp)
 
 4. Register a new application in your identity provider:
 
@@ -41,23 +41,23 @@ Administrators can configure a Single Sign-On provider for their organisation di
    - **Client ID**
    - **Client Secret** — encrypted client-side before submission
 
-   ![Entra ID setup dialog — filled](/assets/images/auth/sso/org/03-entra-setup-dialog-filled.png)
+   ![Entra ID setup dialog — filled](/assets/images/auth/sso/org/03-entra-setup-dialog-filled.webp)
 
-   ![Okta setup dialog — filled](/assets/images/auth/sso/org/02b-okta-setup-dialog-filled.png)
+   ![Okta setup dialog — filled](/assets/images/auth/sso/org/02b-okta-setup-dialog-filled.webp)
 
 6. Click **Save**. Phase fetches the provider's OIDC discovery document and makes sure the configured issuer matches the value the provider reports. If they do not match, the save is rejected and the error shows the correct value to use. The provider is created but not yet active.
 
-   ![Provider card — saved but inactive](/assets/images/auth/sso/org/04-provider-card-saved.png)
+   ![Provider card — saved but inactive](/assets/images/auth/sso/org/04-provider-card-saved.webp)
 
 ## Activate
 
 Hover the configured provider card and click **Activate**. Only one provider per organisation can be active at a time; activating one deactivates any other.
 
-![Provider card — active](/assets/images/auth/sso/org/06-provider-card-active.png)
+![Provider card — active](/assets/images/auth/sso/org/06-provider-card-active.webp)
 
 Once active, members will see a *"Sign in with provider name"* button on the login page after entering their email.
 
-![Login page with SSO sign-in button](/assets/images/auth/sso/org/14-login-email-check-with-sso.png)
+![Login page with SSO sign-in button](/assets/images/auth/sso/org/14-login-email-check-with-sso.webp)
 
 ## Test SSO
 
@@ -66,7 +66,7 @@ Before enforcing SSO on the whole organisation, run a Test SSO flow to confirm t
 1. Hover the active provider card and click **Test SSO**.
 2. Confirm the redirect dialog. Make sure the email in the warning matches your identity-provider account — if you sign in with a different email, Phase creates a new account rather than testing your existing one.
 
-   ![Test SSO confirmation dialog](/assets/images/auth/sso/org/07-test-sso-dialog.png)
+   ![Test SSO confirmation dialog](/assets/images/auth/sso/org/07-test-sso-dialog.webp)
 
 3. Click **Continue**. You are redirected to the identity provider, sign in, and return to the Phase Console.
 
@@ -82,18 +82,18 @@ Before enforcing, make sure every member can actually sign in through the provid
 
 1. Click **Enforce SSO**. A confirmation dialog appears.
 
-   ![Enforce SSO dialog — acknowledgement unchecked](/assets/images/auth/sso/org/08-enforce-sso-dialog-unchecked.png)
+   ![Enforce SSO dialog — acknowledgement unchecked](/assets/images/auth/sso/org/08-enforce-sso-dialog-unchecked.webp)
 
 2. Read the effects — password login disabled, other SSO providers disabled, all members required to authenticate via the active provider, users matched to their existing accounts by email.
 3. Tick the acknowledgement checkbox confirming you understand enforcement will end your current session.
 
-   ![Enforce SSO dialog — acknowledgement checked](/assets/images/auth/sso/org/09-enforce-sso-dialog-checked.png)
+   ![Enforce SSO dialog — acknowledgement checked](/assets/images/auth/sso/org/09-enforce-sso-dialog-checked.webp)
 
 4. Click **Enforce SSO**.
 
 If your current session was established via the organisation's SSO provider, enforcement takes effect immediately and you stay signed in. If you enforced from a password-authenticated session, Phase signs you out and redirects you to the login page — sign back in via SSO to continue.
 
-![SSO enforcement active on provider card](/assets/images/auth/sso/org/10-enforcement-active.png)
+![SSO enforcement active on provider card](/assets/images/auth/sso/org/10-enforcement-active.webp)
 
 Other members' existing sessions remain active for open tabs but will be rejected on the next request. They will be redirected to the lobby where a *"Sign in with provider name"* prompt appears next to the enforced organisation.
 
@@ -101,13 +101,13 @@ Other members' existing sessions remain active for open tabs but will be rejecte
 
 New users can sign up and accept their invite entirely through the organisation's SSO provider. Invited users who already have a Phase account follow a one-time bootstrap. Invite **acceptance** is exempt from SSO enforcement: they sign in with their existing method, accept the invite, and become a member. If their identity for the organisation's provider is already linked, the organisation's SSO works immediately after they join. If not, they [link it from their Account page](/access-control/authentication/account#sign-in-methods) first. All other organisation access still requires the organisation's SSO session.
 
-![Lobby — organisation locked behind SSO](/assets/images/auth/sso/org/15-lobby-sso-lockout.png)
+![Lobby — organisation locked behind SSO](/assets/images/auth/sso/org/15-lobby-sso-lockout.webp)
 
 ### Disable enforcement
 
 Click **Disable SSO Enforcement** on the SSO settings page. Members can sign in with a password again immediately.
 
-![Disable SSO Enforcement button](/assets/images/auth/sso/org/10b-disable-enforcement-button.png)
+![Disable SSO Enforcement button](/assets/images/auth/sso/org/10b-disable-enforcement-button.webp)
 
 ### Lockout protection
 
@@ -121,16 +121,16 @@ Self-hosted operators with shell access to the backend container can also toggle
 
 Hover the provider card to reveal the action buttons:
 
-![Provider card hover — action buttons](/assets/images/auth/sso/org/05-provider-card-hover-actions.png)
+![Provider card hover — action buttons](/assets/images/auth/sso/org/05-provider-card-hover-actions.webp)
 
 - **Edit** — update the display name, tenant / issuer / client ID, or rotate the client secret. Leaving the secret field blank keeps the existing value.
 
-  ![Edit provider dialog](/assets/images/auth/sso/org/11-edit-dialog.png)
+  ![Edit provider dialog](/assets/images/auth/sso/org/11-edit-dialog.webp)
 
 - **Deactivate** — turns off the provider without deleting it. If enforcement is on, deactivating also turns enforcement off to avoid locking the organisation out.
 
-  ![Deactivate provider confirmation dialog](/assets/images/auth/sso/org/13-deactivate-dialog.png)
+  ![Deactivate provider confirmation dialog](/assets/images/auth/sso/org/13-deactivate-dialog.webp)
 
 - **Delete** — removes the provider. If the provider was active and enforcement was on, enforcement is turned off automatically.
 
-  ![Delete provider confirmation dialog](/assets/images/auth/sso/org/12-delete-dialog.png)
+  ![Delete provider confirmation dialog](/assets/images/auth/sso/org/12-delete-dialog.webp)

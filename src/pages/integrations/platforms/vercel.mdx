@@ -51,33 +51,33 @@ Alternatively, you may create a token with a narrower scope to a specific team. 
 
 1. Go to **Integrations** from the sidebar and click on **Third-party credentials** in the integrations tab.
 
-![Go to integrations](/assets/images/platform-integrations/integrations-sidebar.png)
+![Go to integrations](/assets/images/platform-integrations/integrations-sidebar.webp)
 
 2. Click on **Vercel**
 
-![Select Vercel](/assets/images/platform-integrations/vercel/1-vercel-create-new-service-credential.png)
+![Select Vercel](/assets/images/platform-integrations/vercel/1-vercel-create-new-service-credential.webp)
 
 3. Paste your Vercel  `API Token` and add a descriptive name for the service credential and click **Save**
 
-![Add vercel token as service credential](/assets/images/platform-integrations/vercel/2-vercel-save-new-service-credentials.png)
+![Add vercel token as service credential](/assets/images/platform-integrations/vercel/2-vercel-save-new-service-credentials.webp)
 
 ## Step 2: Set up a secret sync
 
 1. Go to your App in the Phase Console and go to the **Syncing** tab. Select **Vercel** under the 'Create a new Sync' menu.
 
-![Set up a vercel secret sync](/assets/images/platform-integrations/vercel/1-create-new-sync-select-vercel.png)
+![Set up a vercel secret sync](/assets/images/platform-integrations/vercel/1-create-new-sync-select-vercel.webp)
 
 2. Choose the credentials you added in the previous step as the authentication mode, and click **Next**.
 
-![Select service credentials for the sync](/assets/images/platform-integrations/vercel/2-create-new-sync-select-vercel-service-credentials.png)
+![Select service credentials for the sync](/assets/images/platform-integrations/vercel/2-create-new-sync-select-vercel-service-credentials.webp)
 
 3. Next, configure the source and destination for your secrets. Pick an Environment from your App as the source. To configure the destination for the sync, choose a Vercel Project from the list of available Projects, as well as the Target Environment and the Secret Type.
 
-![Set up the sync config](/assets/images/platform-integrations/vercel/3-create-new-sync-choose-secret-config.png)
+![Set up the sync config](/assets/images/platform-integrations/vercel/3-create-new-sync-choose-secret-config.webp)
 
 4. Once set up, your secrets will automatically be synced to the chosen destination project in Vercel. You can manage your sync from the *Syncing* tab of your App, or from the *Integrations* screen.
 
-![Sync status](/assets/images/platform-integrations/vercel/4-create-new-sync-sync-status-success.png)
+![Sync status](/assets/images/platform-integrations/vercel/4-create-new-sync-sync-status-success.webp)
 
 ### Important considerations
 - Environment variables that you may have already created in Vercel scoped to 'All Environments' will remain untouched and not managed by Phase. This may lead to unwanted duplication of environment variables, if the same secret key exists in Phase. While supplying secrets to your applications, Vercel will prioritize values of environment variables created in specific environments managed by Phase over those scoped to 'All Environments'. Example: `FOO=BAR` (in Production environment) will be supplied to your application over `FOO=BAZ` (in All Environments). This is a fundamental limitation of the Vercel platform.

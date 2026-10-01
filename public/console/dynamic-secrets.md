@@ -31,7 +31,9 @@ To create a Dynamic Secret, navigate to the "Secrets" tab in the Phase Console, 
 You need to Enable Server-side Encryption (SSE) for the App from the [Settings](/console/apps#settings) tab to use Dynamic Secrets.
 </Note>
 
-![create dynamic secret button](/assets/images/console/dynamic-secrets/create-dynamic-secret-button.png)
+![create dynamic secret button](/assets/images/console/dynamic-secrets/create-dynamic-secret-button.webp)
+
+![choose a provider](/assets/images/console/dynamic-secrets/choose-provider.webp)
 
 Choose a provider, and then fill in the required fields. The required configuration will vary for each provider, but all dynamic secrets will require: 
 
@@ -41,24 +43,28 @@ Choose a provider, and then fill in the required fields. The required configurat
 - **Default TTL**: The default time-to-live for the secret. This is the default duration that the credentials will be leased for when they are created. This value must be less than or equal to the Max TTL.
 - **Outputs**: This is a mapping of secrets or credentials created on the third-party service, and how they will be mapped to secrets in your Phase Environment. These fields will vary depending on the provider.
 
-![common config](/assets/images/console/dynamic-secrets/common-config.png)
+![common config](/assets/images/console/dynamic-secrets/common-config.webp)
 
 View the specific instructions for each provider below for provider-specific configuration.
 
 
 Finally, click **Finish** to save your configuration and create the Dynamic Secret. Your dynamic secret will now be available in the list of secrets for the Environment. You can update the configuration of the Dynamic Secret at any time by clicking on **Configure** next to the secret in the list.
 
-![created secret](/assets/images/console/dynamic-secrets/created-secret.png)
+![created secret](/assets/images/console/dynamic-secrets/created-secret.webp)
+
+All Dynamic Secrets across your Apps are also listed under **Integrations → Dynamic Secrets**.
+
+![dynamic secrets overview](/assets/images/console/dynamic-secrets/dynamic-secrets-overview.webp)
 
 ## Leasing credentials
 
 To lease credentials for a Dynamic Secret, click on the **Generate** button for the secret. Provide a name for the lease, a TTL in seconds, and click "Generate". The TTL must be less than or equal to the Max TTL specified in the Dynamic Secret configuration. 
 
-![generate lease 1](/assets/images/console/dynamic-secrets/generate-lease-1.png)
+![generate lease 1](/assets/images/console/dynamic-secrets/generate-lease-1.webp)
 
 The generated credentials will be displayed, along with the lease ID and lease expiration time. Make sure to copy the credentials, as they will not be displayed again.
 
-![generate lease 2](/assets/images/console/dynamic-secrets/generate-lease-2.png)
+![generate lease 2](/assets/images/console/dynamic-secrets/generate-lease-2.webp)
 
 ## Delete a Dynamic Secret
 
@@ -71,22 +77,22 @@ Deleting a Dynamic Secret will immediately revoke all active leases and remove a
 If there are any active leases for the secret, you will need to confirm that you wish to revoke them before deleting the secret.
 Confirm the deletion in the dialog that appears by clicking the **Revoke all active leases** toggle if it appears, then click **Delete Dynamic Secret**.
 
-![delete secret](/assets/images/console/dynamic-secrets/delete-dynamic-secret.png)
+![delete secret](/assets/images/console/dynamic-secrets/delete-dynamic-secret.webp)
 
 
 ## Managing Leases
 
 To view and manage leases for a Dynamic Secret, click on the **Leases** button for the secret. 
 
-![view leases button](/assets/images/console/dynamic-secrets/leases-button.png)
+![view leases button](/assets/images/console/dynamic-secrets/leases-button.webp)
 
 This will open a list of all active leases for the secret, along with their lease ID, name, creation time, expiration time, and status.
 
-![leases list](/assets/images/console/dynamic-secrets/leases-list.png)
+![leases list](/assets/images/console/dynamic-secrets/leases-list.webp)
 
 Click on the **History** button to view the complete event history for a specific lease with detailed log entries for creation, renewal, and revocation events.
 
-![lease history](/assets/images/console/dynamic-secrets/lease-history.png)
+![lease history](/assets/images/console/dynamic-secrets/lease-history.webp)
 
 ### Renew a Lease
 
@@ -94,11 +100,11 @@ Renewing a lease extends the expiration time of the lease by the specified TTL. 
 
 To renew a lease, click on the **Renew** button next to the lease in the list. Provide a TTL in seconds, and click **Renew**. A lease can only be renewed up to the Max TTL specified in the Dynamic Secret configuration. The available TTL for renewal will be displayed in the dialog.
 
-![renew lease](/assets/images/console/dynamic-secrets/renew-lease.png)
+![renew lease](/assets/images/console/dynamic-secrets/renew-lease.webp)
 
 ### Revoke a Lease
 
 To revoke a lease, click on the **Revoke** button next to the lease in the list. Confirm the revocation in the dialog that appears. This will immediately delete the credentials associated with the lease and mark the lease as revoked.
 
-![revoke lease](/assets/images/console/dynamic-secrets/revoke-lease.png)
+![revoke lease](/assets/images/console/dynamic-secrets/revoke-lease.webp)
 

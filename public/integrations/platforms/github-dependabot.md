@@ -39,11 +39,11 @@ Docs](https://docs.github.com/en/rest/guides/encrypting-secrets-for-the-rest-api
 
 1. Go to **Integrations** from the sidebar, select the **Third-party credentials** tab and click **+ Add credentials**.
 
-![Go to integrations](/assets/images/platform-integrations/integrations-sidebar.png)
+![Go to integrations](/assets/images/platform-integrations/integrations-sidebar.webp)
 
 2. Click on **GitHub**
 
-![Click on GitHub](/assets/images/platform-integrations/github/select-github-credentials.png)
+![Click on GitHub](/assets/images/platform-integrations/github/select-github-credentials.webp)
 
 3. Choose between **OAuth** or **Access Token** authentication method.
 
@@ -54,7 +54,7 @@ OAuth redirects you to GitHub, where you will be prompted to authorize Phase to 
 
 4. Choose between GitHub.com or GitHub Enterprise Server. Select the type of GitHub credentials you wish to add and give it a descriptive name.
 
-![Add GitHub.com credentials](/assets/images/platform-integrations/github/add-github-com-credentials.png)
+![Add GitHub.com credentials](/assets/images/platform-integrations/github/add-github-com-credentials.webp)
 
 If you want to add GitHub Enterprise Server OAuth credentials, you will need to provide the following information:
 
@@ -64,7 +64,7 @@ If you want to add GitHub Enterprise Server OAuth credentials, you will need to 
 This is only for users who want to integrate their self-managed GitHub Enterprise Server with Phase. If you are using GitHub.com cloud with the GitHub enterprise tier, you can simply set up GitHub.com credentials.
 </Note>
 
-![Add GitHub Enterprise Server credentials](/assets/images/platform-integrations/github/add-github-enterprise-server-creds.png)
+![Add GitHub Enterprise Server credentials](/assets/images/platform-integrations/github/add-github-enterprise-server-creds.webp)
 
 5. You will be redirected to GitHub to authorize Phase. **Make sure to grant access to any organizations whose repositories you wish to integrate Phase with**. Click **Authorize** to continue.
 
@@ -72,7 +72,7 @@ This is only for users who want to integrate their self-managed GitHub Enterpris
 
 6. You will be redirected back to the Integrations page, and your new credentials should be visible under the "Third-party credentials" section:
 
-![GitHub credentials stored](/assets/images/platform-integrations/github/github-credentials-created.png)
+![GitHub credentials stored](/assets/images/platform-integrations/github/github-credentials-created.webp)
 
   </TabPanel>
   <TabPanel title="Access Token" slug="access-token">
@@ -97,11 +97,11 @@ Alternatively, if you want to use GitHub Enterprise Server, you will need to pro
 
 **Host URL** (for example `github.yourdomain.com`) and **API URL** (this is typically a path on the GitHub host, for example `https://github.yourdomain.com/api`. This can also be a subdomain, for example `api.github.yourdomain.com`. If you are unsure, please contact your GitHub Enterprise Server administrator).
 
-![Add GitHub Access Token credentials](/assets/images/platform-integrations/github/add-github-credentials-self-hosted-access-token.png)
+![Add GitHub Access Token credentials](/assets/images/platform-integrations/github/add-github-credentials-self-hosted-access-token.webp)
 
 5. You will see that the integration credential has been created successfully.
 
-![GitHub credentials stored](/assets/images/platform-integrations/github/github-credentials-created.png)
+![GitHub credentials stored](/assets/images/platform-integrations/github/github-credentials-created.webp)
 
   </TabPanel>
 </TabGroup>
@@ -118,11 +118,11 @@ Alternatively, if you want to use GitHub Enterprise Server, you will need to pro
 
 1. Go to **Integrations** from the sidebar, select the **Third-party credentials** tab and click **+ Add credentials**.
 
-![Go to integrations](/assets/images/platform-integrations/integrations-sidebar.png)
+![Go to integrations](/assets/images/platform-integrations/integrations-sidebar.webp)
 
 2. Click on **GitHub**
 
-![Click on GitHub](/assets/images/platform-integrations/github/select-github-credentials.png)
+![Click on GitHub](/assets/images/platform-integrations/github/select-github-credentials.webp)
 
 3. Choose between **OAuth** or **Access Token** authentication method.
 
@@ -131,7 +131,7 @@ Alternatively, if you want to use GitHub Enterprise Server, you will need to pro
 
 4. Choose between GitHub.com or GitHub Enterprise Server. Select the type of GitHub credentials you wish to add and give it a descriptive name.
 
-![Add GitHub.com credentials](/assets/images/platform-integrations/github/add-github-credentials-self-hosted-oauth.png)
+![Add GitHub.com credentials](/assets/images/platform-integrations/github/add-github-credentials-self-hosted-oauth.webp)
 
 If you want to add GitHub Enterprise Server OAuth credentials, you will need to provide the following information:
 
@@ -141,7 +141,7 @@ If you want to add GitHub Enterprise Server OAuth credentials, you will need to 
 This is only for users who want to integrate their self-managed GitHub Enterprise Server with Phase. If you are using GitHub.com cloud with the enterprise tier, you can simply set up GitHub.com credentials.
 </Note>
 
-![Add GitHub Enterprise Server credentials](/assets/images/platform-integrations/github/add-github-enterprise-server-creds.png)
+![Add GitHub Enterprise Server credentials](/assets/images/platform-integrations/github/add-github-enterprise-server-creds.webp)
 
 5. You will be redirected to GitHub to authorize Phase. **Make sure to grant access to any organizations whose repositories you wish to integrate Phase with**. Click **Authorize** to continue.
 
@@ -149,7 +149,7 @@ This is only for users who want to integrate their self-managed GitHub Enterpris
 
 6. You will be redirected back to the Integrations page, and your new credentials should be visible under the "Third-party credentials" section:
 
-![GitHub credentials stored](/assets/images/platform-integrations/github/github-credentials-created.png)
+![GitHub credentials stored](/assets/images/platform-integrations/github/github-credentials-created.webp)
 
   </TabPanel>
   <TabPanel title="Access Token" slug="access-token">
@@ -174,11 +174,11 @@ Alternatively, if you want to use GitHub Enterprise Server, you will need to pro
 
 **Host URL** (for example `github.yourdomain.com`) and **API URL** (this is typically a path on the GitHub host, for example `https://github.yourdomain.com/api`. This can also be a subdomain, for example `api.github.yourdomain.com`. If you are unsure, please contact your GitHub Enterprise Server administrator).
 
-![Add GitHub Access Token credentials](/assets/images/platform-integrations/github/add-github-credentials-self-hosted-access-token.png)
+![Add GitHub Access Token credentials](/assets/images/platform-integrations/github/add-github-credentials-self-hosted-access-token.webp)
 
 5. You will see that the integration credential has been created successfully.
 
-![GitHub credentials stored](/assets/images/platform-integrations/github/github-credentials-created.png)
+![GitHub credentials stored](/assets/images/platform-integrations/github/github-credentials-created.webp)
 
   </TabPanel>
 </TabGroup>
@@ -192,11 +192,11 @@ Now that you have authenticated with GitHub, you can configure syncs for your ap
 
 1. Go to your App in the Phase Console and go to the **Syncing** tab. Select **GitHub Dependabot** under the 'Create a new Sync' menu.
 
-![Create a new sync button](/assets/images/platform-integrations/github/dependabot/create-gh-dependabot-sync-button.png)
+![Create a new sync button](/assets/images/platform-integrations/github/dependabot/create-gh-dependabot-sync-button.webp)
 
 2. Select the credentials stored in the previous step as the authentication method for this sync, and click **Next**
 
-![Choose sync authentication credentials](/assets/images/platform-integrations/github/dependabot/select-gh-third-party-credentials.png)
+![Choose sync authentication credentials](/assets/images/platform-integrations/github/dependabot/select-gh-third-party-credentials.webp)
 
 3. Choose the source and destination to sync secrets. Select the Phase Environment as the source for Secrets.
    Next, choose a GitHub repository from the dropdown as the destination to sync Secrets to.
@@ -205,7 +205,7 @@ Now that you have authenticated with GitHub, you can configure syncs for your ap
    For security reasons, secrets in your source Phase Environment will be synced to your GitHub repository as Dependabot Secrets.
    </Note>
 
-![Configure sync](/assets/images/platform-integrations/github/dependabot/setup-gh-dependabot-sync-repo.png)
+![Configure sync](/assets/images/platform-integrations/github/dependabot/setup-gh-dependabot-sync-repo.webp)
 
 Alternatively, you can sync secrets directly to your GitHub organization. You can choose between **All repositories**, meaning private and public repositories, or Only **Private repositories**, based on your requirements. Your GitHub repositories will inherit the organization-level secrets automatically. GitHub Actions secret takes the following precedence:
 
@@ -215,11 +215,13 @@ Alternatively, you can sync secrets directly to your GitHub organization. You ca
     - if not present, then use **Organization secret**
 
 
-![Configure an organization sync](/assets/images/platform-integrations/github/dependabot/setup-gh-dependabot-sync-org.png)
+![Configure an organization sync](/assets/images/platform-integrations/github/dependabot/setup-gh-dependabot-sync-org.webp)
 
 4. Once you have selected your desired source and destination, click **Create**.
    The sync has been set up! Secrets will automatically be synced from your chosen Phase Environment to the GitHub repository as Dependabot Secrets.
    You can click on the **Manage** button on the Sync card to view sync logs, pause syncing, or update authentication credentials.
+
+   ![GitHub Dependabot sync card](/assets/images/platform-integrations/github/dependabot/gh-dependabot-sync-card.webp)
 
 #### Troubleshooting
 

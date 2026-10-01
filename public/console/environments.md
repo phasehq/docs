@@ -35,9 +35,9 @@ To create a new environment:
 
 1. Navigate to the Secrets overview screen inside your app in the Phase console.
 2. Click the "+ New Environment" button.
-![Create a new environment button](/assets/images/console/environments/new-environment-button.png)
+![Create a new environment button](/assets/images/console/environments/new-environment-button.webp)
 3. In the popup dialog, you'll see a message: "Create a new Environment in this App". Enter a name for your new environment in the "Environment name" field. For example, you might enter "QA" for a quality assurance environment.
-![Create a new environment](/assets/images/console/environments/create-new-environment.png)
+![Create a new environment](/assets/images/console/environments/create-new-environment.webp)
 4. Click `Create`
 
 Note: All Organisation Admins will have access to this Environment.
@@ -49,11 +49,11 @@ To manage an existing environment:
 1. On the Secrets overview screen, locate the environment card you want to manage.
 2. Click on the cog icon (⚙️) at the top right of the environment card.
 
-![Manage environment cog button](/assets/images/console/environments/manage-environment-cog-button.png) 
+![Manage environment cog button](/assets/images/console/environments/manage-environment-cog-button.webp) 
 
 3. A "Manage [Environment Name]" dialog will appear with several options:
 
-![Manage existing environment](/assets/images/console/environments/update-environment.png)
+![Manage existing environment](/assets/images/console/environments/update-environment.webp)
 
 
 ### Renaming an Environment
@@ -70,11 +70,15 @@ Changing the environment name will affect how you construct references to secret
 1. In the "Environment Members" section, you can see users who have access to Secrets in this Environment.
 2. Click `Manage access` to add or remove user access to this environment.
 
+![Manage environment access dialog](/assets/images/console/environments/environment-manage-access.webp)
+
 ### Deleting an Environment
 
 1. At the bottom of the dialog, you'll find a "Delete Environment" section.
 2. Be aware that deleting an environment will permanently delete this Environment and all associated Secrets and Integrations.
 3. Click the `Delete` button to remove the environment. Use this option with caution.
+
+![Delete environment section and confirmation](/assets/images/console/environments/environment-delete.webp)
 
 Remember, Organization Owners and Admins have access to all Environments by default. For Developers, you can control Environment access from the App Members screen.
 
