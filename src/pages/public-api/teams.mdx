@@ -123,7 +123,7 @@ Server-side Encryption (SSE) is required for an app to be granted to a team — 
 <Row>
   <Col>
 
-    Create a new team. The calling user becomes the team's owner and is automatically added as a member. Service-account callers create the team without an owner and no auto-membership.
+    Create a new team. The calling user becomes the team's owner and is automatically added as a member. Service-account callers create the team without an owner; the calling service account is automatically added as a team member.
 
     Requires the `Teams.create` org permission and a Pro or Enterprise plan.
 

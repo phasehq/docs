@@ -396,7 +396,7 @@ Authenticate to Phase using external identity providers. Each provider returns a
         azureEntra: { jwt: encodedJWT },
       }
 
-      const res = await fetch(`${HOST}/service/public/identities/external/v1/azure/entra/auth/`, {
+      const res = await fetch(`${HOST}/identities/external/v1/azure/entra/auth/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -425,7 +425,7 @@ Authenticate to Phase using external identity providers. Each provider returns a
     }
 
     r = requests.post(
-        f"{HOST}/service/public/identities/external/v1/azure/entra/auth/",
+        f"{HOST}/identities/external/v1/azure/entra/auth/",
         json=payload,
         headers={"Content-Type": "application/json"},
         timeout=30,
@@ -472,7 +472,7 @@ Authenticate to Phase using external identity providers. Each provider returns a
       }
 
       b, _ := json.Marshal(payload)
-      res, err := http.Post(host+"/service/public/identities/external/v1/azure/entra/auth/", "application/json", bytes.NewReader(b))
+      res, err := http.Post(host+"/identities/external/v1/azure/entra/auth/", "application/json", bytes.NewReader(b))
       if err != nil { panic(err) }
       defer res.Body.Close()
       io.Copy(os.Stdout, res.Body)
@@ -486,7 +486,7 @@ Authenticate to Phase using external identity providers. Each provider returns a
       --query accessToken -o tsv)
     ENCODED=$(echo -n "$TOKEN" | base64)
 
-    curl -X POST https://api.phase.dev/service/public/identities/external/v1/azure/entra/auth/ \
+    curl -X POST https://api.phase.dev/identities/external/v1/azure/entra/auth/ \
       -H "Content-Type: application/json" \
       -d "{
         \"account\": {\"type\": \"service\", \"id\": \"00000000-0000-0000-0000-000000000000\"},

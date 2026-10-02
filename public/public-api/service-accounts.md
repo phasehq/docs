@@ -566,6 +566,7 @@ When fetching a single service account, additional detail fields are included:
     - Requires the service account to have **server-side key management (SSK)** enabled. SAs created via this API always do; client-side-only SAs return `400 Bad Request`.
     - The `token` and `bearerToken` values in the response are only ever returned at creation time — store them securely.
     - Expiry can be set as either an absolute timestamp (`expires_at`) or a relative TTL (`expires_in`). If both are supplied, `expires_at` takes priority. If neither is supplied, the token does not expire.
+    - Callers without a global-access role (Owner/Admin) can only mint or revoke tokens for their own service account or for a service account owned by a team they belong to; other service accounts return `404 Not Found`.
 
     ### URL parameters
 

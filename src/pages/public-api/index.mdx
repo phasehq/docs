@@ -19,7 +19,7 @@ You can use the Phase public REST API to access and manage secrets via a simple 
 
 The Phase API is organized around [REST](https://en.wikipedia.org/wiki/Representational_State_Transfer). The API accepts data in the request body only in JSON-encoded format. It uses standard HTTP methods and response codes.
 
-Supported HTTP methods are `GET`, `POST`, `PUT`, and `DELETE`. `PATCH` is not supported on any endpoint and returns `405 Method Not Allowed`.
+Supported HTTP methods are `GET`, `POST`, `PUT`, and `DELETE`. `PATCH` is not supported on any endpoint: it returns `405 Method Not Allowed`, except on `/v1/secrets` and `/v1/secrets/dynamic` where it returns `403` with `Unsupported HTTP method: PATCH`.
 
 Error responses are always JSON of the form `{"error": "<message>"}`. Check out the API [errors page](/public-api/errors) for more details.
 

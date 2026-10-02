@@ -52,7 +52,7 @@ When fetching a single role, the full permissions object is included. The permis
     App-level permissions. Keys are resource class names, values are arrays of allowed actions. See [Roles & Permissions](/access-control/roles) for the full list.
   </Property>
   <Property name="globalAccess" type="boolean">
-    Read-only. Returned as `true` for the built-in `Owner` and `Admin` roles and `false` otherwise. Cannot be set on custom roles — POST and PUT reject requests that include `global_access` (or `globalAccess`) under `permissions`.
+    Read-only. Returned as `true` for the built-in `Owner` and `Admin` roles and `false` for the other built-in roles; custom roles created through the API omit the field, so treat a missing value as `false`. Cannot be set on custom roles — POST and PUT reject requests that include `global_access` (or `globalAccess`) under `permissions`.
   </Property>
 </Properties>
 

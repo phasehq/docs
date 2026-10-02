@@ -112,7 +112,7 @@ The secret model contains the basic key / value pairs that define your environme
       <Property name="lease" type="boolean">
         Whether to generate leases for dynamic secrets in the response. Must be used along with the `dynamic` parameter.
       </Property>
-      <Property name="lease_ttl" type="boolean">
+      <Property name="lease_ttl" type="integer">
         The TTL to use when generating leases for dynamic secrets, in seconds. Must be used along with the `lease` parameter.
       </Property>
     </Properties>
@@ -318,13 +318,13 @@ The secret model contains the basic key / value pairs that define your environme
         A comment to associate with the secret.
       </Property>
       <Property name="tags" type="array">
-        A list of tags to associate with the secret. Tag names must be valid.
+        A list of tag names to associate with the secret. Tags that do not exist yet are created automatically (max 64 characters each).
       </Property>
       <Property name="path" type="string">
         The path at which to create this secret. Defaults to `/` if not provided.
       </Property>
       <Property name="override" type="object">
-        A personal secret override to be used in place of the default value. The override must be supplied with fields `value` and `isActive`
+        A personal secret override to be used in place of the default value. The override must be supplied with fields `value` and `isActive`. Overrides are always created active; `isActive` only takes effect on update.
       </Property>
     </Properties>
 
@@ -606,7 +606,7 @@ The secret model contains the basic key / value pairs that define your environme
         A comment to associate with the secret.
       </Property>
       <Property name="tags" type="array">
-        A list of tags to associate with the secret. Tag names must be valid. The supplied list will overwrite any existing tags.
+        A list of tag names to associate with the secret. Tags that do not exist yet are created automatically. The supplied list will overwrite any existing tags.
       </Property>
       <Property name="path" type="string">
         The path for this secret.
@@ -859,13 +859,13 @@ The secret model contains the basic key / value pairs that define your environme
 
     ### JSON Body
     
-    Data must be supplied in the JSON request body as an array in the `secrets` field. You must supply an `id` for each secret you want to delete.
+    Data must be supplied in the JSON request body as an array of secret IDs in the `secrets` field.
     
     #### **Required fields**
 
     <Properties>
-      <Property name="id" type="string">
-        Unique identifier for the secret.
+      <Property name="secrets" type="array">
+        A list of the unique identifiers (`id`) of the secrets to delete, ex: `["fad9b534-792a-425b-bfa6-00c26a60f36d"]`.
       </Property>
     </Properties>
 

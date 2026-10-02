@@ -14,7 +14,7 @@ export const metadata = {
 Environments represent deployment stages within an App (e.g. Development, Staging, Production). Each Environment contains its own set of Secrets. On this page, we'll look at the Environments API endpoints for listing, creating, updating, and deleting Environments. {{ className: 'lead' }}
 
 <Note>
-The Environments API requires server-side encryption (SSE) to be enabled for the parent App. An `app_id` query parameter is required for list and create operations — omitting it returns `403` as the API cannot resolve the app context.
+The Environments API requires server-side encryption (SSE) to be enabled for the parent App; every endpoint, including `GET`, returns `403 Forbidden` (`SSE is not enabled for this App.`) for E2EE apps. An `app_id` query parameter is required for list and create operations — omitting it returns `403` as the API cannot resolve the app context.
 </Note>
 
 <DocActions />
@@ -31,7 +31,7 @@ The Environments API requires server-side encryption (SSE) to be enabled for the
     The name of the environment.
   </Property>
   <Property name="envType" type="string">
-    The type of environment: `dev`, `staging`, `prod`, or `custom`.
+    The type of environment: `dev`, `staging`, `prod`, or `custom`. Environments created from the Console are currently returned upper-cased (`DEV`, `STAGING`, `PROD`), so compare this value case-insensitively.
   </Property>
   <Property name="index" type="integer">
     The display order of the environment within its app.

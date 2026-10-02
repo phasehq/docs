@@ -14,7 +14,7 @@ export const metadata = {
 Apps are the top-level organizational unit in Phase. Each App contains Environments, which in turn hold Secrets. On this page, we'll look at the Apps API endpoints for listing, creating, updating, and deleting Apps. {{ className: 'lead' }}
 
 <Note>
-Apps created via the API are SSE-enabled by default. The list endpoint returns metadata for all apps you have access to (SSE and E2EE) — check the `sseEnabled` field. Write operations against secrets and environments via the REST API require SSE; E2EE apps return `400 Bad Request`.
+Apps created via the API are SSE-enabled by default. The list endpoint returns metadata for all apps you have access to (SSE and E2EE) — check the `sseEnabled` field. The Secrets API requires SSE and returns `400 Bad Request` for E2EE apps; the Environments API and `GET`/`PUT`/`DELETE /v1/apps/:id` return `403 Forbidden` (`SSE is not enabled for this App.`).
 </Note>
 
 <DocActions />
