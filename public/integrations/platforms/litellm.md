@@ -84,9 +84,15 @@ In the Phase Console, go to **Integrations → Third-party credentials** and cli
 
 Phase validates the credentials against `/health/readiness` before saving.
 
+![Select LiteLLM](/assets/images/platform-integrations/litellm/create-credentials-litellm.webp)
+
+![LiteLLM credentials](/assets/images/platform-integrations/litellm/input-litellm-credentials.webp)
+
 ## Create a Rotating Secret for LiteLLM
 
 Open an Environment, click **New Secret → Rotating Secret**, and pick **LiteLLM**. The **Provider config** step offers two ways to specify the policy each minted key will carry.
+
+![Rotating Secret with LiteLLM: provider and root credentials](/assets/images/console/rotating-secrets/litellm-step-1.webp)
 
 ### Import from an existing key
 
@@ -99,9 +105,13 @@ In the **Import config** tab:
 
 Phase calls `GET /key/info?key=<your-key>` and shows the full policy as editable JSON. Every field your template key sets — including object fields like `metadata`, `aliases`, `permissions` — is included. The imported policy is captured at create time; re-import if you change the template later.
 
+![Imported LiteLLM key policy](/assets/images/console/rotating-secrets/litellm-import-config.webp)
+
 ### Configure manually
 
 Switch to the **Manual config** tab and fill in the curated set: allowed models, budgets, TPM/RPM limits, parallel request cap, team/user id, tags, and a `blocked` toggle.
+
+![Manual LiteLLM config](/assets/images/console/rotating-secrets/litellm-manual-config.webp)
 
 ### Outputs
 
@@ -109,6 +119,8 @@ LiteLLM yields two values per minted key:
 
 - **api_key** — the bearer token your application uses (e.g. `LITELLM_API_KEY`).
 - **key_id** — the LiteLLM-side token id, used internally for revocation.
+
+![LiteLLM outputs and schedule](/assets/images/console/rotating-secrets/litellm-outputs.webp)
 
 Click **Create and mint**.
 

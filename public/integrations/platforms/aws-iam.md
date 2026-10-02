@@ -72,7 +72,7 @@ After running the command, note the Policy ARN (e.g., `arn:aws:iam::YOUR_ACCOUNT
 1. In the Phase Console, go to Integrations > Third-party credentials.
 2. Click AWS and select the Assume Role tab.
 3. Click Generate next to EXTERNAL ID and copy it.
-   ![Generate External ID in Phase Console UI](/assets/images/platform-integrations/aws/assumerole/aws-asumerole.png)
+   ![Generate External ID in Phase Console UI](/assets/images/platform-integrations/aws/assumerole/aws-assumerole.webp)
 
 ### Step 3: Create IAM Role (in your AWS account)
 
@@ -120,6 +120,8 @@ aws iam attach-role-policy --role-name phase-console-aws-iam-dynamic-secrets-int
 2. Paste the Role ARN in ARN (From step 3) OF ROLE TO BE ASSUMED.
 3. Ensure EXTERNAL ID matches what you generated.
 4. Select Region, give it a Name, and click Save.
+
+   ![Assume Role credentials filled in the Phase Console](/assets/images/platform-integrations/aws/assumerole/aws-assumerole.webp)
 
 ## Self-hosted Phase
 
@@ -223,6 +225,8 @@ aws iam attach-role-policy \
 4. The EXTERNAL ID field can be left blank unless you require it for cross-account constraints.
 5. Select Region, provide a Name, and click Save.
 
+   ![Assume Role credentials in the Phase Console](/assets/images/platform-integrations/aws/assumerole/aws-assumerole.webp)
+
   </TabPanel>
   <TabPanel title="Access Keys" slug="access-keys">
 Use Access Keys to authenticate Phase with AWS. Provide Access Key ID and Secret Access Key with permissions to create and manage IAM users and access keys.
@@ -300,6 +304,8 @@ Copy the `AccessKeyId` and `SecretAccessKey`.
 2. Click AWS and choose Access Keys.
 3. Paste the Access Key ID and Secret Access Key, select Region, give it a Name, and Save.
 
+   ![AWS Access Keys credentials in the Phase Console](/assets/images/platform-integrations/aws/input-aws-credentials.webp)
+
   </TabPanel>
 </TabGroup>
 
@@ -318,4 +324,4 @@ To create an AWS IAM Dynamic Secret, you will need to provide the following info
 - **AWS IAM Groups**: A list of IAM groups to add the user to. You can add the user to multiple groups by separating them with commas.
 - **IAM User Permission Boundary ARN**: An optional ARN of the policy to use as a permission boundary for the user.
 
-![aws iam config](/assets/images/console/dynamic-secrets/aws-iam-config.png)
+![aws iam config](/assets/images/console/dynamic-secrets/aws-iam-config.webp)

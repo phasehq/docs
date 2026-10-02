@@ -20,19 +20,21 @@ Service accounts exist in two categories:
 
 Team-owned service accounts are useful when a team needs dedicated programmatic access for team resources, that is isolated from other teams and users. See [Team-owned service accounts](/access-control/teams#team-owned-service-accounts) for details on creating and managing them.
 
+![Service accounts list with organisation and team owned accounts](/assets/images/console/access-control/service-accounts/service-accounts-list.webp)
+
 ## Create a new Service Account
 
 To create a new Service Account:
 
 1. Navigate to the Access Control page from the sidebar and click on the **Service Accounts** tab.
 
-![Navigate to access control](/assets/images/console/access-control/service-accounts/create-new-service-accounts/1-navigate-to-access-control.png)
+![Navigate to access control](/assets/images/console/access-control/service-accounts/create-new-service-accounts/1-navigate-to-access-control.webp)
 
-![Click on service accounts tab](/assets/images/console/access-control/service-accounts/create-new-service-accounts/2-click-on-service-accounts-tab.png)
+![Click on service accounts tab](/assets/images/console/access-control/service-accounts/create-new-service-accounts/2-click-on-service-accounts-tab.webp)
 
 2. Click the **Create Service Account** button in the center of the screen, if you have previously created service accounts you will see it in the top right corner of the screen.
 
-![Click create service account](/assets/images/console/access-control/service-accounts/create-new-service-accounts/3-click-create-new-service-account.png)
+![Click create service account](/assets/images/console/access-control/service-accounts/create-new-service-accounts/3-click-create-new-service-account.webp)
 
 3. Give your new service account an Account name and choose a Role and Click "Create Service Account".
 
@@ -50,7 +52,7 @@ You may choose to select a different Managed role or a Custom role by clicking o
  You can only select a role whose permissions your own role also has. The dropdown disables roles with permissions that your role does not have. This limit does not apply to users with the `Owner` or `Admin` role.
 </Note>
 
-![Create new service account](/assets/images/console/access-control/service-accounts/create-new-service-accounts/4-create-new-service-account.png)
+![Create new service account](/assets/images/console/access-control/service-accounts/create-new-service-accounts/4-create-new-service-account.webp)
 
 Click "Create service account". This will create a new account with the chosen name and role. 
 
@@ -65,13 +67,13 @@ Once the account is created, you will see it listed in the table.
 
 You can manage a Service Account from the account detail page, accessible by clicking the "Manage" account button. Here you will find information about this account including the account name, role, App / Environment access and tokens. 
 
-![Click manage service account button](/assets/images/console/access-control/service-accounts/create-new-service-accounts/5-manage-service-account.png)
+![Click manage service account button](/assets/images/console/access-control/service-accounts/create-new-service-accounts/5-manage-service-account.webp)
 
 ### Update account name
 
 To update the name of an account, simply click the account name at the top of the page and edit it in place. Click "Save" to save your changes. 
 
-![Update service account name](/assets/images/console/access-control/service-accounts/manage-account/service-account-update-name.png)
+![Update service account name](/assets/images/console/access-control/service-accounts/manage-account/service-account-update-name.webp)
 
 ### Update account role
 
@@ -81,15 +83,15 @@ To update an account's role, click the role label to open the dropdown and selec
  You can only select a role whose permissions your own role also has. For a team-owned account, Phase also counts the permissions of the team [role override](/access-control/teams#role-overrides). This limit does not apply to users with the `Owner` or `Admin` role.
 </Note>
 
-![Update service account role](/assets/images/console/access-control/service-accounts/manage-account/service-account-update-role.png)
+![Update service account role](/assets/images/console/access-control/service-accounts/manage-account/service-account-update-role.webp)
 
 ### Delete account
 
 To delete a Service Account, click on the "Delete" button at the bottom of the page. This will permanently delete this account and all associated tokens. Confirm that you want to delete this account by clicking "Delete" on the confirm dialog.
 
-![Delete service account](/assets/images/console/access-control/service-accounts/manage-account/service-account-delete-1.png)
+![Delete service account](/assets/images/console/access-control/service-accounts/manage-account/service-account-delete-1.webp)
 
-![Confirm delete service account](/assets/images/console/access-control/service-accounts/manage-account/service-account-delete-2.png)
+![Confirm delete service account](/assets/images/console/access-control/service-accounts/manage-account/service-account-delete-2.webp)
 
 ### Account KMS
 
@@ -110,11 +112,11 @@ You can optionally enable **Server-side KMS** for a Service Account. This grants
 
 You can manage the KMS mode for a Service Account by clicking the **Manage** button beside the account KMS indicator at the top of the account page:
 
-![Manage service account KMS button](/assets/images/console/access-control/service-accounts/manage-account/kms-button.png)
+![Manage service account KMS button](/assets/images/console/access-control/service-accounts/manage-account/kms-button.webp)
 
 Select the KMS mode you want to use and click **Save**:
 
-![Manage service account KMS dialog](/assets/images/console/access-control/service-accounts/manage-account/kms-dialog.png)
+![Manage service account KMS dialog](/assets/images/console/access-control/service-accounts/manage-account/kms-dialog.webp)
 
 
 ## Create a new Service Account Token

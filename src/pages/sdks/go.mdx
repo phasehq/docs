@@ -116,7 +116,7 @@ func main() {
 
 You can get the AppID by going to your application settings in the Phase Console, hovering over UUID under the App section and clicking the `Copy` button:
 
-![hello world](/assets/images/console/settings/application-id.png)
+![hello world](/assets/images/console/settings/application-id.webp)
 
 ### Secret Types
 

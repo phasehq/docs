@@ -78,7 +78,7 @@ An External ID is a security measure that helps prevent the "confused deputy" pr
 2.  Click on **AWS** to create new AWS credentials.
 3.  Select the **Assume Role** tab.
 4.  You will see a field for **EXTERNAL ID (Optional)**. Click the **Generate** button next to it, as shown in the UI below.
-    ![Generate External ID in Phase Console UI](/assets/images/platform-integrations/aws/assumerole/aws-asumerole.png)
+    ![Generate External ID in Phase Console UI](/assets/images/platform-integrations/aws/assumerole/aws-assumerole.webp)
 5.  **Copy the generated External ID**. You will need this for the trust policy of the IAM role in the next step. Keep this ID secure.
 
 ### Step 3: Create IAM Role (in your AWS account)
@@ -136,6 +136,8 @@ aws iam attach-role-policy --role-name phase-console-aws-secrets-manager-integra
 4.  Select the appropriate **AWS Region** where your Secrets Manager secrets are or will be stored.
 5.  Provide a descriptive **Name** for these credentials in Phase (e.g., "AWS Secrets Manager Assume role integration credentials").
 6.  Click **Save**.
+
+    ![Assume Role credentials filled in the Phase Console](/assets/images/platform-integrations/aws/assumerole/aws-assumerole.webp)
 
 Phase is now configured to securely access your AWS Secrets Manager using the Assume Role method.
 
@@ -241,7 +243,7 @@ aws iam attach-role-policy \
 2.  Click on **Add credentials**, select **AWS** to create new AWS credentials (or edit existing ones if appropriate).
 3.  Select the **Assume Role** tab.
 
-![Generate External ID in Phase Console UI](/assets/images/platform-integrations/aws/assumerole/aws-asumerole.png)
+![Generate External ID in Phase Console UI](/assets/images/platform-integrations/aws/assumerole/aws-assumerole.webp)
 
 4.  In the **ARN OF ROLE TO BE ASSUMED** field, paste the Role ARN of the `phase-console-aws-secrets-manager-integration-policy` (or your custom name) that you just created (from Step 2.3).
 5.  The **EXTERNAL ID** field can be **left blank**. If you are using a different AWS account than the one with the integration user, you can generate an External ID in the Phase Console.
@@ -503,16 +505,16 @@ You first need to set up credentials to use for the sync, and then choose a sour
 
 2. Go to **Integrations** from the sidebar and click on **Third-party credentials** in the integrations tab.
 
-![Go to integrations](/assets/images/platform-integrations/integrations-sidebar.png)
+![Go to integrations](/assets/images/platform-integrations/integrations-sidebar.webp)
 
 3. Click on **AWS**
 
-![Click on AWS](/assets/images/platform-integrations/aws/create-credentials-aws.png)
+![Click on AWS](/assets/images/platform-integrations/aws/create-credentials-aws.webp)
 
 4. Copy and paste your `AccessKeyId` and `SecretAccessKey` from the AWS Console.
    Select the correct region code and add a descriptive name for these credentials. Click **Save**.
 
-![Input AWS credentials](/assets/images/platform-integrations/aws/input-aws-credentials.png)
+![Input AWS credentials](/assets/images/platform-integrations/aws/input-aws-credentials.webp)
 
 ### Step 2: Configure Sync
 
@@ -520,11 +522,11 @@ You first need to set up credentials to use for the sync, and then choose a sour
 
 2. Go to your App in the Phase Console and go to the **Syncing** tab. Select **AWS Secrets Manager** under the 'Create a new Sync' menu.
 
-![Create AWS SM Sync](/assets/images/platform-integrations/aws/create-aws-sm-sync-button.png)
+![Create AWS SM Sync](/assets/images/platform-integrations/aws/create-aws-sm-sync-button.webp)
 
 3. Select the credentials stored in the previous step as the authentication method for this sync, and click **Next**
 
-![Choose sync authentication credentials](/assets/images/platform-integrations/aws/select-aws-credentials.png)
+![Choose sync authentication credentials](/assets/images/platform-integrations/aws/select-aws-credentials.webp)
 
 <Note>
   If you see an error message and cannot proceed to the next screen, it is most
@@ -536,15 +538,15 @@ You first need to set up credentials to use for the sync, and then choose a sour
 4. Choose the source and destination to sync secrets. Select an Environment as the source for Secrets.
    Next, either enter a name for a new AWS Secret, or click on "Use existing AWS Secret" and select a Secret from the dropdown list.
 
-![Choose sync source and destination](/assets/images/platform-integrations/aws/configure-aws-sm-sync-basic.png)
+![Choose sync source and destination](/assets/images/platform-integrations/aws/configure-aws-sm-sync-basic.webp)
 
 5. (Optional) Use a Customer Managed Key (CMK) to encrypt secrets. If you would like to use an AWS KMS CMK to encrypt your AWS Secret,
    click on the **Advanced** pane to expand it, and paste the ARN of the key to use.
 
-![Set up KMS CMK](/assets/images/platform-integrations/aws/configure-aws-sm-sync-advanced.png)
+![Set up KMS CMK](/assets/images/platform-integrations/aws/configure-aws-sm-sync-advanced.webp)
 
 6. Once you have selected your desired source and destination, click **Create**.
    The sync has been set up! Secrets will automatically be Synced from your chosen Phase Environment to the AWS Secret.
    You can click on the **Manage** button on the Sync card to view sync logs, pause syncing or update authentication credentials.
 
-![Sync card](/assets/images/platform-integrations/aws/aws-sm-sync-card.png)
+![Sync card](/assets/images/platform-integrations/aws/aws-sm-sync-card.webp)

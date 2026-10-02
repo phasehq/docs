@@ -30,7 +30,7 @@ A quick demo showing creating 100 secrets inside of the production environment a
 
 2. Fetch your Phase **Application ID** (AppID) by going to your application settings in the Phase Console, hovering over UUID under the App section and clicking the `Copy` button:
 
-![Application ID](/assets/images/console/settings/application-id.png)
+![Application ID](/assets/images/console/settings/application-id.webp)
 
 ## Step 1: Install the Provider
 

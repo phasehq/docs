@@ -52,15 +52,15 @@ Alternatively, if you do have a Railway Team you want to sync secrets to, please
 
 1. Go to **Integrations** from the sidebar and click on **Third-party credentials** in the integrations tab.
 
-![Go to integrations](/assets/images/platform-integrations/integrations-sidebar.png)
+![Go to integrations](/assets/images/platform-integrations/integrations-sidebar.webp)
 
 2. Click on **Railway**.
 
-![railway-create-creds](/assets/images/platform-integrations/railway/railway-create-creds-button.png)
+![railway-create-creds](/assets/images/platform-integrations/railway/railway-create-creds-button.webp)
 
 3. Enter your Railway `API Token` from the previous step. Enter a descriptive name and click **Save**.
 
-![railway-input-creds](/assets/images/platform-integrations/railway/railway-input-creds.png)
+![railway-input-creds](/assets/images/platform-integrations/railway/railway-input-creds.webp)
 
 Your credentials will be encrypted and saved. You can view and manage these credentials under *Service Credentials* in the *Integrations* screen.
 
@@ -68,11 +68,11 @@ Your credentials will be encrypted and saved. You can view and manage these cred
 
 1. Go to your App in the Phase Console and go to the **Syncing** tab. Select **Railway** under the 'Create a new Sync' menu.
 
-![create railway sync](/assets/images/platform-integrations/railway/railway-create-sync-button.png)
+![create railway sync](/assets/images/platform-integrations/railway/railway-create-sync-button.webp)
 
 2. Choose the credentials you added in the previous step as the authentication mode, and click **Next**.
 
-![select railway creds](/assets/images/platform-integrations/railway/railway-select-creds.png)
+![select railway creds](/assets/images/platform-integrations/railway/railway-select-creds.webp)
 
 3. Next, configure the source and destination for your secrets. Pick an Environment from your App as the source. To configure the destination for the sync, choose a Railway Project from the list of available Projects, as well as an Environment. You can also optionally select a specific Service to sync secrets to. Leave this field blank to sync secrets as Shared Variables in the selected Railway environment.
 
@@ -80,8 +80,8 @@ Your credentials will be encrypted and saved. You can view and manage these cred
    If you choose to sync to a Railway Service, shared Variables automatically provisioned by Railway, including those belonging to Railway Deployments such as Databases, will be overwritten by Phase. Please import all secrets into Phase before continuing.
 </Note>
 
-![configure railway sync](/assets/images/platform-integrations/railway/railway-setup-sync.png)
+![configure railway sync](/assets/images/platform-integrations/railway/railway-setup-sync.webp)
 
 4. Once set up, your secrets will automatically be synced to the chosen destination in Railway. You can manage your sync from the *Syncing* tab of your App, or from the *Integrations* screen.
 
-![railway syncs](/assets/images/platform-integrations/railway/railway-sync-cards.png)
+![railway syncs](/assets/images/platform-integrations/railway/railway-sync-cards.webp)

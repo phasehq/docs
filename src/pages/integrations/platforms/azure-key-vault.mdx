@@ -96,7 +96,7 @@ Example output:
 
 1. Go to **Integrations** from the sidebar and click on **Third-party credentials**.
 
-![Go to integrations](/assets/images/platform-integrations/integrations-sidebar.png)
+![Go to integrations](/assets/images/platform-integrations/integrations-sidebar.webp)
 
 2. Click on **Azure**.
 
@@ -117,7 +117,7 @@ Example output:
 
 2. Go to your App in the Phase Console and go to the **Syncing** tab. Select **Azure Key Vault** under the 'Create a new Sync' menu.
 
-![Select Azure KV sync provider](/assets/images/platform-integrations/azure/4-create-a-sync-w:-azure-kv.webp)
+![Select Azure KV sync provider](/assets/images/platform-integrations/azure/4-create-a-sync-with-azure-kv.webp)
 
 3. Select the Azure credentials stored in the previous step and enter your **Vault URI** (e.g. `https://phase-kv.vault.azure.net`). Click **Next**.
 
@@ -185,6 +185,8 @@ The secret is stored with `content_type: application/json` in Key Vault. Your ap
 </TabGroup>
 
 6. Click **Create**. The sync is now active! Secrets will automatically sync whenever they are updated in Phase.
+
+![Azure Key Vault sync card](/assets/images/platform-integrations/azure/7-azure-kv-sync-card.webp)
 
 ## Optional: Import existing secrets from Azure Key Vault into Phase
 

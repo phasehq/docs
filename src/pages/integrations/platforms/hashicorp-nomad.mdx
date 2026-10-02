@@ -134,15 +134,15 @@ In the following screen you will be presented with a `Token Secret` which is the
 
 1. Go to **Integrations** from the sidebar and click on **Third-party credentials** in the integrations tab.
 
-![Go to integrations](/assets/images/platform-integrations/integrations-sidebar.png)
+![Go to integrations](/assets/images/platform-integrations/integrations-sidebar.webp)
 
 2. Click on **Hashicorp Nomad**
 
-![Click on Nomad](/assets/images/platform-integrations/hashicorp/nomad/nomad-create-creds-button.png)
+![Click on Nomad](/assets/images/platform-integrations/hashicorp/nomad/nomad-create-creds-button.webp)
 
 3. Enter your Nomad instance host including the port, and your `Token Secret` from the previous step. Enter a descriptive name and click **Save**
 
-![Input Nomad credentials](/assets/images/platform-integrations/hashicorp/nomad/nomad-input-creds.png)
+![Input Nomad credentials](/assets/images/platform-integrations/hashicorp/nomad/nomad-input-creds.webp)
 
 Your credentials will be encrypted and saved. You can view and manage these credentials under *Service Credentials* in the *Integrations* screen.
 
@@ -150,16 +150,18 @@ Your credentials will be encrypted and saved. You can view and manage these cred
 
 1. Go to your App in the Phase Console and go to the **Syncing** tab. Select **Hashicorp Nomad** under the 'Create a new Sync' menu.
 
-![Nomad create sync](/assets/images/platform-integrations/hashicorp/nomad/nomad-create-sync-button.png)
+![Nomad create sync](/assets/images/platform-integrations/hashicorp/nomad/nomad-create-sync-button.webp)
 
 2. Choose the credentials you added in the previous step as the authentication mode, and click **Next**:
 
-![Nomad select credentials](/assets/images/platform-integrations/hashicorp/nomad/nomad-sync-choose-creds.png)
+![Nomad select credentials](/assets/images/platform-integrations/hashicorp/nomad/nomad-sync-choose-creds.webp)
 
 3. Next, you can select the source and destination to sync secrets. Select an Environment, and optionally specify a path in your Phase App as the source. 
 The Nomad variable in the destination will be pre-filled as `[app_name]/[env_name]`, and the namespace will be `default`. Change these values as required, and click **Create**
 
-![Nomad setup sync](/assets/images/platform-integrations/hashicorp/nomad/nomad-setup-sync.png)
+![Nomad setup sync](/assets/images/platform-integrations/hashicorp/nomad/nomad-setup-sync.webp)
 
 Your sync is now set up! Phase will now automatically update your Nomad variables whenever you make changes to your secrets in Phase.
 You can manage and keep track of this sync at any time from the *Syncing* tab in your App, or the *Integrations* screen from the sidebar.
+
+![HashiCorp Nomad sync card](/assets/images/platform-integrations/hashicorp/nomad/nomad-sync-card.webp)

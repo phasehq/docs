@@ -266,6 +266,8 @@ For more detailed information about Microsoft Entra ID application registration 
     - **Client Secret** ← the client secret value
 
     Applies to this organisation only. No redeploy needed, and you can [enforce SSO](/access-control/authentication/sso#enforce-sso) so every member must sign in via Entra ID. Full walkthrough: [SSO](/access-control/authentication/sso).
+
+    ![Entra ID setup dialog in the Phase Console](/assets/images/auth/sso/org/03-entra-setup-dialog-filled.webp)
   </TabPanel>
   <TabPanel title="Instance-wide (legacy)" slug="instance-wide">
     Supply the values as environment variables on your self-hosted deployment:
@@ -382,6 +384,8 @@ You now have the three values needed to configure Phase — **Issuer URL**, **Cl
     - **Client Secret** ← Okta Application Client Secret
 
     Applies to this organisation only. No redeploy needed, and you can [enforce SSO](/access-control/authentication/sso#enforce-sso) so every member must sign in via Okta. Full walkthrough: [SSO](/access-control/authentication/sso).
+
+    ![Okta setup dialog in the Phase Console](/assets/images/auth/sso/org/02b-okta-setup-dialog-filled.webp)
   </TabPanel>
   <TabPanel title="Instance-wide (legacy)" slug="instance-wide">
     Supply the values as environment variables on your self-hosted deployment:

@@ -16,25 +16,29 @@ Organisations in Phase contain all your [Apps](/console/apps) and [Users](/conso
 
 When you sign up on Phase, you will need to create an Organisation. You must choose a name for your Organisation that can contain letters or numbers. Organisation names must be unique.
 
-![create organisation](/assets/images/console/organisation/organisation-create.png)
+![create organisation](/assets/images/console/organisation/organisation-create.webp)
 
 ## Apps
 
 This page lists all Apps in your Organisation, along with information about the number of members, environments, integrations and service accounts accessible by you in each App. Click on an App to view and manage it.
 
-![organisation apps](/assets/images/console/organisation/organisation-apps.png)
+![organisation apps](/assets/images/console/organisation/organisation-apps.webp)
 
 ## Members
 
 This page lists all members of your Organisation. If you are an Owner or Admin, you can modify member roles from this screen.
 
-![organisation members](/assets/images/console/organisation/organisation-members.png)
+![organisation members](/assets/images/console/organisation/organisation-members.webp)
 
 You can also invite new members to your Organisation. To invite a new member, click on the "Add a member" button, enter the email of the user you wish to invite, optionally select a role and click "Invite". You will need to manually provision access to Apps for the new member.
 
-![invite member](/assets/images/console/organisation/organisation-memmber-invite.png)
+![invite member](/assets/images/console/organisation/organisation-member-invite.webp)
 
 You are limited to selecting a non Global Access role when inviting a new member. This is because the user has not created an account and associated cryptographic keys. For more information on Global Access roles, see [Roles](/access-control#global-access).
+
+Once a member has joined, you can grant them access to specific Apps and Environments from their member page.
+
+![Grant a member access to an App](/assets/images/console/users/users-add-app.webp)
 
 When you invite a member or change a member's role, you can only select a role whose permissions your own role also has. This limit does not apply to users with the Owner or Admin role.
 
@@ -42,7 +46,13 @@ When you invite a member or change a member's role, you can only select a role w
 
 This page shows your account and recovery info related to this Organisation. You can view your current role, preferences and download your account recovery kit from this screen. This page will also show you the current billing status of your Organisation.
 
-![organisation settings](/assets/images/console/organisation/organisation-settings.png)
+![organisation settings](/assets/images/console/organisation/organisation-settings.webp)
+
+The **Account & Security** tab lets you view your recovery kit and change your password for this account.
+
+![Account & Security settings](/assets/images/console/organisation/organisation-settings-account-security.webp)
+
+![View your account recovery kit](/assets/images/console/users/view-recovery-kit.webp)
 
 ## Transfer Ownership
 
@@ -56,11 +66,11 @@ Organisation Owners can transfer ownership to another member who has the [Admin]
 To transfer ownership:
 
 1. Log in as the Organisation **Owner** and navigate to your Organisation **Settings**. Scroll down to the **Danger Zone** section and click **Transfer Ownership**.
-![transfer ownership settings](/assets/images/console/organisation/organisation-transfer-ownership-1.png)
+![transfer ownership settings](/assets/images/console/organisation/organisation-transfer-ownership-1.webp)
 2. Select the Admin member you want to make the new Owner. Only members with the Admin role are eligible.
-![select new owner](/assets/images/console/organisation/organisation-transfer-ownership-2.png)
+![select new owner](/assets/images/console/organisation/organisation-transfer-ownership-2.webp)
 3. Review the changes, confirm that the new Owner has backed up their account recovery kit, and acknowledge that you will lose your Owner privileges. Click **Transfer Ownership** to complete the transfer. If you are using Phase Cloud, you will see a section for updating the billing email address.
-![confirm transfer](/assets/images/console/organisation/organisation-transfer-ownership-3.png)
+![confirm transfer](/assets/images/console/organisation/organisation-transfer-ownership-3.webp)
 
 Once the transfer is complete:
 

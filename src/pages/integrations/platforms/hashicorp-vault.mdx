@@ -203,17 +203,17 @@ Phase can automatically sync secrets to your Hashicorp Vault instance. First, yo
 
 2. Go to **Integrations** from the sidebar and click on **Add credentials** in the 'Service credentials' section
 
-![Go to integrations](/assets/images/platform-integrations/integrations-sidebar.png)
+![Go to integrations](/assets/images/platform-integrations/integrations-sidebar.webp)
 
 3. Click on **Hashicorp Vault**
 
-![Click on Vault](/assets/images/platform-integrations/hashicorp/vault/vault-create-creds-button.png)
+![Click on Vault](/assets/images/platform-integrations/hashicorp/vault/vault-create-creds-button.webp)
 
 4. Enter your vault instance url under `VAULT ADDR`. Paste your `role_id` and `secret_id` into the `VAULT ROLE ID` and `VAULT SECRET ID` fields respectively.
    `VAULT_NAMESPACE` is optional if you would like Secrets to be synced to a custom namespace.
    Add a descriptive name for these credentials and click **Save**.
 
-![Input Vault credentials](/assets/images/platform-integrations/hashicorp/vault/vault-input-creds.png)
+![Input Vault credentials](/assets/images/platform-integrations/hashicorp/vault/vault-input-creds.webp)
 
 If you are using a Hashicorp Cloud Platform (HCP) managed Vault instance you can copy the Public URL by clicking the 📋Public button
 ![HCL portal vault cluster ](/assets/images/platform-integrations/hashicorp/vault/hcl-vault-portal.png)
@@ -226,11 +226,11 @@ Example: https://vault-cluster-public-vault-gbef9712.627dc7e1.z2.hashicorp.cloud
 
 2. Go to your App in the Phase Console and go to the **Syncing** tab. Select **Hashicorp Vault** under the 'Create a new Sync' menu.
 
-![Create Vault Sync](/assets/images/platform-integrations/hashicorp/vault/vault-create-sync-button.png)
+![Create Vault Sync](/assets/images/platform-integrations/hashicorp/vault/vault-create-sync-button.webp)
 
 3. Select the credentials stored in the previous step as the authentication method for this sync, and click **Next**
 
-![Choose sync authentication credentials](/assets/images/platform-integrations/hashicorp/vault/vault-select-creds.png)
+![Choose sync authentication credentials](/assets/images/platform-integrations/hashicorp/vault/vault-select-creds.webp)
 
 <Note>
   If you see an error message and cannot proceed to the next screen, it is most
@@ -246,8 +246,10 @@ Example: https://vault-cluster-public-vault-gbef9712.627dc7e1.z2.hashicorp.cloud
    `Vault KV Secret Engine` is prefilled as `phase-console-kv-sync/` as per the instructions in [Step 1](#step-1-create-a-new-kv-secrets-engine-in-vault-version-2-kv-v2). If you used a different name for your KV engine, make sure to update it here.
    The `Vault Secret Path` is prefilled as `[app_name]/[env_name]`. You can edit this if desired.
 
-![Choose sync source and destination](/assets/images/platform-integrations/hashicorp/vault/vault-configure-sync.png)
+![Choose sync source and destination](/assets/images/platform-integrations/hashicorp/vault/vault-configure-sync.webp)
 
 5. Once you have selected your desired source and destination, click **Create**.
    The sync has been set up! Secrets will automatically be Synced from your chosen Phase Environment to your Vault instance.
    You can click on the **Manage** button on the Sync card to view sync logs, pause syncing or update authentication credentials.
+
+   ![HashiCorp Vault sync card](/assets/images/platform-integrations/hashicorp/vault/vault-sync-card.webp)
