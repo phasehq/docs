@@ -7,7 +7,7 @@ export const description = 'Integrate Phase with GitLab CI'
 
 # GitLab CI
 
-You can use Phase to sync secrets to GitLab CI Variables.
+You can use Phase to sync secrets to GitLab CI/CD Variables, either for all environments or scoped to specific GitLab environments.
 
 <DocActions />
 
@@ -139,6 +139,10 @@ Now that you have authenticated with GitLab, you can configure syncs for your ap
 3. Choose the source and destination to sync secrets. Select an Environment as the source for Secrets.
    Next, choose a GitLab Project or GitLab Group from the dropdown as the destination to sync Secrets to.
 
+   Then choose a **GitLab Environment Scope**. By default, secrets are synced to the `*` scope (**All environments**) and are available to every job in your pipelines. To make secrets available only to a specific GitLab environment, select a scope from the dropdown, or type any environment scope, including wildcards such as `review/*`. For a project, the dropdown lists the project's environments. Groups don't have environments, so for a group it lists the scopes that the group's variables already use. See [Environment scopes](#environment-scopes) for details.
+
+   ![Choose a GitLab environment scope](/assets/images/platform-integrations/gitlab/gitlab-setup-sync-environment-scope.webp)
+
    You can optionally also choose to [mask](https://docs.gitlab.com/ee/ci/variables/#mask-a-cicd-variable) and/or [protect](https://docs.gitlab.com/ee/ci/variables/) secrets synced to GitLab.
 
    <Note>
@@ -164,6 +168,66 @@ Now that you have authenticated with GitLab, you can configure syncs for your ap
    You can click on the **Manage** button on the Sync card to view sync logs, pause syncing, or update authentication credentials.
 
    ![GitLab CI sync card](/assets/images/platform-integrations/gitlab/gitlab-sync-card.webp)
+
+## Environment scopes
+
+GitLab CI/CD variables can be [limited to an environment](https://docs.gitlab.com/ci/environments/#limit-the-environment-scope-of-a-cicd-variable) with an environment scope. Variables in the default `*` scope are available to every job. Variables in any other scope are only available to jobs that deploy to a matching environment, and if the same key exists in more than one matching scope, GitLab uses the most specific one.
+
+Each GitLab sync manages the variables in a single environment scope:
+
+- It creates, updates and deletes the variables in its scope to match the secrets in the Phase Environment.
+- Variables in other scopes are left untouched, even if they have the same key.
+
+<Note>
+  Syncs created before environment scopes were available don't have an
+  environment scope. They keep syncing to all environments (`*`) as before, and
+  keep updating variables that were moved to another environment scope in
+  GitLab. To use environment scopes with the same GitLab project or group,
+  delete such a sync first and create it again with an environment scope. If
+  you had moved some of its variables to other scopes in GitLab, also create a
+  sync for each of those scopes, or delete those variables: the new sync only
+  updates variables in its own scope, so they would keep their old values.
+</Note>
+
+This lets you sync each Phase Environment to the matching environment in the same GitLab project. For example:
+
+| Phase Environment | GitLab Environment Scope |
+| ----------------- | ------------------------ |
+| Development       | `review/*`               |
+| Staging           | `staging`                |
+| Production        | `production`             |
+
+You can also combine a sync to the default `*` scope with syncs to specific environments. Jobs for those environments then use the scoped value of a variable, and every other job uses the value from the `*` scope.
+
+To use secrets that are scoped to an environment, set the [`environment`](https://docs.gitlab.com/ci/yaml/#environment) of the job that needs them:
+
+```yaml
+deploy_staging:
+  stage: deploy
+  environment: staging
+  script:
+    - ./deploy.sh # Secrets synced to the staging scope are available here
+
+deploy_production:
+  stage: deploy
+  environment: production
+  script:
+    - ./deploy.sh # Secrets synced to the production scope are available here
+```
+
+<Note>
+  An App can only have one sync per GitLab project or group and environment
+  scope, since two syncs to the same scope would overwrite each other's
+  variables.
+</Note>
+
+<Warning>
+  Environment scopes for **group** variables require GitLab Premium or
+  Ultimate. On other tiers, GitLab ignores the scope and makes the variable
+  available to every environment. If this happens, Phase removes the variable
+  again and the sync fails with an error, so scoped secrets are never exposed
+  to all environments. Use a project sync or the default `*` scope instead.
+</Warning>
 
 ## Using the Phase CLI
 
