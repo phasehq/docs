@@ -73,7 +73,7 @@ Certain API endpoints that allow manipulation of encrypted data such as Secrets 
 
 ## Rate Limits
 
-The Phase Cloud API enforces rate limiting to ensure fair usage and maintain optimal performance for all users. The following standard rate limits apply, based on your Organisation's plan:
+The Phase Cloud API applies rate limits. These limits keep usage fair and performance stable for all users. The limit depends on the plan of your Organisation:
 
 | Plan | Requests per Minute |
 |------|---------------------|
@@ -82,10 +82,10 @@ The Phase Cloud API enforces rate limiting to ensure fair usage and maintain opt
 | Enterprise | Custom |
 
 <Note>
-The rate limits are enforced per account (User or Service Account) across an organisation.
+The rate limit applies to your Organisation as a whole. All Users, Service Accounts, and Service Tokens in an Organisation share one limit.
 </Note>
 
-If you exceed the allowed number of requests within a given time frame, you will receive a `429 Too Many Requests` response. The response will include information about when you can retry your request in the `retry-after` header.
+If your Organisation sends more requests than the limit permits, the API returns a `429 Too Many Requests` response. The `retry-after` header in the response gives the number of seconds until the limit resets.
 
 ```bash
 HTTP/2 429 
@@ -102,4 +102,4 @@ referrer-policy: same-origin
 cross-origin-opener-policy: same-origin
 ```
 
-Self-hosted Phase instances do not enforce rate limiting by default. However, administrators can configure rate limiting based on their requirements via the `RATE_LIMIT_DEFAULT` environment variable. Please see the self-hosting [deployment configuration documentation](/self-hosting/configuration/envars#additional-environment-variables) for more details.
+Self-hosted Phase instances do not apply rate limits by default. Administrators can set a rate limit with the `RATE_LIMIT_DEFAULT` environment variable. If this variable is not set, the API applies no rate limits. See the self-hosting [deployment configuration documentation](/self-hosting/configuration/envars#additional-environment-variables) for more information.
