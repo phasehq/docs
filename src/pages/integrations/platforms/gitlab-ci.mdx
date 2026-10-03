@@ -139,7 +139,7 @@ Now that you have authenticated with GitLab, you can configure syncs for your ap
 3. Choose the source and destination to sync secrets. Select an Environment as the source for Secrets.
    Next, choose a GitLab Project or GitLab Group from the dropdown as the destination to sync Secrets to.
 
-   Then choose a **GitLab Environment Scope**. By default, secrets are synced to the `*` scope (**All environments**) and are available to every job in your pipelines. To make secrets available only to a specific GitLab environment, select one of the project's environments from the dropdown, or type any environment scope, including wildcards such as `review/*`. See [Environment scopes](#environment-scopes) for details.
+   Then choose a **GitLab Environment Scope**. By default, secrets are synced to the `*` scope (**All environments**) and are available to every job in your pipelines. To make secrets available only to a specific GitLab environment, select a scope from the dropdown, or type any environment scope, including wildcards such as `review/*`. For a project, the dropdown lists the project's environments. Groups don't have environments, so for a group it lists the scopes that the group's variables already use. See [Environment scopes](#environment-scopes) for details.
 
    ![Choose a GitLab environment scope](/assets/images/platform-integrations/gitlab/gitlab-setup-sync-environment-scope.webp)
 
@@ -183,7 +183,10 @@ Each GitLab sync manages the variables in a single environment scope:
   environment scope. They keep syncing to all environments (`*`) as before, and
   keep updating variables that were moved to another environment scope in
   GitLab. To use environment scopes with the same GitLab project or group,
-  delete such a sync first and create it again with an environment scope.
+  delete such a sync first and create it again with an environment scope. If
+  you had moved some of its variables to other scopes in GitLab, also create a
+  sync for each of those scopes, or delete those variables: the new sync only
+  updates variables in its own scope, so they would keep their old values.
 </Note>
 
 This lets you sync each Phase Environment to the matching environment in the same GitLab project. For example:
