@@ -182,8 +182,8 @@ Each GitLab sync manages the variables in a single environment scope:
   Syncs created before environment scopes were available don't have an
   environment scope. They keep syncing to all environments (`*`) as before, and
   keep updating variables that were moved to another environment scope in
-  GitLab. To sync to a specific environment instead, delete the sync and create
-  it again with an environment scope.
+  GitLab. To use environment scopes with the same GitLab project or group,
+  delete such a sync first and create it again with an environment scope.
 </Note>
 
 This lets you sync each Phase Environment to the matching environment in the same GitLab project. For example:
