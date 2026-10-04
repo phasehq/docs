@@ -187,6 +187,12 @@ Each GitLab sync manages the variables in a single environment scope:
   you had moved some of its variables to other scopes in GitLab, also create a
   sync for each of those scopes, or delete those variables: the new sync only
   updates variables in its own scope, so they would keep their old values.
+
+  If a secret exists in several environment scopes in GitLab, such a sync can't
+  tell which variable to update or delete. It still syncs new and changed
+  secrets, but deletes no variables and fails with an error that names those
+  secrets, until only one of them is left or the sync is created again with an
+  environment scope.
 </Note>
 
 This lets you sync each Phase Environment to the matching environment in the same GitLab project. For example:
