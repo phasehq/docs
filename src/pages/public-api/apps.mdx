@@ -121,7 +121,7 @@ Apps created via the API are SSE-enabled by default. The list endpoint returns m
         A description for the app. Maximum 10,000 characters.
       </Property>
       <Property name="environments" type="array">
-        A list of custom environment names to create instead of the defaults. Each name must contain only letters, numbers, hyphens, and underscores. Requires a paid plan.
+        A list of custom environment names to create instead of the defaults. Each name must contain only letters, numbers, hyphens, and underscores. Requires a Pro or Enterprise plan. On the Free plan, the request returns `403 Forbidden` with `{"error": "Custom environments are not available on the Free plan."}`. The Pro plan allows up to 10 names and Enterprise has no limit. Past the limit, the request returns `403 Forbidden` with `{"error": "Environment quota exceeded for this app's plan."}`.
       </Property>
     </Properties>
 

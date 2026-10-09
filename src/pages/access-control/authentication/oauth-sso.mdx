@@ -99,7 +99,7 @@ Follow these steps to set up GitHub SSO for your Phase application:
 If you are using a GitHub Enterprise Server (self-hosted) instance, you may follow the steps below to set up GitHub SSO for your Phase application as the instructions are nearly identical. The only exception being the Authorization callback URL.
 
 <Note>
-   A GitHub Enterprise Server (self-hosted) instance for OAuth SSO is only available for organizations with an `Enterprise` tier subscription. See [Pricing](https://phase.dev/pricing).
+   A GitHub Enterprise Server (self-hosted) instance for OAuth SSO is only available on self-hosted Phase instances with an active Enterprise [license](/self-hosting/configuration/envars#license). See [Pricing](https://phase.dev/pricing).
 </Note>
 
 1. Log in to your GitHub account and go to [OAuth Apps](https://github.com/settings/applications/new) in Developer Settings.

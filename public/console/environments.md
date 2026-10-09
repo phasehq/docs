@@ -19,6 +19,8 @@ These default environments provide a standard structure for managing your applic
 
 <Note>
  The ability to create and manage custom environments is available for organizations with a `Phase Pro` or `Enterprise` tier subscription.
+
+ Each app can have up to 3 environments on the `Free` tier and up to 10 on the `Pro` tier. The `Enterprise` tier has no limit.
 </Note>
 
 Environment names must match the pattern `^[a-zA-Z0-9\-_]{1,32}$`. This means they can only contain:
