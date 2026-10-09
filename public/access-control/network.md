@@ -108,6 +108,10 @@ Here's a quick video demo:
 
 ## Global Network Policies
 
+<Note>
+ The ability to manage and enforce global network policies is available for organizations with an `Enterprise` tier subscription.
+</Note>
+
 Global Network Policies allow you to enforce network access restrictions across your entire organization. When enabled, these policies apply to all users and service accounts that don't have an explicit network access policy attached.
 
 ### Enforcing a Global Network Policy

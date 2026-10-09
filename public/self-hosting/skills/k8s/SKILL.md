@@ -14,7 +14,7 @@ This skill autonomously deploys Phase Console on any Kubernetes cluster using th
 
 - **Autopilot by default.** The agent creates files and runs commands without asking permission at each step. Show a preview of generated files once before writing, then proceed.
 - **Never handle secrets directly.** Write the Kubernetes secret as a shell script (`create-secret.sh`) with `$(openssl rand -hex 32)` for auto-generated values and `EDIT_ME` placeholders for values the user must supply. Keep `--from-literal` lines flush with no unnecessary leading indentation. Tell the user to fill in the `EDIT_ME` values and run the script. Never ask the user to type secret values into the chat.
-- **License key is not a secret.** If the user has a Phase Enterprise license key, ask them to paste it directly into the chat.
+- **License key is not a secret.** If the user has a Phase license key, ask them to paste it directly into the chat.
 - **Reference files for details.** See `refs/k8s-deployment.md` for exact commands and YAML templates, and `refs/troubleshooting.md` for diagnosing issues.
 
 ## Workflow
@@ -50,7 +50,7 @@ Ask all questions in a single conversational message. Do not ask one at a time.
 6. **SMTP / email notifications** — Does the user have an SMTP gateway for Phase email notifications (invites, alerts)?
    - If **yes**: ask for SMTP host, port, sender address, and username. Tell them the password will be added to the secret script — do not ask for it in chat.
    - If **no**: skip, or suggest they configure one later via the Phase admin panel.
-7. **Phase Enterprise license** — Do they have a Phase Enterprise license key? If yes, ask them to paste it here.
+7. **Phase license** — Do they have a Phase license key? If yes, ask them to paste it here.
 
 Store all answers. Proceed to Phase 3 once answered.
 
@@ -111,7 +111,7 @@ If the user needs AWS Secrets Manager integration, append:
 --from-literal=AWS_DEFAULT_REGION=EDIT_ME_REGION # EDIT_ME: e.g. us-east-1
 ```
 
-If the user has an Enterprise license key, append:
+If the user has a license key, append:
 
 ```bash
 --from-literal=LICENSE_KEY={license_key_value}

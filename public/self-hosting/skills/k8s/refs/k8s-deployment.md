@@ -220,7 +220,7 @@ AWS Secrets Manager (static credentials):
 --from-literal=AWS_DEFAULT_REGION=EDIT_ME_REGION
 ```
 
-Enterprise license:
+Phase license:
 ```bash
 --from-literal=LICENSE_KEY=YOUR_LICENSE_KEY
 ```

@@ -17,7 +17,7 @@ The agent writes config files and runs docker/certbot commands directly. The use
 
 - **Autopilot by default.** Write files and run commands without asking for permission at each step. Preview generated files once before writing, then proceed.
 - **Never handle secrets directly.** Write `.env` configuration as a shell script (`configure-env.sh`) that auto-generates cryptographic secrets with `openssl rand -hex 32` and marks OAuth credentials with `# EDIT_ME`. Tell the user to fill those in and run the script. Never ask the user to type secret values into the chat.
-- **License key is not a secret.** If the user has a Phase Enterprise license key, ask them to paste it directly into the chat.
+- **License key is not a secret.** If the user has a Phase license key, ask them to paste it directly into the chat.
 - **Preserve nginx routing.** All modifications to `nginx/default.conf` must keep the existing routing intact: `/service/` proxies to `backend:8000`, `/` proxies to `frontend:3000`.
 - **Reference files for details.** See `refs/docker-compose-deployment.md` for exact file templates and commands, and `refs/troubleshooting.md` for diagnosing issues.
 
@@ -47,7 +47,7 @@ Ask all questions in a single message:
    - `google`, `github`, `gitlab`, `authentik`
    - `google-oidc`, `jumpcloud-oidc`, `entra-id-oidc`, `okta-oidc`
    - `github-enterprise`
-4. **Phase Enterprise license** — Do they have a license key? If yes, ask them to paste it here.
+4. **Phase license** — Do they have a license key? If yes, ask them to paste it here.
 
 Once answered, proceed to Phase 3.
 

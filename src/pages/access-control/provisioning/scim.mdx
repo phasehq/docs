@@ -71,6 +71,10 @@ Before configuring your identity provider, enable SCIM in the Phase Console and 
   Treat the SCIM token like a password. Anyone with this token can provision and deprovision users in your Phase organisation.
 </Warning>
 
+<Note>
+  If your plan no longer includes SCIM, Phase rejects provisioning requests. You can still disable or delete tokens, then turn SCIM off.
+</Note>
+
 ## Microsoft Entra ID (Azure AD)
 
 Microsoft Entra ID supports SCIM-based provisioning through Enterprise Applications. Follow these steps to configure automatic user and group provisioning from Entra ID to Phase.

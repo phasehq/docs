@@ -42,7 +42,7 @@ GITLAB_CLIENT_SECRET="EDIT_ME"       # EDIT_ME: GitLab OAuth Client Secret
 GITHUB_INTEGRATION_CLIENT_ID="EDIT_ME"      # EDIT_ME (optional)
 GITHUB_INTEGRATION_CLIENT_SECRET="EDIT_ME"  # EDIT_ME (optional)
 
-# Enterprise license (leave blank if not applicable)
+# Phase license (leave blank if not applicable)
 PHASE_LICENSE_OFFLINE=""
 
 cat > .env <<EOF

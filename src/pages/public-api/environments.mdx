@@ -131,6 +131,8 @@ The Environments API requires server-side encryption (SSE) to be enabled for the
 
     Create a new environment within an app. The environment name must contain only letters, numbers, hyphens, and underscores (max 64 characters).
 
+    Creating environments needs a paid plan, and your plan limits the number of environments per app. Requests over the limit return `403 Forbidden`.
+
     ### Required parameters
 
     <Properties>

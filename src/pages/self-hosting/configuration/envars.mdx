@@ -39,6 +39,10 @@ The following providers are available:
 
 You can find a complete list of user auth providers [here](/access-control/authentication#user-authentication).
 
+<Note>
+GitHub Enterprise and the OIDC providers (`google-oidc`, `jumpcloud-oidc`, `entra-id-oidc`, `okta-oidc`) need an Enterprise [license](#license).
+</Note>
+
 ### Google OAuth 2.0
 
 Provider slug: `google`
@@ -956,7 +960,7 @@ aws iam create-access-key --user-name phase-integration-user
 
 ## License
 
-Phase requires a valid license to use the Enterprise tier features in self-hosted deployments. You can request a free trial license [here](https://phase.dev/pricing).
+A license unlocks the features of its plan for the organisation named on the license. Without a license, organisations use the Free plan. See [Pricing](https://phase.dev/pricing) for what each plan includes, or to request a free trial license.
 
 ### Offline license
 
