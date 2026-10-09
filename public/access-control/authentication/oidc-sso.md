@@ -14,7 +14,7 @@ This page walks through registering an application with each supported OIDC prov
 <DocActions /> 
 
 <Note>
- OIDC SSO as an authentication method is only available for organizations with an `Enterprise` tier subscription. See [Pricing](https://phase.dev/pricing). On self-hosted instances, sign-in through these providers also needs an active Enterprise [license](/self-hosting/configuration/envars#license) on the instance.
+ OIDC SSO as an authentication method is only available for organizations with an `Enterprise` tier subscription. See [Pricing](https://phase.dev/pricing). On self-hosted instances, these providers need an Enterprise [license](/self-hosting/configuration/envars#license).
 </Note>
 
 ## Google

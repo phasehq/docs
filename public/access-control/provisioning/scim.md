@@ -12,7 +12,7 @@ SCIM (System for Cross-domain Identity Management) v2 enables automatic user and
 <DocActions />
 
 <Note>
-  SCIM provisioning is available for organisations with an `Enterprise` tier subscription. See [Pricing](https://phase.dev/pricing). On self-hosted instances, this needs an Enterprise [license](/self-hosting/configuration/envars#license).
+  SCIM provisioning is available for organisations with an `Enterprise` tier subscription. See [Pricing](https://phase.dev/pricing).
 </Note>
 
 ## How it works
@@ -72,7 +72,7 @@ Before configuring your identity provider, enable SCIM in the Phase Console and 
 </Warning>
 
 <Note>
-  If your organisation's plan no longer includes SCIM, for example after a downgrade from Enterprise, Phase rejects requests from your identity provider. Admins can still disable or delete tokens, then turn SCIM off. They can't turn SCIM on or create tokens.
+  If your plan no longer includes SCIM, Phase rejects provisioning requests. You can still disable or delete tokens, then turn SCIM off.
 </Note>
 
 ## Microsoft Entra ID (Azure AD)

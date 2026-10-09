@@ -416,18 +416,18 @@ For external databases, `DATABASE_PASSWORD` and `REDIS_PASSWORD` are auto-genera
 
 ## SSO Provider Environment Variable Keys
 
-| Provider | Slug | Client ID Key | Client Secret Key | Enterprise license |
-|----------|------|---------------|-------------------|--------------------|
-| Google OAuth | `google` | `GOOGLE_CLIENT_ID` | `GOOGLE_CLIENT_SECRET` | No |
-| GitHub OAuth | `github` | `GITHUB_CLIENT_ID` | `GITHUB_CLIENT_SECRET` | No |
-| GitLab OAuth | `gitlab` | `GITLAB_CLIENT_ID` | `GITLAB_CLIENT_SECRET` | No |
-| Authentik | `authentik` | `AUTHENTIK_CLIENT_ID` | `AUTHENTIK_CLIENT_SECRET` | No |
-| GitHub Enterprise | `github-enterprise` | `GITHUB_ENTERPRISE_CLIENT_ID` | `GITHUB_ENTERPRISE_CLIENT_SECRET` | Required |
-| Google OIDC | `google-oidc` | `GOOGLE_OIDC_CLIENT_ID` | `GOOGLE_OIDC_CLIENT_SECRET` | Required |
-| JumpCloud OIDC | `jumpcloud-oidc` | `JUMPCLOUD_OIDC_CLIENT_ID` | `JUMPCLOUD_OIDC_CLIENT_SECRET` | Required |
-| Microsoft Entra ID | `entra-id-oidc` | `ENTRA_ID_OIDC_CLIENT_ID` | `ENTRA_ID_OIDC_CLIENT_SECRET` | Required |
-| Okta OIDC | `okta-oidc` | `OKTA_OIDC_CLIENT_ID` | `OKTA_OIDC_CLIENT_SECRET` | Required |
-| Authelia | `authelia` | `AUTHELIA_CLIENT_ID` | `AUTHELIA_CLIENT_SECRET` | No |
+| Provider | Slug | Client ID Key | Client Secret Key |
+|----------|------|---------------|-------------------|
+| Google OAuth | `google` | `GOOGLE_CLIENT_ID` | `GOOGLE_CLIENT_SECRET` |
+| GitHub OAuth | `github` | `GITHUB_CLIENT_ID` | `GITHUB_CLIENT_SECRET` |
+| GitLab OAuth | `gitlab` | `GITLAB_CLIENT_ID` | `GITLAB_CLIENT_SECRET` |
+| Authentik | `authentik` | `AUTHENTIK_CLIENT_ID` | `AUTHENTIK_CLIENT_SECRET` |
+| GitHub Enterprise | `github-enterprise` | `GITHUB_ENTERPRISE_CLIENT_ID` | `GITHUB_ENTERPRISE_CLIENT_SECRET` |
+| Google OIDC | `google-oidc` | `GOOGLE_OIDC_CLIENT_ID` | `GOOGLE_OIDC_CLIENT_SECRET` |
+| JumpCloud OIDC | `jumpcloud-oidc` | `JUMPCLOUD_OIDC_CLIENT_ID` | `JUMPCLOUD_OIDC_CLIENT_SECRET` |
+| Microsoft Entra ID | `entra-id-oidc` | `ENTRA_ID_OIDC_CLIENT_ID` | `ENTRA_ID_OIDC_CLIENT_SECRET` |
+| Okta OIDC | `okta-oidc` | `OKTA_OIDC_CLIENT_ID` | `OKTA_OIDC_CLIENT_SECRET` |
+| Authelia | `authelia` | `AUTHELIA_CLIENT_ID` | `AUTHELIA_CLIENT_SECRET` |
 
 ## SSO Callback URLs
 

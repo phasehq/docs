@@ -30,17 +30,17 @@ The following providers are available:
 - `github` - GitHub OAuth 2.0
 - `gitlab` - GitLab OAuth 2.0
 - `authentik` - Authentik OAuth 2.0
-- `github-enterprise` - GitHub Enterprise Server OAuth 2.0 (Enterprise license)
-- `google-oidc` - Google OIDC (Enterprise license)
-- `jumpcloud-oidc` - JumpCloud OIDC (Enterprise license)
-- `entra-id-oidc` - Microsoft Entra ID OIDC (Enterprise license)
-- `okta-oidc` - Okta OIDC (Enterprise license)
+- `github-enterprise` - GitHub Enterprise Server OAuth 2.0
+- `google-oidc` - Google OIDC
+- `jumpcloud-oidc` - JumpCloud OIDC
+- `entra-id-oidc` - Microsoft Entra ID OIDC
+- `okta-oidc` - Okta OIDC
 - `authelia` - Authelia OIDC
 
 You can find a complete list of user auth providers [here](/access-control/authentication#user-authentication).
 
 <Note>
-Providers marked *Enterprise license* need an active Enterprise [license](#license) on the instance. Without one, sign-in through these providers fails and the backend logs a warning. The other providers work without a license.
+GitHub Enterprise and the OIDC providers (`google-oidc`, `jumpcloud-oidc`, `entra-id-oidc`, `okta-oidc`) need an Enterprise [license](#license).
 </Note>
 
 ### Google OAuth 2.0
@@ -102,10 +102,6 @@ Env(s) required by the following containers:
 ### GitHub Enterprise Server (self-hosted) OAuth 2.0
 
 Provider slug: `github-enterprise`
-
-<Note>
-This provider needs an active Enterprise [license](#license) on the instance.
-</Note>
 
 You can find instructions for setting up SSO with a GitHub Enterprise Server OAuth 2.0 App using the same steps as [GitHub OAuth](/access-control/authentication/oauth-sso#git-hub), but with your enterprise instance.
 
@@ -243,10 +239,6 @@ Env(s) required by the following containers:
 
 Provider slug: `google-oidc`
 
-<Note>
-This provider needs an active Enterprise [license](#license) on the instance.
-</Note>
-
 You can find instructions for setting up SSO with a Google OIDC Application [here](/access-control/authentication/oidc-sso#google).
 
 Set the "callback URL" for your Google OIDC App as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/google-oidc`.
@@ -273,10 +265,6 @@ Env(s) required by the following containers:
 ### JumpCloud OIDC
 
 Provider slug: `jumpcloud-oidc`
-
-<Note>
-This provider needs an active Enterprise [license](#license) on the instance.
-</Note>
 
 You can find instructions for setting up SSO with a JumpCloud OIDC Application [here](/access-control/authentication/oidc-sso#jump-cloud).
 
@@ -305,10 +293,6 @@ Env(s) required by the following containers:
 ### Microsoft Entra ID OIDC
 
 Provider slug: `entra-id-oidc`
-
-<Note>
-This provider needs an active Enterprise [license](#license) on the instance.
-</Note>
 
 You can find instructions for setting up SSO with a Microsoft Entra ID OIDC Application [here](/access-control/authentication/oidc-sso#microsoft-entra-id-azure-ad).
 
@@ -340,10 +324,6 @@ Env(s) required by the following containers:
 ### Okta OIDC
 
 Provider slug: `okta-oidc`
-
-<Note>
-This provider needs an active Enterprise [license](#license) on the instance.
-</Note>
 
 You can find instructions for setting up SSO with an Okta OIDC Application [here](/access-control/authentication/oidc-sso#okta).
 
@@ -980,25 +960,7 @@ aws iam create-access-key --user-name phase-integration-user
 
 ## License
 
-Self-hosted Phase has the same plans as Phase Cloud: Free, Pro and Enterprise. Without a license, an organisation is on the Free tier. A Pro or Enterprise license unlocks that tier for the organisation whose name matches the organisation name on the license. When the license expires, the organisation goes back to the Free tier. You can request a free trial license [here](https://phase.dev/pricing).
-
-| Feature | Free | Pro | Enterprise |
-|---------|------|-----|------------|
-| Environments per app | 3 | 10 | Unlimited |
-| [Custom environments](/console/environments) | ❌ | ✅ | ✅ |
-| [Custom roles](/access-control/roles#custom-roles) | ❌ | ✅ | ✅ |
-| [Teams](/access-control/teams) | ❌ | ✅ | ✅ |
-| [Network access policies](/access-control/network) | ❌ | ✅ | ✅ |
-| [Rotating secrets](/console/rotating-secrets) | ❌ | ✅ | ✅ |
-| [Global network access policies](/access-control/network#global-network-policies) | ❌ | ❌ | ✅ |
-| [Organisation SSO](/access-control/authentication/sso) | ❌ | ❌ | ✅ |
-| [SCIM provisioning](/access-control/provisioning/scim) | ❌ | ❌ | ✅ |
-| [Log streams](/console/logstreams) | ❌ | ❌ | ✅ |
-| [Dynamic secrets](/console/dynamic-secrets) | ❌ | ❌ | ✅ |
-
-On self-hosted, the Free tier has no limit on users or apps. On a licensed organisation, the license sets the number of seats.
-
-Sign-in through GitHub Enterprise, Google OIDC, JumpCloud OIDC, Microsoft Entra ID OIDC or Okta OIDC needs an active Enterprise license on the instance. This covers the [instance-wide providers](#single-sign-on-sso) and [organisation SSO](/access-control/authentication/sso).
+A license unlocks the features of its plan for the organisation named on the license. Without a license, organisations use the Free plan. See [Pricing](https://phase.dev/pricing) for what each plan includes, or to request a free trial license.
 
 ### Offline license
 

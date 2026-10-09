@@ -42,7 +42,7 @@ GITLAB_CLIENT_SECRET="EDIT_ME"       # EDIT_ME: GitLab OAuth Client Secret
 GITHUB_INTEGRATION_CLIENT_ID="EDIT_ME"      # EDIT_ME (optional)
 GITHUB_INTEGRATION_CLIENT_SECRET="EDIT_ME"  # EDIT_ME (optional)
 
-# Phase license, Pro or Enterprise (leave blank if not applicable)
+# Phase license (leave blank if not applicable)
 PHASE_LICENSE_OFFLINE=""
 
 cat > .env <<EOF
@@ -90,17 +90,17 @@ Only include credential lines for the SSO providers the user actually needs. Rem
 
 Pattern: `https://{DOMAIN}/api/auth/callback/{provider_slug}`
 
-| Provider | Slug | Callback URL | Enterprise license |
-|---|---|---|---|
-| Google OAuth | `google` | `https://{domain}/api/auth/callback/google` | No |
-| GitHub OAuth | `github` | `https://{domain}/api/auth/callback/github` | No |
-| GitLab OAuth | `gitlab` | `https://{domain}/api/auth/callback/gitlab` | No |
-| Authentik | `authentik` | `https://{domain}/api/auth/callback/authentik` | No |
-| GitHub Enterprise | `github-enterprise` | `https://{domain}/api/auth/callback/github-enterprise` | Required |
-| Google OIDC | `google-oidc` | `https://{domain}/api/auth/callback/google-oidc` | Required |
-| JumpCloud OIDC | `jumpcloud-oidc` | `https://{domain}/api/auth/callback/jumpcloud-oidc` | Required |
-| Microsoft Entra ID | `entra-id-oidc` | `https://{domain}/api/auth/callback/entra-id-oidc` | Required |
-| Okta OIDC | `okta-oidc` | `https://{domain}/api/auth/callback/okta-oidc` | Required |
+| Provider | Slug | Callback URL |
+|---|---|---|
+| Google OAuth | `google` | `https://{domain}/api/auth/callback/google` |
+| GitHub OAuth | `github` | `https://{domain}/api/auth/callback/github` |
+| GitLab OAuth | `gitlab` | `https://{domain}/api/auth/callback/gitlab` |
+| Authentik | `authentik` | `https://{domain}/api/auth/callback/authentik` |
+| GitHub Enterprise | `github-enterprise` | `https://{domain}/api/auth/callback/github-enterprise` |
+| Google OIDC | `google-oidc` | `https://{domain}/api/auth/callback/google-oidc` |
+| JumpCloud OIDC | `jumpcloud-oidc` | `https://{domain}/api/auth/callback/jumpcloud-oidc` |
+| Microsoft Entra ID | `entra-id-oidc` | `https://{domain}/api/auth/callback/entra-id-oidc` |
+| Okta OIDC | `okta-oidc` | `https://{domain}/api/auth/callback/okta-oidc` |
 
 ## docker-compose.yml — Certbot Patch
 

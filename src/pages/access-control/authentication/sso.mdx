@@ -13,7 +13,7 @@ Administrators can configure a Single Sign-On provider for their organisation di
 <DocActions />
 
 <Note>
- Organisation SSO is available for organisations with an `Enterprise` tier subscription. See [Pricing](https://phase.dev/pricing). On self-hosted instances, members can only sign in through the organisation's provider if the instance has an active Enterprise [license](/self-hosting/configuration/envars#license).
+ Organisation SSO is available for organisations with an `Enterprise` tier subscription. On self-hosted instances, sign-in also needs an Enterprise [license](/self-hosting/configuration/envars#license). See [Pricing](https://phase.dev/pricing).
 </Note>
 
 ## Configure a provider
@@ -138,6 +138,4 @@ Hover the provider card to reveal the action buttons:
 
   ![Delete provider confirmation dialog](/assets/images/auth/sso/org/12-delete-dialog.webp)
 
-<Note>
-If your organisation's plan no longer includes SSO, for example after a downgrade from Enterprise, admins can still deactivate or delete existing providers and turn off SSO enforcement. They can't add, edit or activate providers, or turn on SSO enforcement.
-</Note>
+If your plan no longer includes SSO, you can still deactivate or delete providers and turn off enforcement.

@@ -26,7 +26,7 @@ Log Streams continuously ship organisation audit logs and secret events from Pha
 
 ### Requirements
 
-- A Phase organisation on the **Enterprise** tier on Phase Cloud, or an Enterprise [license](/self-hosting/configuration/envars#license) on self-hosted.
+- A Phase organisation on the **Enterprise** tier.
 - The `LogStreams` permission in your organisation role, plus **global access** — streams export activity across the whole organisation (Owner and Admin roles qualify by default).
 
 ### Event sources

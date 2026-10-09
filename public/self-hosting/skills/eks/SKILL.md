@@ -15,7 +15,7 @@ This skill autonomously deploys Phase Console on AWS EKS using the Phase Helm ch
 - **Autopilot by default.** The agent creates files and runs commands without asking permission at each step. Show a preview of generated files once before writing, then proceed.
 - **Never handle secrets directly.** Write the Kubernetes secret as a shell script (`create-secret.sh`) with `$(openssl rand -hex 32)` for auto-generated values and `EDIT_ME` placeholders for values the user must supply. Keep `--from-literal` lines flush with no unnecessary leading indentation — this makes the script easy to read and edit. Tell the user to fill in the `EDIT_ME` values and run the script. Never ask the user to type secret values into the chat.
 - **Agent runs eksctl.** Do not ask the user to run `eksctl create cluster`. Run it directly and poll until completion.
-- **License key is not a secret.** If the user has a Phase license key (Pro or Enterprise), ask them to paste it directly into the chat.
+- **License key is not a secret.** If the user has a Phase license key, ask them to paste it directly into the chat.
 - **Reference files for details.** See `refs/eks-deployment.md` for exact commands and YAML templates, and `refs/troubleshooting.md` for diagnosing issues.
 
 ## Workflow
@@ -44,9 +44,9 @@ Ask all questions in a single conversational message. Do not ask one at a time.
    - `google` — Google OAuth 2.0
    - `github` — GitHub OAuth 2.0
    - `gitlab` — GitLab OAuth 2.0
-   - `google-oidc`, `jumpcloud-oidc`, `entra-id-oidc`, `okta-oidc` — OIDC providers (need an Enterprise license)
+   - `google-oidc`, `jumpcloud-oidc`, `entra-id-oidc`, `okta-oidc` — OIDC providers
    - `authentik` — Authentik OAuth 2.0
-   - `github-enterprise` — GitHub Enterprise (needs an Enterprise license)
+   - `github-enterprise` — GitHub Enterprise
 6. **Database mode**:
    - **In-cluster** (default) — PostgreSQL and Redis inside the cluster on EBS. Simpler, suitable for dev/small deployments.
    - **External (RDS + ElastiCache)** — Managed AWS databases. Recommended for production.
@@ -54,7 +54,7 @@ Ask all questions in a single conversational message. Do not ask one at a time.
 8. **SMTP / email notifications** — Does the user have an existing SMTP gateway for Phase email notifications (invites, alerts)?
    - If **yes**: ask for SMTP host, port, sender address, and username. Tell them the password will be added to the secret script — do not ask for it in chat.
    - If **no**: offer to provision AWS SES SMTP credentials automatically. If they accept, the agent will create everything and inject the password into the secret.
-9. **Phase license (Pro or Enterprise)** — Do they have a Phase license key? If yes, ask them to paste it here.
+9. **Phase license** — Do they have a Phase license key? If yes, ask them to paste it here.
 
 Store all answers. Proceed to Phase 3 once answered.
 
