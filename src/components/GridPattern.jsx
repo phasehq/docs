@@ -1,5 +1,9 @@
 import { useId } from 'react'
 
+// Neutral SVG grid primitive; presentation comes from the consumer className.
+// Canonical swiss ruled-ground classes: 'fill-none stroke-zinc-200
+// dark:stroke-zinc-800/80' — never skewed, never mix-blend. The `squares`
+// prop is retained only for legacy spotlight consumers.
 export function GridPattern({ width, height, x, y, squares, ...props }) {
   let patternId = useId()
 

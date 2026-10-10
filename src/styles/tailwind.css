@@ -1,4 +1,18 @@
+/* Syntax tokens are mode-scoped: light palette at :root, dark under .dark
+   (code windows are mode-paired, not force-dark). Same token roles, shifted
+   along each hue's ramp for the ground they sit on. */
 :root {
+  --shiki-color-text: theme('colors.zinc.800');
+  --shiki-token-constant: theme('colors.emerald.700');
+  --shiki-token-string: theme('colors.emerald.700');
+  --shiki-token-comment: theme('colors.zinc.500');
+  --shiki-token-keyword: theme('colors.sky.600');
+  --shiki-token-parameter: theme('colors.pink.600');
+  --shiki-token-function: theme('colors.violet.600');
+  --shiki-token-string-expression: theme('colors.emerald.700');
+  --shiki-token-punctuation: theme('colors.zinc.500');
+}
+.dark {
   --shiki-color-text: theme('colors.white');
   --shiki-token-constant: theme('colors.emerald.300');
   --shiki-token-string: theme('colors.emerald.300');
@@ -21,55 +35,80 @@
 @tailwind utilities;
 
 @layer base {
+  /* No background on <html>: body's ground must propagate to the canvas so
+     the -z-10 HeroPattern blueprint wash can paint above it (an opaque html
+     background would make body paint over every negative-z element). Body's
+     propagated background also covers overscroll. */
+
+  /* Fallback for the next/font mono variable: the variable class lives on the
+     app root wrapper (_app.jsx), but Headless UI dialogs portal to
+     document.body — without a root-level fallback, `font-family:
+     var(--font-jetbrains-mono), ...` would be invalid there and silently
+     inherit the sans stack. */
+  :root {
+    --font-jetbrains-mono: 'JetBrains Mono', ui-monospace, monospace;
+  }
+
+  ::selection {
+    background-color: theme('colors.emerald.100');
+    color: theme('colors.emerald.900');
+  }
+  .dark ::selection {
+    background-color: theme('colors.emerald.900');
+    color: theme('colors.emerald.300');
+  }
+
   /* Apply globally to all scrollable areas */
   * {
     scrollbar-width: thin;
   }
   /* Default light mode */
   html:not(.dark),
-  body:not(.dark),
   :not(.dark) * {
-    scrollbar-color: theme('colors.neutral.300') theme('colors.neutral.100');
+    scrollbar-color: theme('colors.zinc.300') theme('colors.zinc.100');
   }
 
   /* Dark mode */
-  .dark html,
-  .dark body,
+  html.dark,
   .dark * {
-    scrollbar-color: theme('colors.zinc.700') theme('colors.zinc.900');
+    scrollbar-color: theme('colors.zinc.800') theme('colors.zinc.925');
   }
 
   *::-webkit-scrollbar {
     width: 8px;
-    background: theme('colors.neutral.100');
+    background: theme('colors.zinc.100');
   }
 
   *::-webkit-scrollbar-thumb {
-    background: theme('colors.neutral.300');
+    background: theme('colors.zinc.300');
     border-radius: 4px;
   }
 
   *::-webkit-scrollbar-thumb:hover {
-    background: theme('colors.neutral.400');
+    background: theme('colors.zinc.400');
   }
 
   *::-webkit-scrollbar-thumb:active {
-    background: theme('colors.neutral.400');
+    background: theme('colors.zinc.400');
   }
 
+  html.dark::-webkit-scrollbar,
   .dark *::-webkit-scrollbar {
-    background: theme('colors.zinc.900');
+    background: theme('colors.zinc.925');
   }
 
+  html.dark::-webkit-scrollbar-thumb,
   .dark *::-webkit-scrollbar-thumb {
+    background: theme('colors.zinc.800');
+  }
+
+  html.dark::-webkit-scrollbar-thumb:hover,
+  .dark *::-webkit-scrollbar-thumb:hover {
     background: theme('colors.zinc.700');
   }
 
-  .dark *::-webkit-scrollbar-thumb:hover {
-    background: theme('colors.zinc.600');
-  }
-
+  html.dark::-webkit-scrollbar-thumb:active,
   .dark *::-webkit-scrollbar-thumb:active {
-    background: theme('colors.zinc.500');
+    background: theme('colors.zinc.600');
   }
 }
