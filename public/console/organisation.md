@@ -77,3 +77,46 @@ Once the transfer is complete:
 - The selected member becomes the new **Owner** of the organisation.
 - You will be demoted to an **Admin** and will continue to remain a member of the organisation until removed.
 - Both the old and new Owner will receive an email notification about the transfer.
+
+## Delete an Organisation
+
+Organisation Owners can delete an organisation. Deleting it locks the organisation at once. After 7 days, Phase permanently deletes the organisation and all of its data. Until then, the Owner can restore it.
+
+<Warning>
+  Once the 7 days have passed, deletion **can't be undone**. Audit logs and secret access logs are deleted with the organisation.
+</Warning>
+
+To delete an organisation:
+
+1. Log in as the Organisation **Owner** and navigate to your Organisation **Settings**. Scroll down to the **Danger Zone** section and click **Delete Organisation**.
+![delete organisation settings](/assets/images/console/organisation/organisation-delete-1.webp)
+2. Review what stops working now and what will be deleted. Type the organisation name to confirm, then click **Delete organisation**.
+![confirm organisation deletion](/assets/images/console/organisation/organisation-delete-2.webp)
+
+### Pending Deletion
+
+For the next 7 days, the organisation is locked:
+
+- Nobody can open it. It stays in the organisation list, with its deletion date.
+- Access tokens, service accounts, SCIM and external identities stop working, so apps and CI pipelines can't fetch secrets.
+- Secret syncs and secret rotations pause.
+- On Phase Cloud, a paid subscription is set to cancel at the end of the current billing period.
+
+### Restore an Organisation
+
+The Owner can restore the organisation at any time during the 7 days. In the organisation list, click **Restore organisation** on its card. Other members can see the deletion date, but only the Owner can restore it.
+
+![restore organisation](/assets/images/console/organisation/organisation-restore.webp)
+
+After a restore, the organisation works as before. Paused syncs and rotations resume, and on Phase Cloud the subscription resumes.
+
+### Permanent Deletion
+
+After 7 days, Phase:
+
+- Revokes active [dynamic secret](/console/dynamic-secrets) leases and [rotating secret](/console/rotating-secrets) credentials at the provider.
+- Stops syncs and log streams. Secrets already synced to other services stay there.
+- On Phase Cloud, cancels the remaining subscription.
+- Deletes the organisation and all of its data: apps, environments, secrets and secret history, members, invites, teams, roles, network access policies, service accounts and access tokens, integrations, log streams, SSO and SCIM configuration, audit logs and secret access logs.
+- Deletes accounts provisioned by SCIM that don't belong to another organisation.
+- Emails the Owner to confirm the deletion.
