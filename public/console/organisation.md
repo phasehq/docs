@@ -125,4 +125,4 @@ After 7 days, Phase:
 - Deletes accounts provisioned by SCIM that don't belong to another organisation.
 - Emails the Owner to confirm the deletion.
 
-If a lease or credential can't be revoked, Phase deletes nothing and tries again every hour until it can.
+If a lease or credential can't be revoked, Phase deletes nothing, emails the Owner and tries again every hour until it can.
