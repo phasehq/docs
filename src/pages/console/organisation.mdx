@@ -126,3 +126,7 @@ After 7 days, Phase:
 - Emails the Owner to confirm the deletion.
 
 If a lease or credential can't be revoked, Phase deletes nothing, emails the Owner and tries again every hour until it can.
+
+### Self-hosting
+
+Permanent deletion runs on the `maintenance` queue. The bundled worker (`python manage.py rqworker`) starts a worker for it. If you run split workers (e.g. one Deployment per queue on Kubernetes), add a consumer for the `maintenance` queue. Without one, deleted organisations stay locked after the 7 days and are never deleted.
