@@ -106,7 +106,7 @@ For the next 7 days, the organisation is locked:
 
 ### Restore an Organisation
 
-The Owner can restore the organisation at any time during the 7 days. In the organisation list, click **Restore organisation** on its card. Other members can see the deletion date, but only the Owner can restore it.
+The Owner can restore the organisation at any time during the 7 days, or later while its [deletion is delayed](#delayed-deletion). In the organisation list, click **Restore organisation** on its card. Other members can see the deletion date, but only the Owner can restore it.
 
 ![restore organisation](/assets/images/console/organisation/organisation-restore.webp)
 
@@ -125,7 +125,11 @@ After 7 days, Phase:
 - Deletes accounts provisioned by SCIM that don't belong to another organisation.
 - Emails the Owner to confirm the deletion.
 
-If a lease or credential can't be revoked, Phase deletes nothing, emails the Owner and tries again every hour until it can.
+### Delayed Deletion
+
+If a lease or credential can't be revoked, Phase deletes nothing, emails the Owner and tries again every hour, so a temporary problem at the provider resolves itself. Meanwhile the organisation's card shows **Deletion delayed**.
+
+If Phase no longer has access to the provider, the Owner can still restore the organisation, even after the 7 days. Give Phase access to the provider again, for example by updating its third-party credentials, then delete the organisation again.
 
 ### Self-hosting
 
