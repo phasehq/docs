@@ -110,7 +110,9 @@ The Owner can restore the organisation at any time during the 7 days. In the org
 
 ![restore organisation](/assets/images/console/organisation/organisation-restore.webp)
 
-After a restore, the organisation works as before. Paused syncs and rotations resume, and on Phase Cloud the subscription resumes.
+After a restore, the organisation works as before, and paused syncs and rotations resume.
+
+On Phase Cloud, the subscription continues if you restore the organisation before the end of the billing period. If the period has already ended, so has the subscription: the organisation is on the Free plan, and you need to subscribe again.
 
 ### Permanent Deletion
 
@@ -122,3 +124,5 @@ After 7 days, Phase:
 - Deletes the organisation and all of its data: apps, environments, secrets and secret history, members, invites, teams, roles, network access policies, service accounts and access tokens, integrations, log streams, SSO and SCIM configuration, audit logs and secret access logs.
 - Deletes accounts provisioned by SCIM that don't belong to another organisation.
 - Emails the Owner to confirm the deletion.
+
+If a lease or credential can't be revoked, Phase deletes nothing and tries again every hour until it can.
