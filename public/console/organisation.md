@@ -82,6 +82,8 @@ Once the transfer is complete:
 
 Organisation Owners can delete an organisation. Deleting it locks the organisation at once. After 7 days, Phase permanently deletes the organisation and all of its data. Until then, the Owner can restore it.
 
+On Phase Cloud, an organisation with unpaid invoices can't be deleted. Pay them first.
+
 <Warning>
   Once the 7 days have passed, deletion **can't be undone**. Audit logs and secret access logs are deleted with the organisation.
 </Warning>
