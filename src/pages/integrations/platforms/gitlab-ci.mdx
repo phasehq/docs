@@ -122,6 +122,13 @@ This feature is only available on GitLab if you have the Premium or Ultimate lic
 
 ![Input GitLab credentials](/assets/images/platform-integrations/gitlab/gitlab-creds-input.webp)
 
+<Note>
+  Use the address your GitLab instance is served from. Phase only follows
+  redirects on the same host, such as from `http://` to `https://`. If your
+  GitLab URL redirects to another host, syncs fail with an error that names that
+  address: use it as the GitLab host instead.
+</Note>
+
 Your credentials will be encrypted and saved. You can view and manage these credentials under *Service Credentials* in the *Integrations* screen.
 
 ## Step 2: Configure Sync
