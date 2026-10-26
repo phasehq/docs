@@ -397,7 +397,15 @@ function main() {
 
     const mdxContents = fs.readFileSync(mdxFileAbsolutePath, 'utf8')
     const route = routeForMdxPath(mdxFileAbsolutePath, pagesRoot)
-    fs.writeFileSync(destinationMarkdownAbsolutePath, toMarkdown(mdxContents, route, routes), 'utf8')
+    let markdown
+    try {
+      markdown = toMarkdown(mdxContents, route, routes)
+    } catch (error) {
+      // Never fail the build over a copy: keep the MDX source for this page.
+      console.warn(`export-mdx-to-md: kept MDX source for ${route}: ${error.message}`)
+      markdown = mdxContents
+    }
+    fs.writeFileSync(destinationMarkdownAbsolutePath, markdown, 'utf8')
   }
 }
 
