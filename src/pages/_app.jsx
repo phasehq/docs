@@ -46,6 +46,10 @@ Router.events.on('hashChangeStart', onRouteChange)
 
 export default function App({ Component, pageProps }) {
   let router = useRouter()
+  let description =
+    pageProps.description ||
+    pageProps.metadata?.description ||
+    'Phase Documentation'
 
   return (
     <>
@@ -55,7 +59,6 @@ export default function App({ Component, pageProps }) {
         ) : (
           <title>{`${pageProps.title} - Phase Docs`}</title>
         )}
-        <meta name="description" content={pageProps.description} />
         <link
           rel="icon"
           type="image/svg+xml"
@@ -72,19 +75,20 @@ export default function App({ Component, pageProps }) {
       </Head>
       <NextSeo
         title={router.pathname === '/' ? 'Phase Docs' : `${pageProps.title} - Phase Docs`}
-        description='Phase Documentation'
+        description={description}
+        canonical={`https://docs.phase.dev${router.pathname}`}
         openGraph={{
           title: router.pathname === '/' ? 'Phase Docs' : `${pageProps.title} - Phase Docs`,
-          description: pageProps.description,
+          description,
           url: `https://docs.phase.dev${router.pathname}`,
           locale: 'en',
           site_name: 'Phase DOCS',
           images: [
             {
-              url: `${router.basePath}/assets/images/docs-meta.png`,
+              url: 'https://docs.phase.dev/assets/images/docs-meta.png',
               width: 1200,
               height: 630,
-              alt: 'https://docs.phase.dev',
+              alt: 'Phase Docs',
               type: 'image/png',
             },
           ],
