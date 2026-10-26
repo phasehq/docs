@@ -14,3 +14,12 @@
   Content-Type: application/json
   Cache-Control: public, max-age=3600
   Access-Control-Allow-Origin: *
+
+https://:project.pages.dev/*
+  X-Robots-Tag: noindex
+
+https://:version.:project.pages.dev/*
+  X-Robots-Tag: noindex
+
+/*.md
+  X-Robots-Tag: noindex
