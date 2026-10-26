@@ -23,7 +23,7 @@ The Python SDK allows you to securely manage secrets in your applications, from 
 - [github.com/phasehq/python-sdk](https://github.com/phasehq/python-sdk)
 
 <Note>
-  To use the Python SDK, you need to create a new App on the Phase Console. Add the service token or user token (PAT) to your application, preferably using environment variables. [Quick start &raquo;](/quickstart)
+  To use the Python SDK, you need to create a new App on the Phase Console. Add the service account token or personal access token (PAT) to your application, preferably using environment variables. [Quick start &raquo;](/quickstart)
 </Note>
 
 ---
@@ -52,7 +52,7 @@ from phase import Phase, CreateSecretsOptions, GetAllSecretsOptions, GetSecretOp
 
 ## Initialize the SDK
 
-Initialize the SDK with your Phase service token or user token and the host URL:
+Initialize the SDK with your Phase service account token or personal access token (PAT) and the host URL:
 
 ```python
 phase = Phase(
@@ -156,10 +156,10 @@ print(f"Delete result: {result}")
 ### Personal Secrets
 
 <Note>
-  Personal secrets are only accessible when using a user token (prefixed with `pss_user:v1`). They allow individual users to create and manage their own secret overrides without affecting the shared secrets.
+  Personal secrets are only accessible when using a personal access token (prefixed with `pss_user:v1`). They allow individual users to create and manage their own secret overrides without affecting the shared secrets.
 </Note>
 
-To work with personal secrets, first initialize the SDK with a user token:
+To work with personal secrets, first initialize the SDK with a personal access token:
 
 ```python
 phase = Phase(
@@ -207,7 +207,7 @@ if secret:
     print(f"Key: {secret.key}, Value: {secret.value}, Overridden: {secret.overridden}")
 ```
 
-When using a user token, `get_secret` and `get_all_secrets` will automatically return personal overrides if they exist and are active. The `overridden` attribute indicates whether the returned value is a personal override.
+When using a personal access token, `get_secret` and `get_all_secrets` will automatically return personal overrides if they exist and are active. The `overridden` attribute indicates whether the returned value is a personal override.
 
 <Note>
   Remember to handle exceptions appropriately in your application. Wrap SDK calls in try-except blocks to handle potential errors.

@@ -108,7 +108,7 @@ keep the v1 "sync as-is" behavior.
 
 To see the full set of configurable Helm chart options, please see: [`values.yaml`](https://github.com/phasehq/kubernetes-secrets-operator/blob/main/phase-kubernetes-operator/values.yaml)
 
-### 2. Create a Service Token Secret in Kubernetes
+### 2. Create a Service Account Token Secret in Kubernetes
 
 ```fish
 kubectl create secret generic phase-service-token \
@@ -138,7 +138,7 @@ spec:
   authentication:
     serviceToken:
       serviceTokenSecretReference:
-        secretName: 'phase-service-token' # Name of the Phase Service Token with access to your application
+        secretName: 'phase-service-token' # Name of the secret holding a Phase service account token with access to your application
         secretNamespace: 'default'
   managedSecretReferences:
     - secretName: 'my-application-secret' # Name of the Kubernetes managed secret that Phase will sync
@@ -580,7 +580,7 @@ The Phase Secrets Operator makes a few deliberate tradeoffs:
   modes a Warning event is recorded on the `PhaseSecret` naming the affected secret.
 - Auto-redeploy requires `secrets.phase.dev/redeploy`, an `envFrom.secretRef`
   match, and a changed managed Secret.
-- Service token and managed Secret namespaces are explicit; auto-redeploy scans
+- Service account token and managed Secret namespaces are explicit; auto-redeploy scans
   Deployments in the `PhaseSecret` namespace.
 
 Transient Phase API failures are retried before the reconcile is requeued. Rate
@@ -616,7 +616,7 @@ kubectl get pods
 kubectl logs <operator-pod-name>
 ```
 
-Example (revoked Service Token):
+Example (revoked service account token):
 
 ```fish
 λ kubectl logs phase-secrets-operator-phase-kubernetes-operator-8b69db6f-f4m8s -f
@@ -728,10 +728,10 @@ Secrets it created. Remove any managed Secrets you no longer need manually.
 
 You can easily integrate with your kubernetes workload and inject secrets securely using in memory init containers.
 
-1. Create `PHASE_SERVICE_TOKEN` Kubernetes secret.
+1. Create the `phase-service-token` Kubernetes secret. It stores the service account token under the `token` key, the same format the operator uses.
 
 ```fish
-kubectl create secret generic phase-service-token --from-literal=PHASE_SERVICE_TOKEN=<TOKEN> --namespace=default
+kubectl create secret generic phase-service-token --from-literal=token=<TOKEN> --namespace=default
 ```
 
 2. Here's an example `deploy.yaml`:
@@ -766,7 +766,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: phase-service-token
-                  key: PHASE_SERVICE_TOKEN
+                  key: token
           command:
             [
               '/bin/sh',
