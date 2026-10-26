@@ -69,7 +69,10 @@ function buildLlmsText(navigation) {
 function main() {
   const navigation = readNavigation()
   const content = buildLlmsText(navigation)
-  const outFile = path.join(process.cwd(), 'public', 'llms.txt')
+  // Runs in postbuild, after `next build` has already copied public/ into
+  // the export, so the file is written straight into out/.
+  const outFile = path.join(process.cwd(), 'out', 'llms.txt')
+  fs.mkdirSync(path.dirname(outFile), { recursive: true })
   fs.writeFileSync(outFile, content, 'utf8')
   const count = navigation.reduce((n, group) => n + group.links.length, 0)
   console.log(`llms.txt generated with ${count} links -> ${outFile}`)
