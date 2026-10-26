@@ -5,9 +5,9 @@
   "packageManager": "yarn@1.22.22",
   "scripts": {
     "dev": "next dev",
-    "prebuild": "node scripts/export-mdx-to-md.js",
+    "prebuild": "node scripts/export-mdx-to-md.js && node scripts/generate-llms-txt.js",
     "build": "NODE_OPTIONS='--max-old-space-size=4096' next build",
-    "postbuild": "next-sitemap && node scripts/generate-llms-txt.js",
+    "postbuild": "next-sitemap",
     "start": "next start",
     "lint": "next lint"
   },
