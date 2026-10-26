@@ -1,80 +1,45 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const metadata = {
-  title: 'Roles API',
-  description:
-    'Explore the Phase Roles API for managing roles and permissions programmatically.',
-}
-
-<Tag variant="small">API</Tag>
+---
+title: "Roles"
+description: "Explore the Phase Roles API for managing roles and permissions programmatically."
+url: https://docs.phase.dev/public-api/roles
+---
 
 # Roles
 
-Roles define the set of permissions granted to users and service accounts within your organisation. Phase includes five default roles (Owner, Admin, Manager, Developer, Service) and supports creating custom roles on paid plans. On this page, we'll look at the Roles API endpoints for listing, creating, updating, and deleting roles. {{ className: 'lead' }}
-
-<DocActions />
+Roles define the set of permissions granted to users and service accounts within your organisation. Phase includes five default roles (Owner, Admin, Manager, Developer, Service) and supports creating custom roles on paid plans. On this page, we'll look at the Roles API endpoints for listing, creating, updating, and deleting roles.
 
 ## The Role model
 
 ### Properties
 
-<Properties>
-  <Property name="id" type="string">
-    Unique identifier for the role.
-  </Property>
-  <Property name="name" type="string">
-    The name of the role.
-  </Property>
-  <Property name="description" type="string">
-    An optional description for the role.
-  </Property>
-  <Property name="color" type="string">
-    A hex color code for the role (e.g. `#FF0000`).
-  </Property>
-  <Property name="isDefault" type="boolean">
-    Whether this is a built-in default role. Default roles cannot be modified or deleted.
-  </Property>
-  <Property name="createdAt" type="timestamp">
-    Timestamp of when the role was created.
-  </Property>
-</Properties>
+  - `id` (string): Unique identifier for the role.
+  - `name` (string): The name of the role.
+  - `description` (string): An optional description for the role.
+  - `color` (string): A hex color code for the role (e.g. `#FF0000`).
+  - `isDefault` (boolean): Whether this is a built-in default role. Default roles cannot be modified or deleted.
+  - `createdAt` (timestamp): Timestamp of when the role was created.
 
 ### Permissions object
 
 When fetching a single role, the full permissions object is included. The permissions structure contains:
 
-<Properties>
-  <Property name="permissions" type="object">
-    Organisation-level permissions. Keys are resource class names, values are arrays of allowed actions (`create`, `read`, `update`, `delete`). See [Roles & Permissions](/access-control/roles) for the full list of valid resource classes.
-  </Property>
-  <Property name="appPermissions" type="object">
-    App-level permissions. Keys are resource class names, values are arrays of allowed actions. See [Roles & Permissions](/access-control/roles) for the full list.
-  </Property>
-  <Property name="globalAccess" type="boolean">
-    Read-only. Returned as `true` for the built-in `Owner` and `Admin` roles and `false` otherwise. Cannot be set on custom roles — POST and PUT reject requests that include `global_access` (or `globalAccess`) under `permissions`.
-  </Property>
-</Properties>
+  - `permissions` (object): Organisation-level permissions. Keys are resource class names, values are arrays of allowed actions (`create`, `read`, `update`, `delete`). See [Roles & Permissions](https://docs.phase.dev/access-control/roles.md) for the full list of valid resource classes.
+  - `appPermissions` (object): App-level permissions. Keys are resource class names, values are arrays of allowed actions. See [Roles & Permissions](https://docs.phase.dev/access-control/roles.md) for the full list.
+  - `globalAccess` (boolean): Read-only. Returned as `true` for the built-in `Owner` and `Admin` roles and `false` otherwise. Cannot be set on custom roles — POST and PUT reject requests that include `global_access` (or `globalAccess`) under `permissions`.
 
-<Note>
-Responses use camelCase keys (`appPermissions`, `globalAccess`). On POST and PUT, `app_permissions` snake_case is also accepted; the `permissions` payload must contain only `permissions` and `app_permissions` keys.
-</Note>
+> **Note:** Responses use camelCase keys (`appPermissions`, `globalAccess`). On POST and PUT, `app_permissions` snake_case is also accepted; the `permissions` payload must contain only `permissions` and `app_permissions` keys.
 
 ---
 
-## List Roles {{ tag: 'GET', label: '/v1/roles' }}
-
-<Row>
-  <Col>
+## List Roles
 
     Retrieve all roles in the organisation, including both default and custom roles.
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="GET" label="/v1/roles">
+    **cURL**
 
-    ```fish {{ title: 'cURL' }}
+    ```fish
     curl https://api.phase.dev/v1/roles/ \
       -H "Authorization: Bearer {token}"
     ```
@@ -91,9 +56,9 @@ Responses use camelCase keys (`appPermissions`, `globalAccess`). On POST and PUT
     data = response.json()
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```json {{ title: 'Response' }}
+    ```json
     {
         "data": [
             {
@@ -124,32 +89,21 @@ Responses use camelCase keys (`appPermissions`, `globalAccess`). On POST and PUT
     }
     ```
 
-  </Col>
-</Row>
-
 ---
 
-## Get Role {{ tag: 'GET', label: '/v1/roles/:id' }}
-
-<Row>
-  <Col>
+## Get Role
 
     Retrieve a single role with its full permissions object. For default roles, the permissions are resolved from the built-in role definitions. For custom roles, the stored permissions are returned directly.
 
     ### URL parameters
 
-    <Properties>
-      <Property name="id" type="string">
-        The unique identifier of the role.
-      </Property>
-    </Properties>
+      - `id` (string): The unique identifier of the role.
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="GET" label="/v1/roles/:id">
+    **cURL**
 
-    ```fish {{ title: 'cURL' }}
+    ```fish
     curl https://api.phase.dev/v1/roles/6aec9df5-cd75-4645-a9d0-8b6f6aff78d6/ \
       -H "Authorization: Bearer {token}"
     ```
@@ -167,9 +121,9 @@ Responses use camelCase keys (`appPermissions`, `globalAccess`). On POST and PUT
     data = response.json()
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```json {{ title: 'Response' }}
+    ```json
     {
         "id": "6aec9df5-cd75-4645-a9d0-8b6f6aff78d6",
         "name": "Developer",
@@ -196,21 +150,13 @@ Responses use camelCase keys (`appPermissions`, `globalAccess`). On POST and PUT
     }
     ```
 
-  </Col>
-</Row>
-
 ---
 
-## Create Role {{ tag: 'POST', label: '/v1/roles' }}
-
-<Row>
-  <Col>
+## Create Role
 
     Create a custom role with a specified set of permissions.
 
-    <Note>
-    Custom roles are not available on the Free plan. You must be on a Pro or Enterprise plan to create custom roles.
-    </Note>
+> **Note:** Custom roles are not available on the Free plan. You must be on a Pro or Enterprise plan to create custom roles.
 
     - The role can only include permissions that the caller's own role has. Otherwise the request returns `403 Forbidden` with `{"error": "You cannot grant permissions your own role does not include: <permissions>"}`. The error lists each extra permission as `<scope>:<resource>:<action>`, for example `permissions:SSO:create`. Callers with a global-access role (Owner or Admin) are exempt.
 
@@ -218,32 +164,19 @@ Responses use camelCase keys (`appPermissions`, `globalAccess`). On POST and PUT
 
     #### Required fields
 
-    <Properties>
-      <Property name="name" type="string">
-        The role name. Maximum 64 characters. Must be unique within the organisation (case-insensitive).
-      </Property>
-      <Property name="permissions" type="object">
-        The permissions object. Must contain exactly two keys: `permissions` (org-level) and `app_permissions` (app-level). The `global_access` flag cannot be set on custom roles — POST and PUT reject requests that include `global_access` (or `globalAccess`) under `permissions` with `400 Bad Request`.
-      </Property>
-    </Properties>
+      - `name` (string): The role name. Maximum 64 characters. Must be unique within the organisation (case-insensitive).
+      - `permissions` (object): The permissions object. Must contain exactly two keys: `permissions` (org-level) and `app_permissions` (app-level). The `global_access` flag cannot be set on custom roles — POST and PUT reject requests that include `global_access` (or `globalAccess`) under `permissions` with `400 Bad Request`.
 
     #### Optional fields
 
-    <Properties>
-      <Property name="description" type="string">
-        A description for the role. Maximum 500 characters.
-      </Property>
-      <Property name="color" type="string">
-        A hex color code. Maximum 7 characters (e.g. `#FF0000`).
-      </Property>
-    </Properties>
+      - `description` (string): A description for the role. Maximum 500 characters.
+      - `color` (string): A hex color code. Maximum 7 characters (e.g. `#FF0000`).
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="POST" label="/v1/roles">
+    **cURL**
 
-    ```fish {{ title: 'cURL' }}
+    ```fish
     curl -X POST https://api.phase.dev/v1/roles/ \
       -H "Authorization: Bearer {token}" \
       -H "Content-Type: application/json" \
@@ -296,9 +229,9 @@ Responses use camelCase keys (`appPermissions`, `globalAccess`). On POST and PUT
     data = response.json()
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```json {{ title: 'Response' }}
+    ```json
     {
         "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
         "name": "Read Only",
@@ -322,15 +255,9 @@ Responses use camelCase keys (`appPermissions`, `globalAccess`). On POST and PUT
     }
     ```
 
-  </Col>
-</Row>
-
 ---
 
-## Update Role {{ tag: 'PUT', label: '/v1/roles/:id' }}
-
-<Row>
-  <Col>
+## Update Role
 
     Update a custom role's name, description, color, and/or permissions. At least one field must be provided. Default roles cannot be modified (`403 Forbidden`).
 
@@ -338,37 +265,22 @@ Responses use camelCase keys (`appPermissions`, `globalAccess`). On POST and PUT
 
     ### URL parameters
 
-    <Properties>
-      <Property name="id" type="string">
-        The unique identifier of the role.
-      </Property>
-    </Properties>
+      - `id` (string): The unique identifier of the role.
 
     ### JSON Body
 
     When `permissions` is provided, the full object replaces the stored permissions and must contain exactly two keys: `permissions` and `app_permissions`. The camelCase variant `appPermissions` is also accepted on input. Sending `global_access` (or `globalAccess`) under `permissions` returns `400 Bad Request`.
 
-    <Properties>
-      <Property name="name" type="string">
-        The new role name. Maximum 64 characters. Must be unique within the organisation (case-insensitive).
-      </Property>
-      <Property name="description" type="string">
-        The new description. Maximum 500 characters.
-      </Property>
-      <Property name="color" type="string">
-        The new hex color code. Maximum 7 characters.
-      </Property>
-      <Property name="permissions" type="object">
-        The updated permissions object. Replaces the stored permissions in full.
-      </Property>
-    </Properties>
+      - `name` (string): The new role name. Maximum 64 characters. Must be unique within the organisation (case-insensitive).
+      - `description` (string): The new description. Maximum 500 characters.
+      - `color` (string): The new hex color code. Maximum 7 characters.
+      - `permissions` (object): The updated permissions object. Replaces the stored permissions in full.
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="PUT" label="/v1/roles/:id">
+    **cURL**
 
-    ```fish {{ title: 'cURL' }}
+    ```fish
     curl -X PUT https://api.phase.dev/v1/roles/f47ac10b-58cc-4372-a567-0e02b2c3d479/ \
       -H "Authorization: Bearer {token}" \
       -H "Content-Type: application/json" \
@@ -410,9 +322,9 @@ Responses use camelCase keys (`appPermissions`, `globalAccess`). On POST and PUT
     data = response.json()
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```json {{ title: 'Response' }}
+    ```json
     {
         "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
         "name": "Auditor",
@@ -438,15 +350,9 @@ Responses use camelCase keys (`appPermissions`, `globalAccess`). On POST and PUT
     }
     ```
 
-  </Col>
-</Row>
-
 ---
 
-## Delete Role {{ tag: 'DELETE', label: '/v1/roles/:id' }}
-
-<Row>
-  <Col>
+## Delete Role
 
     Delete a custom role.
 
@@ -455,18 +361,13 @@ Responses use camelCase keys (`appPermissions`, `globalAccess`). On POST and PUT
 
     ### URL parameters
 
-    <Properties>
-      <Property name="id" type="string">
-        The unique identifier of the role.
-      </Property>
-    </Properties>
+      - `id` (string): The unique identifier of the role.
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="DELETE" label="/v1/roles/:id">
+    **cURL**
 
-    ```fish {{ title: 'cURL' }}
+    ```fish
     curl -X DELETE https://api.phase.dev/v1/roles/f47ac10b-58cc-4372-a567-0e02b2c3d479/ \
       -H "Authorization: Bearer {token}"
     ```
@@ -484,11 +385,8 @@ Responses use camelCase keys (`appPermissions`, `globalAccess`). On POST and PUT
     # Returns 204 No Content on success
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```text {{ title: 'Response' }}
+    ```text
     204 No Content
     ```
-
-  </Col>
-</Row>

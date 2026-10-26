@@ -1,20 +1,15 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description = 'Stream organisation audit logs and secret events from Phase to your SIEM or log management platform in near real-time.'
-
-<Tag variant="small">CONSOLE</Tag>
+---
+title: "Log Streams"
+description: "Stream organisation audit logs and secret events from Phase to your SIEM or log management platform in near real-time."
+url: https://docs.phase.dev/console/logstreams
+---
 
 # Log Streams
 
 Log Streams continuously ship organisation audit logs and secret events from Phase to an external log management platform or SIEM for monitoring, alerting and threat detection. Streams are configured under **Integrations** → **Log Streams**, deliver in near real-time, and expose a per-delivery history with manual retry for anything that fails. Log Streams are available on the **Enterprise** tier.
 
-<DocActions />
-
-<Note>
-  Log Streams ship **metadata only**. Secret values, keys and comments are
-  end-to-end encrypted and never leave Phase.
-</Note>
+> **Note:** Log Streams ship **metadata only**. Secret values, keys and comments are
+>   end-to-end encrypted and never leave Phase.
 
 ## How it works
 
@@ -80,15 +75,15 @@ To pivot from an exported secret event back to Phase, copy the `phase.secret.id`
 3. If a later successful delivery covers a failed range (for example after an authentication recovery), the failure is **auto-resolved**.
 4. Anything still unresolved appears under the **out of sync** badge on the stream card. Click through to the filtered event history and press **Retry** on a row to re-ship exactly that range. Once a range falls fully outside the destination&apos;s ingestion window, the retry is refused — the destination would accept and silently discard the events, falsely marking the range recovered. Expired rows are auto-resolved as **Expired** after a grace period, and the events remain queryable in the Console. If only the older part of a range has expired, a retry ships the still-live tail and records the expired part as **skipped**.
 
-   ![Stream card with the out of sync badge](/assets/images/console/log-streams/log-stream-out-of-sync.webp)
+   ![Stream card with the out of sync badge](https://docs.phase.dev/assets/images/console/log-streams/log-stream-out-of-sync.webp)
 
-   ![Unresolved deliveries with the Retry action](/assets/images/console/log-streams/log-stream-retry.webp)
+   ![Unresolved deliveries with the Retry action](https://docs.phase.dev/assets/images/console/log-streams/log-stream-retry.webp)
 5. **Authentication failures** skip retries entirely and pause the stream (retrying with a dead key is pointless). Fix the credentials, press **Resume**, and shipping continues from the stored cursor with no gap.
 
-   ![Paused stream with the Resume action](/assets/images/console/log-streams/log-stream-paused.webp)
+   ![Paused stream with the Resume action](https://docs.phase.dev/assets/images/console/log-streams/log-stream-paused.webp)
 6. **Deleting the stream&apos;s third-party credentials** also pauses it — a stream without credentials can never deliver, so it is paused visibly rather than left looking healthy. Select new credentials in the stream&apos;s configuration, save, and resume.
 
-   ![Paused stream card](/assets/images/console/log-streams/log-stream-paused-card.webp)
+   ![Paused stream card](https://docs.phase.dev/assets/images/console/log-streams/log-stream-paused-card.webp)
 
 ### Backfilling missed events
 
@@ -101,11 +96,11 @@ Backfilling covers ranges a stream failed to deliver while active. It does not e
 
 - **Pause / Resume**: pausing stops all egress; resuming continues from the stored cursor with no gap (subject to the destination&apos;s ingestion window).
 
-  ![Log stream configuration tab with status, pause control and event source toggles](/assets/images/console/log-streams/log-stream-config.webp)
+  ![Log stream configuration tab with status, pause control and event source toggles](https://docs.phase.dev/assets/images/console/log-streams/log-stream-config.webp)
 
 - **Events tab**: every delivery is recorded — `Completed`, `Failed` or `Skipped` — with its event count, attempts, exact time range and error detail. Failed rows stay listed until they are resolved by a successful re-ship, and can be retried individually. Skipped rows record ranges that fell outside the destination&apos;s ingestion window — they cannot be re-shipped and auto-resolve as **Expired**.
 
-  ![Events tab showing the delivery history with status filters](/assets/images/console/log-streams/log-stream-events.webp)
+  ![Events tab showing the delivery history with status filters](https://docs.phase.dev/assets/images/console/log-streams/log-stream-events.webp)
 
 - **Stream options**: a `service` name for the destination (default `phase-console`), free-form tags, and the per-chunk retry limit.
 
@@ -117,15 +112,15 @@ Stream logs to [Datadog](https://www.datadoghq.com/) for monitoring, alerting an
 
 1. Log in to Datadog and go to **Organization Settings** → **API Keys**.
 
-   ![Datadog API Keys page with the New Key button](/assets/images/console/log-streams/datadog-new-key-button.png)
+   ![Datadog API Keys page with the New Key button](https://docs.phase.dev/assets/images/console/log-streams/datadog-new-key-button.png)
 
 2. Click **+ New Key** and name it, e.g. `phase-log-stream`.
 
-   ![Datadog New API Key dialog with the key named phase-log-stream](/assets/images/console/log-streams/datadog-new-key-name.png)
+   ![Datadog New API Key dialog with the key named phase-log-stream](https://docs.phase.dev/assets/images/console/log-streams/datadog-new-key-name.png)
 
 3. Copy the key value.
 
-   ![Created Datadog API key with the Copy button](/assets/images/console/log-streams/datadog-new-key-created.png)
+   ![Created Datadog API key with the Copy button](https://docs.phase.dev/assets/images/console/log-streams/datadog-new-key-created.png)
 
 Note: API keys are the right credential for log shipping: they are org-level, intake-only by design (they can submit data but cannot read or manage anything), cannot be scoped further, and [remain valid even if the user who created them is later disabled](https://docs.datadoghq.com/account_management/api-app-keys/).
 
@@ -135,41 +130,43 @@ Note: API keys are the right credential for log shipping: they are org-level, in
 
 1. In the Phase Console, go to **Integrations** → **Third-party credentials** and click **+ Add credentials**.
 
-   ![Third-party credentials tab with the Add credentials button](/assets/images/console/log-streams/create-new-cred-button.webp)
+   ![Third-party credentials tab with the Add credentials button](https://docs.phase.dev/assets/images/console/log-streams/create-new-cred-button.webp)
 
 2. Select the **Datadog** card.
 
-   ![Create new service credentials dialog with the Datadog card](/assets/images/console/log-streams/create-new-cred-datadog-1.webp)
+   ![Create new service credentials dialog with the Datadog card](https://docs.phase.dev/assets/images/console/log-streams/create-new-cred-datadog-1.webp)
 
 3. Enter your **API key** and pick your **site** from the region dropdown. The optional **application key** is not required for log streaming.
 4. Give the credentials a descriptive name and save.
 
-   ![Datadog credential form with API key, site region and name](/assets/images/console/log-streams/create-new-cred-datadog-2.webp)
+   ![Datadog credential form with API key, site region and name](https://docs.phase.dev/assets/images/console/log-streams/create-new-cred-datadog-2.webp)
 
 ### Step 3: Create a Log Stream
 
 1. Go to **Integrations** → **Log Streams** and click **Create a Log Stream**.
 
-   ![Log Streams tab with the Create a Log Stream button](/assets/images/console/log-streams/create-a-log-stream-button.webp)
+   ![Log Streams tab with the Create a Log Stream button](https://docs.phase.dev/assets/images/console/log-streams/create-a-log-stream-button.webp)
 
 2. Select **Datadog**, then your Datadog credentials.
 
-   ![Choose the Datadog provider](/assets/images/console/log-streams/create-a-log-stream-provider.webp)
+   ![Choose the Datadog provider](https://docs.phase.dev/assets/images/console/log-streams/create-a-log-stream-provider.webp)
 3. Choose the event sources to ship.
 4. Optionally configure the Datadog `service` name, additional tags and the per-chunk retry limit. Tag values are sanitised to Datadog&apos;s tag rules (lowercased, spaces and special characters become underscores).
 5. Click **Test connection** to validate the API key against Datadog&apos;s key-validation endpoint (no log data is written), then **Create**.
 
-   ![Create a Log Stream dialog with credentials, event sources and Datadog destination options](/assets/images/console/log-streams/create-a-log-stream-dialog.webp)
+   ![Create a Log Stream dialog with credentials, event sources and Datadog destination options](https://docs.phase.dev/assets/images/console/log-streams/create-a-log-stream-dialog.webp)
 
 The new stream appears with its health status, per-source delivery state and a deep link to the shipped logs in Datadog:
 
-![Log stream card showing per-source delivery status and the Explore logs in Datadog link](/assets/images/console/log-streams/log-stream-card.webp)
+![Log stream card showing per-source delivery status and the Explore logs in Datadog link](https://docs.phase.dev/assets/images/console/log-streams/log-stream-card.webp)
 
 Events will appear in the Datadog **Log Explorer** under `source:phase` within about a minute. Example events as they land in Datadog:
 
-<CodeGroup title="Example events">
+**Example events**
 
-```json {{ title: 'App secret audit log' }}
+**App secret audit log**
+
+```json
 // A user read a secret via the REST API using curl
 {
   "actor": {
@@ -223,7 +220,9 @@ Events will appear in the Datadog **Log Explorer** under `source:phase` within a
 }
 ```
 
-```json {{ title: 'Organisation audit event' }}
+**Organisation audit event**
+
+```json
 // A user invited another user
 {
   "actor": {
@@ -270,8 +269,6 @@ Events will appear in the Datadog **Log Explorer** under `source:phase` within a
 }
 ```
 
-</CodeGroup>
-
 ### Using the logs in Datadog
 
 Since Phase ships structured JSON, every field is parsed automatically. IP addresses, user agents and user identity are mapped to Datadog standard attributes (`network.client.ip`, `http.useragent`, `usr.*`) so they light up native facets with no pipeline configuration. Some useful queries:
@@ -295,20 +292,18 @@ For Cloud SIEM, you can create detection rules over these logs, for example:
 - Secret reads from an IP outside your allowed ranges: `source:phase @event.type:read -@network.client.ip:203.0.113.0/24`
 - A service account token created and used within minutes, or mass secret reads from a single actor in a short window.
 
-<Note>
-  Datadog&apos;s intake silently discards events with timestamps older than **18
-  hours**. This is why streams cannot backfill historical data from before
-  they were created, and why a stream that is paused or failing for that long
-  records the missed range as **skipped** in the delivery history and jumps
-  the cursor forward. The engine skips shortly *before* the 18-hour mark —
-  it keeps a ~40-minute safety margin so events admitted for delivery cannot
-  age past the cutoff mid-flight. The events always remain queryable in
-  Phase: organisation audit events under **Logs** in the Console, and secret
-  events in each app&apos;s **Logs** tab.
-</Note>
+> **Note:** Datadog&apos;s intake silently discards events with timestamps older than **18
+>   hours**. This is why streams cannot backfill historical data from before
+>   they were created, and why a stream that is paused or failing for that long
+>   records the missed range as **skipped** in the delivery history and jumps
+>   the cursor forward. The engine skips shortly *before* the 18-hour mark —
+>   it keeps a ~40-minute safety margin so events admitted for delivery cannot
+>   age past the cutoff mid-flight. The events always remain queryable in
+>   Phase: organisation audit events under **Logs** in the Console, and secret
+>   events in each app&apos;s **Logs** tab.
 
 ## Self-hosting
 
 - Log shipping runs on a dedicated `log-streams` queue. The bundled worker (`python manage.py rqworker`) starts a pool for it automatically — size it with the [`LOG_STREAM_WORKERS`](/self-hosting/configuration/envars) environment variable (default: `2`). Shipping is network-bound and serialized per stream, so useful concurrency roughly equals your number of active streams.
 - If you run split workers (e.g. one Deployment per queue on Kubernetes), add a consumer for the `log-streams` queue.
-- See the [self-hosting guide](/self-hosting) and [environment variables reference](/self-hosting/configuration/envars) for full deployment configuration.
+- See the [self-hosting guide](https://docs.phase.dev/self-hosting.md) and [environment variables reference](https://docs.phase.dev/self-hosting/configuration/envars.md) for full deployment configuration.

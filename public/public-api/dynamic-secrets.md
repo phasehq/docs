@@ -1,70 +1,40 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const metadata = {
-  title: 'Secrets API',
-  description:
-    'Explore the Phase Secrets API.',
-}
-
-
-<Tag variant="small">API</Tag>
+---
+title: "Dynamic Secrets"
+description: "Explore the Phase Secrets API."
+url: https://docs.phase.dev/public-api/dynamic-secrets
+---
 
 # Dynamic Secrets
 
-Dynamic Secrets are credentials for third-party services that are *leased* on-demand for a limited time. Leases are tied to a specific account, and can be renewed to extend their validity, or revoked manually before they expire. Dynamic Secrets reduce the attack surface of your secrets by limiting the lifespan of active credentials and ensuring that each user has their own set of credentials. 
-Dynamic Secrets can be created manually or automatically through integrations with external systems. This guide covers how to fetch metadata for dynamic secrets and leases, generate credentials, and renew or revoke leases via the REST API. {{ className: 'lead' }}
-
-<DocActions /> 
+Dynamic Secrets are credentials for third-party services that are *leased* on-demand for a limited time. Leases are tied to a specific account, and can be renewed to extend their validity, or revoked manually before they expire. Dynamic Secrets reduce the attack surface of your secrets by limiting the lifespan of active credentials and ensuring that each user has their own set of credentials.
+Dynamic Secrets can be created manually or automatically through integrations with external systems. This guide covers how to fetch metadata for dynamic secrets and leases, generate credentials, and renew or revoke leases via the REST API.
 
 ---
 
-Dynamic Secrets can be fetched via a `GET` request to the `/v1/secrets/dynamic/` endpoint, or as part of the standard [Secrets API](/public-api/secrets) by including the `dynamic` or `includeDynamic` query parameters. Include the `lease` parameter to generate leases for dynamic secrets in the response.
+Dynamic Secrets can be fetched via a `GET` request to the `/v1/secrets/dynamic/` endpoint, or as part of the standard [Secrets API](https://docs.phase.dev/public-api/secrets.md) by including the `dynamic` or `includeDynamic` query parameters. Include the `lease` parameter to generate leases for dynamic secrets in the response.
 
-### Get Dynamic Secrets {{ tag: 'GET', label: '/v1/secrets/dynamic/' }}
-
-<Row>
-  <Col>
+### Get Dynamic Secrets
 
     Retrieve all dynamic secrets in a given environment. You can optionally filter secrets by a specific path and / or name.
 
     #### Required parameters
 
-    <Properties>
-      <Property name="app_id" type="string">
-        Unique identifier for the Phase App you wish to get secrets from.
-      </Property>
-      <Property name="env" type="string">
-        The environment name, ex: `development`
-      </Property>
-    </Properties>
-    
+      - `app_id` (string): Unique identifier for the Phase App you wish to get secrets from.
+      - `env` (string): The environment name, ex: `development`
+
     #### Optional parameters
 
-    <Properties>
-      <Property name="path" type="string">
-        Get dynamic secrets at a specific path.
-      </Property>
-      <Property name="id" type="string">
-        The id of a specific secret to fetch.
-      </Property>
-      <Property name="name" type="string">
-        The name of a specific secret to fetch.
-      </Property>
-      <Property name="lease" type="boolean">
-        Whether to generate leases for dynamic secrets in the response. If not supplied, the `lease` field in the response will be `null`. **Note that generating leases can increase the response latency by several seconds.**
-      </Property>
-      <Property name="ttl" type="number">
-        The TTL to use when generating leases for dynamic secrets, in seconds. If not supplied, the default TTL defined for the dynamic secret will be used.
-      </Property>
-    </Properties>
+      - `path` (string): Get dynamic secrets at a specific path.
+      - `id` (string): The id of a specific secret to fetch.
+      - `name` (string): The name of a specific secret to fetch.
+      - `lease` (boolean): Whether to generate leases for dynamic secrets in the response. If not supplied, the `lease` field in the response will be `null`. **Note that generating leases can increase the response latency by several seconds.**
+      - `ttl` (number): The TTL to use when generating leases for dynamic secrets, in seconds. If not supplied, the default TTL defined for the dynamic secret will be used.
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="GET" label="/v1/secrets/dynamic/">
+    **cURL**
 
-    ```fish {{ title: 'cURL' }}
+    ```fish
     curl -G https://api.phase.dev/v1/secrets/dynamic/ \
       -H "Authorization: Bearer {token}" \
       -d app_id=72b9ddd5-8fce-49ab-89d9-c431d53a9552 \
@@ -88,7 +58,7 @@ Dynamic Secrets can be fetched via a `GET` request to the `/v1/secrets/dynamic/`
     };
 
     fetch(url + new URLSearchParams(params), {
-        method: 'GET', 
+        method: 'GET',
         headers: headers
     })
     .then(response => {
@@ -111,7 +81,7 @@ Dynamic Secrets can be fetched via a `GET` request to the `/v1/secrets/dynamic/`
         'lease': 'true'
     }
     headers = {
-        'Authorization': f"Bearer {token}"  
+        'Authorization': f"Bearer {token}"
     }
 
     response = requests.get(url, params=params, headers=headers)
@@ -182,9 +152,9 @@ Dynamic Secrets can be fetched via a `GET` request to the `/v1/secrets/dynamic/`
 
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```json {{ title: 'Response' }}
+    ```json
     [
         {
             "id": "e30c989a-e032-4328-8220-5b7e6044808b",
@@ -246,24 +216,20 @@ Dynamic Secrets can be fetched via a `GET` request to the `/v1/secrets/dynamic/`
             }
         }
     ]
-    
 
     ```
 
-  </Col>
-</Row>
-
 ---
 
-Dynamic secrets can also be fetched via the standard [Secrets API](/public-api/secrets) by including the `dynamic` or `includeDynamic` query parameters. This is useful for fetching all static and dynamic secrets at a given path. Include the `lease` parameter to generate leases for dynamic secrets in the response.
+Dynamic secrets can also be fetched via the standard [Secrets API](https://docs.phase.dev/public-api/secrets.md) by including the `dynamic` or `includeDynamic` query parameters. This is useful for fetching all static and dynamic secrets at a given path. Include the `lease` parameter to generate leases for dynamic secrets in the response.
 
-## Get all secrets (Static & Dynamic) {{ tag: 'GET', label: '/v1/secrets/' }}
+## Get all secrets (Static & Dynamic)
 
-<Row>
-<Col sticky>
-<CodeGroup title="Request" tag="GET" label="/v1/secrets">
+**Request**
 
-    ```fish {{ title: 'cURL' }}
+    **cURL**
+
+    ```fish
     curl -G https://api.phase.dev/v1/secrets/ \
       -H "Authorization: Bearer {token}" \
       -d app_id=72b9ddd5-8fce-49ab-89d9-c431d53a9552 \
@@ -285,7 +251,7 @@ Dynamic secrets can also be fetched via the standard [Secrets API](/public-api/s
     };
 
     fetch(url + new URLSearchParams(params), {
-        method: 'GET', 
+        method: 'GET',
         headers: headers
     })
     .then(response => {
@@ -307,7 +273,7 @@ Dynamic secrets can also be fetched via the standard [Secrets API](/public-api/s
         'dynamic': 'true'
     }
     headers = {
-        'Authorization': f"Bearer {token}"  
+        'Authorization': f"Bearer {token}"
     }
 
     response = requests.get(url, params=params, headers=headers)
@@ -378,11 +344,9 @@ Dynamic secrets can also be fetched via the standard [Secrets API](/public-api/s
 
     ```
 
-    </CodeGroup>
-  </Col>
+  **Response**
 
-  <Col>
-  ```json {{ title: 'Response' }}
+  ```json
     [
         {
             "id": "e30c989a-e032-4328-8220-5b7e6044808b",
@@ -446,8 +410,6 @@ Dynamic secrets can also be fetched via the standard [Secrets API](/public-api/s
     ]
 
     ```
-    </Col>
-</Row>
 
 ---
 
@@ -455,27 +417,19 @@ Dynamic secrets can also be fetched via the standard [Secrets API](/public-api/s
 
 Leases are temporary credentials generated for a Dynamic Secret. Each lease has a unique ID, name, TTL (time-to-live), status (active, expired, or revoked), and owner (account). Leases can be renewed to extend their TTL, or revoked manually before they expire.
 
-### Get Leases {{ tag: 'GET', label: '/v1/secrets/dynamic/leases/' }}
-
-<Row>
-  <Col>
+### Get Leases
 
     List all leases for a given dynamic secret. The response will not include credentials.
 
     #### Required parameters
 
-    <Properties>
-      <Property name="secret_id" type="string">
-        Unique identifier for the dynamic secret you wish to get leases for.
-      </Property>
-    </Properties>
-    
-  </Col>
-  <Col sticky>
+      - `secret_id` (string): Unique identifier for the dynamic secret you wish to get leases for.
 
-    <CodeGroup title="Request" tag="GET" label="/v1/secrets/dynamic/leases/">
+**Request**
 
-    ```fish {{ title: 'cURL' }}
+    **cURL**
+
+    ```fish
     curl -G https://api.phase.dev/v1/secrets/dynamic/leases/ \
       -H "Authorization: Bearer {token}" \
       -d secret_id=72b9ddd5-8fce-49ab-89d9-c431d53a9552
@@ -491,7 +445,7 @@ Leases are temporary credentials generated for a Dynamic Secret. Each lease has 
     };
 
     fetch(url + new URLSearchParams(params), {
-        method: 'GET', 
+        method: 'GET',
         headers: headers
     })
     .then(response => {
@@ -510,7 +464,7 @@ Leases are temporary credentials generated for a Dynamic Secret. Each lease has 
         'secret_id': '72b9ddd5-8fce-49ab-89d9-c431d53a9552'
     }
     headers = {
-        'Authorization': f"Bearer {token}"  
+        'Authorization': f"Bearer {token}"
     }
 
     response = requests.get(url, params=params, headers=headers)
@@ -581,9 +535,9 @@ Leases are temporary credentials generated for a Dynamic Secret. Each lease has 
 
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```json {{ title: 'Response' }}
+    ```json
     [
         {
             "id": "87aef716-9064-4a4a-8079-f5c132693ee2",
@@ -674,51 +628,32 @@ Leases are temporary credentials generated for a Dynamic Secret. Each lease has 
     ]
 
     ```
-  </Col>
-</Row>
 
 ---
 
-## Renew a lease {{ tag: 'PUT', label: '/v1/secrets/dynamic/leases/' }}
-
-<Row>
-  <Col>
+## Renew a lease
 
     Renew the TTL for a leased credential.
 
     ### Required parameters
 
-    <Properties>
-      <Property name="app_id" type="string">
-        Unique identifier for the Phase App.
-      </Property>
-      <Property name="env" type="string">
-        The environment name, ex: `development`
-      </Property>
-    </Properties>
+      - `app_id` (string): Unique identifier for the Phase App.
+      - `env` (string): The environment name, ex: `development`
 
     ### JSON Body
-    
+
     Add the Lease ID and TTL in the request body
-    
+
     #### **Required fields**
 
-    <Properties>
-      <Property name="lease_id" type="string">
-        Unique identifier for the Lease.
-      </Property>
-      <Property name="ttl" type="number">
-        The desired lease duration in seconds. The new TTL cannot exceed the maximum TTL defined for the dynamic secret.
-      </Property>
-    </Properties>
+      - `lease_id` (string): Unique identifier for the Lease.
+      - `ttl` (number): The desired lease duration in seconds. The new TTL cannot exceed the maximum TTL defined for the dynamic secret.
 
+**Request**
 
-  </Col>
-  <Col sticky>
+    **cURL**
 
-    <CodeGroup title="Request" tag="PUT" label="/v1/secrets/dynamic/leases/">
-
-    ```fish {{ title: 'cURL' }}
+    ```fish
     curl --location --request PUT 'https://api.phase.dev/v1/secrets/dynamic/leases/?app_id=72b9ddd5-8fce-49ab-89d9-c431d53a9552&env=development' \
     --header 'Authorization: Bearer {token}' \
     --header 'Content-Type: application/json' \
@@ -737,7 +672,7 @@ Leases are temporary credentials generated for a Dynamic Secret. Each lease has 
         'app_id': '72b9ddd5-8fce-49ab-89d9-c431d53a9552',
         'env': 'development',
     }
-    
+
     const raw = JSON.stringify({"lease_id":"fc58f652-818b-47c3-b111-f479367039f6","ttl":3600});
 
     const requestOptions = {
@@ -832,58 +767,38 @@ Leases are temporary credentials generated for a Dynamic Secret. Each lease has 
 
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```json {{ title: 'Response' }}
+    ```json
     {
       "message": "Lease renewed successfully. Updated expiry: 2025-10-27 12:49:26.611113+00:00"
     }
     ```
-    
-
-  </Col>
-</Row>
-
 
 ---
 
-## Revoke a lease {{ tag: 'DELETE', label: '/v1/secrets/dynamic/leases/' }}
-
-<Row>
-  <Col>
+## Revoke a lease
 
     Revoke a leased credential.
 
     ### Required parameters
 
-    <Properties>
-      <Property name="app_id" type="string">
-        Unique identifier for the Phase App.
-      </Property>
-      <Property name="env" type="string">
-        The environment name, ex: `development`
-      </Property>
-    </Properties>
+      - `app_id` (string): Unique identifier for the Phase App.
+      - `env` (string): The environment name, ex: `development`
 
     ### JSON Body
-    
+
     Add the Lease ID and TTL in the request body
-    
+
     #### **Required fields**
 
-    <Properties>
-      <Property name="lease_id" type="string">
-        Unique identifier for the Lease.
-      </Property>
-    </Properties>
+      - `lease_id` (string): Unique identifier for the Lease.
 
+**Request**
 
-  </Col>
-  <Col sticky>
+    **cURL**
 
-    <CodeGroup title="Request" tag="DELETE" label="/v1/secrets/dynamic/leases/">
-
-    ```fish {{ title: 'cURL' }}
+    ```fish
     curl --location --request DELETE 'https://api.phase.dev/v1/secrets/dynamic/leases/?app_id=72b9ddd5-8fce-49ab-89d9-c431d53a9552&env=development' \
     --header 'Authorization: Bearer {token}' \
     --header 'Content-Type: application/json' \
@@ -899,7 +814,7 @@ Leases are temporary credentials generated for a Dynamic Secret. Each lease has 
         'app_id': '72b9ddd5-8fce-49ab-89d9-c431d53a9552',
         'env': 'development',
     }
-    
+
     const raw = JSON.stringify({"lease_id":"fc58f652-818b-47c3-b111-f479367039f6"});
 
     const requestOptions = {
@@ -994,13 +909,10 @@ Leases are temporary credentials generated for a Dynamic Secret. Each lease has 
 
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```json {{ title: 'Response' }}
+    ```json
     {
       "message": "Lease revoked successfully"
     }
     ```
-  </Col>
-</Row>
-

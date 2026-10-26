@@ -1,70 +1,41 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const metadata = {
-  title: 'Service Accounts API',
-  description:
-    'Explore the Phase Service Accounts API for managing service accounts programmatically.',
-}
-
-<Tag variant="small">API</Tag>
+---
+title: "Service Accounts"
+description: "Explore the Phase Service Accounts API for managing service accounts programmatically."
+url: https://docs.phase.dev/public-api/service-accounts
+---
 
 # Service Accounts
 
-Service Accounts provide programmatic, non-human access to your Phase organisation. Each Service Account has its own Role, authentication tokens, and can be granted access to specific Apps and Environments. On this page, we'll look at the API endpoints for managing Service Accounts, their access, and their lifecycle. {{ className: 'lead' }}
-
-<DocActions />
+Service Accounts provide programmatic, non-human access to your Phase organisation. Each Service Account has its own Role, authentication tokens, and can be granted access to specific Apps and Environments. On this page, we'll look at the API endpoints for managing Service Accounts, their access, and their lifecycle.
 
 ## The Service Account model
 
 ### Properties
 
-<Properties>
-  <Property name="id" type="string">
-    Unique identifier for the service account.
-  </Property>
-  <Property name="name" type="string">
-    The name of the service account.
-  </Property>
-  <Property name="role" type="object">
-    The assigned role, with `id` and `name`.
-  </Property>
-  <Property name="createdAt" type="timestamp">
-    Timestamp of when the service account was created.
-  </Property>
-  <Property name="updatedAt" type="timestamp">
-    Timestamp of when the service account was last updated.
-  </Property>
-</Properties>
+  - `id` (string): Unique identifier for the service account.
+  - `name` (string): The name of the service account.
+  - `role` (object): The assigned role, with `id` and `name`.
+  - `createdAt` (timestamp): Timestamp of when the service account was created.
+  - `updatedAt` (timestamp): Timestamp of when the service account was last updated.
 
 ### Detail Properties
 
 When fetching a single service account, additional detail fields are included:
 
-<Properties>
-  <Property name="tokens" type="array">
-    Array of active tokens, each with `id`, `name`, `createdAt`, and `expiresAt`.
-  </Property>
-  <Property name="apps" type="array">
-    Array of accessible apps, each with `id`, `name`, and an `environments` array containing the environments the service account can access within that app.
-  </Property>
-</Properties>
+  - `tokens` (array): Array of active tokens, each with `id`, `name`, `createdAt`, and `expiresAt`.
+  - `apps` (array): Array of accessible apps, each with `id`, `name`, and an `environments` array containing the environments the service account can access within that app.
 
 ---
 
-## List Service Accounts {{ tag: 'GET', label: '/v1/service-accounts' }}
-
-<Row>
-  <Col>
+## List Service Accounts
 
     Retrieve all active service accounts in the organisation.
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="GET" label="/v1/service-accounts">
+    **cURL**
 
-    ```fish {{ title: 'cURL' }}
+    ```fish
     curl https://api.phase.dev/v1/service-accounts/ \
       -H "Authorization: Bearer {token}"
     ```
@@ -81,9 +52,9 @@ When fetching a single service account, additional detail fields are included:
     data = response.json()
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```json {{ title: 'Response' }}
+    ```json
     {
         "data": [
             {
@@ -100,56 +71,33 @@ When fetching a single service account, additional detail fields are included:
     }
     ```
 
-  </Col>
-</Row>
-
 ---
 
-## Create Service Account {{ tag: 'POST', label: '/v1/service-accounts' }}
-
-<Row>
-  <Col>
+## Create Service Account
 
     Create a new service account. The server generates all cryptographic keys and mints an initial authentication token, which is returned in the response.
 
-    <Note>
-    The `initialToken.token` and `initialToken.bearerToken` strings are only returned once at creation time. Store them securely — they cannot be retrieved again. The token's `id` is returned alongside them so it can be referenced by the [Delete Token](#delete-token) endpoint later.
-    </Note>
+> **Note:** The `initialToken.token` and `initialToken.bearerToken` strings are only returned once at creation time. Store them securely — they cannot be retrieved again. The token's `id` is returned alongside them so it can be referenced by the [Delete Token](#delete-token) endpoint later.
 
     ### JSON Body
 
     #### Required fields
 
-    <Properties>
-      <Property name="name" type="string">
-        The service account name. Maximum 64 characters.
-      </Property>
-      <Property name="role_id" type="string">
-        The ID of the role to assign. Must not be a role with global access (e.g. Owner or Admin). The role can only include permissions that the caller's own role has. Otherwise the request returns `403 Forbidden` and the error lists each extra permission. For a team-owned service account, the caller's permissions also include the team's `memberRole` override (or `serviceAccountRole` for service account callers). Callers with a global-access role are exempt.
-      </Property>
-    </Properties>
+      - `name` (string): The service account name. Maximum 64 characters.
+      - `role_id` (string): The ID of the role to assign. Must not be a role with global access (e.g. Owner or Admin). The role can only include permissions that the caller's own role has. Otherwise the request returns `403 Forbidden` and the error lists each extra permission. For a team-owned service account, the caller's permissions also include the team's `memberRole` override (or `serviceAccountRole` for service account callers). Callers with a global-access role are exempt.
 
     #### Optional fields
 
-    <Properties>
-      <Property name="token_name" type="string">
-        A name for the initial token. Defaults to `"Default"`.
-      </Property>
-      <Property name="team_id" type="string">
-        Bind the service account to a [Team](/public-api/teams). Team-owned service accounts are visible only to team members (plus Owner / Admin), are auto-added as members of the team, are provisioned `EnvironmentKey` records for every SSE-enabled app the team has access to, and cannot later be transferred to a different team or be removed from the owning team's membership. Requires a Pro or Enterprise plan; the caller must be a member of the team (or hold global access).
-      </Property>
-    </Properties>
+      - `token_name` (string): A name for the initial token. Defaults to `"Default"`.
+      - `team_id` (string): Bind the service account to a [Team](https://docs.phase.dev/public-api/teams.md). Team-owned service accounts are visible only to team members (plus Owner / Admin), are auto-added as members of the team, are provisioned `EnvironmentKey` records for every SSE-enabled app the team has access to, and cannot later be transferred to a different team or be removed from the owning team's membership. Requires a Pro or Enterprise plan; the caller must be a member of the team (or hold global access).
 
-    <Note>
-    Service accounts are visible to all org members with the `ServiceAccounts.read` permission **except** team-owned ones — those are only visible to members of the owning team and to Owner / Admin. The same scoping applies to `GET /v1/service-accounts/` and `GET /v1/service-accounts/:id/`.
-    </Note>
+> **Note:** Service accounts are visible to all org members with the `ServiceAccounts.read` permission **except** team-owned ones — those are only visible to members of the owning team and to Owner / Admin. The same scoping applies to `GET /v1/service-accounts/` and `GET /v1/service-accounts/:id/`.
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="POST" label="/v1/service-accounts">
+    **cURL**
 
-    ```fish {{ title: 'cURL' }}
+    ```fish
     curl -X POST https://api.phase.dev/v1/service-accounts/ \
       -H "Authorization: Bearer {token}" \
       -H "Content-Type: application/json" \
@@ -178,9 +126,9 @@ When fetching a single service account, additional detail fields are included:
     data = response.json()
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```json {{ title: 'Response' }}
+    ```json
     {
         "id": "8ab27128-02d8-42c1-b893-12acaffbbd4b",
         "name": "deploy-bot",
@@ -203,32 +151,21 @@ When fetching a single service account, additional detail fields are included:
 
     The `initialToken.token` and `initialToken.bearerToken` strings are only returned in this response — there's no way to recover them later. The `initialToken.id` is the same identifier used by the [Delete Token](#delete-token) endpoint to revoke this specific token.
 
-  </Col>
-</Row>
-
 ---
 
-## Get Service Account {{ tag: 'GET', label: '/v1/service-accounts/:id' }}
-
-<Row>
-  <Col>
+## Get Service Account
 
     Retrieve a single service account with full detail, including tokens and app/environment access.
 
     ### URL parameters
 
-    <Properties>
-      <Property name="id" type="string">
-        The unique identifier of the service account.
-      </Property>
-    </Properties>
+      - `id` (string): The unique identifier of the service account.
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="GET" label="/v1/service-accounts/:id">
+    **cURL**
 
-    ```fish {{ title: 'cURL' }}
+    ```fish
     curl https://api.phase.dev/v1/service-accounts/8ab27128-02d8-42c1-b893-12acaffbbd4b/ \
       -H "Authorization: Bearer {token}"
     ```
@@ -246,9 +183,9 @@ When fetching a single service account, additional detail fields are included:
     data = response.json()
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```json {{ title: 'Response' }}
+    ```json
     {
         "id": "8ab27128-02d8-42c1-b893-12acaffbbd4b",
         "name": "deploy-bot",
@@ -287,43 +224,26 @@ When fetching a single service account, additional detail fields are included:
     }
     ```
 
-  </Col>
-</Row>
-
 ---
 
-## Update Service Account {{ tag: 'PUT', label: '/v1/service-accounts/:id' }}
-
-<Row>
-  <Col>
+## Update Service Account
 
     Update a service account's name and/or role. At least one field must be provided.
 
     ### URL parameters
 
-    <Properties>
-      <Property name="id" type="string">
-        The unique identifier of the service account.
-      </Property>
-    </Properties>
+      - `id` (string): The unique identifier of the service account.
 
     ### JSON Body
 
-    <Properties>
-      <Property name="name" type="string">
-        The new name. Maximum 64 characters. HTML tags and ASCII control characters are stripped; whitespace is trimmed.
-      </Property>
-      <Property name="role_id" type="string">
-        The ID of the new role. Must not be a global-access role — service accounts cannot hold roles with `global_access: true`. If the role changes, the new role can only include permissions that the caller's own role has. Otherwise the request returns `403 Forbidden` and the error lists each extra permission. For a team-owned service account, the caller's permissions also include the team's `memberRole` override (or `serviceAccountRole` for service account callers). Callers with a global-access role are exempt.
-      </Property>
-    </Properties>
+      - `name` (string): The new name. Maximum 64 characters. HTML tags and ASCII control characters are stripped; whitespace is trimmed.
+      - `role_id` (string): The ID of the new role. Must not be a global-access role — service accounts cannot hold roles with `global_access: true`. If the role changes, the new role can only include permissions that the caller's own role has. Otherwise the request returns `403 Forbidden` and the error lists each extra permission. For a team-owned service account, the caller's permissions also include the team's `memberRole` override (or `serviceAccountRole` for service account callers). Callers with a global-access role are exempt.
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="PUT" label="/v1/service-accounts/:id">
+    **cURL**
 
-    ```fish {{ title: 'cURL' }}
+    ```fish
     curl -X PUT https://api.phase.dev/v1/service-accounts/8ab27128-02d8-42c1-b893-12acaffbbd4b/ \
       -H "Authorization: Bearer {token}" \
       -H "Content-Type: application/json" \
@@ -350,9 +270,9 @@ When fetching a single service account, additional detail fields are included:
     data = response.json()
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```json {{ title: 'Response' }}
+    ```json
     {
         "id": "8ab27128-02d8-42c1-b893-12acaffbbd4b",
         "name": "deploy-bot-v2",
@@ -367,32 +287,21 @@ When fetching a single service account, additional detail fields are included:
     }
     ```
 
-  </Col>
-</Row>
-
 ---
 
-## Delete Service Account {{ tag: 'DELETE', label: '/v1/service-accounts/:id' }}
-
-<Row>
-  <Col>
+## Delete Service Account
 
     Delete a service account. All associated tokens are immediately invalidated (subsequent requests with those tokens return `401 Unauthorized` with `{"error": "Token expired or deleted"}`), and all app/environment access grants are removed.
 
     ### URL parameters
 
-    <Properties>
-      <Property name="id" type="string">
-        The unique identifier of the service account.
-      </Property>
-    </Properties>
+      - `id` (string): The unique identifier of the service account.
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="DELETE" label="/v1/service-accounts/:id">
+    **cURL**
 
-    ```fish {{ title: 'cURL' }}
+    ```fish
     curl -X DELETE https://api.phase.dev/v1/service-accounts/8ab27128-02d8-42c1-b893-12acaffbbd4b/ \
       -H "Authorization: Bearer {token}"
     ```
@@ -410,21 +319,15 @@ When fetching a single service account, additional detail fields are included:
     # Returns 204 No Content on success
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```text {{ title: 'Response' }}
+    ```text
     204 No Content
     ```
 
-  </Col>
-</Row>
-
 ---
 
-## Manage Access {{ tag: 'PUT', label: '/v1/service-accounts/:id/access' }}
-
-<Row>
-  <Col>
+## Manage Access
 
     Set the app and environment access for a service account. This is a **declarative** endpoint — the request body represents the entire desired access state.
 
@@ -438,28 +341,19 @@ When fetching a single service account, additional detail fields are included:
 
     ### URL parameters
 
-    <Properties>
-      <Property name="id" type="string">
-        The unique identifier of the service account.
-      </Property>
-    </Properties>
+      - `id` (string): The unique identifier of the service account.
 
     ### JSON Body
 
-    <Properties>
-      <Property name="apps" type="array">
-        An array of app access objects. Each object must have:
-        - `id` (string): The app ID.
-        - `environments` (array): A list of environment IDs to grant access to. Must not be empty.
-      </Property>
-    </Properties>
+      - `apps` (array): An array of app access objects. Each object must have:
+          - `id` (string): The app ID.
+          - `environments` (array): A list of environment IDs to grant access to. Must not be empty.
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="PUT" label="/v1/service-accounts/:id/access">
+    **cURL (grant access)**
 
-    ```fish {{ title: 'cURL (grant access)' }}
+    ```fish
     curl -X PUT https://api.phase.dev/v1/service-accounts/8ab27128-02d8-42c1-b893-12acaffbbd4b/access/ \
       -H "Authorization: Bearer {token}" \
       -H "Content-Type: application/json" \
@@ -476,7 +370,9 @@ When fetching a single service account, additional detail fields are included:
       }'
     ```
 
-    ```fish {{ title: 'cURL (revoke all access)' }}
+    **cURL (revoke all access)**
+
+    ```fish
     curl -X PUT https://api.phase.dev/v1/service-accounts/8ab27128-02d8-42c1-b893-12acaffbbd4b/access/ \
       -H "Authorization: Bearer {token}" \
       -H "Content-Type: application/json" \
@@ -510,9 +406,9 @@ When fetching a single service account, additional detail fields are included:
     data = response.json()
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```json {{ title: 'Response' }}
+    ```json
     {
         "id": "8ab27128-02d8-42c1-b893-12acaffbbd4b",
         "name": "deploy-bot",
@@ -551,15 +447,9 @@ When fetching a single service account, additional detail fields are included:
     }
     ```
 
-  </Col>
-</Row>
-
 ---
 
-## Create Token {{ tag: 'POST', label: '/v1/service-accounts/:id/tokens' }}
-
-<Row>
-  <Col>
+## Create Token
 
     Mint an additional bearer token for an existing service account. The server uses its keyring to generate the token end-to-end, so the caller only needs to supply a name and an optional expiry.
 
@@ -569,39 +459,24 @@ When fetching a single service account, additional detail fields are included:
 
     ### URL parameters
 
-    <Properties>
-      <Property name="id" type="string">
-        The unique identifier of the service account.
-      </Property>
-    </Properties>
+      - `id` (string): The unique identifier of the service account.
 
     ### JSON Body
 
     #### Required fields
 
-    <Properties>
-      <Property name="name" type="string">
-        A human-readable name for the token. Maximum 64 characters.
-      </Property>
-    </Properties>
+      - `name` (string): A human-readable name for the token. Maximum 64 characters.
 
     #### Optional fields
 
-    <Properties>
-      <Property name="expires_at" type="string">
-        Absolute expiry as an ISO-8601 datetime **with a timezone offset** (e.g. `2026-12-31T23:59:59Z` or `2026-12-31T23:59:59+00:00`). Must be in the future. Naive datetimes (no offset) are rejected.
-      </Property>
-      <Property name="expires_in" type="integer">
-        Token lifetime in seconds (positive integer). The server converts this to an absolute expiry at request time as `now + expires_in`. Ignored if `expires_at` is also supplied.
-      </Property>
-    </Properties>
+      - `expires_at` (string): Absolute expiry as an ISO-8601 datetime **with a timezone offset** (e.g. `2026-12-31T23:59:59Z` or `2026-12-31T23:59:59+00:00`). Must be in the future. Naive datetimes (no offset) are rejected.
+      - `expires_in` (integer): Token lifetime in seconds (positive integer). The server converts this to an absolute expiry at request time as `now + expires_in`. Ignored if `expires_at` is also supplied.
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="POST" label="/v1/service-accounts/:id/tokens">
+    **cURL**
 
-    ```fish {{ title: 'cURL' }}
+    ```fish
     curl -X POST https://api.phase.dev/v1/service-accounts/8ab27128-02d8-42c1-b893-12acaffbbd4b/tokens/ \
       -H "Authorization: Bearer {token}" \
       -H "Content-Type: application/json" \
@@ -631,9 +506,7 @@ When fetching a single service account, additional detail fields are included:
     data = response.json()
     ```
 
-    </CodeGroup>
-
-    ```json {{ title: 'Response', statusCode: '201' }}
+    ```json
     {
         "id": "f8621d1a-6903-4b60-8e8d-2085a2475871",
         "name": "CI Token",
@@ -644,15 +517,9 @@ When fetching a single service account, additional detail fields are included:
     }
     ```
 
-  </Col>
-</Row>
-
 ---
 
-## Delete Token {{ tag: 'DELETE', label: '/v1/service-accounts/:id/tokens/:token_id' }}
-
-<Row>
-  <Col>
+## Delete Token
 
     Revoke a service account token. Any subsequent requests using the token return `401 Unauthorized`.
 
@@ -660,21 +527,14 @@ When fetching a single service account, additional detail fields are included:
 
     ### URL parameters
 
-    <Properties>
-      <Property name="id" type="string">
-        The unique identifier of the service account.
-      </Property>
-      <Property name="token_id" type="string">
-        The unique identifier of the token to revoke.
-      </Property>
-    </Properties>
+      - `id` (string): The unique identifier of the service account.
+      - `token_id` (string): The unique identifier of the token to revoke.
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="DELETE" label="/v1/service-accounts/:id/tokens/:token_id">
+    **cURL**
 
-    ```fish {{ title: 'cURL' }}
+    ```fish
     curl -X DELETE https://api.phase.dev/v1/service-accounts/8ab27128-02d8-42c1-b893-12acaffbbd4b/tokens/f8621d1a-6903-4b60-8e8d-2085a2475871/ \
       -H "Authorization: Bearer {token}"
     ```
@@ -691,11 +551,8 @@ When fetching a single service account, additional detail fields are included:
     # Returns 204 No Content on success
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```text {{ title: 'Response' }}
+    ```text
     204 No Content
     ```
-
-  </Col>
-</Row>

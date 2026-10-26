@@ -1,17 +1,12 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-<Tag variant="small">ACCESS CONTROL</Tag>
-
-export const description =
-  'This guide explains how to use External Identities to authenticate with Phase and manage access with the Access Control system.'
-
+---
+title: "External Identities"
+description: "This guide explains how to use External Identities to authenticate with Phase and manage access with the Access Control system."
+url: https://docs.phase.dev/access-control/external-identities
+---
 
 # External Identities
 
-External Identities allow you to use third-party platforms and services to serve as identity providers for clients seeking programmatic access to Phase. Instead of manually provisioning access tokens for each client on each machine or an instance on your infrastructure, you can use External Identities to establish a trusted relationship with a principal that will be used to validate the identity of the client and grant access to Phase. This enables dynamic authentication and authorization for clients such as the CLI, SDKs, Kubernetes Operator, or your own applications. 
-
-<DocActions /> 
+External Identities allow you to use third-party platforms and services to serve as identity providers for clients seeking programmatic access to Phase. Instead of manually provisioning access tokens for each client on each machine or an instance on your infrastructure, you can use External Identities to establish a trusted relationship with a principal that will be used to validate the identity of the client and grant access to Phase. This enables dynamic authentication and authorization for clients such as the CLI, SDKs, Kubernetes Operator, or your own applications.
 
 Example use cases:
 - **AWS**: You have a fleet of EC2 instances in an autoscaling group (ASG). Instead of manually provisioning access tokens for each machine, you establish a trusted relationship with the instance profile attached to the ASG.
@@ -19,8 +14,9 @@ Example use cases:
 
 The authentication flow will be as follows:
 
-<Diagram caption="External Identities authentication with AWS IAM">
-{`
+*External Identities authentication with AWS IAM*
+
+```mermaid
 sequenceDiagram
   participant Client as Client
   participant Phase as Phase
@@ -42,8 +38,7 @@ sequenceDiagram
 
   Note over Client,Phase: 5. Authenticate to API with Access Token
   Client->>Phase: Make authenticated requests using the Access Token
-`}
-</Diagram>
+```
 
 Benefits:
 - Automate the creation and provisioning of access tokens for every client on your infrastructure.
@@ -64,27 +59,15 @@ Phase currently supports the following external identity providers:
 
 To set up an External Identity for use with a Phase Service Account, follow these steps. First, navigate to the **Access Control** page from the sidebar, and select **External Identities**. Then, choose a provider:
 
-![external identities page](/assets/images/console/access-control/external-identities/external-identities.webp)
+![external identities page](https://docs.phase.dev/assets/images/console/access-control/external-identities/external-identities.webp)
 
 Then, enter the required information to configure the external identity. For all providers, you will need to provide basic information about the identity and how tokens are generated:
 
-<Properties>
-  <Property name="Identity Name" type="string">
-    A name for the external identity.
-  </Property>
-  <Property name="Description" type="string">
-    Optionally, a description for the external identity.
-  </Property>
-  <Property name="Token name" type="string">
-    Optional name for tokens that will be generated for Service Accounts using this external identity. The default is the provider shortcode, e.g. `aws-iam`.
-  </Property>
-  <Property name="Token Default TTL" type="number">
-    The default TTL (in seconds) for tokens generated for Service Accounts using this external identity. Default is 3600 seconds (1 hour).
-  </Property>
-  <Property name="Token Max TTL" type="number">
-    The default TTL (in seconds) for tokens generated for Service Accounts using this external identity. Default is 86400 seconds (24 hours).
-  </Property>
-</Properties>
+  - `Identity Name` (string): A name for the external identity.
+  - `Description` (string): Optionally, a description for the external identity.
+  - `Token name` (string): Optional name for tokens that will be generated for Service Accounts using this external identity. The default is the provider shortcode, e.g. `aws-iam`.
+  - `Token Default TTL` (number): The default TTL (in seconds) for tokens generated for Service Accounts using this external identity. Default is 3600 seconds (1 hour).
+  - `Token Max TTL` (number): The default TTL (in seconds) for tokens generated for Service Accounts using this external identity. Default is 86400 seconds (24 hours).
 
 Additionally, you will need to provide provider-specific information depending on the selected provider.
 
@@ -92,51 +75,34 @@ Additionally, you will need to provide provider-specific information depending o
 
 For AWS IAM, you will need to provide the following information:
 
-<Properties>
-  <Property name="Trusted principal ARNs" type="comma-separated-string">
-    The ARN(s) of the AWS IAM User(s) to bind to the Phase Service Account. Separate multiple ARNs with commas.
-  </Property>
-  <Property name="Signature expiry" type="number">
-    The duration (in seconds) for which the signed requests from the AWS IAM User will be valid. Default is 60 seconds. The lower the better. This is to protect against replay attacks.
-  </Property>
-  <Property name="STS endpoint" type="string">
-    Optionally, specify a custom AWS STS endpoint. If not provided, the default AWS STS endpoint will be used (`https://sts.amazonaws.com`).
-  </Property>
-</Properties>
+  - `Trusted principal ARNs` (comma-separated-string): The ARN(s) of the AWS IAM User(s) to bind to the Phase Service Account. Separate multiple ARNs with commas.
+  - `Signature expiry` (number): The duration (in seconds) for which the signed requests from the AWS IAM User will be valid. Default is 60 seconds. The lower the better. This is to protect against replay attacks.
+  - `STS endpoint` (string): Optionally, specify a custom AWS STS endpoint. If not provided, the default AWS STS endpoint will be used (`https://sts.amazonaws.com`).
 
-![configure new identity](/assets/images/console/access-control/external-identities/configure-new-identity.webp)
+![configure new identity](https://docs.phase.dev/assets/images/console/access-control/external-identities/configure-new-identity.webp)
 
 ### Azure
 
 For Azure, you will need to provide the following information:
 
-<Properties>
-  <Property name="Tenant ID" type="string">
-    Your Azure AD tenant ID (UUID format). Used to validate the `tid` claim in the JWT and to construct the OIDC discovery URL for key verification.
-  </Property>
-  <Property name="Resource / Audience" type="string">
-    The App ID URI that maps to the IMDS `?resource=` parameter and the JWT `aud` claim. Default: `https://management.azure.com/`. This ensures tokens issued for other Azure resources cannot be reused.
-  </Property>
-  <Property name="Allowed Service Principal IDs" type="comma-separated-string">
-    Azure AD service principal object IDs allowed to authenticate. Matched against the `oid` claim in the JWT. Separate multiple IDs with commas. These are the object IDs of Managed Identities or Service Principals.
-  </Property>
-</Properties>
+  - `Tenant ID` (string): Your Azure AD tenant ID (UUID format). Used to validate the `tid` claim in the JWT and to construct the OIDC discovery URL for key verification.
+  - `Resource / Audience` (string): The App ID URI that maps to the IMDS `?resource=` parameter and the JWT `aud` claim. Default: `https://management.azure.com/`. This ensures tokens issued for other Azure resources cannot be reused.
+  - `Allowed Service Principal IDs` (comma-separated-string): Azure AD service principal object IDs allowed to authenticate. Matched against the `oid` claim in the JWT. Separate multiple IDs with commas. These are the object IDs of Managed Identities or Service Principals.
 
-<Note>
-To find a **Service Principal's** object ID, run: `az ad sp show --id <appId> --query id -o tsv`.
+> **Note:** To find a **Service Principal's** object ID, run: `az ad sp show --id <appId> --query id -o tsv`.
+>
+> For **Managed Identities** (VMs, AKS, Functions), the principal ID is returned when you enable the identity:
+> ```bash
+> az vm identity assign --resource-group <rg> --name <vm-name>
+> # Returns: { "principalId": "dcc518e4-...", ... }
+> ```
+> You can also find it in the Azure Portal under the resource's Identity blade.
 
-For **Managed Identities** (VMs, AKS, Functions), the principal ID is returned when you enable the identity:
-```bash
-az vm identity assign --resource-group <rg> --name <vm-name>
-# Returns: { "principalId": "dcc518e4-...", ... }
-```
-You can also find it in the Azure Portal under the resource's Identity blade.
-</Note>
+![configure new Azure identity](https://docs.phase.dev/assets/images/console/access-control/external-identities/configure-new-identity-azure.webp)
 
-![configure new Azure identity](/assets/images/console/access-control/external-identities/configure-new-identity-azure.webp)
+*External Identities authentication with Azure*
 
-<Diagram caption="External Identities authentication with Azure">
-{`
+```mermaid
 sequenceDiagram
   participant Client as Client
   participant Phase as Phase
@@ -158,29 +124,25 @@ sequenceDiagram
 
   Note over Client,Phase: 5. Authenticate to API with Access Token
   Client->>Phase: Make authenticated requests using the Access Token
-`}
-</Diagram>
-
+```
 
 ## Manage External Identities
 
-Once an External Identity is created, it will appear in the list on the **External Identities** page. From here, you can view details, edit configurations, or delete the identity. 
+Once an External Identity is created, it will appear in the list on the **External Identities** page. From here, you can view details, edit configurations, or delete the identity.
 
-![external identities list](/assets/images/console/access-control/external-identities/external-identities-list.webp)
+![external identities list](https://docs.phase.dev/assets/images/console/access-control/external-identities/external-identities-list.webp)
 
 ## Bind an External Identity to a Service Account
 
-<Note>
-To use an External Identity, the Service Account must have [Server-side KMS](/access-control/service-accounts#server-side-kms) enabled.
-</Note>
+> **Note:** To use an External Identity, the Service Account must have [Server-side KMS](https://docs.phase.dev/access-control/service-accounts.md#server-side-kms) enabled.
 
 Once you have configured an External Identity, you can bind it to a Phase Service Account. To do this, navigate to the **Service Accounts** page, select the desired Service Account and click **Manage** to open the account detail page. Scroll down to the **External Identities** section and click **Manage External Identities**:
 
-![manage external identities button](/assets/images/console/access-control/external-identities/manage-account-identities-button.webp)
+![manage external identities button](https://docs.phase.dev/assets/images/console/access-control/external-identities/manage-account-identities-button.webp)
 
 From the dialog, select the External Identity you want to bind to this Service Account and enable it using the toggle switch. Click **Save** to apply the changes:
 
-![add external identity to service account](/assets/images/console/access-control/external-identities/manage-account-identities-dialog.webp)
+![add external identity to service account](https://docs.phase.dev/assets/images/console/access-control/external-identities/manage-account-identities-dialog.webp)
 
 ## Authenticate with External Identities
 
@@ -206,10 +168,9 @@ phase auth --mode azure --service-account-id 0f1a2b3c-4d5e-6789-abcd-ef012345678
 
 ### API Authentication
 
-You can also authenticate programmatically using the Phase API. For detailed information about the authentication endpoints and request formats, see the [Public API documentation](/public-api/external-identities).
+You can also authenticate programmatically using the Phase API. For detailed information about the authentication endpoints and request formats, see the [Public API documentation](https://docs.phase.dev/public-api/external-identities.md).
 
 ### Learn More
 
-- **CLI Commands**: See the [CLI Commands documentation](/cli/commands#auth) for complete authentication options
-- **API Reference**: Check the [Public API documentation](/public-api/external-identities) for programmatic authentication
-
+- **CLI Commands**: See the [CLI Commands documentation](https://docs.phase.dev/cli/commands.md#auth) for complete authentication options
+- **API Reference**: Check the [Public API documentation](https://docs.phase.dev/public-api/external-identities.md) for programmatic authentication

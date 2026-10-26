@@ -1,20 +1,12 @@
-import { Tag } from '@/components/Tag'
-import { HeroPattern } from '@/components/HeroPattern'
-import { SecurityCards } from '@/components/SecurityCards'
-import { DocActions } from '@/components/DocActions'
-
-export const description =
-  'Phase architecture, threat model, and security implementation.'
-
-<HeroPattern />
-
-<Tag variant="small">SECURITY</Tag>
+---
+title: "Security Overview"
+description: "Phase architecture, threat model, and security implementation."
+url: https://docs.phase.dev/security
+---
 
 # Security Overview
 
 Security is at the core of Phase's design and operations. As a platform for managing application secrets and configurations, Phase implements comprehensive security measures at every level. This security-first approach encompasses all aspects of the platform, including data encryption, key management, access control, and audit logging. Phase is designed to be secure by default out of the box, prioritizing the protection of secrets at all times without requiring extensive configuration from users.
-
-<DocActions /> 
 
 ## Security Objectives
 
@@ -30,11 +22,9 @@ Security is at the core of Phase's design and operations. As a platform for mana
 
 Phase is **SOC 2 Type II** compliant. You can find more information and request access to a copy of the full audit report in our [Trust Center](https://trust.phase.dev).
 
-<div style={{ textAlign: 'left' }}>
-  <a href="https://trust.phase.dev" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block' }}>
-    <img src="/assets/soc2-certified-dark-badge.svg" alt="SOC 2 Type II certified" width="150" loading="lazy" />
+  <a href="https://trust.phase.dev" target="_blank" rel="noopener noreferrer" style=>
+    ![SOC 2 Type II certified](https://docs.phase.dev/assets/soc2-certified-dark-badge.svg)
   </a>
-</div>
 
 ---
 
@@ -45,8 +35,6 @@ Phase undergoes annual external penetration testing conducted by an independent 
 ---
 
 ## Platform Security
-
-<SecurityCards />
 
 ---
 
@@ -137,4 +125,3 @@ curl -s https://docs.phase.dev/cloud/ips.txt
 # JSON — e.g. extract the IPv4 addresses with jq
 curl -s https://docs.phase.dev/cloud/ips.json | jq -r '.egress.ipv4[]'
 ```
-

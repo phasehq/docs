@@ -1,15 +1,12 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description = 'Run Phase on your own DigitalOcean infrastructure.'
-
-<Tag variant="small">SELF-HOSTING</Tag>
+---
+title: "DigitalOcean"
+description: "Run Phase on your own DigitalOcean infrastructure."
+url: https://docs.phase.dev/self-hosting/digitalocean
+---
 
 # DigitalOcean
 
-Learn how to set up the Phase Console using a DigitalOcean droplet and managed PostgreSQL via the Docker Compose template. {{ className: 'lead' }}
-
-<DocActions /> 
+Learn how to set up the Phase Console using a DigitalOcean droplet and managed PostgreSQL via the Docker Compose template.
 
 Keep in mind the steps listed below serve as a rough outline on how to self-host Phase Services on your own infrastructure.
 
@@ -127,9 +124,7 @@ You may:
    sudo usermod -aG docker $USER
    ```
 
-   <Note>
-   You will need to log out and log back in for the group changes to take effect. You may use `Ctrl + D` to log out and then SSH back in.
-   </Note>
+> **Note:** You will need to log out and log back in for the group changes to take effect. You may use `Ctrl + D` to log out and then SSH back in.
 
    Verify that Docker is running:
 
@@ -164,7 +159,6 @@ You may:
    - Update **DATABASE_NAME**, **DATABASE_USER**, and **DATABASE_PASSWORD** with your credentials.
    - Add **REDIS_HOST**, **REDIS_PORT**, and **REDIS_PASSWORD** and set them to your Managed Redis host, port, and password.
 
-
    ### Generate secrets
 
    You can use the following command to generate strong random secrets for your `.env` file:
@@ -175,11 +169,9 @@ You may:
    rm .env.bak
    ```
 
-   For a complete list of available options, refer to the [environment variables](/self-hosting/configuration/envars) documentation.
+   For a complete list of available options, refer to the [environment variables](https://docs.phase.dev/self-hosting/configuration/envars.md) documentation.
 
-   <Note>
-   For a production deployment, please use a more secure method than a `.env` file to store your secrets. Please see our guide on [Docker Compose secrets](https://phase.dev/blog/docker-compose-secrets/) for more information.
-   </Note>
+> **Note:** For a production deployment, please use a more secure method than a `.env` file to store your secrets. Please see our guide on [Docker Compose secrets](https://phase.dev/blog/docker-compose-secrets/) for more information.
 
 5. **Edit `docker-compose.yml`**:
 
@@ -240,4 +232,3 @@ You can check the health of the services using `curl`. Since a self-signed certi
   curl -vk https://your-droplet-ip-address/service/health/
   # Expected response: {"status": "alive", "version": "x.x.x"}
   ```
-

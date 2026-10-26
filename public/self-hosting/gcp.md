@@ -1,16 +1,12 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description =
-  'Run Phase on your own Google Cloud Platform infrastructure.'
-
-<Tag variant="small">SELF-HOSTING</Tag>
+---
+title: "Google Cloud Platform"
+description: "Run Phase on your own Google Cloud Platform infrastructure."
+url: https://docs.phase.dev/self-hosting/gcp
+---
 
 # Google Cloud Platform
 
-Learn how to set up the Phase Console using GCP Compute Engine and managed CloudSQL instance via the Docker Compose template. {{ className: 'lead' }}
-
-<DocActions /> 
+Learn how to set up the Phase Console using GCP Compute Engine and managed CloudSQL instance via the Docker Compose template.
 
 Keep in mind the steps listed below serve as a rough outline on how to self-host Phase Services on your own infrastructure.
 
@@ -148,9 +144,7 @@ You may:
    sudo usermod -aG docker $USER
    ```
 
-   <Note>
-   You will need to log out and log back in for the group changes to take effect. You may use `Ctrl + D` to log out and then SSH back in.
-   </Note>
+> **Note:** You will need to log out and log back in for the group changes to take effect. You may use `Ctrl + D` to log out and then SSH back in.
 
    Verify that Docker is running:
 
@@ -197,11 +191,9 @@ You may:
    rm .env.bak
    ```
 
-   For a complete list of available options, refer to the [environment variables](/self-hosting/configuration/envars) documentation.
+   For a complete list of available options, refer to the [environment variables](https://docs.phase.dev/self-hosting/configuration/envars.md) documentation.
 
-   <Note>
-   For a production deployment, please use a more secure method than a `.env` file to store your secrets. Please see our guide on [Docker Compose secrets](https://phase.dev/blog/docker-compose-secrets/) for more information.
-   </Note>
+> **Note:** For a production deployment, please use a more secure method than a `.env` file to store your secrets. Please see our guide on [Docker Compose secrets](https://phase.dev/blog/docker-compose-secrets/) for more information.
 
 5. **Edit `docker-compose.yml`**:
 

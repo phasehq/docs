@@ -1,16 +1,12 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description = 'Authenticating with Phase using email and password.'
-
-<Tag variant="small">AUTHENTICATION</Tag>
+---
+title: "Password Authentication"
+description: "Authenticating with Phase using email and password."
+url: https://docs.phase.dev/access-control/authentication/password
+---
 
 # Password Authentication
 
 Phase supports native email and password authentication out of the box, with no external identity provider configuration required.
-
-<DocActions />
-
 
 ## Signup
 
@@ -20,7 +16,7 @@ To create a new account with email and password:
 2. Verify your email address by clicking the link sent to your inbox. The verification link expires after 24 hours.
 3. Log in and complete the onboarding flow: set your Organisation name, create a sudo password, and save your recovery kit.
 
-![Sign up with email and password](/assets/images/console/users/users-signup.webp)
+![Sign up with email and password](https://docs.phase.dev/assets/images/console/users/users-signup.webp)
 
 ## Login
 
@@ -29,24 +25,22 @@ Phase uses an email-first login flow. Enter your email address, and the system w
 - If your account uses a password, you will be prompted to enter it.
 - If your organisation uses SSO, you will be redirected to your identity provider.
 
-![Login: enter your email address](/assets/images/console/quickstart/login-email.webp)
+![Login: enter your email address](https://docs.phase.dev/assets/images/console/quickstart/login-email.webp)
 
-![Login: enter your password](/assets/images/console/quickstart/login-password.webp)
+![Login: enter your password](https://docs.phase.dev/assets/images/console/quickstart/login-password.webp)
 
-If [two-factor authentication](/access-control/authentication/mfa) is enabled on your account, you will also be prompted for a code from your authenticator app. Your email address and other sign-in settings can be managed from the [Account page](/access-control/authentication/account).
+If [two-factor authentication](https://docs.phase.dev/access-control/authentication/mfa.md) is enabled on your account, you will also be prompted for a code from your authenticator app. Your email address and other sign-in settings can be managed from the [Account page](https://docs.phase.dev/access-control/authentication/account.md).
 
 ## Password change
 
 You can change your password from **Settings > Account & Security** in any of your organisations. Changing your password re-encrypts all organisation keyrings to ensure continued end-to-end encryption with your new credentials.
 
-![Change password dialog](/assets/images/auth/account/change-password.webp)
+![Change password dialog](https://docs.phase.dev/assets/images/auth/account/change-password.webp)
 
 ## Account recovery
 
 If you forget your password, you can reset it using the 24-word recovery phrase from your recovery kit. The recovery process generates a new password and re-wraps your account keys.
 
-![Account recovery with the recovery phrase](/assets/images/auth/account/account-recovery.webp)
+![Account recovery with the recovery phrase](https://docs.phase.dev/assets/images/auth/account/account-recovery.webp)
 
-<Note>
-Your recovery kit is generated during onboarding. Store it securely -- it is the only way to regain access to your account if you lose your password.
-</Note>
+> **Note:** Your recovery kit is generated during onboarding. Store it securely -- it is the only way to regain access to your account if you lose your password.

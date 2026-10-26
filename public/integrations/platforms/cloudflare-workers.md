@@ -1,35 +1,27 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description = 'Integrate Phase with Cloudflare Workers'
-
-<Tag variant="small">INTEGRATE</Tag>
+---
+title: "Cloudflare Workers"
+description: "Integrate Phase with Cloudflare Workers"
+url: https://docs.phase.dev/integrations/platforms/cloudflare-workers
+---
 
 # Cloudflare Workers
 
 You can use Phase to sync secrets with your Cloudflare Workers.
 
-<DocActions />
-
-<Warning>
-  When secret syncing is enabled, secrets stored inside Phase will be treated as
-  the source of truth. Any secrets on the target service will be overwritten or
-  deleted. Please import your secrets into Phase before continuing.
-</Warning>
+> **Warning:** When secret syncing is enabled, secrets stored inside Phase will be treated as
+>   the source of truth. Any secrets on the target service will be overwritten or
+>   deleted. Please import your secrets into Phase before continuing.
 
 ### Prerequisites
 
-- Sign up for the [Phase Console](/quickstart) and [create an App](/console/apps#create-an-app).
-- Enable Server-side Encryption (SSE) for the App from the [Settings](/console/apps#settings) tab.
+- Sign up for the [Phase Console](https://docs.phase.dev/quickstart.md) and [create an App](https://docs.phase.dev/console/apps.md#create-an-app).
+- Enable Server-side Encryption (SSE) for the App from the [Settings](https://docs.phase.dev/console/apps.md#settings) tab.
 
-<Note>
-  For security reasons Phase sets the secret type in Cloudflare Workers
-  environment variables as type `Encrypted` for additional protection. This
-  means that you will not be able to see the secret value in the Cloudflare
-  Workers UI. You can still use the secret in your build commands and environment
-  variables.
-</Note>
-
+> **Note:** For security reasons Phase sets the secret type in Cloudflare Workers
+>   environment variables as type `Encrypted` for additional protection. This
+>   means that you will not be able to see the secret value in the Cloudflare
+>   Workers UI. You can still use the secret in your build commands and environment
+>   variables.
 
 ## Step 1: Authentication
 
@@ -39,48 +31,48 @@ You can use Phase to sync secrets with your Cloudflare Workers.
 
 2. Click on **Workers & Pages** in the sidebar to the left.
 
-![Workers and Pages](/assets/images/platform-integrations/cloudflare-pages/1.png)
+![Workers and Pages](https://docs.phase.dev/assets/images/platform-integrations/cloudflare-pages/1.png)
 
 3. Copy the **Account ID** by clicking on the copy button in the Account Details section on the right.
 
-![Copy Account ID](/assets/images/platform-integrations/cloudflare-pages/2.png)
+![Copy Account ID](https://docs.phase.dev/assets/images/platform-integrations/cloudflare-pages/2.png)
 
 ### Create a Cloudflare Token
 
 1. Go to Cloudflare's [API tokens](https://dash.cloudflare.com/profile/api-tokens) page and click on **Create Token**
 
-![Create token button](/assets/images/platform-integrations/cloudflare-pages/3.png)
+![Create token button](https://docs.phase.dev/assets/images/platform-integrations/cloudflare-pages/3.png)
 
 2. In the Create API Tokens page, create a **Custom Token** by clicking on **Get started** in the **Custom token** section.
 
-![Select custom token](/assets/images/platform-integrations/cloudflare-pages/4.png)
+![Select custom token](https://docs.phase.dev/assets/images/platform-integrations/cloudflare-pages/4.png)
 
 3. Give your token a descriptive name and give it **Edit** access to **Worker Scripts ** like in the screen below:
 
-![Token name and permissions](/assets/images/platform-integrations/cloudflare-workers/5.png)
+![Token name and permissions](https://docs.phase.dev/assets/images/platform-integrations/cloudflare-workers/5.png)
 
 Scroll down and click **Continue to summary**
 
-![Continue to summary](/assets/images/platform-integrations/cloudflare-pages/6.png)
+![Continue to summary](https://docs.phase.dev/assets/images/platform-integrations/cloudflare-pages/6.png)
 
 4. Confirm the permissions and create the token by clicking on **Create token**
 
-![Confirm permissions](/assets/images/platform-integrations/cloudflare-workers/7.png)
-![Create token](/assets/images/platform-integrations/cloudflare-workers/8.png)
+![Confirm permissions](https://docs.phase.dev/assets/images/platform-integrations/cloudflare-workers/7.png)
+![Create token](https://docs.phase.dev/assets/images/platform-integrations/cloudflare-workers/8.png)
 
 ### Save your credentials in Phase
 
 1. Go to **Integrations** from the sidebar and click on **Third-party credentials** in the integrations tab.
 
-![Go to integrations](/assets/images/platform-integrations/integrations-sidebar.webp)
+![Go to integrations](https://docs.phase.dev/assets/images/platform-integrations/integrations-sidebar.webp)
 
 2. Click on **Cloudflare**
 
-![Create Cloudflare credentials](/assets/images/platform-integrations/cloudflare-pages/create-cf-creds-button.webp)
+![Create Cloudflare credentials](https://docs.phase.dev/assets/images/platform-integrations/cloudflare-pages/create-cf-creds-button.webp)
 
 3. Copy and paste your `Account ID` and `Access token` from the Cloudflare dashboard. Add a descriptive name for these credentials and click **Save**
 
-![Input Cloudflare credentials](/assets/images/platform-integrations/cloudflare-pages/cf-creds-input.webp)
+![Input Cloudflare credentials](https://docs.phase.dev/assets/images/platform-integrations/cloudflare-pages/cf-creds-input.webp)
 
 ## Step 2: Sync Secrets from Phase
 
@@ -90,27 +82,25 @@ Now that you have set up your Cloudflare account with Phase, you can start creat
 
 1. Select **Cloudflare Workers** under the 'Syncing' tab.
 
-![Create cloudflare workers sync](/assets/images/platform-integrations/cloudflare-workers/phase-console-cloudflare-workers.webp)
+![Create cloudflare workers sync](https://docs.phase.dev/assets/images/platform-integrations/cloudflare-workers/phase-console-cloudflare-workers.webp)
 
 2. Select the credentials stored in the previous step as the authentication method for this sync, and click **Next**
 
-![Choose sync authentication credentials](/assets/images/platform-integrations/cloudflare-workers/cloudflare-workers-creds.webp)
+![Choose sync authentication credentials](https://docs.phase.dev/assets/images/platform-integrations/cloudflare-workers/cloudflare-workers-creds.webp)
 
-<Note>
-  If you see an error message and cannot proceed to the next screen, it is most
-  likely an issue with the Account ID or Access Token. Verify that you created
-  the Cloudflare credentials correctly and update them from the Integrations
-  screen if needed.
-</Note>
+> **Note:** If you see an error message and cannot proceed to the next screen, it is most
+>   likely an issue with the Account ID or Access Token. Verify that you created
+>   the Cloudflare credentials correctly and update them from the Integrations
+>   screen if needed.
 
 3. Choose the source and destination to sync secrets. Select an Environment as the source for secrets along with the Path if you have a specific folder you want to sync from.
    Next, select your Cloudflare Worker from the dropdown. Once you have selected your desired source and destination, click **Create**.
 
-![Choose sync source and destination](/assets/images/platform-integrations/cloudflare-workers/create-sync-source-destination.webp)
+![Choose sync source and destination](https://docs.phase.dev/assets/images/platform-integrations/cloudflare-workers/create-sync-source-destination.webp)
 
 The sync has been set up! Secrets will automatically be synced from your chosen Phase Environment to the Cloudflare Worker instance. You can click on the **Manage** button on the Sync card to view sync logs, pause syncing or update authentication credentials.
 
-![Sync created](/assets/images/platform-integrations/cloudflare-workers/sync-created.webp)
+![Sync created](https://docs.phase.dev/assets/images/platform-integrations/cloudflare-workers/sync-created.webp)
 
 Each time Phase syncs a secret to a Cloudflare Worker, a new deployment is triggered. You will see several deployments in the Cloudflare Workers version history tab depending on the number of secrets synced, with the source being labeled as `API`.
 
@@ -185,7 +175,7 @@ export default {
       },
     });
   },
-}; 
+};
 ```
 
-This may be useful for verifying the values of the example secrets synced to Cloudflare Workers as they are not visible in the Cloudflare Workers dashboard. Please note this is for testing purposes only. 
+This may be useful for verifying the values of the example secrets synced to Cloudflare Workers as they are not visible in the Cloudflare Workers dashboard. Please note this is for testing purposes only.

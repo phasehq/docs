@@ -1,77 +1,45 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const metadata = {
-  title: 'External Identities API',
-  description:
-    'Authenticate with Phase using external identity providers (AWS IAM, Azure).',
-}
-
-
-<Tag variant="small">API</Tag>
+---
+title: "External Identities"
+description: "Authenticate with Phase using external identity providers (AWS IAM, Azure)."
+url: https://docs.phase.dev/public-api/external-identities
+---
 
 # External Identities
 
-Authenticate to Phase using external identity providers. Each provider returns a Phase authentication token scoped to the specified Service Account, with an optional TTL. {{ className: 'lead' }}
-
-<DocActions />
+Authenticate to Phase using external identity providers. Each provider returns a Phase authentication token scoped to the specified Service Account, with an optional TTL.
 
 ---
 
 ## AWS IAM
 
-### Authenticate with AWS IAM {{ tag: 'POST', label: '/identities/external/v1/aws/iam/auth/' }}
-
-<Row>
-  <Col>
+### Authenticate with AWS IAM
 
     Exchange an AWS STS SigV4-signed GetCallerIdentity request for a Phase token.
 
     ### JSON Body
-    
+
     Supply the Service Account to authenticate and the signed AWS request data.
-    
+
     #### **Required fields**
 
-    <Properties>
-      <Property name="account.id" type="string">
-        Service Account ID (UUID) to authenticate.
-      </Property>
-      <Property name="awsIam.httpRequestUrl" type="string">
-        Base64-encoded signed request URL (from SigV4 prepared request).
-      </Property>
-      <Property name="awsIam.httpRequestHeaders" type="string">
-        Base64-encoded JSON of signed request headers.
-      </Property>
-      <Property name="awsIam.httpRequestBody" type="string">
-        Base64-encoded request body used to sign the GetCallerIdentity call.
-      </Property>
-    </Properties>
+      - `account.id` (string): Service Account ID (UUID) to authenticate.
+      - `awsIam.httpRequestUrl` (string): Base64-encoded signed request URL (from SigV4 prepared request).
+      - `awsIam.httpRequestHeaders` (string): Base64-encoded JSON of signed request headers.
+      - `awsIam.httpRequestBody` (string): Base64-encoded request body used to sign the GetCallerIdentity call.
 
     #### **Optional fields**
 
-    <Properties>
-      <Property name="account.type" type="string">
-        Defaults to <code>service</code>. Only <code>service</code> is supported currently.
-      </Property>
-      <Property name="awsIam.httpRequestMethod" type="string">
-        HTTP method used when signing. Defaults to <code>POST</code>.
-      </Property>
-      <Property name="tokenRequest.ttl" type="number">
-        Requested token TTL in seconds. If omitted, the default identity TTL is used.
-      </Property>
-    </Properties>
+      - `account.type` (string): Defaults to `service`. Only `service` is supported currently.
+      - `awsIam.httpRequestMethod` (string): HTTP method used when signing. Defaults to `POST`.
+      - `tokenRequest.ttl` (number): Requested token TTL in seconds. If omitted, the default identity TTL is used.
 
-    <Note>
-      To create the signed values, sign an AWS STS <code>GetCallerIdentity</code> request with SigV4 for your region/endpoint. Use the STS Query API body <code>Action=GetCallerIdentity&Version=2011-06-15</code> and header <code>Content-Type: application/x-www-form-urlencoded; charset=utf-8</code>. Then Base64-encode the prepared URL, headers (as JSON), and body.
-    </Note>
+> **Note:** To create the signed values, sign an AWS STS `GetCallerIdentity` request with SigV4 for your region/endpoint. Use the STS Query API body `Action=GetCallerIdentity&Version=2011-06-15` and header `Content-Type: application/x-www-form-urlencoded; charset=utf-8`. Then Base64-encode the prepared URL, headers (as JSON), and body.
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="POST" label="/identities/external/v1/aws/iam/auth/">
+    **JSON body**
 
-    ```json {{ title: 'JSON body' }}
+    ```json
     {
       "account": {
         "type": "service",
@@ -272,9 +240,9 @@ Authenticate to Phase using external identity providers. Each provider returns a
     puts res.body
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```json {{ title: 'Response' }}
+    ```json
     {
       "authentication": {
         "tokenType": "ServiceAccount",
@@ -286,46 +254,24 @@ Authenticate to Phase using external identity providers. Each provider returns a
     }
     ```
 
-  </Col>
-</Row>
-
 ---
 
 ## Notes on signing the AWS request
 
-<Row>
-  <Col>
-    
-    Use AWS SigV4 to sign an STS <code>GetCallerIdentity</code> request.
-    
-    <Properties>
-      <Property name="Endpoint" type="string">
-        Prefer the regional STS endpoint for your configured AWS region (e.g. <code>https://sts.eu-central-1.amazonaws.com</code>). If no region is found, you may use the legacy global endpoint.
-      </Property>
-      <Property name="Method" type="string">
-        <code>POST</code> (default) or <code>GET</code>. The same method must be used in signing and in <code>awsIam.httpRequestMethod</code>.
-      </Property>
-      <Property name="Body" type="string">
-        STS Query API payload: <code>Action=GetCallerIdentity&Version=2011-06-15</code>.
-      </Property>
-      <Property name="Headers" type="object">
-        Must include <code>Content-Type: application/x-www-form-urlencoded; charset=utf-8</code> and SigV4 headers (e.g. <code>X-Amz-Date</code>, <code>Authorization</code>).
-      </Property>
-    </Properties>
+    Use AWS SigV4 to sign an STS `GetCallerIdentity` request.
+
+      - `Endpoint` (string): Prefer the regional STS endpoint for your configured AWS region (e.g. `https://sts.eu-central-1.amazonaws.com`). If no region is found, you may use the legacy global endpoint.
+      - `Method` (string): `POST` (default) or `GET`. The same method must be used in signing and in `awsIam.httpRequestMethod`.
+      - `Body` (string): STS Query API payload: `Action=GetCallerIdentity&Version=2011-06-15`.
+      - `Headers` (object): Must include `Content-Type: application/x-www-form-urlencoded; charset=utf-8` and SigV4 headers (e.g. `X-Amz-Date`, `Authorization`).
 
     Base64-encode the prepared URL, headers (as JSON), and body before submitting to Phase.
-
-  </Col>
-</Row>
 
 ---
 
 ## Azure
 
-### Authenticate with Azure {{ tag: 'POST', label: '/identities/external/v1/azure/entra/auth/' }}
-
-<Row>
-  <Col>
+### Authenticate with Azure
 
     Exchange an Azure AD JWT for a Phase token. The JWT is validated statelessly using Azure AD's public OIDC signing keys — no Azure credentials are stored on the Phase backend.
 
@@ -335,36 +281,21 @@ Authenticate to Phase using external identity providers. Each provider returns a
 
     #### **Required fields**
 
-    <Properties>
-      <Property name="account.id" type="string">
-        Service Account ID (UUID) to authenticate.
-      </Property>
-      <Property name="azureEntra.jwt" type="string">
-        Base64-encoded Azure AD JWT access token.
-      </Property>
-    </Properties>
+      - `account.id` (string): Service Account ID (UUID) to authenticate.
+      - `azureEntra.jwt` (string): Base64-encoded Azure AD JWT access token.
 
     #### **Optional fields**
 
-    <Properties>
-      <Property name="account.type" type="string">
-        Defaults to <code>service</code>. Only <code>service</code> is supported currently.
-      </Property>
-      <Property name="tokenRequest.ttl" type="number">
-        Requested token TTL in seconds. If omitted, the default identity TTL is used.
-      </Property>
-    </Properties>
+      - `account.type` (string): Defaults to `service`. Only `service` is supported currently.
+      - `tokenRequest.ttl` (number): Requested token TTL in seconds. If omitted, the default identity TTL is used.
 
-    <Note>
-      The JWT must be obtained from Azure AD with a <code>resource</code> / <code>audience</code> that matches the value configured on the Phase identity (default: <code>https://management.azure.com/</code>). The <code>oid</code> claim in the JWT (the service principal's object ID) must be in the identity's allowed service principal IDs list.
-    </Note>
+> **Note:** The JWT must be obtained from Azure AD with a `resource` / `audience` that matches the value configured on the Phase identity (default: `https://management.azure.com/`). The `oid` claim in the JWT (the service principal's object ID) must be in the identity's allowed service principal IDs list.
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="POST" label="/identities/external/v1/azure/entra/auth/">
+    **JSON body**
 
-    ```json {{ title: 'JSON body' }}
+    ```json
     {
       "account": {
         "type": "service",
@@ -479,7 +410,9 @@ Authenticate to Phase using external identity providers. Each provider returns a
     }
     ```
 
-    ```bash {{ title: 'curl' }}
+    **curl**
+
+    ```bash
     # Get token via Azure CLI (as logged-in user or service principal)
     TOKEN=$(az account get-access-token \
       --resource https://management.azure.com/ \
@@ -495,9 +428,9 @@ Authenticate to Phase using external identity providers. Each provider returns a
       }"
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```json {{ title: 'Response' }}
+    ```json
     {
       "authentication": {
         "tokenType": "ServiceAccount",
@@ -509,32 +442,14 @@ Authenticate to Phase using external identity providers. Each provider returns a
     }
     ```
 
-  </Col>
-</Row>
-
 ---
 
 ## Notes on Azure JWT tokens
 
-<Row>
-  <Col>
-
     Azure AD issues two token versions. The version is determined by the `accessTokenAcceptedVersion` on the **resource** app registration, not the client.
 
-    <Properties>
-      <Property name="v1.0 tokens (default)" type="string">
-        Used for <code>https://management.azure.com/</code>. Issuer: <code>https://sts.windows.net/{'{'}tenantId{'}'}/</code>. Audience: resource URI string.
-      </Property>
-      <Property name="v2.0 tokens" type="string">
-        Used for custom app registrations with <code>accessTokenAcceptedVersion: 2</code>. Issuer: <code>https://login.microsoftonline.com/{'{'}tenantId{'}'}/v2.0</code>. Audience: client ID GUID.
-      </Property>
-      <Property name="Credential sources" type="string">
-        <code>DefaultAzureCredential</code> tries (in order): environment variables (Service Principal), Workload Identity (Kubernetes), Managed Identity (IMDS), Azure CLI, Azure Developer CLI.
-      </Property>
-    </Properties>
+      - `v1.0 tokens (default)` (string): Used for `https://management.azure.com/`. Issuer: `https://sts.windows.net/{'{'}tenantId{'}'}/`. Audience: resource URI string.
+      - `v2.0 tokens` (string): Used for custom app registrations with `accessTokenAcceptedVersion: 2`. Issuer: `https://login.microsoftonline.com/{'{'}tenantId{'}'}/v2.0`. Audience: client ID GUID.
+      - `Credential sources` (string): `DefaultAzureCredential` tries (in order): environment variables (Service Principal), Workload Identity (Kubernetes), Managed Identity (IMDS), Azure CLI, Azure Developer CLI.
 
     Phase automatically detects the token version and validates accordingly. No configuration is needed.
-
-  </Col>
-</Row>
-

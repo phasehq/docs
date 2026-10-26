@@ -1,19 +1,17 @@
-import { Tag } from '@/components/Tag'
-import { HeroPattern } from '@/components/HeroPattern'
-
-export const description =
-  'Integrate Phase with popular frameworks to manage secrets and environment variables at runtime.'
-
-<HeroPattern />
+---
+title: "Framework Integration"
+description: "Integrate Phase with popular frameworks to manage secrets and environment variables at runtime."
+url: https://docs.phase.dev/integrations/frameworks
+---
 
 # Framework Integration
 
-Use `phase run` to inject secrets into your application process at runtime. No code changes or dependencies required. {{ className: 'lead' }}
+Use `phase run` to inject secrets into your application process at runtime. No code changes or dependencies required.
 
 ## Prerequisites
 
 - Create an account on the Phase Console
-- [Install the CLI](/cli/install)
+- [Install the CLI](https://docs.phase.dev/cli/install.md)
 
 ## Initialize Phase
 
@@ -49,11 +47,9 @@ Alternatively, you can use `phase run` in your package.json file, so secrets wil
 }
 ```
 
-<Note>
-  Note that for environment variables to be exposed to the client, you'll have
-  to prefix them with `NEXT_PUBLIC_`. Read more about that
-  [here](https://nextjs.org/docs/basic-features/environment-variables).
-</Note>
+> **Note:** Note that for environment variables to be exposed to the client, you'll have
+>   to prefix them with `NEXT_PUBLIC_`. Read more about that
+>   [here](https://nextjs.org/docs/basic-features/environment-variables).
 
 ---
 
@@ -76,14 +72,7 @@ phase run npm run dev
 }
 ```
 
-<div className="not-prose">
-  <Button
-    href="https://nodejs.dev/en/learn/how-to-read-environment-variables-from-nodejs/"
-    variant="text"
-    arrow="right"
-    children="Node Docs"
-  />
-</div>
+[Node Docs](https://nodejs.dev/en/learn/how-to-read-environment-variables-from-nodejs/)
 
 ---
 
@@ -109,16 +98,9 @@ phase run npm start
 }
 ```
 
-<Note>React environment variables must be prefixed with `REACT_APP_`</Note>
+> **Note:** React environment variables must be prefixed with `REACT_APP_`
 
-<div className="not-prose">
-  <Button
-    href="https://create-react-app.dev/docs/adding-custom-environment-variables"
-    variant="text"
-    arrow="right"
-    children="React Docs"
-  />
-</div>
+[React Docs](https://create-react-app.dev/docs/adding-custom-environment-variables)
 
 ---
 
@@ -134,14 +116,7 @@ Chaining multiple commands
 phase run "python manage.py migrate && python manage.py runserver payments-api:8000"
 ```
 
-<div className="not-prose">
-  <Button
-    href="https://docs.djangoproject.com/en/4.2/topics/settings"
-    variant="text"
-    arrow="right"
-    children="Django Docs"
-  />
-</div>
+[Django Docs](https://docs.djangoproject.com/en/4.2/topics/settings)
 
 ---
 
@@ -167,14 +142,7 @@ phase run npm run dev
 }
 ```
 
-<div className="not-prose">
-  <Button
-    href="https://v2.nuxt.com/docs/configuration-glossary/configuration-env"
-    variant="text"
-    arrow="right"
-    children="Nuxt Docs"
-  />
-</div>
+[Nuxt Docs](https://v2.nuxt.com/docs/configuration-glossary/configuration-env)
 
 ---
 
@@ -199,14 +167,7 @@ phase run npm run start:dev
 }
 ```
 
-<div className="not-prose">
-  <Button
-    href="https://docs.nestjs.com/techniques/configuration#cache-environment-variables"
-    variant="text"
-    arrow="right"
-    children="NestJS Docs"
-  />
-</div>
+[NestJS Docs](https://docs.nestjs.com/techniques/configuration#cache-environment-variables)
 
 ---
 
@@ -232,18 +193,9 @@ phase run npm run dev
 }
 ```
 
-<Note>
-  Vue.js client side environment variables must be prefixed with `VUE_APP`
-</Note>
+> **Note:** Vue.js client side environment variables must be prefixed with `VUE_APP`
 
-<div className="not-prose">
-  <Button
-    href="https://cli.vuejs.org/guide/mode-and-env.html#environment-variables"
-    variant="text"
-    arrow="right"
-    children="Vue Docs"
-  />
-</div>
+[Vue Docs](https://cli.vuejs.org/guide/mode-and-env.html#environment-variables)
 
 ---
 
@@ -253,14 +205,7 @@ phase run npm run dev
 phase run uvicorn main:app --reload
 ```
 
-<div className="not-prose">
-  <Button
-    href="https://fastapi.tiangolo.com/advanced/settings"
-    variant="text"
-    arrow="right"
-    children="FastAPI Docs"
-  />
-</div>
+[FastAPI Docs](https://fastapi.tiangolo.com/advanced/settings)
 
 ---
 
@@ -270,14 +215,7 @@ phase run uvicorn main:app --reload
 phase run flask run
 ```
 
-<div className="not-prose">
-  <Button
-    href="https://flask.palletsprojects.com/en/2.1.x/config"
-    variant="text"
-    arrow="right"
-    children="Flask Docs"
-  />
-</div>
+[Flask Docs](https://flask.palletsprojects.com/en/2.1.x/config)
 
 ---
 
@@ -301,18 +239,9 @@ phase run npm run dev
 }
 ```
 
-<Note>
-  Svelte client side environment variables must be prefixed with `PUBLIC_`
-</Note>
+> **Note:** Svelte client side environment variables must be prefixed with `PUBLIC_`
 
-<div className="not-prose">
-  <Button
-    href="https://kit.svelte.dev/docs/modules#$env-static-public"
-    variant="text"
-    arrow="right"
-    children="Svelte Docs"
-  />
-</div>
+[Svelte Docs](https://kit.svelte.dev/docs/modules#$env-static-public)
 
 ---
 
@@ -322,14 +251,7 @@ phase run npm run dev
 phase run go run server.go
 ```
 
-<div className="not-prose">
-  <Button
-    href="https://docs.gofiber.io/api/middleware/envvar"
-    variant="text"
-    arrow="right"
-    children="Fiber Docs"
-  />
-</div>
+[Fiber Docs](https://docs.gofiber.io/api/middleware/envvar)
 
 ---
 
@@ -339,14 +261,7 @@ phase run go run server.go
 phase run rails server
 ```
 
-<div className="not-prose">
-  <Button
-    href="https://guides.rubyonrails.org/configuring.html"
-    variant="text"
-    arrow="right"
-    children="Ruby on Rails Docs"
-  />
-</div>
+[Ruby on Rails Docs](https://guides.rubyonrails.org/configuring.html)
 
 ---
 
@@ -387,14 +302,7 @@ redirect_stderr=true
 stdout_logfile=/var/log/supervisor/laravel.log
 ```
 
-<div className="not-prose">
-  <Button
-    href="https://laravel.com/docs/10.x/configuration#environment-configuration"
-    variant="text"
-    arrow="right"
-    children="Laravel Docs"
-  />
-</div>
+[Laravel Docs](https://laravel.com/docs/10.x/configuration#environment-configuration)
 
 ---
 
@@ -418,18 +326,9 @@ phase run npm run dev
 }
 ```
 
-<Note>
-  Gatsby client side environment variables must be prefixed with `GATSBY_`
-</Note>
+> **Note:** Gatsby client side environment variables must be prefixed with `GATSBY_`
 
-<div className="not-prose">
-  <Button
-    href="https://www.gatsbyjs.com/docs/how-to/local-development/environment-variables/#accessing-environment-variables-in-the-browser"
-    variant="text"
-    arrow="right"
-    children="Gatsby Docs"
-  />
-</div>
+[Gatsby Docs](https://www.gatsbyjs.com/docs/how-to/local-development/environment-variables/#accessing-environment-variables-in-the-browser)
 
 ---
 
@@ -453,14 +352,7 @@ phase run npm run dev
 }
 ```
 
-<div className="not-prose">
-  <Button
-    href="https://remix.run/docs/en/main/guides/envvars"
-    variant="text"
-    arrow="right"
-    children="Remix Docs"
-  />
-</div>
+[Remix Docs](https://remix.run/docs/en/main/guides/envvars)
 
 ---
 
@@ -470,11 +362,4 @@ phase run npm run dev
 phase run dotnet run
 ```
 
-<div className="not-prose">
-  <Button
-    href="https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-environment-variables"
-    variant="text"
-    arrow="right"
-    children=".NET Docs"
-  />
-</div>
+[.NET Docs](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-environment-variables)

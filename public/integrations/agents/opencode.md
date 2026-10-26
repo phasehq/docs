@@ -1,19 +1,16 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description = 'Integrate Phase with OpenCode'
-
-<Tag variant="small">INTEGRATE</Tag>
+---
+title: "OpenCode"
+description: "Integrate Phase with OpenCode"
+url: https://docs.phase.dev/integrations/agents/opencode
+---
 
 # OpenCode
 
 Manage Phase secrets directly from [OpenCode](https://opencode.ai). OpenCode can list, create, update, and delete secrets, run processes with injected secrets, and manage your Phase environments — all from natural language.
 
-<DocActions />
-
 ## Prerequisites
 
-- [Phase CLI installed and authenticated](/cli/usage)
+- [Phase CLI installed and authenticated](https://docs.phase.dev/cli/usage.md)
 - [OpenCode](https://opencode.ai) installed
 
 ## Setup
@@ -30,9 +27,7 @@ You'll be asked whether AI agents can see secret values:
 - **Mask values** (recommended) — `secret` and `sealed` types show as `[REDACTED]`
 - **Show values** — `secret` and `config` types are visible; `sealed` is always hidden
 
-<Note>
-OpenCode also reads skills from `~/.claude/skills/` and `~/.agents/skills/`. If you've already installed the Phase skill for Claude Code or Codex, OpenCode will pick it up automatically.
-</Note>
+> **Note:** OpenCode also reads skills from `~/.claude/skills/` and `~/.agents/skills/`. If you've already installed the Phase skill for Claude Code or Codex, OpenCode will pick it up automatically.
 
 ### 2. Start using Phase in OpenCode
 
@@ -63,9 +58,7 @@ The skill is installed at `~/.config/opencode/skills/phase-cli/SKILL.md`, the us
 | `secret` | Controlled by `phase ai enable` | Standard encrypted secrets |
 | `sealed` | **Never visible** | Write-only secrets (API keys, tokens, passwords) |
 
-<Warning>
-Sealed secret values are **never** exposed to AI agents regardless of configuration.
-</Warning>
+> **Warning:** Sealed secret values are **never** exposed to AI agents regardless of configuration.
 
 ---
 

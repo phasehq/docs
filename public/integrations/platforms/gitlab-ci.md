@@ -1,21 +1,16 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description = 'Integrate Phase with GitLab CI'
-
-<Tag variant="small">INTEGRATE</Tag>
+---
+title: "GitLab CI"
+description: "Integrate Phase with GitLab CI"
+url: https://docs.phase.dev/integrations/platforms/gitlab-ci
+---
 
 # GitLab CI
 
 You can use Phase to sync secrets to GitLab CI Variables.
 
-<DocActions />
-
-<Warning>
-  When secret syncing is enabled, secrets stored inside Phase will be treated as
-  the source of truth. Any secrets on the target service will be overwritten or
-  deleted. Please import your secrets into Phase before continuing.
-</Warning>
+> **Warning:** When secret syncing is enabled, secrets stored inside Phase will be treated as
+>   the source of truth. Any secrets on the target service will be overwritten or
+>   deleted. Please import your secrets into Phase before continuing.
 
 ### Prerequisites
 
@@ -53,28 +48,26 @@ Given these factors, it is recommended to use Group Access Tokens for authentica
 
 1. Go to **User Settings** from the sidebar and click on **Access Tokens**.
 
-![Go to your GitLab Preferences](/assets/images/platform-integrations/gitlab/gitlab-pat-auth-preferences.png)
+![Go to your GitLab Preferences](https://docs.phase.dev/assets/images/platform-integrations/gitlab/gitlab-pat-auth-preferences.png)
 
-![Select Access Tokens](/assets/images/platform-integrations/gitlab/gitlab-pat-auth-preferences-access-tokens.png)
+![Select Access Tokens](https://docs.phase.dev/assets/images/platform-integrations/gitlab/gitlab-pat-auth-preferences-access-tokens.png)
 
 2. Click on **Add new token**.
 
-![Click Add new token](/assets/images/platform-integrations/gitlab/gitlab-pat-auth-preferences-access-tokens-add-new-token.png)
+![Click Add new token](https://docs.phase.dev/assets/images/platform-integrations/gitlab/gitlab-pat-auth-preferences-access-tokens-add-new-token.png)
 
 3. Fill in the **Token name**, set the `api` Scope, and set the **Expiration date**.
 
-![Create a Personal Access Token](/assets/images/platform-integrations/gitlab/gitlab-pat-auth-preferences-access-tokens-create-pat.png)
+![Create a Personal Access Token](https://docs.phase.dev/assets/images/platform-integrations/gitlab/gitlab-pat-auth-preferences-access-tokens-create-pat.png)
 
-<Note>
-  If you leave the Expiration date blank, GitLab will create a token with a
-  12-month expiry by default. Ensure you set an appropriate expiration date to
-  prevent the token from expiring unexpectedly. Also, ensure the `api` scope is
-  selected to allow necessary permissions for Phase integration.
-</Note>
+> **Note:** If you leave the Expiration date blank, GitLab will create a token with a
+>   12-month expiry by default. Ensure you set an appropriate expiration date to
+>   prevent the token from expiring unexpectedly. Also, ensure the `api` scope is
+>   selected to allow necessary permissions for Phase integration.
 
 4. Click **Create personal access token** and copy the token.
 
-![Personal Access Token copy](/assets/images/platform-integrations/gitlab/gitlab-pat-auth-preferences-access-tokens-create-pat-copy.png)
+![Personal Access Token copy](https://docs.phase.dev/assets/images/platform-integrations/gitlab/gitlab-pat-auth-preferences-access-tokens-create-pat-copy.png)
 
 ### Create a Group Access Token (GAT)
 
@@ -82,45 +75,42 @@ This feature is only available on GitLab if you have the Premium or Ultimate lic
 
 1. Go to your **GitLab Group**.
 
-![Go to your GitLab Group](/assets/images/platform-integrations/gitlab/gitlab-gat-groups-select.png)
+![Go to your GitLab Group](https://docs.phase.dev/assets/images/platform-integrations/gitlab/gitlab-gat-groups-select.png)
 
 2. Navigate to **Settings** > **Access Tokens**.
 
-![Go to your GitLab Group Settings > Access Tokens](/assets/images/platform-integrations/gitlab/gitlab-gat-groups-setting-access-tokens.png)
+![Go to your GitLab Group Settings > Access Tokens](https://docs.phase.dev/assets/images/platform-integrations/gitlab/gitlab-gat-groups-setting-access-tokens.png)
 
 3. Click on **Add new token**.
 
-![Click Add new token](/assets/images/platform-integrations/gitlab/gitlab-gat-groups-setting-access-tokens-add-new-token.png)
+![Click Add new token](https://docs.phase.dev/assets/images/platform-integrations/gitlab/gitlab-gat-groups-setting-access-tokens-add-new-token.png)
 
 4. Fill in the **Token name**, select the `Owner` Role, set the `api` Scope, and set the **Expiration date**.
 
-![Create a Group Access Token](/assets/images/platform-integrations/gitlab/gitlab-gat-groups-setting-access-tokens-create-gat.png)
+![Create a Group Access Token](https://docs.phase.dev/assets/images/platform-integrations/gitlab/gitlab-gat-groups-setting-access-tokens-create-gat.png)
 
-<Note>
-  If you leave the Expiration date blank, GitLab will create a token with a
-  12-month expiry by default. Ensure you set an appropriate expiration date to
-  prevent the token from expiring unexpectedly. Also, ensure the `api` scope is
-  selected to allow necessary permissions for Phase integration.
-</Note>
+> **Note:** If you leave the Expiration date blank, GitLab will create a token with a
+>   12-month expiry by default. Ensure you set an appropriate expiration date to
+>   prevent the token from expiring unexpectedly. Also, ensure the `api` scope is
+>   selected to allow necessary permissions for Phase integration.
 
 5. Click **Create group access token** and copy the token.
 
-![Group Access Token copy](/assets/images/platform-integrations/gitlab/gitlab-gat-groups-setting-access-tokens-create-gat-copy.png)
-
+![Group Access Token copy](https://docs.phase.dev/assets/images/platform-integrations/gitlab/gitlab-gat-groups-setting-access-tokens-create-gat-copy.png)
 
 ### Store authentication credentials in Phase
 
 1. Go to **Integrations** from the sidebar and click on **Third-party credentials** in the integrations tab.
 
-![Go to integrations](/assets/images/platform-integrations/integrations-sidebar.webp)
+![Go to integrations](https://docs.phase.dev/assets/images/platform-integrations/integrations-sidebar.webp)
 
 2. Click on **GitLab**
 
-![Click on GitLab](/assets/images/platform-integrations/gitlab/gitlab-creds-button.webp)
+![Click on GitLab](https://docs.phase.dev/assets/images/platform-integrations/gitlab/gitlab-creds-button.webp)
 
 3. Enter your GitLab instance host (use `https://gitlab.com` for GitLab.com) and token. Enter a descriptive name for these credentials and click **Save**
 
-![Input GitLab credentials](/assets/images/platform-integrations/gitlab/gitlab-creds-input.webp)
+![Input GitLab credentials](https://docs.phase.dev/assets/images/platform-integrations/gitlab/gitlab-creds-input.webp)
 
 Your credentials will be encrypted and saved. You can view and manage these credentials under *Service Credentials* in the *Integrations* screen.
 
@@ -130,40 +120,38 @@ Now that you have authenticated with GitLab, you can configure syncs for your ap
 
 1. Go to your App in the Phase Console and go to the **Syncing** tab. Select **GitLab CI** under the 'Create a new Sync' menu.
 
-![Create a new sync button](/assets/images/platform-integrations/gitlab/gitlab-create-sync-button.webp)
+![Create a new sync button](https://docs.phase.dev/assets/images/platform-integrations/gitlab/gitlab-create-sync-button.webp)
 
 2. Select the credentials stored in the previous step as the authentication method for this sync, and click **Next**.
 
-![Choose sync authentication credentials](/assets/images/platform-integrations/gitlab/gitlab-choose-creds.webp)
+![Choose sync authentication credentials](https://docs.phase.dev/assets/images/platform-integrations/gitlab/gitlab-choose-creds.webp)
 
 3. Choose the source and destination to sync secrets. Select an Environment as the source for Secrets.
    Next, choose a GitLab Project or GitLab Group from the dropdown as the destination to sync Secrets to.
 
    You can optionally also choose to [mask](https://docs.gitlab.com/ee/ci/variables/#mask-a-cicd-variable) and/or [protect](https://docs.gitlab.com/ee/ci/variables/) secrets synced to GitLab.
 
-   <Note>
-   Masked variables must meet the following criteria in GitLab. 
-   If any secrets in the selected environment and path do not meet these requirements, the sync will fail.
+> **Note:** Masked variables must meet the following criteria in GitLab.
+>    If any secrets in the selected environment and path do not meet these requirements, the sync will fail.
+>
+>    Masked variables must:
+>
+>    - Be a single line.
+>    - Be 8 characters or longer.
+>    - Not match the name of an existing predefined or custom CI/CD variable.
+>
+>    Additionally, if variable expansion is enabled, the value can contain only:
+>
+>    - Characters from the Base64 alphabet (RFC4648).
+>    - The @, :, ., or ~ characters.
 
-   Masked variables must:
-
-   - Be a single line.
-   - Be 8 characters or longer.
-   - Not match the name of an existing predefined or custom CI/CD variable. 
-
-   Additionally, if variable expansion is enabled, the value can contain only:
-
-   - Characters from the Base64 alphabet (RFC4648).
-   - The @, :, ., or ~ characters. 
-   </Note>
-
-![Configure sync](/assets/images/platform-integrations/gitlab/gitlab-setup-sync.webp)
+![Configure sync](https://docs.phase.dev/assets/images/platform-integrations/gitlab/gitlab-setup-sync.webp)
 
 4. Once you have selected your desired source and destination, click **Create**.
    The sync has been set up! Secrets will automatically be synced from your chosen Phase Environment to the GitLab Project or Group as CI/CD variables.
    You can click on the **Manage** button on the Sync card to view sync logs, pause syncing, or update authentication credentials.
 
-   ![GitLab CI sync card](/assets/images/platform-integrations/gitlab/gitlab-sync-card.webp)
+   ![GitLab CI sync card](https://docs.phase.dev/assets/images/platform-integrations/gitlab/gitlab-sync-card.webp)
 
 ## Using the Phase CLI
 
@@ -174,12 +162,10 @@ Fetch secrets directly inside your GitLab CI pipeline during runtime without sto
 - Sign up for the [Phase Console](https://console.phase.dev) and [create an App](https://console.phase.dev/apps#create-an-app).
 - `PHASE_SERVICE_TOKEN`
 
-<Note>
-  If you are using a Self-Hosted instance of the Phase Console, you may supply
-  the `PHASE_HOST` environment variable with your URL (`https://<HOST>`).
-</Note>
+> **Note:** If you are using a Self-Hosted instance of the Phase Console, you may supply
+>   the `PHASE_HOST` environment variable with your URL (`https://<HOST>`).
 
-For detailed CLI install options, please see: [Installation](/cli/install)
+For detailed CLI install options, please see: [Installation](https://docs.phase.dev/cli/install.md)
 
 ### Setting `PHASE_SERVICE_TOKEN`:
 

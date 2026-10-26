@@ -1,17 +1,14 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description = 'Deploy the Phase Console Railway template.'
-
-<Tag variant="small">SELF-HOSTING</Tag>
+---
+title: "Railway"
+description: "Deploy the Phase Console Railway template."
+url: https://docs.phase.dev/self-hosting/railway
+---
 
 # Railway
 
-Deploy the Phase Console Railway template. {{ className: 'lead' }}
+Deploy the Phase Console Railway template.
 
-<DocActions />
-
-[![Railway deployment template](/assets/images/self-hosting/railway/railway-template.png)](https://railway.app/template/FgdM-Z?referralCode=rG9hj-)
+[![Railway deployment template](https://docs.phase.dev/assets/images/self-hosting/railway/railway-template.png)](https://railway.app/template/FgdM-Z?referralCode=rG9hj-)
 
 ## Prerequisites
 - A Railway account on the [Hobby](https://railway.app/pricing) tier or better
@@ -34,68 +31,68 @@ ALLOWED_HOSTS=healthcheck.railway.app,${{RAILWAY_PRIVATE_DOMAIN}},${{railway-ngi
 
 1. Go to the [Phase Console](https://railway.app/template/FgdM-Z?referralCode=rG9hj-) Railway deployment template page and click **Deploy Now**.
 
-![Railway template click deploy now button](/assets/images/self-hosting/railway/configure/1-railway-template-deploy-now.png)
+![Railway template click deploy now button](https://docs.phase.dev/assets/images/self-hosting/railway/configure/1-railway-template-deploy-now.png)
 
 2. Click **Configure** on each service container listed, fill out the required Environment variables, and click **Save Config**.
 
-![Configure environment variables](/assets/images/self-hosting/railway/configure/2-railway-template-services-configure.png)
+![Configure environment variables](https://docs.phase.dev/assets/images/self-hosting/railway/configure/2-railway-template-services-configure.png)
 
 Important notes:
 - Read the descriptions for each Environment variable as they contain setup instructions
 - For security and consistency, we do not autogenerate secrets using Railway's secret function syntax. Generate them manually using `openssl` like this: `openssl rand -hex 32`
 - Some Environment variables need to be set across multiple services
 
-For a complete list of all secrets and environment variables with descriptions, see the self-hosting [env vars](/self-hosting/configuration/envars) guide.
+For a complete list of all secrets and environment variables with descriptions, see the self-hosting [env vars](https://docs.phase.dev/self-hosting/configuration/envars.md) guide.
 
 Optionally, you can click the **Pre-Configured Environment Variables** dropdown under each service to view or override the pre-set environment variables and secrets to best suit your needs.
 
-![Configure pre-set environment variables](/assets/images/self-hosting/railway/configure/3-railway-tempalte-preset-env.png)
+![Configure pre-set environment variables](https://docs.phase.dev/assets/images/self-hosting/railway/configure/3-railway-tempalte-preset-env.png)
 
 3. Once configured, click **Deploy**.
 
-![Deploy railway template](/assets/images/self-hosting/railway/configure/4-deploy-railway-template.png)
+![Deploy railway template](https://docs.phase.dev/assets/images/self-hosting/railway/configure/4-deploy-railway-template.png)
 
 Please wait for the train to arrive. 🚄
 
-![Deploying](/assets/images/self-hosting/railway/configure/5-deploying-railway-template.png)
+![Deploying](https://docs.phase.dev/assets/images/self-hosting/railway/configure/5-deploying-railway-template.png)
 
 ### 2. Deploy the Template
 
 1. Click on the `railway-nginx` service.
 
-![Click railway nginx](/assets/images/self-hosting/railway/deploy/1-click-railway-nginx.png)
+![Click railway nginx](https://docs.phase.dev/assets/images/self-hosting/railway/deploy/1-click-railway-nginx.png)
 
 2. Select the **Settings** tab.
 
-![Select settings](/assets/images/self-hosting/railway/deploy/2-select-settings.png)
+![Select settings](https://docs.phase.dev/assets/images/self-hosting/railway/deploy/2-select-settings.png)
 
 3. Scroll down and click **+ Custom Domain** in the Networking section.
 
-![Set-up a custom domain](/assets/images/self-hosting/railway/deploy/3-set-up-custom-domain.png)
+![Set-up a custom domain](https://docs.phase.dev/assets/images/self-hosting/railway/deploy/3-set-up-custom-domain.png)
 
 4. Enter your Custom Domain, set the port to `80`, and click **Add Domain**.
 
-![Custom domain and port](/assets/images/self-hosting/railway/deploy/4-configure-custom-domaion.png)
+![Custom domain and port](https://docs.phase.dev/assets/images/self-hosting/railway/deploy/4-configure-custom-domaion.png)
 
 5. Configure your DNS settings at your registrar or provider as described in the popup, then click **Dismiss**. For additional context, refer to the [Railway Docs](https://docs.railway.app/deploy/exposing-your-app#add-a-custom-domain).
 
 Note: If using Cloudflare, disable the Proxy status (orange cloud icon) to avoid double proxying, as Railway uses Cloudflare for routing.
 
-![CNAME setup instructions](/assets/images/self-hosting/railway/deploy/5-domain-cname-instructions.png)
+![CNAME setup instructions](https://docs.phase.dev/assets/images/self-hosting/railway/deploy/5-domain-cname-instructions.png)
 
 6. Wait for DNS propagation and TLS certificate issuance.
 
 7. Verify the deployment by clicking the custom domain in the **Deployments** tab.
 
-![Custom domain](/assets/images/self-hosting/railway/deploy/6-click-custom-domain.png)
+![Custom domain](https://docs.phase.dev/assets/images/self-hosting/railway/deploy/6-click-custom-domain.png)
 
 🎉
 
-![Phase Console](/assets/images/self-hosting/railway/deploy/7-phase-console-deployed.png)
+![Phase Console](https://docs.phase.dev/assets/images/self-hosting/railway/deploy/7-phase-console-deployed.png)
 
-You should be all set! Head on over to your Railway custom domain and sign up for a Phase Console account. Here's a [quickstart](/quickstart).
+You should be all set! Head on over to your Railway custom domain and sign up for a Phase Console account. Here's a [quickstart](https://docs.phase.dev/quickstart.md).
 
-If you want members to sign in via an identity provider, see [Authentication](/access-control/authentication) — SSO can be configured on your deployment at any time.
+If you want members to sign in via an identity provider, see [Authentication](https://docs.phase.dev/access-control/authentication.md) — SSO can be configured on your deployment at any time.
 
 ## Troubleshooting
 
@@ -107,7 +104,7 @@ Frontend: `http(s)://example.com/api/health`
 
 Example:
 ```fish
-curl https://demo.railway.phase.dev/api/health 
+curl https://demo.railway.phase.dev/api/health
 {"status":"alive"}
 ```
 
@@ -123,7 +120,7 @@ curl https://demo.railway.phase.dev/service/health/
 
 Below is an example of an OAuth redirection error when using GitHub SSO (though not exclusive to GitHub). This can occur even with correct OAuth configuration if the Railway environment variables referenced by the Phase `backend` service from the `railway-nginx` server are outdated after adding a new custom domain. An easy way to spot this is by going through the OAuth redirection URL in your browser address bar and looking for the `redirect_url=...`. In the example below it's set to the Railway provided domain for the `railway-nginx` service and not the custom domain we have set previously.
 
-![Oauth redirection uri error](/assets/images/self-hosting/railway/troubleshooting/1-github-ouath-redirection-error.png)
+![Oauth redirection uri error](https://docs.phase.dev/assets/images/self-hosting/railway/troubleshooting/1-github-ouath-redirection-error.png)
 
 Similar issues can appear during login. If you check the browser console, you may see errors indicating that requests to a Railway domain have been blocked by the Content Security Policy (CSP) of the Phase Console. This suggests that services (`frontend` or `backend`) are using incorrect or outdated Railway referenced Environment variables. Verify the referenced variables in each service's Environment Variable tab, redeploy them, and then redeploy the `railway-nginx` service.
 
@@ -131,30 +128,30 @@ Similar issues can appear during login. If you check the browser console, you ma
 
 1. Select the service to redeploy.
 
-![Click railway nginx](/assets/images/self-hosting/railway/deploy/1-click-railway-nginx.png)
+![Click railway nginx](https://docs.phase.dev/assets/images/self-hosting/railway/deploy/1-click-railway-nginx.png)
 
 2. From the Deployments tab, find the latest **Active** deployment (in green), click the options button next to "View logs", and select **Redeploy**.
 
-![Redeploy railway-nginx](/assets/images/self-hosting/railway/deploy/11-select-redeploy.png)
+![Redeploy railway-nginx](https://docs.phase.dev/assets/images/self-hosting/railway/deploy/11-select-redeploy.png)
 
 3. Confirm the redeployment.
 
-![Confirm railway-nginx redeployment](/assets/images/self-hosting/railway/deploy/12-confirm-redeploy.png)
+![Confirm railway-nginx redeployment](https://docs.phase.dev/assets/images/self-hosting/railway/deploy/12-confirm-redeploy.png)
 
 ### Viewing Logs
 
 1. Select the service to inspect.
 
-![Click railway nginx](/assets/images/self-hosting/railway/deploy/1-click-railway-nginx.png)
+![Click railway nginx](https://docs.phase.dev/assets/images/self-hosting/railway/deploy/1-click-railway-nginx.png)
 
 2. From the Deployments tab, click the green **View logs** button from the latest active deployment.
 
-![View logs from latest deployment](/assets/images/self-hosting/railway/troubleshooting/1-view-logs.png)
+![View logs from latest deployment](https://docs.phase.dev/assets/images/self-hosting/railway/troubleshooting/1-view-logs.png)
 
 3. Select **Deploy logs** to see application-level logs.
 
-![View deploy logs from a service](/assets/images/self-hosting/railway/troubleshooting/2-view-deploy-logs.png)
+![View deploy logs from a service](https://docs.phase.dev/assets/images/self-hosting/railway/troubleshooting/2-view-deploy-logs.png)
 
 4. For publicly exposed services (like `railway-nginx`), you can also view the **HTTP Logs**.
 
-![View http logs from a service](/assets/images/self-hosting/railway/troubleshooting/3-view-http-logs.png)
+![View http logs from a service](https://docs.phase.dev/assets/images/self-hosting/railway/troubleshooting/3-view-http-logs.png)

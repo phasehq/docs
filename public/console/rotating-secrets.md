@@ -1,19 +1,14 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description = 'This guide will explain how to work with Rotating Secrets in Phase.'
-
-<Tag variant="small">CONSOLE</Tag>
+---
+title: "Rotating Secrets"
+description: "This guide will explain how to work with Rotating Secrets in Phase."
+url: https://docs.phase.dev/console/rotating-secrets
+---
 
 # Rotating Secrets
 
 Rotating Secrets are credentials for third-party services that Phase mints, exposes, and revokes automatically on a schedule. The active credential surfaces alongside your regular secrets — SDKs, CLI, REST clients, and sync integrations pick up rotated values with no application-side changes.
 
-<DocActions />
-
-<Note>
-  Rotating Secrets are available on the `Pro` plan and above. SSE (Server-Side Encryption) must be enabled on the App.
-</Note>
+> **Note:** Rotating Secrets are available on the `Pro` plan and above. SSE (Server-Side Encryption) must be enabled on the App.
 
 ## How it works
 
@@ -42,18 +37,16 @@ A common pattern is a 30-day interval with a 10–15 day revocation delay.
 
 ## Supported Providers
 
-- [LiteLLM](/integrations/platforms/litellm)
-- [OpenAI](/integrations/platforms/openai)
+- [LiteLLM](https://docs.phase.dev/integrations/platforms/litellm.md)
+- [OpenAI](https://docs.phase.dev/integrations/platforms/openai.md)
 
 ## Create a Rotating Secret
 
 In the **Secrets** tab, open an Environment and click **New Secret → Rotating Secret**.
 
-![New Secret menu with the Rotating Secret option](/assets/images/console/rotating-secrets/new-secret-rotating-secret.webp)
+![New Secret menu with the Rotating Secret option](https://docs.phase.dev/assets/images/console/rotating-secrets/new-secret-rotating-secret.webp)
 
-<Note>
-  You need to enable Server-side Encryption (SSE) on the App from the [Settings](/console/apps#settings) tab before creating a Rotating Secret.
-</Note>
+> **Note:** You need to enable Server-side Encryption (SSE) on the App from the [Settings](https://docs.phase.dev/console/apps.md#settings) tab before creating a Rotating Secret.
 
 The dialog has three steps:
 
@@ -61,9 +54,9 @@ The dialog has three steps:
 
 Pick the provider and the **root credentials** Phase will use to mint and revoke. If you haven't saved credentials for this provider yet, you'll be prompted to create them. Give the Rotating Secret a name and optional description.
 
-![Choose a rotation provider](/assets/images/console/rotating-secrets/create-rotating-secret-provider.webp)
+![Choose a rotation provider](https://docs.phase.dev/assets/images/console/rotating-secrets/create-rotating-secret-provider.webp)
 
-![Provider and root credentials step](/assets/images/console/rotating-secrets/create-rotating-secret-step-1.webp)
+![Provider and root credentials step](https://docs.phase.dev/assets/images/console/rotating-secrets/create-rotating-secret-step-1.webp)
 
 ### 2. Provider config
 
@@ -74,9 +67,9 @@ Configure the policy each minted credential should carry (model allowlists, spen
 
 The full JSON is sent to the provider on every rotation, so fields outside the manual form's curated set still flow through if you set them via Import.
 
-![Import config tab with the imported policy as editable JSON](/assets/images/console/rotating-secrets/litellm-import-config.webp)
+![Import config tab with the imported policy as editable JSON](https://docs.phase.dev/assets/images/console/rotating-secrets/litellm-import-config.webp)
 
-![Manual config tab](/assets/images/console/rotating-secrets/litellm-manual-config.webp)
+![Manual config tab](https://docs.phase.dev/assets/images/console/rotating-secrets/litellm-manual-config.webp)
 
 ### 3. Schedule & outputs
 
@@ -84,7 +77,7 @@ The full JSON is sent to the provider on every rotation, so fields outside the m
 - **Revocation delay** — how long Phase waits before revoking the previous credential.
 - **Outputs** — each provider yields one or more values per credential (e.g. an API key and a key id). Choose an env-variable name for each.
 
-![Schedule and outputs step](/assets/images/console/rotating-secrets/create-rotating-secret-step-3.webp)
+![Schedule and outputs step](https://docs.phase.dev/assets/images/console/rotating-secrets/create-rotating-secret-step-3.webp)
 
 Click **Create and mint**. Phase mints the first credential synchronously and persists it. If the initial mint fails, the transaction rolls back with the provider's error — nothing partial is left behind.
 
@@ -92,7 +85,7 @@ Click **Create and mint**. Phase mints the first credential synchronously and pe
 
 In an Environment, outputs from the same Rotating Secret are grouped under a header with the secret's name and a **Manage** button. Each output renders as a normal secret row with a reveal toggle and a rotation status indicator.
 
-![Rotating Secret group in an Environment](/assets/images/console/rotating-secrets/rotating-secret-group.webp)
+![Rotating Secret group in an Environment](https://docs.phase.dev/assets/images/console/rotating-secrets/rotating-secret-group.webp)
 
 What you can and can't edit on a rotating row:
 
@@ -108,7 +101,7 @@ What you can and can't edit on a rotating row:
 
 Reveals are logged in the standard audit log. References work as usual — `${ROTATED_KEY}` resolves to the current active credential.
 
-REST and SDK clients can identify rotating rows via the `lifecycle: "rotating"` field on the secret response (see the [Secrets API reference](/public-api/secrets)).
+REST and SDK clients can identify rotating rows via the `lifecycle: "rotating"` field on the secret response (see the [Secrets API reference](https://docs.phase.dev/public-api/secrets.md)).
 
 ## Manage a Rotating Secret
 
@@ -118,21 +111,21 @@ Click **Manage** on the group header. The dialog has three tabs:
 
 Rotation interval, revocation delay, next scheduled rotation, current health, and recent failure (if any). Actions:
 
-![Manage a Rotating Secret: Status tab](/assets/images/console/rotating-secrets/manage-status.webp)
+![Manage a Rotating Secret: Status tab](https://docs.phase.dev/assets/images/console/rotating-secrets/manage-status.webp)
 
 - **Rotate now** — a break-glass action. Mints a fresh credential and **immediately revokes every other live credential** at the provider, skipping the configured revocation delay. The schedule resets to one interval from now. Use this when you believe an existing credential has been compromised. The confirmation dialog requires you to tick **"I understand that all live credentials will be revoked immediately"** before it proceeds — any consumer still using a previous credential will start receiving auth errors until it picks up the new value.
 - **Pause / Resume** — stop the rotation schedule. The current credential continues to work at the provider.
 - **Delete** — soft-delete the Rotating Secret. Phase cancels scheduled jobs, revokes all active and expiring credentials at the provider, and removes the outputs from the Environment.
 
-![Danger zone with Rotate now and Delete](/assets/images/console/rotating-secrets/manage-status-danger-zone.webp)
+![Danger zone with Rotate now and Delete](https://docs.phase.dev/assets/images/console/rotating-secrets/manage-status-danger-zone.webp)
 
-![Rotate now confirmation dialog](/assets/images/console/rotating-secrets/rotate-now-confirm.webp)
+![Rotate now confirmation dialog](https://docs.phase.dev/assets/images/console/rotating-secrets/rotate-now-confirm.webp)
 
 ### Credentials
 
 Every credential Phase has minted, with status, identifiers, and timestamps. Non-terminal credentials have a **Revoke** action.
 
-![Credentials tab](/assets/images/console/rotating-secrets/manage-credentials.webp)
+![Credentials tab](https://docs.phase.dev/assets/images/console/rotating-secrets/manage-credentials.webp)
 
 | Status | Meaning |
 |---|---|
@@ -148,7 +141,7 @@ Every credential Phase has minted, with status, identifiers, and timestamps. Non
 
 Chronological log of every lifecycle event — mint attempts, rotations, revoke attempts, health transitions, manual operations. Each event records the actor, IP, user agent, and a sanitised provider response excerpt.
 
-![Events tab](/assets/images/console/rotating-secrets/manage-events.webp)
+![Events tab](https://docs.phase.dev/assets/images/console/rotating-secrets/manage-events.webp)
 
 ## Health and failure handling
 
@@ -158,9 +151,9 @@ Chronological log of every lifecycle event — mint attempts, rotations, revoke 
 | `Degraded` | At least one transient failure recently. Phase is retrying with exponential backoff. |
 | `Failed` | The schedule is paused. Either an auth/config/quota error has stopped rotation, or transient failures have exceeded the retry budget. |
 
-![Degraded rotating secret in the Environment view](/assets/images/console/rotating-secrets/rotating-secret-degraded.webp)
+![Degraded rotating secret in the Environment view](https://docs.phase.dev/assets/images/console/rotating-secrets/rotating-secret-degraded.webp)
 
-![Degraded status with the last failure](/assets/images/console/rotating-secrets/manage-status-degraded.webp)
+![Degraded status with the last failure](https://docs.phase.dev/assets/images/console/rotating-secrets/manage-status-degraded.webp)
 
 When health flips to `Failed`, the previously-active credential continues to work — your application keeps running on the credential it has — but no new credentials are minted until you resolve the issue and click **Resume**.
 
@@ -188,7 +181,7 @@ Recipients are resolved at send time, so role changes between the failure and th
 
 ## Permissions
 
-Rotating Secrets are gated by two separate [permissions](/access-control/roles):
+Rotating Secrets are gated by two separate [permissions](https://docs.phase.dev/access-control/roles.md):
 
 - **`Secrets`** — reading the rotated value. The active credential surfaces alongside regular secrets, so anyone with `Secrets:read` can read the value via the UI, CLI, REST, or sync integrations.
 - **`RotatingSecrets`** — managing the rotation config: create, edit, pause/resume, delete, manual rotate, and revoke a credential. Defaults: `Owner`, `Admin`, and `Manager` get full access; `Developer` and `Service` get read-only.

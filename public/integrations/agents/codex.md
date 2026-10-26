@@ -1,19 +1,16 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description = 'Integrate Phase with OpenAI Codex'
-
-<Tag variant="small">INTEGRATE</Tag>
+---
+title: "OpenAI Codex"
+description: "Integrate Phase with OpenAI Codex"
+url: https://docs.phase.dev/integrations/agents/codex
+---
 
 # OpenAI Codex
 
 Manage Phase secrets directly from [OpenAI Codex](https://developers.openai.com/codex/cli). Codex can list, create, update, and delete secrets, run processes with injected secrets, and manage your Phase environments — all from natural language.
 
-<DocActions />
-
 ## Prerequisites
 
-- [Phase CLI installed and authenticated](/cli/usage)
+- [Phase CLI installed and authenticated](https://docs.phase.dev/cli/usage.md)
 - [OpenAI Codex CLI](https://developers.openai.com/codex/cli) installed
 
 ## Setup
@@ -58,9 +55,7 @@ The skill is installed at `~/.agents/skills/phase-cli/SKILL.md`, which is the us
 | `secret` | Controlled by `phase ai enable` | Standard encrypted secrets |
 | `sealed` | **Never visible** | Write-only secrets (API keys, tokens, passwords) |
 
-<Warning>
-Sealed secret values are **never** exposed to AI agents regardless of configuration.
-</Warning>
+> **Warning:** Sealed secret values are **never** exposed to AI agents regardless of configuration.
 
 ---
 

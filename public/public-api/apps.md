@@ -1,64 +1,37 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const metadata = {
-  title: 'Apps API',
-  description:
-    'Explore the Phase Apps API for managing applications programmatically.',
-}
-
-<Tag variant="small">API</Tag>
+---
+title: "Apps"
+description: "Explore the Phase Apps API for managing applications programmatically."
+url: https://docs.phase.dev/public-api/apps
+---
 
 # Apps
 
-Apps are the top-level organizational unit in Phase. Each App contains Environments, which in turn hold Secrets. On this page, we'll look at the Apps API endpoints for listing, creating, updating, and deleting Apps. {{ className: 'lead' }}
+Apps are the top-level organizational unit in Phase. Each App contains Environments, which in turn hold Secrets. On this page, we'll look at the Apps API endpoints for listing, creating, updating, and deleting Apps.
 
-<Note>
-Apps created via the API are SSE-enabled by default. The list endpoint returns metadata for all apps you have access to (SSE and E2EE) — check the `sseEnabled` field. Write operations against secrets and environments via the REST API require SSE; E2EE apps return `400 Bad Request`.
-</Note>
-
-<DocActions />
+> **Note:** Apps created via the API are SSE-enabled by default. The list endpoint returns metadata for all apps you have access to (SSE and E2EE) — check the `sseEnabled` field. Write operations against secrets and environments via the REST API require SSE; E2EE apps return `400 Bad Request`.
 
 ## The App model
 
 ### Properties
 
-<Properties>
-  <Property name="id" type="string">
-    Unique identifier for the app.
-  </Property>
-  <Property name="name" type="string">
-    The name of the app.
-  </Property>
-  <Property name="description" type="string">
-    An optional description for the app.
-  </Property>
-  <Property name="sseEnabled" type="boolean">
-    Whether server-side encryption is enabled for this app.
-  </Property>
-  <Property name="createdAt" type="timestamp">
-    Timestamp of when the app was created.
-  </Property>
-  <Property name="updatedAt" type="timestamp">
-    Timestamp of when the app was last updated.
-  </Property>
-</Properties>
+  - `id` (string): Unique identifier for the app.
+  - `name` (string): The name of the app.
+  - `description` (string): An optional description for the app.
+  - `sseEnabled` (boolean): Whether server-side encryption is enabled for this app.
+  - `createdAt` (timestamp): Timestamp of when the app was created.
+  - `updatedAt` (timestamp): Timestamp of when the app was last updated.
 
 ---
 
-## List Apps {{ tag: 'GET', label: '/v1/apps' }}
-
-<Row>
-  <Col>
+## List Apps
 
     Retrieve metadata for all apps (SSE and E2EE) that the authenticated account has access to. Use the `sseEnabled` field to distinguish; only SSE apps support secrets and environment writes via the REST API.
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="GET" label="/v1/apps">
+    **cURL**
 
-    ```fish {{ title: 'cURL' }}
+    ```fish
     curl https://api.phase.dev/v1/apps/ \
       -H "Authorization: Bearer {token}"
     ```
@@ -75,9 +48,9 @@ Apps created via the API are SSE-enabled by default. The list endpoint returns m
     data = response.json()
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```json {{ title: 'Response' }}
+    ```json
     {
         "data": [
             {
@@ -92,15 +65,9 @@ Apps created via the API are SSE-enabled by default. The list endpoint returns m
     }
     ```
 
-  </Col>
-</Row>
-
 ---
 
-## Create App {{ tag: 'POST', label: '/v1/apps' }}
-
-<Row>
-  <Col>
+## Create App
 
     Create a new SSE-enabled App. By default, three environments are created automatically: Development, Staging, and Production. You can optionally supply a custom list of environment names.
 
@@ -108,29 +75,18 @@ Apps created via the API are SSE-enabled by default. The list endpoint returns m
 
     #### Required fields
 
-    <Properties>
-      <Property name="name" type="string">
-        The app name. Maximum 64 characters.
-      </Property>
-    </Properties>
+      - `name` (string): The app name. Maximum 64 characters.
 
     #### Optional fields
 
-    <Properties>
-      <Property name="description" type="string">
-        A description for the app. Maximum 10,000 characters.
-      </Property>
-      <Property name="environments" type="array">
-        A list of custom environment names to create instead of the defaults. Each name must contain only letters, numbers, hyphens, and underscores. Requires a paid plan.
-      </Property>
-    </Properties>
+      - `description` (string): A description for the app. Maximum 10,000 characters.
+      - `environments` (array): A list of custom environment names to create instead of the defaults. Each name must contain only letters, numbers, hyphens, and underscores. Requires a paid plan.
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="POST" label="/v1/apps">
+    **cURL**
 
-    ```fish {{ title: 'cURL' }}
+    ```fish
     curl -X POST https://api.phase.dev/v1/apps/ \
       -H "Authorization: Bearer {token}" \
       -H "Content-Type: application/json" \
@@ -140,7 +96,9 @@ Apps created via the API are SSE-enabled by default. The list endpoint returns m
       }'
     ```
 
-    ```fish {{ title: 'cURL (custom environments)' }}
+    **cURL (custom environments)**
+
+    ```fish
     curl -X POST https://api.phase.dev/v1/apps/ \
       -H "Authorization: Bearer {token}" \
       -H "Content-Type: application/json" \
@@ -167,9 +125,9 @@ Apps created via the API are SSE-enabled by default. The list endpoint returns m
     data = response.json()
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```json {{ title: 'Response' }}
+    ```json
     {
         "id": "72b9ddd5-8fce-49ab-89d9-c431d53a9552",
         "name": "My New App",
@@ -208,32 +166,21 @@ Apps created via the API are SSE-enabled by default. The list endpoint returns m
 
     The `environments` array reflects whatever was created — either the three defaults (Development/Staging/Production) or the custom names from the request body, in request order. Each entry has the same shape as `GET /v1/environments/:id`.
 
-  </Col>
-</Row>
-
 ---
 
-## Get App {{ tag: 'GET', label: '/v1/apps/:id' }}
-
-<Row>
-  <Col>
+## Get App
 
     Retrieve a single app by its ID.
 
     ### URL parameters
 
-    <Properties>
-      <Property name="id" type="string">
-        The unique identifier of the app.
-      </Property>
-    </Properties>
+      - `id` (string): The unique identifier of the app.
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="GET" label="/v1/apps/:id">
+    **cURL**
 
-    ```fish {{ title: 'cURL' }}
+    ```fish
     curl https://api.phase.dev/v1/apps/72b9ddd5-8fce-49ab-89d9-c431d53a9552/ \
       -H "Authorization: Bearer {token}"
     ```
@@ -251,9 +198,9 @@ Apps created via the API are SSE-enabled by default. The list endpoint returns m
     data = response.json()
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```json {{ title: 'Response' }}
+    ```json
     {
         "id": "72b9ddd5-8fce-49ab-89d9-c431d53a9552",
         "name": "My App",
@@ -264,43 +211,26 @@ Apps created via the API are SSE-enabled by default. The list endpoint returns m
     }
     ```
 
-  </Col>
-</Row>
-
 ---
 
-## Update App {{ tag: 'PUT', label: '/v1/apps/:id' }}
-
-<Row>
-  <Col>
+## Update App
 
     Update an app's name and/or description. At least one field must be provided.
 
     ### URL parameters
 
-    <Properties>
-      <Property name="id" type="string">
-        The unique identifier of the app.
-      </Property>
-    </Properties>
+      - `id` (string): The unique identifier of the app.
 
     ### JSON Body
 
-    <Properties>
-      <Property name="name" type="string">
-        The new app name. Maximum 64 characters.
-      </Property>
-      <Property name="description" type="string">
-        The new app description. Maximum 10,000 characters.
-      </Property>
-    </Properties>
+      - `name` (string): The new app name. Maximum 64 characters.
+      - `description` (string): The new app description. Maximum 10,000 characters.
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="PUT" label="/v1/apps/:id">
+    **cURL**
 
-    ```fish {{ title: 'cURL' }}
+    ```fish
     curl -X PUT https://api.phase.dev/v1/apps/72b9ddd5-8fce-49ab-89d9-c431d53a9552/ \
       -H "Authorization: Bearer {token}" \
       -H "Content-Type: application/json" \
@@ -327,9 +257,9 @@ Apps created via the API are SSE-enabled by default. The list endpoint returns m
     data = response.json()
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```json {{ title: 'Response' }}
+    ```json
     {
         "id": "72b9ddd5-8fce-49ab-89d9-c431d53a9552",
         "name": "Updated App Name",
@@ -340,36 +270,23 @@ Apps created via the API are SSE-enabled by default. The list endpoint returns m
     }
     ```
 
-  </Col>
-</Row>
-
 ---
 
-## Delete App {{ tag: 'DELETE', label: '/v1/apps/:id' }}
-
-<Row>
-  <Col>
+## Delete App
 
     Permanently delete an app and all its associated data.
 
-    <Note>
-    This action is irreversible. All environments, secrets, and access configurations associated with the app will be permanently deleted.
-    </Note>
+> **Note:** This action is irreversible. All environments, secrets, and access configurations associated with the app will be permanently deleted.
 
     ### URL parameters
 
-    <Properties>
-      <Property name="id" type="string">
-        The unique identifier of the app.
-      </Property>
-    </Properties>
+      - `id` (string): The unique identifier of the app.
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="DELETE" label="/v1/apps/:id">
+    **cURL**
 
-    ```fish {{ title: 'cURL' }}
+    ```fish
     curl -X DELETE https://api.phase.dev/v1/apps/72b9ddd5-8fce-49ab-89d9-c431d53a9552/ \
       -H "Authorization: Bearer {token}"
     ```
@@ -387,11 +304,8 @@ Apps created via the API are SSE-enabled by default. The list endpoint returns m
     # Returns 204 No Content on success
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```text {{ title: 'Response' }}
+    ```text
     204 No Content
     ```
-
-  </Col>
-</Row>

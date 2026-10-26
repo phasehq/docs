@@ -1,16 +1,8 @@
-import { Tag } from '@/components/Tag'
-
-export const description =
-  'SDK to integrate Phase in client-side JavaScript applications.'
-
-export const sections = [
-  { title: 'Install', id: 'install-the-sdk' },
-  { title: 'Import', id: 'import-the-sdk' },
-  { title: 'Initialize', id: 'initialize-the-sdk' },
-  { title: 'Usage', id: 'usage' },
-]
-
-<Tag variant="small">SDK</Tag>
+---
+title: "JavaScript SDK"
+description: "SDK to integrate Phase in client-side JavaScript applications."
+url: https://docs.phase.dev/sdks/js
+---
 
 # JavaScript SDK
 
@@ -21,11 +13,9 @@ The JavaScript SDK can be used with any JavaScript client-side application to en
 - [@phase.dev/phase-js](https://www.npmjs.com/package/@phase.dev/phase-js)
 - [github.com/phasehq/client-js-sdk](https://github.com/phasehq/client-js-sdk)
 
-<Note>
-  In order to use the JavaScript SDK you will need to create a new App and get
-  an `APP_ID` from the Phase Console. Add the `APP_ID` to your application,
-  preferably using an environment variable. [Quick start &raquo;](/quickstart)
-</Note>
+> **Note:** In order to use the JavaScript SDK you will need to create a new App and get
+>   an `APP_ID` from the Phase Console. Add the `APP_ID` to your application,
+>   preferably using an environment variable. [Quick start &raquo;](https://docs.phase.dev/quickstart.md)
 
 ---
 
@@ -33,21 +23,25 @@ The JavaScript SDK can be used with any JavaScript client-side application to en
 
 The JavaScript SDK is distributed via [npm](https://www.npmjs.com/package/@phase.dev/phase-js). You can install it using the following command for your preferred package manager.
 
-<CodeGroup title="Install">
+**Install**
 
-    ```bash {{ title: 'npm' }}
+    **npm**
+
+    ```bash
     npm i @phase.dev/phase-js
     ```
 
-    ```bash {{ title: 'yarn' }}
+    **yarn**
+
+    ```bash
     yarn add @phase.dev/phase-js
     ```
 
-    ```bash {{ title: 'pnpm' }}
+    **pnpm**
+
+    ```bash
     pnpm i @phase.dev/phase-js
     ```
-
-</CodeGroup>
 
 ---
 

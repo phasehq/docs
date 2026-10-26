@@ -1,26 +1,23 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description = 'Integrate Phase with Kubernetes'
-
-<Tag variant="small">INTEGRATE</Tag>
+---
+title: "Kubernetes"
+description: "Integrate Phase with Kubernetes"
+url: https://docs.phase.dev/integrations/platforms/kubernetes
+---
 
 # Kubernetes
 
 You can use Phase to sync secrets with applications running in your Kubernetes cluster.
 
-<DocActions />
-
 ### Prerequisites
 
-- Sign up for the [Phase Console](/quickstart) and create an application.
+- Sign up for the [Phase Console](https://docs.phase.dev/quickstart.md) and create an application.
 - Obtain a [`PHASE_SERVICE_TOKEN`](/access-control/authentication/tokens#creating-a-service-account-token) for your application, that has access to the environment you are trying to fetch secrets from.
 
 ## Using the Phase Kubernetes Operator
 
 This section provides a step-by-step guide to help you get started with the Phase Kubernetes Operator. Feel free to adjust the provided options and configurations to suit your specific needs.
 
-![Phase Cryptography](/assets/images/platform-integrations/kubernetes/phase-kubernetes-operator.webp)
+![Phase Cryptography](https://docs.phase.dev/assets/images/platform-integrations/kubernetes/phase-kubernetes-operator.webp)
 
 ### 1. Install the Operator via Helm
 
@@ -30,8 +27,7 @@ Add the Phase Helm repository and update it:
 helm repo add phase https://helm.phase.dev && helm repo update
 ```
 
-<TabGroup slug="operator-install">
-  <TabPanel title="New install" slug="fresh-install">
+**New install**
 
 Install the Phase Secrets Operator:
 
@@ -43,14 +39,11 @@ It's best practice to specify the version in production environments to avoid
 unintended upgrades. Find available versions on our [GitHub
 releases](https://github.com/phasehq/kubernetes-secrets-operator/releases).
 
-  </TabPanel>
-  <TabPanel title="Upgrade from v1" slug="upgrade-v1">
+**Upgrade from v1**
 
 Version 2.0 replaces the Python/Kopf operator with a Go/controller-runtime operator. Existing `PhaseSecret` resources and the Kubernetes Secrets they manage are preserved across the upgrade. The `secrets.phase.dev/v1alpha1` API and all legacy fields remain supported.
 
-<Note>
-  A simple `helm upgrade` swaps the operator image but does **not** upgrade the CRD, and it does not remove the finalizer the v1 operator added to your `PhaseSecret` resources. Both are handled manually in the steps below.
-</Note>
+> **Note:** A simple `helm upgrade` swaps the operator image but does **not** upgrade the CRD, and it does not remove the finalizer the v1 operator added to your `PhaseSecret` resources. Both are handled manually in the steps below.
 
 #### 1. Apply the v2 CRD
 
@@ -93,18 +86,13 @@ kubectl -n <operator-namespace> get pods
 kubectl -n <operator-namespace> logs deploy/phase-secrets-operator-phase-kubernetes-operator | grep "PhaseSecret sync complete"
 ```
 
-<Note>
-  Rolling back with `helm rollback` restores the v1 operator. The v2 CRD is backward compatible and is not reverted, so existing resources continue to work.
-</Note>
+> **Note:** Rolling back with `helm rollback` restores the v1 operator. The v2 CRD is backward compatible and is not reverted, so existing resources continue to work.
 
 **Reference handling changed in v2.** In v1, unresolved `${...}` references were synced
 as-is. v2 defaults to `onSecretReferenceError: Fail`, which aborts the sync (and records a
 Warning event) so a broken value is never written to a workload. If an environment you sync
 contains an unresolved reference, set `onSecretReferenceError: Warn` on that `PhaseSecret` to
 keep the v1 "sync as-is" behavior.
-
-  </TabPanel>
-</TabGroup>
 
 To see the full set of configurable Helm chart options, please see: [`values.yaml`](https://github.com/phasehq/kubernetes-secrets-operator/blob/main/phase-kubernetes-operator/values.yaml)
 
@@ -163,98 +151,54 @@ View the secrets:
 kubectl get secret my-application-secret -o yaml
 ```
 
-<Note>
-  The operator automatically synchronizes secrets every 60 seconds by default,
-  or as specified by the `pollingInterval` property.
-</Note>
+> **Note:** The operator automatically synchronizes secrets every 60 seconds by default,
+>   or as specified by the `pollingInterval` property.
 
 ### Properties
 
-<Properties>
-  <Property name="phaseApp" type="required unless phaseAppId is set">
-    The name of the Phase application to fetch secrets from. At least one of
-    `phaseApp` or `phaseAppId` is required.
-  </Property>
-  <Property name="phaseAppId" type="optional">
-    The ID of the Phase application to fetch secrets from. This is useful when
-    app names are ambiguous. At least one of `phaseApp` or `phaseAppId` is
-    required, and `phaseAppId` takes precedence over `phaseApp` when set.
-  </Property>
-  <Property name="phaseAppEnv" type="optional">
-    The Phase App Environment to fetch secrets from (e.g., dev, staging, prod).{' '}
-    <b>Default</b>: `production`.
-  </Property>
-  <Property name="phaseAppEnvTag" type="optional">
-    Tag for filtering secrets in the specified Phase App Environment.{' '}
-    <b>Default</b>: `None`.
-  </Property>
-  <Property name="phaseAppEnvPath" type="optional">
-    Path within the Phase application environment to fetch secrets from.{' '}
-    <b>Default</b>: `/`.
-  </Property>
-  <Property name="phaseHost" type="optional">
-    The URL of a Phase Console instance. <b>Default</b>:
-    `https://console.phase.dev`.
-  </Property>
-  <Property name="pollingInterval" type="optional">
-    Interval in seconds to poll for secret updates. For near real-time syncing,
-    it is recommended to set this value to 5 seconds or less.{' '}
-    <b>Default</b>: `60`.
-  </Property>
-  <Property
-    name="authentication.serviceToken.serviceTokenSecretReference.secretName"
-    type="required"
-  >
-    The name of the Kubernetes managed secret containing your Phase Service
-    Token.
-  </Property>
-  <Property
-    name="authentication.serviceToken.serviceTokenSecretReference.secretNamespace"
-    type="required"
-  >
-    The namespace of the Kubernetes managed secret containing your Phase Service
-    Token.
-  </Property>
-  <Property name="managedSecretReferences.secretName">
-    Name of the Kubernetes managed secret that Phase will sync secrets to.
-  </Property>
-  <Property name="managedSecretReferences.secretNamespace">
-    The namespace of the Kubernetes managed secret that Phase will sync secrets
-    to.
-  </Property>
-  <Property name="managedSecretReferences.secretType" type="optional">
-    The type of the Kubernetes Secret. Options include: "Opaque",
-    "kubernetes.io/tls"
-  </Property>
-  <Property name="managedSecretReferences.nameTransformer" type="optional">
-    Default name transformer applied to all secret keys in this managed secret.
-    Per-key `nameTransformer` set within `processors` takes precedence.
-    Options: `upper_snake`, `camel`, `upper-camel`, `lower-snake`, `tf-var`,
-    `lower-kebab`.
-  </Property>
-  <Property name="managedSecretReferences.processors" type="optional">
-    Per-key processors to transform secret key names and values during ingestion.
-    Each processor can have the following properties:
-    `asName` (rename the key), `nameTransformer` (transform the key casing),
-    and `type` (`plain` or `base64`). <b>Default</b> for 'type': `plain`.
-  </Property>
-  <Property name="managedSecretReferences.template.metadata" type="optional">
-    Labels and annotations to apply to the managed Kubernetes Secret. Use
-    `template.metadata.labels` and `template.metadata.annotations`.
-  </Property>
-  <Property name="redeployLabelSelector" type="optional">
-    Kubernetes label selector used to limit which Deployments are scanned for
-    auto-redeploy. If omitted, the operator
-    scans all Deployments in the namespace of the managed Secret. Suitable for large deployments.
-  </Property>
-  <Property name="onSecretReferenceError" type="optional">
-    Policy when a Phase secret reference (`${...}`) cannot be resolved. `Fail`
-    (default) aborts the sync so unresolved values are never written to the managed
-    Secret. `Warn` syncs anyway, leaving unresolved references as their literal
-    `${...}` text. In both cases the operator records a Warning event on the
-    `PhaseSecret` naming the affected secret. Options: `Fail`, `Warn`.
-  </Property>
-</Properties>
+  - `phaseApp` (required unless phaseAppId is set): The name of the Phase application to fetch secrets from. At least one of
+      `phaseApp` or `phaseAppId` is required.
+  - `phaseAppId` (optional): The ID of the Phase application to fetch secrets from. This is useful when
+      app names are ambiguous. At least one of `phaseApp` or `phaseAppId` is
+      required, and `phaseAppId` takes precedence over `phaseApp` when set.
+  - `phaseAppEnv` (optional): The Phase App Environment to fetch secrets from (e.g., dev, staging, prod).{' '}
+      <b>Default</b>: `production`.
+  - `phaseAppEnvTag` (optional): Tag for filtering secrets in the specified Phase App Environment.{' '}
+      <b>Default</b>: `None`.
+  - `phaseAppEnvPath` (optional): Path within the Phase application environment to fetch secrets from.{' '}
+      <b>Default</b>: `/`.
+  - `phaseHost` (optional): The URL of a Phase Console instance. <b>Default</b>:
+      `https://console.phase.dev`.
+  - `pollingInterval` (optional): Interval in seconds to poll for secret updates. For near real-time syncing,
+      it is recommended to set this value to 5 seconds or less.{' '}
+      <b>Default</b>: `60`.
+  - `authentication.serviceToken.serviceTokenSecretReference.secretName` (required): The name of the Kubernetes managed secret containing your Phase Service
+      Token.
+  - `authentication.serviceToken.serviceTokenSecretReference.secretNamespace` (required): The namespace of the Kubernetes managed secret containing your Phase Service
+      Token.
+  - `managedSecretReferences.secretName`: Name of the Kubernetes managed secret that Phase will sync secrets to.
+  - `managedSecretReferences.secretNamespace`: The namespace of the Kubernetes managed secret that Phase will sync secrets
+      to.
+  - `managedSecretReferences.secretType` (optional): The type of the Kubernetes Secret. Options include: "Opaque",
+      "kubernetes.io/tls"
+  - `managedSecretReferences.nameTransformer` (optional): Default name transformer applied to all secret keys in this managed secret.
+      Per-key `nameTransformer` set within `processors` takes precedence.
+      Options: `upper_snake`, `camel`, `upper-camel`, `lower-snake`, `tf-var`,
+      `lower-kebab`.
+  - `managedSecretReferences.processors` (optional): Per-key processors to transform secret key names and values during ingestion.
+      Each processor can have the following properties:
+      `asName` (rename the key), `nameTransformer` (transform the key casing),
+      and `type` (`plain` or `base64`). <b>Default</b> for 'type': `plain`.
+  - `managedSecretReferences.template.metadata` (optional): Labels and annotations to apply to the managed Kubernetes Secret. Use
+      `template.metadata.labels` and `template.metadata.annotations`.
+  - `redeployLabelSelector` (optional): Kubernetes label selector used to limit which Deployments are scanned for
+      auto-redeploy. If omitted, the operator
+      scans all Deployments in the namespace of the managed Secret. Suitable for large deployments.
+  - `onSecretReferenceError` (optional): Policy when a Phase secret reference (`${...}`) cannot be resolved. `Fail`
+      (default) aborts the sync so unresolved values are never written to the managed
+      Secret. `Warn` syncs anyway, leaving unresolved references as their literal
+      `${...}` text. In both cases the operator records a Warning event on the
+      `PhaseSecret` naming the affected secret. Options: `Fail`, `Warn`.
 
 ## Secret processors:
 
@@ -495,9 +439,7 @@ spec:
 
 To ensure that deployments are automatically redeployed when their associated secrets change, add the `secrets.phase.dev/redeploy` annotation with a value of `"true"` to your deployment. This instructs the Phase Kubernetes Operator to redeploy the application whenever the specified secrets are updated.
 
-<Note>
-  The redeployment annotation will only trigger when secrets have been provisioned to a deployment using `secretRef`.
-</Note>
+> **Note:** The redeployment annotation will only trigger when secrets have been provisioned to a deployment using `secretRef`.
 
 You can set `spec.redeployLabelSelector` on the `PhaseSecret` to narrow which
 Deployments are scanned for auto-redeploy:
@@ -713,14 +655,7 @@ helm uninstall phase-secrets-operator
 Deleting a `PhaseSecret`, or uninstalling the operator, does not delete the Kubernetes
 Secrets it created. Remove any managed Secrets you no longer need manually.
 
-<div className="not-prose">
-  <Button
-    href="https://kubernetes.io/docs/concepts/configuration/secret/"
-    variant="text"
-    arrow="right"
-    children="Kubernetes - Secrets Management"
-  />
-</div>
+[Kubernetes - Secrets Management](https://kubernetes.io/docs/concepts/configuration/secret/)
 
 ---
 
@@ -798,11 +733,4 @@ spec:
 
 3. **Secret Versioning**: If you update a secret, the change won't be automatically propagated to running pods. The pods need to be restarted to pick up the new version of the secret.
 
-<div className="not-prose">
-  <Button
-    href="https://kubernetes.io/docs/concepts/workloads/pods/init-containers/"
-    variant="text"
-    arrow="right"
-    children="Kubernetes - Init Containers"
-  />
-</div>
+[Kubernetes - Init Containers](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/)

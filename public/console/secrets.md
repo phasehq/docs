@@ -1,29 +1,24 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description = 'This guide will explain how to work with Secrets in Phase'
-
-<Tag variant="small">CONSOLE</Tag>
+---
+title: "Secrets"
+description: "This guide will explain how to work with Secrets in Phase"
+url: https://docs.phase.dev/console/secrets
+---
 
 # Secrets
 
-Secrets are key/value pairs used to store application secrets and configuration for your applications across [Environments](/console/environments) in various folders and paths. Secrets in Phase can additionally have tags and comments associated with them. Every read, update or delete event for a secret will be logged and viewable on the [App logs](/console/apps#logs) screen. All changes to secrets in an environment automatically trigger deployments to their platform secret sync integrations, if set up. 
+Secrets are key/value pairs used to store application secrets and configuration for your applications across [Environments](https://docs.phase.dev/console/environments.md) in various folders and paths. Secrets in Phase can additionally have tags and comments associated with them. Every read, update or delete event for a secret will be logged and viewable on the [App logs](https://docs.phase.dev/console/apps.md#logs) screen. All changes to secrets in an environment automatically trigger deployments to their platform secret sync integrations, if set up.
 
-![Secrets in an Environment](/assets/images/console/secrets/secrets-environment.webp)
-
-<DocActions /> 
+![Secrets in an Environment](https://docs.phase.dev/assets/images/console/secrets/secrets-environment.webp)
 
 ## Create a Secret
 
 To create a Secret in a specific Environment, click the "New Secret" button. This will create a new empty secret, with a blank key and value. Enter the desired key and value and click "Deploy" to save your changes.
 
-![Creating a new secret](/assets/images/console/secrets/create/secret-create.webp)
+![Creating a new secret](https://docs.phase.dev/assets/images/console/secrets/create/secret-create.webp)
 
 <video controls autoplay="true" muted loop><source src="/assets/images/console/secrets/create/create-secrets-demo.mp4" /></video>
 
-<Note>
-Secret keys cannot be empty, or share the same key as another secret in the current environment at the same path.
-</Note>
+> **Note:** Secret keys cannot be empty, or share the same key as another secret in the current environment at the same path.
 
 ## Secret Types
 
@@ -35,27 +30,25 @@ Every secret in Phase has a type that controls its behavior and visibility. All 
 | **Sealed** | Values are write-once. After saving, the plaintext value is redacted server-side and can never be read back in the Console UI. The type cannot be changed once saved. Use this for values that should only be injected at runtime and never exposed in the UI, such as root credentials or signing keys. |
 | **Config** | Non-sensitive configuration values (e.g. `APP_NAME`, `LOG_LEVEL`, `REGION`). Values are shown in plaintext by default without masking. |
 
-![Secret type selector shown when hovering the secret key](/assets/images/console/secrets/secret-types.webp)
+![Secret type selector shown when hovering the secret key](https://docs.phase.dev/assets/images/console/secrets/secret-types.webp)
 
 ### Changing a secret's type
 
 You can change a secret's type by hovering over the secret row and using the type selector in the key field. Type changes are staged like any other edit and are only saved when you deploy.
 
-![Staged secret type changes before deploying](/assets/images/console/secrets/secret-types-staged.webp)
+![Staged secret type changes before deploying](https://docs.phase.dev/assets/images/console/secrets/secret-types-staged.webp)
 
-<Warning>
-Once a sealed secret is saved, its type is permanently locked. You cannot unseal a secret or change it to another type. To replace it, delete the secret and create a new one.
-</Warning>
+> **Warning:** Once a sealed secret is saved, its type is permanently locked. You cannot unseal a secret or change it to another type. To replace it, delete the secret and create a new one.
 
 ## Import Secrets
 
-You can import secrets into your Apps and Environments by dragging-and-dropping `.env` files or selecting them from your filesystem. 
+You can import secrets into your Apps and Environments by dragging-and-dropping `.env` files or selecting them from your filesystem.
 
 By default, Phase will parse all key-value pairs in your .env files, as well as any comments that are either in-line or precede a key-value pair. You can also open the "Import secrets" menu for more detailed import options as well as a text area to simply paste the contents of your .env file.
 
-![New Secret menu with the Import secrets option](/assets/images/console/secrets/create/new-secret-menu.webp)
+![New Secret menu with the Import secrets option](https://docs.phase.dev/assets/images/console/secrets/create/new-secret-menu.webp)
 
-![Import secrets dialog](/assets/images/console/secrets/import/import-secrets-dialog.webp)
+![Import secrets dialog](https://docs.phase.dev/assets/images/console/secrets/import/import-secrets-dialog.webp)
 
 If one or more keys of the secret that you are trying to import into Phase already exist, their respective values will automatically be updated. You can easily review the changes while in the deploy preview before deploying.
 
@@ -65,7 +58,7 @@ Here's a quick demo of how to import secrets into a single environment:
 
 You can also import `.env` files into multiple Environments simultaneously from the Secrets tab. You'll be able to decide which specific environments to import into, and whether or not to include values and comments in each respective Environment. This is great for quickly initializing your App with dev secrets from your local `.env` file, while populating other Environments with just the corresponding keys.
 
-![Import secrets into multiple Environments](/assets/images/console/secrets/import/import-secrets-multi-env.webp)
+![Import secrets into multiple Environments](https://docs.phase.dev/assets/images/console/secrets/import/import-secrets-multi-env.webp)
 
 ## Secret Referencing
 
@@ -114,22 +107,22 @@ When developing locally with the Phase CLI, the override value will be used by d
 
 To create a Personal Secret, click on the "Override" button for a secret.
 
-![secret override button](/assets/images/console/secrets/personal-secret-button.webp)
+![secret override button](https://docs.phase.dev/assets/images/console/secrets/personal-secret-button.webp)
 
 Then simply enter the value you wish to override this secret with. You can also control whether a Personal Secret override is active using the "Activate Secret Override" toggle switch.
 
-![create personal secret](/assets/images/console/secrets/personal-secret-create.webp)
+![create personal secret](https://docs.phase.dev/assets/images/console/secrets/personal-secret-create.webp)
 
 ## Tag a Secret
 
 To apply a tag to a Secret, hover on the Secret row and click on "Tags" in the secret key input box to open the Tags dialog.
 You can select one or more tags to apply to this Secret, or create new Tags if required.
 
-![tag a secret](/assets/images/console/secrets/secret-tags-edit.webp)
+![tag a secret](https://docs.phase.dev/assets/images/console/secrets/secret-tags-edit.webp)
 
 All tags applied to a secret will be displayed inline with the secret name.
 
-![view secret tags](/assets/images/console/secrets/secret-tags-display.webp)
+![view secret tags](https://docs.phase.dev/assets/images/console/secrets/secret-tags-display.webp)
 
 **Note: Secret tags are not saved until you "Deploy" changes to the Environment**
 
@@ -137,11 +130,11 @@ All tags applied to a secret will be displayed inline with the secret name.
 
 To add comments to a Secret, hover in the Secret row and click on the "Comment" button in the value input box to open the comment dialog. Type your comment and close the dialog.
 
-![edit secret comment](/assets/images/console/secrets/secret-comment-edit.webp)
+![edit secret comment](https://docs.phase.dev/assets/images/console/secrets/secret-comment-edit.webp)
 
 Secrets with comments will be identifiable by a green comment icon.
 
-![view secret comment](/assets/images/console/secrets/secret-comment-display.webp)
+![view secret comment](https://docs.phase.dev/assets/images/console/secrets/secret-comment-display.webp)
 
 **Note: Secret comments are not saved until you "Deploy" changes to the Environment**
 
@@ -149,25 +142,25 @@ Secrets with comments will be identifiable by a green comment icon.
 
 You can easily share secrets to other users via a secure link. When sharing a secret, you need to decide whether you simply want to link a secret to another user who already has access to it in Phase (via a Permalink) or an external user who may not have an account in Phase (via a Lockbox). You can hover over the secret row and click the "Share" button to see the menu to create a Permalink or Lockbox.
 
-![Share menu on a secret row](/assets/images/console/secrets/sharing/secret-share-button.webp)
+![Share menu on a secret row](https://docs.phase.dev/assets/images/console/secrets/sharing/secret-share-button.webp)
 
 ### Permalink
 
 Permalinks allow you to share a secret with other users who already have access to it in Phase. This is useful when you want to link a specific secret within an App, Environment, or Folder to others on your team.
 
-![secret permalink](/assets/images/console/secrets/sharing/secret-permalink.webp)
+![secret permalink](https://docs.phase.dev/assets/images/console/secrets/sharing/secret-permalink.webp)
 
 ### Lockbox
 
-Lockbox allows secrets to be shared via a single link using a "sealed box" with [zero-trust encryption](/security/architecture#lockbox). The key that is used to decrypt the secret is encoded as a URL fragment and is not stored in Phase or transmitted to the server. When creating a Lockbox, you will be able to update or override the value of the secret and specify the expiry time and the maximum number of views. Please be mindful that anyone with the link will be able to access the secret.
+Lockbox allows secrets to be shared via a single link using a "sealed box" with [zero-trust encryption](https://docs.phase.dev/security/architecture.md#lockbox). The key that is used to decrypt the secret is encoded as a URL fragment and is not stored in Phase or transmitted to the server. When creating a Lockbox, you will be able to update or override the value of the secret and specify the expiry time and the maximum number of views. Please be mindful that anyone with the link will be able to access the secret.
 
 <video controls autoplay="true" muted loop><source src="/assets/images/console/secrets/sharing/lockbox/lockbox-demo.mp4" /></video>
 
-![Create a Lockbox](/assets/images/console/secrets/sharing/lockbox/lockbox-create.webp)
+![Create a Lockbox](https://docs.phase.dev/assets/images/console/secrets/sharing/lockbox/lockbox-create.webp)
 
-![Lockbox link](/assets/images/console/secrets/sharing/lockbox/lockbox-link.webp)
+![Lockbox link](https://docs.phase.dev/assets/images/console/secrets/sharing/lockbox/lockbox-link.webp)
 
-![Opening a Lockbox](/assets/images/console/secrets/sharing/lockbox/lockbox-view-2.webp)
+![Opening a Lockbox](https://docs.phase.dev/assets/images/console/secrets/sharing/lockbox/lockbox-view-2.webp)
 
 ## View Secret history
 
@@ -176,23 +169,21 @@ This dialog shows a timeline of changes to all properties of this secret, with t
 
 You can also restore the "Value" of a secret from history by clicking the "Restore" button. This will update the value of the Secret, and will be saved when you next Deploy your changes.
 
-![view secret history](/assets/images/console/secrets/secret-history-restore.webp)
+![view secret history](https://docs.phase.dev/assets/images/console/secrets/secret-history-restore.webp)
 
 ## Search for a Secret
 
 You can search for a secret by typing the secret key into the search bar in a single environment or across all environments in the App Secrets tab. This will filter the list of secrets to only show secrets that match the search query.
 
-![Search for a secret in an Environment](/assets/images/console/secrets/search/secret-search.webp)
+![Search for a secret in an Environment](https://docs.phase.dev/assets/images/console/secrets/search/secret-search.webp)
 
 ### Global Secret search
 
 You can also search for secrets across all Apps, Environments, and Folders that you have access to in your organization via the command palette. You will see matching results listed with the App, Environment, and Path context of each secret.
 
-<Note>
-All secret searches are performed client side in your browser regardless of App encryption mode. Secret values are not fetched or decrypted when performing searches.
-</Note>
+> **Note:** All secret searches are performed client side in your browser regardless of App encryption mode. Secret values are not fetched or decrypted when performing searches.
 
-![Global secret search](/assets/images/console/secrets/search/global-search.webp)
+![Global secret search](https://docs.phase.dev/assets/images/console/secrets/search/global-search.webp)
 
 <video controls autoplay="true" muted loop><source src="/assets/images/console/secrets/search/search.mp4" /></video>
 
@@ -202,16 +193,16 @@ To update the key or value of a secret, simply find the secret row of the secret
 
 Secrets that have been updated will be highlighted in yellow to indicate that they have been updated. You can update any number of secrets at once. Once finalized, click the "Deploy" button to save your changes.
 
-![Updated secrets highlighted before deploying](/assets/images/console/secrets/update/secret-update.webp)
+![Updated secrets highlighted before deploying](https://docs.phase.dev/assets/images/console/secrets/update/secret-update.webp)
 
 <video controls autoplay="true" muted loop><source src="/assets/images/console/secrets/update/secrets-update-demo.mp4" /></video>
 
 ## Delete a Secret
 
-To delete a secret (key & value), simply hover on the Secret row and click the red 🗑️ (trashcan) button at the end of the secret options menu. This will select the secret for deletion. You will see the row being highlighted in red to indicate that it is selected for deletion. 
+To delete a secret (key & value), simply hover on the Secret row and click the red 🗑️ (trashcan) button at the end of the secret options menu. This will select the secret for deletion. You will see the row being highlighted in red to indicate that it is selected for deletion.
 
 You can select any number of secrets for deletion by clicking the red 🗑️ (trashcan) button on the corresponding secret row. You can also deselect a secret that was selected for deletion by clicking the red restore button. Once finalized, click the "Deploy" button to delete the selected secrets.
 
-![Secret selected for deletion](/assets/images/console/secrets/delete/secret-delete.webp)
+![Secret selected for deletion](https://docs.phase.dev/assets/images/console/secrets/delete/secret-delete.webp)
 
 <video controls autoplay="true" muted loop><source src="/assets/images/console/secrets/delete/secret-delete-demo.mp4" /></video>

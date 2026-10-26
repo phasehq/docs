@@ -1,27 +1,22 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description = 'Integrate Phase with Bitbucket Pipelines'
-
-<Tag variant="small">INTEGRATE</Tag>
+---
+title: "Bitbucket Pipelines"
+description: "Integrate Phase with Bitbucket Pipelines"
+url: https://docs.phase.dev/integrations/platforms/bitbucket-pipelines
+---
 
 # Bitbucket Pipelines
 
 You can use the Phase CLI to effortlessly inject or expose secrets inside your CI pipelines or jobs.
-
-<DocActions />
 
 ### Prerequisites
 
 - Have signed up for the [Phase Console](https://console.phase.dev) and created an application.
 - `PHASE_SERVICE_TOKEN`.
 
-<Note>
-  If you are using a Self-Hosted instance of the Phase Console, you may supply
-  the `PHASE_HOST` environment variable with your URL (`https://<HOST>`).
-</Note>
+> **Note:** If you are using a Self-Hosted instance of the Phase Console, you may supply
+>   the `PHASE_HOST` environment variable with your URL (`https://<HOST>`).
 
-For detailed cli install options, please see: [Installation](/cli/install)
+For detailed cli install options, please see: [Installation](https://docs.phase.dev/cli/install.md)
 
 ### Setting `PHASE_SERVICE_TOKEN`:
 

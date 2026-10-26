@@ -1,64 +1,34 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const metadata = {
-  title: 'Invites API',
-  description:
-    'Explore the Phase Invites API for creating, listing, and cancelling pending organisation member invitations.',
-}
-
-<Tag variant="small">API</Tag>
+---
+title: "Invites"
+description: "Explore the Phase Invites API for creating, listing, and cancelling pending organisation member invitations."
+url: https://docs.phase.dev/public-api/invites
+---
 
 # Invites
 
-Invites are pending membership requests sent to an email address. When an invite is accepted through the Phase console, the recipient becomes an organisation member with the assigned role. On this page, we'll look at the API endpoints for creating, listing, and cancelling pending invites. {{ className: 'lead' }}
+Invites are pending membership requests sent to an email address. When an invite is accepted through the Phase console, the recipient becomes an organisation member with the assigned role. On this page, we'll look at the API endpoints for creating, listing, and cancelling pending invites.
 
-<Note>
-Invites live under the Members resource — all endpoints are namespaced as `/v1/members/invites/`. The `POST /v1/members/` endpoint is reserved for the future direct-member-creation flow and currently returns `405 Method Not Allowed`.
-</Note>
-
-<DocActions />
+> **Note:** Invites live under the Members resource — all endpoints are namespaced as `/v1/members/invites/`. The `POST /v1/members/` endpoint is reserved for the future direct-member-creation flow and currently returns `405 Method Not Allowed`.
 
 ## The Invite model
 
 ### Properties
 
-<Properties>
-  <Property name="id" type="string">
-    Unique identifier for the invite.
-  </Property>
-  <Property name="inviteeEmail" type="string">
-    The email address the invite was sent to.
-  </Property>
-  <Property name="role" type="object">
-    The role that will be assigned on acceptance, with `id` and `name`.
-  </Property>
-  <Property name="invitedBy" type="object">
-    Who sent the invite. Contains `type` (`"member"` or `"service_account"`) and either `email` (for members) or `name` (for service accounts). `null` if the sender has since been removed.
-  </Property>
-  <Property name="createdAt" type="timestamp">
-    Timestamp of when the invite was created.
-  </Property>
-  <Property name="expiresAt" type="timestamp">
-    Timestamp of when the invite expires. Invites are valid for 14 days.
-  </Property>
-  <Property name="valid" type="boolean">
-    Whether the invite is still valid (has not been cancelled or accepted).
-  </Property>
-</Properties>
+  - `id` (string): Unique identifier for the invite.
+  - `inviteeEmail` (string): The email address the invite was sent to.
+  - `role` (object): The role that will be assigned on acceptance, with `id` and `name`.
+  - `invitedBy` (object): Who sent the invite. Contains `type` (`"member"` or `"service_account"`) and either `email` (for members) or `name` (for service accounts). `null` if the sender has since been removed.
+  - `createdAt` (timestamp): Timestamp of when the invite was created.
+  - `expiresAt` (timestamp): Timestamp of when the invite expires. Invites are valid for 14 days.
+  - `valid` (boolean): Whether the invite is still valid (has not been cancelled or accepted).
 
 ---
 
-## Create Invite {{ tag: 'POST', label: '/v1/members/invites' }}
-
-<Row>
-  <Col>
+## Create Invite
 
     Send an invitation to a new member. An invite email is sent to the specified address, and the invite expires after 14 days.
 
-    <Note>
-    This endpoint creates an **invite**, not a direct membership. The invited user must accept the invite via the console to become a member.
-    </Note>
+> **Note:** This endpoint creates an **invite**, not a direct membership. The invited user must accept the invite via the console to become a member.
 
     ### Constraints
 
@@ -68,29 +38,20 @@ Invites live under the Members resource — all endpoints are namespaced as `/v1
     - The email is validated against RFC format; whitespace is trimmed and the local + domain parts are lowercased. Invalid emails return `400 Bad Request`.
     - The email must not already belong to an active member or a pending invite. Duplicate invites return `409 Conflict` with `{"error": "An active invite already exists for '<email>'."}`.
 
-    <Note>
-    App and environment access cannot be scoped at invite time. Because Phase is end-to-end encrypted, granting access requires the invitee's identity key, which doesn't exist until they accept the invite and complete their key ceremony. Use [Manage Access](/public-api/members#manage-access) after acceptance. Sending an `apps` field returns `400 Bad Request`.
-    </Note>
+> **Note:** App and environment access cannot be scoped at invite time. Because Phase is end-to-end encrypted, granting access requires the invitee's identity key, which doesn't exist until they accept the invite and complete their key ceremony. Use [Manage Access](https://docs.phase.dev/public-api/members.md#manage-access) after acceptance. Sending an `apps` field returns `400 Bad Request`.
 
     ### JSON Body
 
     #### Required fields
 
-    <Properties>
-      <Property name="email" type="string">
-        The email address of the person to invite.
-      </Property>
-      <Property name="role_id" type="string">
-        The ID of the role to assign on acceptance.
-      </Property>
-    </Properties>
+      - `email` (string): The email address of the person to invite.
+      - `role_id` (string): The ID of the role to assign on acceptance.
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="POST" label="/v1/members/invites">
+    **cURL**
 
-    ```fish {{ title: 'cURL' }}
+    ```fish
     curl -X POST https://api.phase.dev/v1/members/invites/ \
       -H "Authorization: Bearer {token}" \
       -H "Content-Type: application/json" \
@@ -117,9 +78,7 @@ Invites live under the Members resource — all endpoints are namespaced as `/v1
     data = response.json()
     ```
 
-    </CodeGroup>
-
-    ```json {{ title: 'Response', statusCode: '201' }}
+    ```json
     {
         "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
         "inviteeEmail": "bob@example.com",
@@ -137,24 +96,17 @@ Invites live under the Members resource — all endpoints are namespaced as `/v1
     }
     ```
 
-  </Col>
-</Row>
-
 ---
 
-## List Invites {{ tag: 'GET', label: '/v1/members/invites' }}
-
-<Row>
-  <Col>
+## List Invites
 
     Retrieve all pending (valid, non-expired) invites for the organisation, ordered by most recent first.
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="GET" label="/v1/members/invites">
+    **cURL**
 
-    ```fish {{ title: 'cURL' }}
+    ```fish
     curl https://api.phase.dev/v1/members/invites/ \
       -H "Authorization: Bearer {token}"
     ```
@@ -171,9 +123,9 @@ Invites live under the Members resource — all endpoints are namespaced as `/v1
     data = response.json()
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```json {{ title: 'Response' }}
+    ```json
     {
         "data": [
             {
@@ -210,32 +162,21 @@ Invites live under the Members resource — all endpoints are namespaced as `/v1
     }
     ```
 
-  </Col>
-</Row>
-
 ---
 
-## Cancel Invite {{ tag: 'DELETE', label: '/v1/members/invites/:id' }}
-
-<Row>
-  <Col>
+## Cancel Invite
 
     Cancel a pending invite. The invite is immediately invalidated and the invitee can no longer use the invite link to join the organisation.
 
     ### URL parameters
 
-    <Properties>
-      <Property name="id" type="string">
-        The unique identifier of the invite.
-      </Property>
-    </Properties>
+      - `id` (string): The unique identifier of the invite.
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="DELETE" label="/v1/members/invites/:id">
+    **cURL**
 
-    ```fish {{ title: 'cURL' }}
+    ```fish
     curl -X DELETE https://api.phase.dev/v1/members/invites/a1b2c3d4-e5f6-7890-abcd-ef1234567890/ \
       -H "Authorization: Bearer {token}"
     ```
@@ -253,11 +194,8 @@ Invites live under the Members resource — all endpoints are namespaced as `/v1
     # Returns 204 No Content on success
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```text {{ title: 'Response' }}
+    ```text
     204 No Content
     ```
-
-  </Col>
-</Row>

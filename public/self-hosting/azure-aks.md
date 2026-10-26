@@ -1,21 +1,12 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description =
-  'Deploy Phase via Helm on Azure Kubernetes Service (AKS), with standard or Tailscale networking.'
-
-<Tag variant="small">SELF-HOSTING</Tag>
+---
+title: "Azure Kubernetes Service (AKS) Helm Deployment"
+description: "Deploy Phase via Helm on Azure Kubernetes Service (AKS), with standard or Tailscale networking."
+url: https://docs.phase.dev/self-hosting/azure-aks
+---
 
 # Azure Kubernetes Service (AKS) Helm Deployment
 
-Deploy Phase on AKS with standard Kubernetes networking, keep it private to your Tailscale network, or publish the same instance through Tailscale Funnel. {{ className: 'lead' }}
-
-<DocActions />
-
-<SkillBox
-  skill="aks"
-  triggerPhrase="deploy Phase on Azure AKS"
-/>
+Deploy Phase on AKS with standard Kubernetes networking, keep it private to your Tailscale network, or publish the same instance through Tailscale Funnel.
 
 The Phase Helm chart remains independent of Tailscale. Tailscale ingress and
 egress are separate Kubernetes resources managed by the
@@ -57,11 +48,7 @@ PHASE_CHART_VERSION="1.0.2"
 TAILSCALE_OPERATOR_VERSION="1.98.9"
 ```
 
-<details className="my-6 rounded-2xl border border-zinc-200 bg-zinc-50/50 px-4 py-3 dark:border-zinc-700 dark:bg-zinc-800/30 [&>:last-child]:mb-0">
-  <summary className="cursor-pointer select-none font-semibold text-zinc-900 marker:text-zinc-500 dark:text-white dark:marker:text-zinc-400">
-    Optional preflight: select a subscription, check SKU quota and
-    capacity, and create or connect AKS
-  </summary>
+**Optional preflight: select a subscription, check SKU quota and capacity, and create or connect AKS**
 
 Expand this section when choosing a region or node SKU, creating a cluster, or
 refreshing local AKS credentials. If `kubectl` already targets a suitable
@@ -129,12 +116,10 @@ See the Azure guidance for
 and [securing API server access](https://learn.microsoft.com/azure/architecture/security/access-azure-kubernetes-service-cluster-api-server)
 before changing an existing cluster's access model.
 
-<Note>
-  Tailscale's standalone proxy pods perform network configuration in an init
-  container. Confirm that your AKS admission and pod-security policy allows
-  the operator proxy workload before standardizing a locked-down cluster
-  configuration.
-</Note>
+> **Note:** Tailscale's standalone proxy pods perform network configuration in an init
+>   container. Confirm that your AKS admission and pod-security policy allows
+>   the operator proxy workload before standardizing a locked-down cluster
+>   configuration.
 
 Connect `kubectl` to the cluster:
 
@@ -160,9 +145,6 @@ kubectl get nodes -o wide
 The current context must be the intended cluster and every existing node
 should report `Ready` before continuing.
 
-</details>
-
-
 ## Deployment
 
 ### 1. Prepare ingress before installing Phase
@@ -170,19 +152,12 @@ should report `Ready` before continuing.
 Choose one tab and complete it. For Funnel, use the Tailscale tab now and
 enable public access only after the private Phase health checks pass.
 
-<Warning>
-  The application-routing NGINX mode is cluster-wide. Before running an
-  `approuting update` command on a shared cluster, inventory every Ingress that
-  uses `webapprouting.kubernetes.azure.com` and confirm its owner accepts the
-  load-balancer exposure change.
-</Warning>
+> **Warning:** The application-routing NGINX mode is cluster-wide. Before running an
+>   `approuting update` command on a shared cluster, inventory every Ingress that
+>   uses `webapprouting.kubernetes.azure.com` and confirm its owner accepts the
+>   load-balancer exposure change.
 
-<TabGroup
-  title="Ingress setup"
-  subtitle="Establish the final hostname before installing Phase."
-  slug="aks-ingress-setup"
->
-  <TabPanel title="Standard Kubernetes ingress" slug="standard">
+**Standard Kubernetes ingress**
 
 For a cluster without application routing, enable the add-on with an external
 NGINX controller:
@@ -217,7 +192,7 @@ kubectl -n app-routing-system get service nginx -o wide
 ```
 
 Install cert-manager using step 1 of the
-[Kubernetes Helm guide](/self-hosting/kubernetes#1-install-cert-manager).
+[Kubernetes Helm guide](https://docs.phase.dev/self-hosting/kubernetes.md#1-install-cert-manager).
 Do not reuse that guide's generic NGINX issuer. Create
 `aks-letsencrypt-prod.yaml` with the AKS application-routing class and replace
 the email address:
@@ -258,8 +233,7 @@ remains public. If you already operate another ingress controller, skip the
 AKS add-on and issuer instructions, then follow the custom-controller path in
 **Create the Phase values file**.
 
-  </TabPanel>
-  <TabPanel title="Custom ingress controller" slug="custom">
+**Custom ingress controller**
 
 Keep your existing maintained controller and establish its DNS and TLS before
 installing Phase. Set the final hostname:
@@ -320,8 +294,7 @@ kubectl apply -f phase-custom-ingress.yaml
 The controller may report an unavailable backend until Helm creates the Phase
 Services in **Install Phase**.
 
-  </TabPanel>
-  <TabPanel title="Private Tailscale or Funnel" slug="tailscale">
+**Private Tailscale or Funnel**
 
 For a cluster without application routing, enable the add-on with an
 **internal** NGINX controller:
@@ -575,16 +548,11 @@ The hostname resembles `phase-aks.tail123abc.ts.net`. A request can return an
 NGINX 404 until Phase is installed; that confirms the private bridge works but
 NGINX does not yet have a matching Phase Ingress.
 
-<Note>
-  Tailscale provisions a public TLS certificate for this private hostname.
-  The machine and tailnet DNS names therefore appear in public Certificate
-  Transparency logs. Do not encode customer names, environment secrets, or
-  other sensitive metadata in the name. See Tailscale's
-  [certificate privacy note](https://tailscale.com/docs/how-to/set-up-https-certificates#machine-names-in-the-public-ledger).
-</Note>
-
-  </TabPanel>
-</TabGroup>
+> **Note:** Tailscale provisions a public TLS certificate for this private hostname.
+>   The machine and tailnet DNS names therefore appear in public Certificate
+>   Transparency logs. Do not encode customer names, environment secrets, or
+>   other sensitive metadata in the name. See Tailscale's
+>   [certificate privacy note](https://tailscale.com/docs/how-to/set-up-https-certificates#machine-names-in-the-public-ledger).
 
 ### 2. Create the Phase namespace and Secret
 
@@ -616,12 +584,7 @@ Use the final `PHASE_HOST` from **Prepare ingress before installing Phase** in
 `global.host` and, for chart-managed ingress, `ingress.host`. Do not install
 with a placeholder and plan to repair it later.
 
-<TabGroup
-  title="Phase values"
-  subtitle="Choose the values that match the ingress path."
-  slug="aks-values"
->
-  <TabPanel title="Standard Kubernetes ingress" slug="standard">
+**Standard Kubernetes ingress**
 
 Create `phase-values.yaml` and replace `phase.example.com` if you chose a
 different hostname:
@@ -663,8 +626,7 @@ certManager:
   issuerKind: "ClusterIssuer"
 ```
 
-  </TabPanel>
-  <TabPanel title="Private Tailscale or Funnel" slug="tailscale">
+**Private Tailscale or Funnel**
 
 Record the cluster pod CIDR. The Tailscale values use this address range as the
 NGINX trusted-proxy boundary:
@@ -735,18 +697,15 @@ client address for Funnel. The existing `ingress.annotations` value supports
 this configuration; no Phase chart template change or additional dependency is
 required.
 
-<Warning>
-  Never use `0.0.0.0/0` for `set_real_ip_from`. Trusting the complete pod
-  CIDR means another pod that can reach NGINX could forge
-  `X-Forwarded-For`. Prevent untrusted workloads from reaching NGINX with an
-  enforced NetworkPolicy or use a narrower dedicated proxy boundary before
-  treating the address as a production security control. This annotation
-  restores client IP attribution only; it does not configure every forwarded
-  host, protocol, or port header.
-</Warning>
+> **Warning:** Never use `0.0.0.0/0` for `set_real_ip_from`. Trusting the complete pod
+>   CIDR means another pod that can reach NGINX could forge
+>   `X-Forwarded-For`. Prevent untrusted workloads from reaching NGINX with an
+>   enforced NetworkPolicy or use a narrower dedicated proxy boundary before
+>   treating the address as a production security control. This annotation
+>   restores client IP attribution only; it does not configure every forwarded
+>   host, protocol, or port header.
 
-  </TabPanel>
-  <TabPanel title="Custom ingress controller" slug="custom">
+**Custom ingress controller**
 
 Create `phase-values.yaml`, use the final hostname established in
 **Prepare ingress before installing Phase**, and leave ingress ownership to
@@ -784,9 +743,6 @@ certManager:
 
 The separately managed `phase-custom-ingress.yaml` owns routing and TLS.
 
-  </TabPanel>
-</TabGroup>
-
 The values above use the minimal in-cluster database path. For managed
 PostgreSQL or Redis, start with the
 [Helm chart values](https://github.com/phasehq/kubernetes-secrets-operator/blob/main/phase-console/values.yaml)
@@ -822,12 +778,10 @@ helm upgrade --install phase-console phase/phase \
   --timeout 15m
 ```
 
-<Note>
-  Do not add `--wait` or `--atomic` while using this chart version with the
-  bundled database. Application init containers wait for the migration hook,
-  and waiting for application readiness before running the hook can create a
-  circular wait.
-</Note>
+> **Note:** Do not add `--wait` or `--atomic` while using this chart version with the
+>   bundled database. Application init containers wait for the migration hook,
+>   and waiting for application readiness before running the hook can create a
+>   circular wait.
 
 Watch the workloads become ready:
 
@@ -911,15 +865,13 @@ Open `https://<phase-host>` from the allowed source and create the first
 account. It becomes the owner of its new organization. Copy or download the
 recovery kit before finishing onboarding; it cannot be retrieved later.
 
-<Warning>
-  The minimal values explicitly enable password authentication and do not
-  configure SMTP. In this mode Phase cannot send a verification email, so
-  password registrations become active immediately. Keep the standard or
-  custom ingress bootstrap allowlist in place, and do not enable Funnel, until
-  you deliberately configure and test the intended public registration policy.
-  An email-domain allowlist alone is not identity proof without working email
-  verification.
-</Warning>
+> **Warning:** The minimal values explicitly enable password authentication and do not
+>   configure SMTP. In this mode Phase cannot send a verification email, so
+>   password registrations become active immediately. Keep the standard or
+>   custom ingress bootstrap allowlist in place, and do not enable Funnel, until
+>   you deliberately configure and test the intended public registration policy.
+>   An email-domain allowlist alone is not identity proof without working email
+>   verification.
 
 Before making the instance public, choose and test one authentication posture:
 
@@ -945,8 +897,8 @@ Before making the instance public, choose and test one authentication posture:
   verification test before opening the network gate.
 
 Use the
-[SSO configuration](/self-hosting/configuration/envars#single-sign-on-sso) or
-[email gateway configuration](/self-hosting/configuration/envars#email-gateway-configuration)
+[SSO configuration](https://docs.phase.dev/self-hosting/configuration/envars.md#single-sign-on-sso) or
+[email gateway configuration](https://docs.phase.dev/self-hosting/configuration/envars.md#email-gateway-configuration)
 for the selected path. Keep provider and SMTP credentials in the existing
 Kubernetes Secret, never in `phase-values.yaml`. After changing authentication
 values, apply them and restart the ConfigMap consumers while the bootstrap
@@ -1000,12 +952,7 @@ private ingress boundary, an explicit full-instance Funnel endpoint, and
 destination-specific tailnet egress. Ingress and private egress are
 independent choices.
 
-<TabGroup
-  title="Ingress method"
-  subtitle="Choose how users reach Phase."
-  slug="ingress-method"
->
-  <TabPanel title="Tailscale private ingress" slug="tailscale">
+**Tailscale private ingress**
 
 Install the Tailscale Kubernetes operator, create the ingress bridge, and read
 the assigned `.ts.net` hostname before installing Phase. Put that final
@@ -1016,8 +963,7 @@ This path is private to the tailnet unless you explicitly enable Funnel. The
 tested deployment sends Tailscale HTTPS ingress to the internal AKS NGINX
 Service; Phase keeps using the existing Helm-chart ingress routing.
 
-  </TabPanel>
-  <TabPanel title="Standard Kubernetes ingress" slug="standard">
+**Standard Kubernetes ingress**
 
 Use your preferred ingress controller, DNS record, and TLS certificate. Point
 the Phase Ingress at that controller and use the final public or private DNS
@@ -1027,26 +973,23 @@ Tailscale is not required for the Phase Helm release or for calls to public
 integration APIs. Keep the controller private or public according to your
 organization's network and access requirements.
 
-  </TabPanel>
-  <TabPanel title="Public instance via Funnel" slug="funnel">
+**Public instance via Funnel**
 
 [Tailscale Funnel](https://tailscale.com/docs/features/tailscale-funnel) gives
 external browsers and integrations such as Okta a public HTTPS route to the
 same `.ts.net` hostname used inside the tailnet. No Azure public load balancer,
 new DNS name, or second Phase host configuration is required.
 
-<Warning>
-  This intentionally makes the complete Phase instance internet-reachable:
-  the UI, login and authentication routes, health endpoints, and APIs. Funnel
-  is a transport boundary, not application authentication. Enable it only when
-  the organization accepts that exposure and Phase authentication, SSO, RBAC,
-  and SCIM bearer-token controls are configured appropriately.
-
-  Do not continue with the Funnel annotation while using the minimal
-  password-auth values without SMTP: that combination permits immediate public
-  self-registration. Complete the public authentication gate in **Verify
-  Phase** first, and verify the chosen SSO-only or email-verification behavior.
-</Warning>
+> **Warning:** This intentionally makes the complete Phase instance internet-reachable:
+>   the UI, login and authentication routes, health endpoints, and APIs. Funnel
+>   is a transport boundary, not application authentication. Enable it only when
+>   the organization accepts that exposure and Phase authentication, SSO, RBAC,
+>   and SCIM bearer-token controls are configured appropriately.
+>
+>   Do not continue with the Funnel annotation while using the minimal
+>   password-auth values without SMTP: that combination permits immediate public
+>   self-registration. Complete the public authentication gate in **Verify
+>   Phase** first, and verify the chosen SSO-only or email-verification behavior.
 
 The same hostname is useful here: existing CSP, cookie domains, frontend API
 origins, and backend `ALLOWED_HOSTS` remain valid. Merge this entry into the
@@ -1210,12 +1153,10 @@ Certificate Transparency history cannot be removed. For an intentional public
 endpoint, keep the annotation and policy permission under change control
 instead of running the rollback.
 
-<Note>
-  A separate SCIM-only Funnel Ingress is an optional hardening design when the
-  UI must remain private. It needs another `.ts.net` hostname and current chart
-  `1.0.2` would need an `additionalAllowedHosts` value. It is not required for
-  the same-host full-instance setup above.
-</Note>
+> **Note:** A separate SCIM-only Funnel Ingress is an optional hardening design when the
+>   UI must remain private. It needs another `.ts.net` hostname and current chart
+>   `1.0.2` would need an `additionalAllowedHosts` value. It is not required for
+>   the same-host full-instance setup above.
 
 Funnel is beta, supports only `.ts.net` names and public ports `443`, `8443`,
 and `10000`, and has bandwidth limits. The tested operator `1.98.9` Funnel path
@@ -1229,22 +1170,13 @@ official [Kubernetes Funnel guide](https://tailscale.com/docs/kubernetes-operato
 [Funnel limits](https://tailscale.com/docs/features/tailscale-funnel), and
 [operator ingress guide](https://tailscale.com/docs/kubernetes-operator/ingress).
 
-  </TabPanel>
-</TabGroup>
-
-<TabGroup
-  title="Private integration egress"
-  subtitle="Choose whether Phase must call services on a tailnet."
-  slug="private-egress"
->
-  <TabPanel title="No Tailscale" slug="none">
+**No Tailscale**
 
 No additional Phase configuration is required. Backend and worker replicas
 use normal Kubernetes and AKS DNS/routing for public APIs and services
 reachable through your Azure virtual network.
 
-  </TabPanel>
-  <TabPanel title="Tailscale egress services" slug="tailscale">
+**Tailscale egress services**
 
 Create one operator-managed ExternalName Service per private tailnet target.
 Every backend and worker replica can call the stable Service concurrently:
@@ -1285,7 +1217,9 @@ Then merge a narrow grant into the existing `grants` array. For a target tagged
 ]
 ```
 
-```yaml {{ title: 'phase-local-llm-gateway.yaml' }}
+**phase-local-llm-gateway.yaml**
+
+```yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -1374,13 +1308,11 @@ Every pod should receive the target's healthy response. Supply credentials
 over standard input or an existing Kubernetes Secret when the endpoint
 requires authentication; do not paste keys into the command or documentation.
 
-<Note>
-  Tailscale encrypts the proxy-to-target tailnet leg with WireGuard, so an
-  HTTP-only target is not sent in plaintext across the internet. This is not
-  end-to-end HTTPS/TLS: pod-to-proxy and target-daemon-to-local-service hops
-  remain ordinary local TCP. Use HTTPS or mTLS when application-layer
-  process-to-process encryption is required.
-</Note>
+> **Note:** Tailscale encrypts the proxy-to-target tailnet leg with WireGuard, so an
+>   HTTP-only target is not sent in plaintext across the internet. This is not
+>   end-to-end HTTPS/TLS: pod-to-proxy and target-daemon-to-local-service hops
+>   remain ordinary local TCP. Use HTTPS or mTLS when application-layer
+>   process-to-process encryption is required.
 
 The minimal standalone configuration has one proxy replica. It accepts
 traffic from any number of Phase replicas, but proxy-layer high availability
@@ -1397,9 +1329,6 @@ Normal workload pods do not automatically become Tailscale clients or resolve
 MagicDNS names. Tailscale's optional `DNSConfig` integration can add `.ts.net`
 resolution for HTTPS certificate validation, but each destination still
 requires an egress proxy.
-
-  </TabPanel>
-</TabGroup>
 
 ## Upgrading
 

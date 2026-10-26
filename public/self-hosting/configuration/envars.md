@@ -1,27 +1,18 @@
-import { Tag } from '@/components/Tag'
-import { HeroPattern } from '@/components/HeroPattern'
-import { DocActions } from '@/components/DocActions'
-
-export const description =
-  'Overview of Phase Console deployment configuration options'
-
-<HeroPattern />
-
-<Tag variant="small">SELF-HOSTING</Tag>
+---
+title: "Secrets and deployment configuration"
+description: "Overview of Phase Console deployment configuration options"
+url: https://docs.phase.dev/self-hosting/configuration/envars
+---
 
 # Secrets and deployment configuration
 
-Configure your secrets and environment variables when self-hosting Phase. {{ className: 'lead' }}
+Configure your secrets and environment variables when self-hosting Phase.
 
 Depending on your self-hosted deployment method, you may need to configure various environment variables.
 Certain environment variables are required, while others are optional based on your use case.
 
-<DocActions /> 
-
-<Note>
-For enhanced security, Phase services support mounting secrets from files. To use this feature, specify the mount location (e.g., `/run/secrets/secret_key`) using the `_FILE` suffix naming convention (e.g., `SECRET_KEY_FILE`).
-When a file-based secret is present, services will prioritize it over any corresponding environment variable. You can enable debug mode by setting `DEBUG=True` to view logs indicating the source of each loaded secret.
-</Note>
+> **Note:** For enhanced security, Phase services support mounting secrets from files. To use this feature, specify the mount location (e.g., `/run/secrets/secret_key`) using the `_FILE` suffix naming convention (e.g., `SECRET_KEY_FILE`).
+> When a file-based secret is present, services will prioritize it over any corresponding environment variable. You can enable debug mode by setting `DEBUG=True` to view logs indicating the source of each loaded secret.
 
 ## Single sign-on (SSO)
 
@@ -37,13 +28,13 @@ The following providers are available:
 - `okta-oidc` - Okta OIDC
 - `authelia` - Authelia OIDC
 
-You can find a complete list of user auth providers [here](/access-control/authentication#user-authentication).
+You can find a complete list of user auth providers [here](https://docs.phase.dev/access-control/authentication.md#user-authentication).
 
 ### Google OAuth 2.0
 
 Provider slug: `google`
 
-You can find instructions for setting up SSO with Google OAuth 2.0 [here](/access-control/authentication/oauth-sso#google).
+You can find instructions for setting up SSO with Google OAuth 2.0 [here](https://docs.phase.dev/access-control/authentication/oauth-sso.md#google).
 
 Set the "redirect URI" for your Google OAuth application as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/google`.
 
@@ -54,14 +45,8 @@ https://[**YOUR_DOMAIN**]/api/auth/callback/google
 
 After setting up your credentials on the Google Cloud console, set the Client ID and Client secret values:
 
-<Properties>
-  <Property name="GOOGLE_CLIENT_ID" type="string">
-    Google OAuth Client ID
-  </Property>
-  <Property name="GOOGLE_CLIENT_SECRET" type="string">
-    Google OAuth Client secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
-  </Property>
-</Properties>
+  - `GOOGLE_CLIENT_ID` (string): Google OAuth Client ID
+  - `GOOGLE_CLIENT_SECRET` (string): Google OAuth Client secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
 
 Env(s) required by the following containers:
 - [`frontend`](https://hub.docker.com/r/phasehq/frontend)
@@ -71,7 +56,7 @@ Env(s) required by the following containers:
 
 Provider slug: `github`
 
-You can find instructions for setting up SSO with a GitHub OAuth 2.0 App [here](/access-control/authentication/oauth-sso#git-hub).
+You can find instructions for setting up SSO with a GitHub OAuth 2.0 App [here](https://docs.phase.dev/access-control/authentication/oauth-sso.md#git-hub).
 
 Set the "Authorization callback URL" for your GitHub OAuth App as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/github`.
 
@@ -82,14 +67,8 @@ https://[**YOUR_DOMAIN**]/api/auth/callback/github
 
 After setting up your App on GitHub, set the Client ID and Client secret values:
 
-<Properties>
-  <Property name="GITHUB_CLIENT_ID" type="string">
-    GitHub OAuth Client ID
-  </Property>
-  <Property name="GITHUB_CLIENT_SECRET" type="string">
-    GitHub OAuth Client secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
-  </Property>
-</Properties>
+  - `GITHUB_CLIENT_ID` (string): GitHub OAuth Client ID
+  - `GITHUB_CLIENT_SECRET` (string): GitHub OAuth Client secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
 
 Env(s) required by the following containers:
 - [`frontend`](https://hub.docker.com/r/phasehq/frontend)
@@ -99,7 +78,7 @@ Env(s) required by the following containers:
 
 Provider slug: `github-enterprise`
 
-You can find instructions for setting up SSO with a GitHub Enterprise Server OAuth 2.0 App using the same steps as [GitHub OAuth](/access-control/authentication/oauth-sso#git-hub), but with your enterprise instance.
+You can find instructions for setting up SSO with a GitHub Enterprise Server OAuth 2.0 App using the same steps as [GitHub OAuth](https://docs.phase.dev/access-control/authentication/oauth-sso.md#git-hub), but with your enterprise instance.
 
 Set the "Authorization callback URL" for your GitHub Enterprise Server OAuth App as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/github-enterprise`.
 
@@ -110,20 +89,10 @@ https://[**YOUR_DOMAIN**]/api/auth/callback/github-enterprise
 
 After setting up your App on GitHub Enterprise Server, set the base URL, API URL, Client ID and Client secret values:
 
-<Properties>
-  <Property name="GITHUB_ENTERPRISE_BASE_URL" type="string">
-    The URL of your GitHub Enterprise Server instance. Example: `https://github.yourdomain.com`
-  </Property>
-  <Property name="GITHUB_ENTERPRISE_API_URL" type="string">
-    The API URL of your GitHub Enterprise Server instance. This is usually GITHUB_ENTERPRISE_BASE_URL + /api. Example: `https://github.yourdomain.com/api`. Phase will reference the environment variable and construct the API URL of your instance as follows: `GITHUB_ENTERPRISE_API_URL/v3/user`.
-  </Property>
-  <Property name="GITHUB_ENTERPRISE_CLIENT_ID" type="string">
-    GitHub Enterprise Server OAuth Client ID
-  </Property>
-  <Property name="GITHUB_ENTERPRISE_CLIENT_SECRET" type="string">
-    GitHub Enterprise Server OAuth Client secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
-  </Property>
-</Properties>
+  - `GITHUB_ENTERPRISE_BASE_URL` (string): The URL of your GitHub Enterprise Server instance. Example: `https://github.yourdomain.com`
+  - `GITHUB_ENTERPRISE_API_URL` (string): The API URL of your GitHub Enterprise Server instance. This is usually GITHUB_ENTERPRISE_BASE_URL + /api. Example: `https://github.yourdomain.com/api`. Phase will reference the environment variable and construct the API URL of your instance as follows: `GITHUB_ENTERPRISE_API_URL/v3/user`.
+  - `GITHUB_ENTERPRISE_CLIENT_ID` (string): GitHub Enterprise Server OAuth Client ID
+  - `GITHUB_ENTERPRISE_CLIENT_SECRET` (string): GitHub Enterprise Server OAuth Client secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
 
 Env(s) required by the following containers:
 - [`frontend`](https://hub.docker.com/r/phasehq/frontend)
@@ -133,7 +102,7 @@ Env(s) required by the following containers:
 
 Provider slug: `gitlab`
 
-You can find instructions for setting up SSO with a GitLab OAuth 2.0 Application [here](/access-control/authentication/oauth-sso#git-lab).
+You can find instructions for setting up SSO with a GitLab OAuth 2.0 Application [here](https://docs.phase.dev/access-control/authentication/oauth-sso.md#git-lab).
 
 Make sure the application has the `read_user` scope.
 
@@ -150,17 +119,9 @@ After setting up your Application on GitLab, set the Client ID and Client secret
 
 If you are using a self-hosted GitLab instance, you can optionally set the `GITLAB_AUTH_URL` env var.
 
-<Properties>
-  <Property name="GITLAB_CLIENT_ID" type="string">
-    GitLab OAuth Client ID
-  </Property>
-  <Property name="GITLAB_CLIENT_SECRET" type="string">
-    GitLab OAuth Client secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
-  </Property>
-  <Property name="GITLAB_AUTH_URL" type="string (Optional)">
-    GitLab instance host url
-  </Property>
-</Properties>
+  - `GITLAB_CLIENT_ID` (string): GitLab OAuth Client ID
+  - `GITLAB_CLIENT_SECRET` (string): GitLab OAuth Client secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
+  - `GITLAB_AUTH_URL` (string (Optional)): GitLab instance host url
 
 Env(s) required by the following containers:
 - [`frontend`](https://hub.docker.com/r/phasehq/frontend)
@@ -170,31 +131,21 @@ Env(s) required by the following containers:
 
 Provider slug: `authentik`
 
-You can find instructions for setting up SSO with an Authentik OAuth/OIDC Application [here](/access-control/authentication/oauth-sso#authentik).
+You can find instructions for setting up SSO with an Authentik OAuth/OIDC Application [here](https://docs.phase.dev/access-control/authentication/oauth-sso.md#authentik).
 
 Set the "Redirect URI" for your Authentik OAuth/OIDC App as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/authentik`.
 
 Example:
 ```bash
 https://[**YOUR_DOMAIN**]/api/auth/callback/authentik
-``` 
+```
 
 After setting up your Application on Authentik, set the Client ID, Client Secret, Authentik URL, and Authentik App Slug values:
 
-<Properties>
-  <Property name="AUTHENTIK_CLIENT_ID" type="string">
-    Authentik OIDC Client ID
-  </Property>
-  <Property name="AUTHENTIK_CLIENT_SECRET" type="string">
-    Authentik OIDC Client secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
-  </Property>
-  <Property name="AUTHENTIK_URL" type="string">
-    Authentik instance URL
-  </Property>
-  <Property name="AUTHENTIK_APP_SLUG" type="string">
-    Authentik App slug
-  </Property>
-</Properties>
+  - `AUTHENTIK_CLIENT_ID` (string): Authentik OIDC Client ID
+  - `AUTHENTIK_CLIENT_SECRET` (string): Authentik OIDC Client secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
+  - `AUTHENTIK_URL` (string): Authentik instance URL
+  - `AUTHENTIK_APP_SLUG` (string): Authentik App slug
 
 Env(s) required by the following containers:
 - [`frontend`](https://hub.docker.com/r/phasehq/frontend)
@@ -204,7 +155,7 @@ Env(s) required by the following containers:
 
 Provider slug: `authelia`
 
-You can find instructions for setting up SSO with an Authelia OIDC Application [here](/access-control/authentication/oauth-sso#authelia).
+You can find instructions for setting up SSO with an Authelia OIDC Application [here](https://docs.phase.dev/access-control/authentication/oauth-sso.md#authelia).
 
 Set the "Redirect URI" for your Authelia OIDC client as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/authelia`.
 
@@ -215,17 +166,9 @@ https://[**YOUR_DOMAIN**]/api/auth/callback/authelia
 
 After configuring your Authelia OIDC client, set the Client ID, Client Secret, and URL values:
 
-<Properties>
-  <Property name="AUTHELIA_CLIENT_ID" type="string">
-    Authelia OIDC Client ID
-  </Property>
-  <Property name="AUTHELIA_CLIENT_SECRET" type="string">
-    Authelia OIDC Client secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
-  </Property>
-  <Property name="AUTHELIA_URL" type="string">
-    Authelia instance URL (e.g., `https://auth.example.com`)
-  </Property>
-</Properties>
+  - `AUTHELIA_CLIENT_ID` (string): Authelia OIDC Client ID
+  - `AUTHELIA_CLIENT_SECRET` (string): Authelia OIDC Client secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
+  - `AUTHELIA_URL` (string): Authelia instance URL (e.g., `https://auth.example.com`)
 
 Env(s) required by the following containers:
 - [`frontend`](https://hub.docker.com/r/phasehq/frontend)
@@ -235,7 +178,7 @@ Env(s) required by the following containers:
 
 Provider slug: `google-oidc`
 
-You can find instructions for setting up SSO with a Google OIDC Application [here](/access-control/authentication/oidc-sso#google).
+You can find instructions for setting up SSO with a Google OIDC Application [here](https://docs.phase.dev/access-control/authentication/oidc-sso.md#google).
 
 Set the "callback URL" for your Google OIDC App as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/google-oidc`.
 
@@ -245,14 +188,8 @@ https://[**YOUR_DOMAIN**]/api/auth/callback/google-oidc
 ```
 
 After setting up your Application on Google Cloud, set the Client ID and Client secret values:
-<Properties>
-  <Property name="GOOGLE_OIDC_CLIENT_ID" type="string">
-    Google OIDC Client ID
-  </Property>
-  <Property name="GOOGLE_OIDC_CLIENT_SECRET" type="string">
-    Google OIDC Client secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
-  </Property>
-</Properties>
+  - `GOOGLE_OIDC_CLIENT_ID` (string): Google OIDC Client ID
+  - `GOOGLE_OIDC_CLIENT_SECRET` (string): Google OIDC Client secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
 
 Env(s) required by the following containers:
 - [`frontend`](https://hub.docker.com/r/phasehq/frontend)
@@ -262,25 +199,19 @@ Env(s) required by the following containers:
 
 Provider slug: `jumpcloud-oidc`
 
-You can find instructions for setting up SSO with a JumpCloud OIDC Application [here](/access-control/authentication/oidc-sso#jump-cloud).
+You can find instructions for setting up SSO with a JumpCloud OIDC Application [here](https://docs.phase.dev/access-control/authentication/oidc-sso.md#jump-cloud).
 
 Set the "callback URL" for your JumpCloud OIDC App as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/jumpcloud-oidc`.
 
 Example:
 ```bash
 https://[**YOUR_DOMAIN**]/api/auth/callback/jumpcloud-oidc
-``` 
+```
 
 After setting up your Application on JumpCloud, set the Client ID and Client secret values:
 
-<Properties>
-  <Property name="JUMPCLOUD_OIDC_CLIENT_ID" type="string">
-    JumpCloud OIDC Client ID
-  </Property>
-  <Property name="JUMPCLOUD_OIDC_CLIENT_SECRET" type="string">
-    JumpCloud OIDC Client secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
-  </Property>
-</Properties>
+  - `JUMPCLOUD_OIDC_CLIENT_ID` (string): JumpCloud OIDC Client ID
+  - `JUMPCLOUD_OIDC_CLIENT_SECRET` (string): JumpCloud OIDC Client secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
 
 Env(s) required by the following containers:
 - [`frontend`](https://hub.docker.com/r/phasehq/frontend)
@@ -290,28 +221,20 @@ Env(s) required by the following containers:
 
 Provider slug: `entra-id-oidc`
 
-You can find instructions for setting up SSO with a Microsoft Entra ID OIDC Application [here](/access-control/authentication/oidc-sso#microsoft-entra-id-azure-ad).
+You can find instructions for setting up SSO with a Microsoft Entra ID OIDC Application [here](https://docs.phase.dev/access-control/authentication/oidc-sso.md#microsoft-entra-id-azure-ad).
 
 Set the "callback URL" for your Microsoft Entra ID OIDC App as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/entra-id-oidc`.
 
 Example:
 ```bash
 https://[**YOUR_DOMAIN**]/api/auth/callback/entra-id-oidc
-``` 
+```
 
 After setting up your Application on Microsoft Entra ID, set the Tenant ID, Client ID and Client secret values:
 
-<Properties>
-  <Property name="ENTRA_ID_OIDC_TENANT_ID" type="string">
-    Microsoft Entra ID Directory (tenant) ID
-  </Property>
-  <Property name="ENTRA_ID_OIDC_CLIENT_ID" type="string">
-    Microsoft Entra ID Application (client) ID
-  </Property>
-  <Property name="ENTRA_ID_OIDC_CLIENT_SECRET" type="string">
-    Microsoft Entra ID Client secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
-  </Property>
-</Properties>
+  - `ENTRA_ID_OIDC_TENANT_ID` (string): Microsoft Entra ID Directory (tenant) ID
+  - `ENTRA_ID_OIDC_CLIENT_ID` (string): Microsoft Entra ID Application (client) ID
+  - `ENTRA_ID_OIDC_CLIENT_SECRET` (string): Microsoft Entra ID Client secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
 
 Env(s) required by the following containers:
 - [`frontend`](https://hub.docker.com/r/phasehq/frontend)
@@ -321,7 +244,7 @@ Env(s) required by the following containers:
 
 Provider slug: `okta-oidc`
 
-You can find instructions for setting up SSO with an Okta OIDC Application [here](/access-control/authentication/oidc-sso#okta).
+You can find instructions for setting up SSO with an Okta OIDC Application [here](https://docs.phase.dev/access-control/authentication/oidc-sso.md#okta).
 
 Set the "Sign-in redirect URIs" for your Okta OIDC App as `${HTTP_PROTOCOL}${HOST}/api/auth/callback/okta-oidc`.
 
@@ -332,17 +255,9 @@ https://[**YOUR_DOMAIN**]/api/auth/callback/okta-oidc
 
 After setting up your Application on Okta, set the Client ID, Client Secret and Issuer values:
 
-<Properties>
-  <Property name="OKTA_OIDC_CLIENT_ID" type="string">
-    Okta OIDC Application Client ID
-  </Property>
-  <Property name="OKTA_OIDC_CLIENT_SECRET" type="string">
-    Okta OIDC Application Client secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
-  </Property>
-  <Property name="OKTA_OIDC_ISSUER" type="string">
-    Your Okta domain URL. Can be found in your Okta dashboard URL (e.g. `https://acme-1234567.okta.com`).
-  </Property>
-</Properties>
+  - `OKTA_OIDC_CLIENT_ID` (string): Okta OIDC Application Client ID
+  - `OKTA_OIDC_CLIENT_SECRET` (string): Okta OIDC Application Client secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
+  - `OKTA_OIDC_ISSUER` (string): Your Okta domain URL. Can be found in your Okta dashboard URL (e.g. `https://acme-1234567.okta.com`).
 
 Env(s) required by the following containers:
 - [`frontend`](https://hub.docker.com/r/phasehq/frontend)
@@ -354,27 +269,21 @@ Env(s) required by the following containers:
 
 Password authentication is controlled by the `ENABLE_PASSWORD_AUTH` variable. The official Helm chart and [docker-compose template](https://raw.githubusercontent.com/phasehq/console/main/docker-compose.yml) **enable it by default**, so a standard self-hosted install has password sign-up and login working out of the box alongside any configured SSO. When the variable is unset, the application falls back to SSO-only mode: password signup, login, change-password and password-based recovery are refused, and the login page hides the password UI. Set `ENABLE_PASSWORD_AUTH=false` to run an SSO-only instance.
 
-<Properties>
-  <Property name="ENABLE_PASSWORD_AUTH" type="boolean (Optional)">
-    When set to `true`, password authentication is enabled alongside any configured SSO providers. Defaults to `false` (SSO-only).
+  - `ENABLE_PASSWORD_AUTH` (boolean (Optional)): When set to `true`, password authentication is enabled alongside any configured SSO providers. Defaults to `false` (SSO-only).
 
-    Accepts `true`, `1`, or `yes` (case-insensitive); any other value (or an unset variable) leaves password authentication disabled.
+      Accepts `true`, `1`, or `yes` (case-insensitive); any other value (or an unset variable) leaves password authentication disabled.
 
-    When disabled:
-    - All password-auth endpoints (register, login, change-password, password-based recovery, email verification, resend-verification) return `403`.
-    - The login page hides the "Create an account" link, and `/signup` redirects to `/login`.
-    - The email field on the login page remains visible -- it is the discovery mechanism for organisation-level SSO (e.g. Microsoft Entra ID), which routes users to their identity provider after they enter their work email.
-    - SSO endpoints and SSO users are unaffected.
+      When disabled:
+      - All password-auth endpoints (register, login, change-password, password-based recovery, email verification, resend-verification) return `403`.
+      - The login page hides the "Create an account" link, and `/signup` redirects to `/login`.
+      - The email field on the login page remains visible -- it is the discovery mechanism for organisation-level SSO (e.g. Microsoft Entra ID), which routes users to their identity provider after they enter their work email.
+      - SSO endpoints and SSO users are unaffected.
 
-    The toggle is reversible at any time without data migration -- password hashes are preserved while disabled, and existing password users regain access if you flip it back on.
+      The toggle is reversible at any time without data migration -- password hashes are preserved while disabled, and existing password users regain access if you flip it back on.
 
-    Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) and [`backend`](https://hub.docker.com/r/phasehq/backend) containers.
-  </Property>
-</Properties>
+      Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) and [`backend`](https://hub.docker.com/r/phasehq/backend) containers.
 
-<Note>
-Before enabling SSO-only mode (i.e. setting `ENABLE_PASSWORD_AUTH=false`, or leaving it unset, on an instance that previously had password users), make sure every member who needs continued access has signed in via SSO at least once -- the SocialAccount link is created on first SSO sign-in, and existing password users will otherwise be locked out. Configure at least one provider in [`SSO_PROVIDERS`](#additional-environment-variables) before disabling password auth, otherwise the instance will have no usable sign-in path.
-</Note>
+> **Note:** Before enabling SSO-only mode (i.e. setting `ENABLE_PASSWORD_AUTH=false`, or leaving it unset, on an instance that previously had password users), make sure every member who needs continued access has signed in via SSO at least once -- the SocialAccount link is created on first SSO sign-in, and existing password users will otherwise be locked out. Configure at least one provider in [`SSO_PROVIDERS`](#additional-environment-variables) before disabling password auth, otherwise the instance will have no usable sign-in path.
 
 ### Email verification
 
@@ -382,114 +291,75 @@ When SMTP is configured, new accounts must verify their email address before log
 
 If SMTP is not configured, or if `SKIP_EMAIL_VERIFICATION` is set to `true`, accounts are activated immediately at signup without email verification. See the [email gateway configuration](#email-gateway-configuration) section below for how to wire up the mailer.
 
-<Properties>
-  <Property name="SKIP_EMAIL_VERIFICATION" type="boolean (Optional)">
-    When set to `true`, new accounts created via email/password signup are activated immediately without requiring email verification. Defaults to `false`.
-    If SMTP is not configured, email verification is automatically skipped regardless of this setting.
+  - `SKIP_EMAIL_VERIFICATION` (boolean (Optional)): When set to `true`, new accounts created via email/password signup are activated immediately without requiring email verification. Defaults to `false`.
+      If SMTP is not configured, email verification is automatically skipped regardless of this setting.
 
-    At signup this only takes effect when [`ENABLE_PASSWORD_AUTH`](#password-authentication) is enabled. It also applies to the [account email change](/access-control/authentication/account#changing-your-email-address) flow for every account type: when set (or when SMTP is not configured), the verification code step is skipped there too.
+      At signup this only takes effect when [`ENABLE_PASSWORD_AUTH`](#password-authentication) is enabled. It also applies to the [account email change](https://docs.phase.dev/access-control/authentication/account.md#changing-your-email-address) flow for every account type: when set (or when SMTP is not configured), the verification code step is skipped there too.
 
-    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
-  </Property>
-</Properties>
+      Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
 
 ---
 
 ## Application secrets
 
-<Properties>
-  <Property name="NEXTAUTH_SECRET (Deprecated)" type="string">
-    **Deprecated.** No longer read by the application after the NextAuth removal in Console `v2.67.0`. Safe to leave in place for now; it will be dropped from the reference deployment templates in a later release.
-  </Property>
-  <Property name="SECRET_KEY" type="string">
-    A random 32 byte hex string. Can be generated with `openssl rand -hex 32`. Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
-  </Property>
-  <Property name="SERVER_SECRET" type="string">
-    A random 32 byte hex string. Can be generated with `openssl rand -hex 32`. Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
-  </Property>
-</Properties>
+  - `NEXTAUTH_SECRET (Deprecated)` (string):
+      **Deprecated.** No longer read by the application after the NextAuth removal in Console `v2.67.0`. Safe to leave in place for now; it will be dropped from the reference deployment templates in a later release.
+  - `SECRET_KEY` (string): A random 32 byte hex string. Can be generated with `openssl rand -hex 32`. Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
+  - `SERVER_SECRET` (string): A random 32 byte hex string. Can be generated with `openssl rand -hex 32`. Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
 
 ---
 
 ## Host configuration
 
-<Properties>
-  <Property name="HOST" type="string">
-    The hostname where you would like to run Phase. Defaults to `localhost`. Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend), [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
-  </Property>
-  <Property name="HTTP_PROTOCOL" type="string">
-    The url scheme for your host. Defaults to `https://`. Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend), [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
-  </Property>
-  <Property name="USER_EMAIL_DOMAIN_WHITELIST" type="string (Optional)">
-    A comma-separated list of domains to restrict signups and logins.
-    When set, only users with emails matching the specified domains can register or log in.
-    To use this feature, set the value to a list of domains to use as a whitelist. For example:
-    ```fish
-    USER_EMAIL_DOMAIN_WHITELIST=mydomain.com,subdomain.mydomain.com
-    ```
-    will only allow users with emails `@mydomain.com` or `@subdomain.mydomain.com` to sign up or login.
-    Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) and [`backend`](https://hub.docker.com/r/phasehq/backend) containers.
-  </Property>
-  <Property name="LOGIN_BANNER_TEXT" type="string (Optional)">
-    A custom message to display on the login screen. Can be up to 512 characters long.
-    This allows self-hosting users to display important information, announcements, or notices to users before they log in.
-    Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
-  </Property>
-</Properties>
+  - `HOST` (string): The hostname where you would like to run Phase. Defaults to `localhost`. Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend), [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  - `HTTP_PROTOCOL` (string): The url scheme for your host. Defaults to `https://`. Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend), [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  - `USER_EMAIL_DOMAIN_WHITELIST` (string (Optional)): A comma-separated list of domains to restrict signups and logins.
+      When set, only users with emails matching the specified domains can register or log in.
+      To use this feature, set the value to a list of domains to use as a whitelist. For example:
+      ```fish
+      USER_EMAIL_DOMAIN_WHITELIST=mydomain.com,subdomain.mydomain.com
+      ```
+      will only allow users with emails `@mydomain.com` or `@subdomain.mydomain.com` to sign up or login.
+      Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) and [`backend`](https://hub.docker.com/r/phasehq/backend) containers.
+  - `LOGIN_BANNER_TEXT` (string (Optional)): A custom message to display on the login screen. Can be up to 512 characters long.
+      This allows self-hosting users to display important information, announcements, or notices to users before they log in.
+      Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
 
 ---
 
 ## Database configuration
 
-<Properties>
-  <Property name="DATABASE_HOST" type="string">
-    The database hostname. Defaults to `postgres`. 
-    
-    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
-  </Property>
-  <Property name="DATABASE_NAME" type="string">
-    Defaults to `postgres-db-name`. 
-    
-    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
-  </Property>
-  <Property name="DATABASE_USER" type="string">
-    Defaults to `postgres-user`. 
-    
-    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
-  </Property>
-  <Property name="DATABASE_PASSWORD" type="string">
-    A database password is provided by default, but it is **highly** recommended
-    to change this value. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
-    
-    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
-  </Property>
-  <Property name="DATABASE_PORT" type="number">
-    Defaults to `5432`.
+  - `DATABASE_HOST` (string): The database hostname. Defaults to `postgres`.
 
-    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
-  </Property>
-  <Property name="EXTERNAL_MIGRATION" type="string">
-    Defaults to `false`. This is used to control whether the backend container will run database migrations. In a standalone (monolith) deployment setup, you may set this to `false` or use the default value to automatically run the database migrations. In high availability systems (such as Kubernetes, Docker Swarm, Nomad) where multiple replicas of the service are being run concurrently, please set it to `true` and handle the migrations in a dedicated job for a safe and reliable migration setup. 
+      Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  - `DATABASE_NAME` (string): Defaults to `postgres-db-name`.
 
-    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
-  </Property>
-  <Property name="DATABASE_SSL" type="boolean">
-    Enables or disables SSL/TLS for database connections. Defaults to `False`. 
-    
-    When `False` or unset, Phase uses the default `sslmode=prefer`, which attempts a TLS connection but falls back to plaintext if TLS is unavailable. When `True`, Phase enforces a TLS connection.
-    
-    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
-  </Property>
-  <Property name="DATABASE_SSL_CA_PATH" type="string (Optional)">
-    Path to the CA certificate bundle for verifying the database's TLS certificate.
-    
-    If provided, Phase sets `sslmode=verify-full` and validates the database certificate against this CA, including a hostname check. If not provided (but `DATABASE_SSL=True`), Phase sets `sslmode=require`.
-    
-    For AWS RDS, Phase includes the RDS CA bundle at `/etc/ssl/certs/rds-ca-bundle.pem` which you can point this variable to.
-    
-    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
-  </Property>
-</Properties>
+      Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  - `DATABASE_USER` (string): Defaults to `postgres-user`.
+
+      Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  - `DATABASE_PASSWORD` (string): A database password is provided by default, but it is **highly** recommended
+      to change this value. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
+
+      Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  - `DATABASE_PORT` (number): Defaults to `5432`.
+
+      Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  - `EXTERNAL_MIGRATION` (string): Defaults to `false`. This is used to control whether the backend container will run database migrations. In a standalone (monolith) deployment setup, you may set this to `false` or use the default value to automatically run the database migrations. In high availability systems (such as Kubernetes, Docker Swarm, Nomad) where multiple replicas of the service are being run concurrently, please set it to `true` and handle the migrations in a dedicated job for a safe and reliable migration setup.
+
+      Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
+  - `DATABASE_SSL` (boolean): Enables or disables SSL/TLS for database connections. Defaults to `False`.
+
+      When `False` or unset, Phase uses the default `sslmode=prefer`, which attempts a TLS connection but falls back to plaintext if TLS is unavailable. When `True`, Phase enforces a TLS connection.
+
+      Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  - `DATABASE_SSL_CA_PATH` (string (Optional)): Path to the CA certificate bundle for verifying the database's TLS certificate.
+
+      If provided, Phase sets `sslmode=verify-full` and validates the database certificate against this CA, including a hostname check. If not provided (but `DATABASE_SSL=True`), Phase sets `sslmode=require`.
+
+      For AWS RDS, Phase includes the RDS CA bundle at `/etc/ssl/certs/rds-ca-bundle.pem` which you can point this variable to.
+
+      Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
 
 ---
 
@@ -497,104 +367,68 @@ If SMTP is not configured, or if `SKIP_EMAIL_VERIFICATION` is set to `true`, acc
 
 Phase uses Redis or Valkey for asynchronous job queues, caching and rate limiting.
 
-<Note>
-  If your Redis or Valkey instance supports ACLs, make sure it's set up with at least `on ~* -@all +@read +@write +ping +multi +exec +discard +watch +unwatch +@scripting +@pubsub` access string (ACL) permissions.
-</Note>
+> **Note:** If your Redis or Valkey instance supports ACLs, make sure it's set up with at least `on ~* -@all +@read +@write +ping +multi +exec +discard +watch +unwatch +@scripting +@pubsub` access string (ACL) permissions.
 
-<Properties>
-  <Property name="REDIS_HOST" type="string">
-    The Redis server hostname. Defaults to `redis`.
+  - `REDIS_HOST` (string): The Redis server hostname. Defaults to `redis`.
 
-    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
-  </Property>
-  <Property name="REDIS_PORT" type="number">
-    The Redis server port. Defaults to `6379`.
+      Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  - `REDIS_PORT` (number): The Redis server port. Defaults to `6379`.
 
-    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
-  </Property>
-  <Property name="REDIS_PASSWORD" type="string">
-    The password for the Redis server. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
+      Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  - `REDIS_PASSWORD` (string): The password for the Redis server. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
 
-    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
-  </Property>
-  <Property name="REDIS_SSL" type="boolean">
-    Enables or disables SSL for Redis connections. Defaults to `False`.
+      Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  - `REDIS_SSL` (boolean): Enables or disables SSL for Redis connections. Defaults to `False`.
 
-    The value is considered `True` if the environment variable is set to `"true"` (case-insensitive).
+      The value is considered `True` if the environment variable is set to `"true"` (case-insensitive).
 
-    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
-  </Property>
-  <Property name="REDIS_USER" type="string (Optional)">
-    The username for the Redis server. Required if your Redis instance has ACLs enabled.
+      Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  - `REDIS_USER` (string (Optional)): The username for the Redis server. Required if your Redis instance has ACLs enabled.
 
-    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
-  </Property>
-  <Property name="REDIS_SSL_CA_PATH" type="string (Optional)">
-    Path to the CA certificate bundle for verifying Redis SSL certificates. Required if `REDIS_SSL` is set to `True`.
-    Example: `/etc/ssl/certs/ca-certificates.crt`
-    If you are using a self-signed certificate, you can set this to the path to the certificate bundle. Same goes for a certificate bundle for a managed service like Redis Cloud which may not be available in the default certificate bundle.
-    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
-  </Property>
-</Properties>
+      Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  - `REDIS_SSL_CA_PATH` (string (Optional)): Path to the CA certificate bundle for verifying Redis SSL certificates. Required if `REDIS_SSL` is set to `True`.
+      Example: `/etc/ssl/certs/ca-certificates.crt`
+      If you are using a self-signed certificate, you can set this to the path to the certificate bundle. Same goes for a certificate bundle for a managed service like Redis Cloud which may not be available in the default certificate bundle.
+      Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
 
 ---
 
 ## Email gateway configuration
 
-<Note>
-SMTP configuration is required for email verification for password-based signup. If SMTP is not configured, new accounts created via email/password are activated immediately without email verification.
-</Note>
+> **Note:** SMTP configuration is required for email verification for password-based signup. If SMTP is not configured, new accounts created via email/password are activated immediately without email verification.
 
-<Properties>
-  <Property name="SMTP_SERVER" type="string">
-    Your SMTP gateway host. eg. `my-email-gateway-smtp.eu-central-1.amazonaws.com`
+  - `SMTP_SERVER` (string): Your SMTP gateway host. eg. `my-email-gateway-smtp.eu-central-1.amazonaws.com`
 
-    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
-  </Property>
-  <Property name="SMTP_PORT" type="number">
-    The port for your SMTP server. Defaults to `587`, if not specified.
+      Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  - `SMTP_PORT` (number): The port for your SMTP server. Defaults to `587`, if not specified.
 
-    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
-  </Property>
-  <Property name="SMTP_USERNAME" type="string">
-    Your SMTP email gateway username.
+      Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  - `SMTP_USERNAME` (string): Your SMTP email gateway username.
 
-    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
-  </Property>
-  <Property name="SMTP_PASSWORD" type="string">
-    Your SMTP email gateway password. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
+      Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  - `SMTP_PASSWORD` (string): Your SMTP email gateway password. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
 
-    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
-  </Property>
-  <Property name="DEFAULT_FROM_EMAIL" type="string">
-    Email address from which you want to dispatch emails.
+      Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  - `DEFAULT_FROM_EMAIL` (string): Email address from which you want to dispatch emails.
 
-    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
-  </Property>
-  <Property name="SMTP_TIMEOUT" type="number">
-    The timeout in seconds for SMTP operations. Defaults to `5`, if not specified.
+      Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  - `SMTP_TIMEOUT` (number): The timeout in seconds for SMTP operations. Defaults to `5`, if not specified.
 
-    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
-  </Property>
-  <Property name="SMTP_USE_TLS" type="boolean">
-    Enables or disables TLS (Transport Layer Security) for SMTP connections. Defaults to `True`.
+      Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  - `SMTP_USE_TLS` (boolean): Enables or disables TLS (Transport Layer Security) for SMTP connections. Defaults to `True`.
 
-    The value is considered `True` if the environment variable is set to `"true"` or `"1"` (case-insensitive).
+      The value is considered `True` if the environment variable is set to `"true"` or `"1"` (case-insensitive).
 
-    Note: Only one of `SMTP_USE_TLS` or `SMTP_USE_SSL` should be enabled.
+      Note: Only one of `SMTP_USE_TLS` or `SMTP_USE_SSL` should be enabled.
 
-    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
-  </Property>
-  <Property name="SMTP_USE_SSL" type="boolean">
-    Enables or disables SSL (Secure Sockets Layer) for SMTP connections. Defaults to `False`.
+      Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  - `SMTP_USE_SSL` (boolean): Enables or disables SSL (Secure Sockets Layer) for SMTP connections. Defaults to `False`.
 
-    The value is considered `True` if the environment variable is set to `"true"` or `"1"` (case-insensitive).
+      The value is considered `True` if the environment variable is set to `"true"` or `"1"` (case-insensitive).
 
-    Note: Only one of `SMTP_USE_TLS` or `SMTP_USE_SSL` should be enabled.
+      Note: Only one of `SMTP_USE_TLS` or `SMTP_USE_SSL` should be enabled.
 
-    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
-  </Property>
-</Properties>
+      Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
 
 ### Email Logging
 
@@ -612,43 +446,31 @@ These logs can be useful for troubleshooting email delivery issues when self-hos
 
 ### GitHub integration:
 
-1. Create a new GitHub OAuth application. You may follow the instructions [here](/access-control/authentication/oauth-sso#git-hub). Please note that this is different from the one you may already have set up for GitHub SSO, which is used for authentication.
+1. Create a new GitHub OAuth application. You may follow the instructions [here](https://docs.phase.dev/access-control/authentication/oauth-sso.md#git-hub). Please note that this is different from the one you may already have set up for GitHub SSO, which is used for authentication.
 2. Set the Authorization callback URL to: `https://[**YOUR_DOMAIN**]/service/oauth/github/callback`
 3. Hit Register application
 4. Supply the following secrets to your Phase Console instance
 
-<Properties>
-  <Property name="GITHUB_INTEGRATION_CLIENT_ID" type="string">
-    GitHub OAuth application Client ID
+  - `GITHUB_INTEGRATION_CLIENT_ID` (string): GitHub OAuth application Client ID
 
-    Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) and [`backend`](https://hub.docker.com/r/phasehq/backend) containers.
-  </Property>
-  <Property name="GITHUB_INTEGRATION_CLIENT_SECRET" type="string">
-    GitHub OAuth application Client Secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
+      Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) and [`backend`](https://hub.docker.com/r/phasehq/backend) containers.
+  - `GITHUB_INTEGRATION_CLIENT_SECRET` (string): GitHub OAuth application Client Secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
 
-    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
-  </Property>
-</Properties>
+      Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
 
 ### GitHub Enterprise Server (self-hosted) integration:
 
-1. Create a new GitHub Enterprise Server OAuth application. You may follow the instructions [here](/access-control/authentication/oauth-sso#git-hub). Please note that this is different from the one you may already have set up for GitHub SSO, which is used for authentication.
+1. Create a new GitHub Enterprise Server OAuth application. You may follow the instructions [here](https://docs.phase.dev/access-control/authentication/oauth-sso.md#git-hub). Please note that this is different from the one you may already have set up for GitHub SSO, which is used for authentication.
 2. Set the Authorization callback URL to: `https://[**YOUR_DOMAIN**]/service/oauth/github/callback`
 3. Click "Register application"
 4. Supply the following secrets to your Phase Console instance
 
-<Properties>
-  <Property name="GITHUB_ENTERPRISE_INTEGRATION_CLIENT_ID" type="string">
-    GitHub Enterprise Server OAuth application Client ID
+  - `GITHUB_ENTERPRISE_INTEGRATION_CLIENT_ID` (string): GitHub Enterprise Server OAuth application Client ID
 
-    Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) and [`backend`](https://hub.docker.com/r/phasehq/backend) containers.
-  </Property>
-  <Property name="GITHUB_ENTERPRISE_INTEGRATION_CLIENT_SECRET" type="string">
-    GitHub Enterprise Server OAuth application Client Secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
+      Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) and [`backend`](https://hub.docker.com/r/phasehq/backend) containers.
+  - `GITHUB_ENTERPRISE_INTEGRATION_CLIENT_SECRET` (string): GitHub Enterprise Server OAuth application Client Secret. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
 
-    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
-  </Property>
-</Properties>
+      Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
 
 ## AWS Integration
 
@@ -656,8 +478,7 @@ These logs can be useful for troubleshooting email delivery issues when self-hos
 
 Choose a method of supplying AWS integration credentials to your Phase instance.
 
-<TabGroup>
-  <TabPanel title="IMDSv2" slug="imds">
+**IMDSv2**
 
 If you are running Phase inside of a container(s) on an AWS EC2 instance, you can use an EC2 instance profile to provision a machine role which Phase will use via the IMDSv2 API to assume other roles to get temporary credentials.
 
@@ -714,9 +535,7 @@ aws iam add-role-to-instance-profile --instance-profile-name PhaseEC2InstanceRol
 
 Make sure this instance profile is attached to the EC2 instance(s) that will be used to run Phase.
 
-<Note>
-Please make sure that the instance metadata service is enabled, and IMDSv2 is enabled and reachable from within the containers.
-</Note>
+> **Note:** Please make sure that the instance metadata service is enabled, and IMDSv2 is enabled and reachable from within the containers.
 
 Depending on how you first created the EC2 instance, you may have to enable IMDSv2 manually and set the metadata response hop limit to 2. This is the default when creating an EC2 from the AWS Console launch wizard. You can use the following command to set the metadata response hop limit to 2. Make sure that you have the `ec2:ModifyInstanceMetadataOptions` permission before running it:
 
@@ -737,11 +556,10 @@ Sample output:
         "HttpProtocolIpv6": "disabled",
         "InstanceMetadataTags": "disabled"
     }
-}  
+}
 ```
-  </TabPanel>
 
-  <TabPanel title="Kubernetes IRSA" slug="irsa">
+**Kubernetes IRSA**
 
 If you are running Phase on an AWS EKS cluster, you can use an IAM role for service accounts to provision a machine role which Phase will use via the IRSA API to assume other roles to get temporary credentials. More information about this can be found [here](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html).
 
@@ -762,7 +580,6 @@ This will output a URL like `https://oidc.eks.<YOUR_AWS_REGION>.amazonaws.com/id
 You can then construct your OIDC provider ARN, which will look like: `arn:aws:iam::<YOUR_AWS_ACCOUNT_ID>:oidc-provider/oidc.eks.<YOUR_AWS_REGION>.amazonaws.com/id/<YOUR_OIDC_ID>`
 
 For example, if your cluster is `my-cluster` in `us-west-2` and your account ID is `111122223333`, and the `describe-cluster` command output `https://oidc.eks.us-west-2.amazonaws.com/id/EXAMPLED5AB5C991A547448B880E7A3225F`, then your OIDC ID is `EXAMPLED5AB5C991A547448B880E7A3225F` and your OIDC Provider ARN is `arn:aws:iam::111122223333:oidc-provider/oidc.eks.us-west-2.amazonaws.com/id/EXAMPLED5AB5C991A547448B880E7A3225F`.
-
 
 ### Step 2: Create IAM Role and Policy
 
@@ -873,9 +690,7 @@ After updating your `values.yaml`, apply the changes using Helm:
 helm upgrade --install <RELEASE_NAME> phase/phase-console -f values.yaml -n <YOUR_KUBERNETES_NAMESPACE>
 ```
 
-</TabPanel>
-
-<TabPanel title="Access Keys" slug="access-keys">
+**Access Keys**
 
 If you are self-hosting Phase outside of an AWS environment (e.g., on-premise, or with another cloud provider) or running it on an AWS compute service like Lightsail that does not support instance profiles, you will need to create an IAM user with an access key and secret key that Phase can use to assume roles in your AWS account(s) for integrating with services like AWS Secrets Manager.
 
@@ -936,21 +751,12 @@ aws iam create-access-key --user-name phase-integration-user
 
 2.  AWS will return an `AccessKeyId` and a `SecretAccessKey`. You will need to provide them to your Phase instance as the following secrets:
 
-<Properties>
-  <Property name="AWS_INTEGRATION_ACCESS_KEY_ID" type="string">
-    AWS integration access key ID for the integration user
+  - `AWS_INTEGRATION_ACCESS_KEY_ID` (string): AWS integration access key ID for the integration user
 
-    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
-  </Property>
-  <Property name="AWS_INTEGRATION_SECRET_ACCESS_KEY" type="string">
-    AWS integration secret access key for the integration user. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
+      Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  - `AWS_INTEGRATION_SECRET_ACCESS_KEY` (string): AWS integration secret access key for the integration user. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath.
 
-    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
-  </Property>
-</Properties>
-
-  </TabPanel>
-</TabGroup>
+      Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
 
 ---
 
@@ -962,18 +768,11 @@ Phase requires a valid license to use the Enterprise tier features in self-hoste
 
 For air-gapped or restricted-egress environments, use the `PHASE_LICENSE_OFFLINE` variable.
 
-<Note>
-Phase does not export any outbound usage telemetry for self-hosted instances. This license will work in fully air-gapped environments or where egress is filtered.
-</Note>
+> **Note:** Phase does not export any outbound usage telemetry for self-hosted instances. This license will work in fully air-gapped environments or where egress is filtered.
 
-
-<Properties>
-  <Property name="PHASE_LICENSE_OFFLINE" type="string">
-    The environment variable Phase license for self-hosted deployments with egress restrictions. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath
-    Example: `phase_license:v1:...`
-    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
-  </Property>
-</Properties>
+  - `PHASE_LICENSE_OFFLINE` (string): The environment variable Phase license for self-hosted deployments with egress restrictions. Can be mounted from a file by suffixing `_FILE` to the key, pointing to a filepath
+      Example: `phase_license:v1:...`
+      Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
 
 The backend logs license validation details on every startup:
 
@@ -986,17 +785,10 @@ phase-backend  | License ID: e3de75b1-9afc-4ec1-a203-18febd7be2c0, Customer Name
 
 ## Debugging
 
-<Properties>
-  <Property name="DEBUG" type="string (optional)">
-    Allows running the application with "Debug mode" enabled. Provide this
-    environment variable with the value `True` to enable this.
+  - `DEBUG` (string (optional)): Allows running the application with "Debug mode" enabled. Provide this
+      environment variable with the value `True` to enable this.
 
-    <Warning>
-    Never run the application with Debug mode enabled in production!
-    </Warning>
-
-  </Property>
-</Properties>
+  > **Warning:** Never run the application with Debug mode enabled in production!
 
 Env(s) required by the following containers:
 - [`frontend`](https://hub.docker.com/r/phasehq/frontend)
@@ -1007,95 +799,68 @@ Env(s) required by the following containers:
 
 ## Additional Environment Variables
 
-These variables are not required if using the suggested [docker-compose template](https://raw.githubusercontent.com/phasehq/console/main/docker-compose.yml). However if you are deploying the Phase Console using a custom docker-compose configuration or without docker-compose, make sure the following variables are correctly set. 
+These variables are not required if using the suggested [docker-compose template](https://raw.githubusercontent.com/phasehq/console/main/docker-compose.yml). However if you are deploying the Phase Console using a custom docker-compose configuration or without docker-compose, make sure the following variables are correctly set.
 
-<Properties>
-  <Property name="AUTH_FRESHNESS_MAX_AGE_SECONDS" type="number (Optional)">
-    Maximum age, in seconds, of a session's last authentication before sensitive account actions (linking or unlinking sign-in methods, enabling or disabling 2FA, changing the account email, deleting the account) require the user to sign in again. Defaults to `900` (15 minutes).
+  - `AUTH_FRESHNESS_MAX_AGE_SECONDS` (number (Optional)): Maximum age, in seconds, of a session's last authentication before sensitive account actions (linking or unlinking sign-in methods, enabling or disabling 2FA, changing the account email, deleting the account) require the user to sign in again. Defaults to `900` (15 minutes).
 
-    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
-  </Property>
-  <Property name="NEXTAUTH_URL" type="string">
-    The base console URL for NextAuth. References `${HTTP_PROTOCOL}${HOST}`
-    
-    Example: `https://[**YOUR_DOMAIN**]`
+      Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
+  - `NEXTAUTH_URL` (string): The base console URL for NextAuth. References `${HTTP_PROTOCOL}${HOST}`
 
-    Required by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
-  </Property>
-  <Property name="OAUTH_REDIRECT_URI" type="string">
-    The base console URI, used for OAuth redirection from backend to frontend. References `${HTTP_PROTOCOL}${HOST}`
-    
-    Example: `https://[**YOUR_DOMAIN**]`
+      Example: `https://[**YOUR_DOMAIN**]`
 
-    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
-  </Property>
-  <Property name="BACKEND_API_BASE" type="string">
-    The base URL for the backend API. This will be accessed privately by the Phase frontend container. You may use a private, non publicly accessible url like `http://backend:8000` to avoid over the internet roundtrip for performance reasons. References `${HTTP_PROTOCOL}${HOST}/service`
-    
-    Example: `https://[**YOUR_DOMAIN**]/service`
+      Required by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
+  - `OAUTH_REDIRECT_URI` (string): The base console URI, used for OAuth redirection from backend to frontend. References `${HTTP_PROTOCOL}${HOST}`
 
-    Required by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
-  </Property>
-  <Property name="NEXT_PUBLIC_BACKEND_API_BASE" type="string">
-    The public base URL for the backend API. This URL will be accessed publicly by the browser running Phase Console. References `${HTTP_PROTOCOL}${HOST}/service`
-    
-    Example: `https://[**YOUR_DOMAIN**]/service`
+      Example: `https://[**YOUR_DOMAIN**]`
 
-    Required by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
-  </Property>
-  <Property name="SSO_PROVIDERS" type="string (Optional)">
-    Comma-separated list of SSO providers.
-    
-    Example: `google,github,gitlab`
+      Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
+  - `BACKEND_API_BASE` (string): The base URL for the backend API. This will be accessed privately by the Phase frontend container. You may use a private, non publicly accessible url like `http://backend:8000` to avoid over the internet roundtrip for performance reasons. References `${HTTP_PROTOCOL}${HOST}/service`
 
-    Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
-  </Property>
-  <Property name="NEXT_PUBLIC_NEXTAUTH_PROVIDERS (Legacy)" type="string">
-    **This is a legacy variable and is not required if you are using Console version >= `v2.50.0`**
+      Example: `https://[**YOUR_DOMAIN**]/service`
 
-    Comma-separated list of NextAuth providers. References `${SSO_PROVIDERS}`
-    
-    Example: `google,github,gitlab`
+      Required by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
+  - `NEXT_PUBLIC_BACKEND_API_BASE` (string): The public base URL for the backend API. This URL will be accessed publicly by the browser running Phase Console. References `${HTTP_PROTOCOL}${HOST}/service`
 
-    Required by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
-  </Property>
-  <Property name="ALLOWED_HOSTS" type="string">
-    Comma-separated list of allowed hosts used by the backend. Default: `${HOST},backend`
+      Example: `https://[**YOUR_DOMAIN**]/service`
 
-    Example: `[**YOUR_DOMAIN**],backend`
+      Required by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
+  - `SSO_PROVIDERS` (string (Optional)): Comma-separated list of SSO providers.
 
-    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
-  </Property>
-  <Property name="ALLOWED_ORIGINS" type="string">
-    Comma-separated list of allowed origins used by the Phase backend. References `${HTTP_PROTOCOL}${HOST}`
+      Example: `google,github,gitlab`
 
-    Example: `https://[**YOUR_DOMAIN**]`
+      Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
+  - `NEXT_PUBLIC_NEXTAUTH_PROVIDERS (Legacy)` (string):
+      **This is a legacy variable and is not required if you are using Console version >= `v2.50.0`**
 
-    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
-  </Property>
-  <Property name="SESSION_COOKIE_DOMAIN" type="string">
-    Domain for the session cookie used by the Phase backend. References `${HOST}`
+      Comma-separated list of NextAuth providers. References `${SSO_PROVIDERS}`
 
-    Example: `[**YOUR_DOMAIN**]` (example.com)
+      Example: `google,github,gitlab`
 
-    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
-  </Property>
+      Required by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) container.
+  - `ALLOWED_HOSTS` (string): Comma-separated list of allowed hosts used by the backend. Default: `${HOST},backend`
 
-  <Property name="GUNICORN_WORKERS" type="number (Optional)">
-    The number of Gunicorn worker processes for handling requests in the backend. 
-    If not specified, Phase will automatically calculate the number of workers based on available CPU cores using the formula `(2 * CPUs) + 1`, with a default cap of 8 workers to prevent potential database connection exhaustion.
-    
-    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
-  </Property>
-  <Property name="LOG_STREAM_WORKERS" type="number (Optional)">
-    The number of worker processes for [Log Stream](/console/logstreams) deliveries. Defaults to `2`; values below `1` are clamped to `1`.
-    Log shipping is network-bound and delivered serially per stream, so useful concurrency roughly equals the number of active Log Streams — raise this if the lag indicator on your streams keeps growing.
+      Example: `[**YOUR_DOMAIN**],backend`
 
-    Referenced by the [`worker`](https://hub.docker.com/r/phasehq/backend) container.
-  </Property>
-  <Property name="RATE_LIMIT_DEFAULT" type="string">
-    Rate limit for API requests.
-    Example: `100/minute`. Rate limits can be specified over a period of second, minute, hour or day. The period must be specified after the / separator using s, m, h or d, respectively. For increased clarity, extended units such as second, minute, hour, day or even abbreviations like sec, min, hr are allowed, as only the first character is relevant to identify the rate. 
-    Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
-  </Property>
-</Properties>
+      Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  - `ALLOWED_ORIGINS` (string): Comma-separated list of allowed origins used by the Phase backend. References `${HTTP_PROTOCOL}${HOST}`
+
+      Example: `https://[**YOUR_DOMAIN**]`
+
+      Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+  - `SESSION_COOKIE_DOMAIN` (string): Domain for the session cookie used by the Phase backend. References `${HOST}`
+
+      Example: `[**YOUR_DOMAIN**]` (example.com)
+
+      Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
+
+  - `GUNICORN_WORKERS` (number (Optional)): The number of Gunicorn worker processes for handling requests in the backend.
+      If not specified, Phase will automatically calculate the number of workers based on available CPU cores using the formula `(2 * CPUs) + 1`, with a default cap of 8 workers to prevent potential database connection exhaustion.
+
+      Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
+  - `LOG_STREAM_WORKERS` (number (Optional)): The number of worker processes for [Log Stream](https://docs.phase.dev/console/logstreams.md) deliveries. Defaults to `2`; values below `1` are clamped to `1`.
+      Log shipping is network-bound and delivered serially per stream, so useful concurrency roughly equals the number of active Log Streams — raise this if the lag indicator on your streams keeps growing.
+
+      Referenced by the [`worker`](https://hub.docker.com/r/phasehq/backend) container.
+  - `RATE_LIMIT_DEFAULT` (string): Rate limit for API requests.
+      Example: `100/minute`. Rate limits can be specified over a period of second, minute, hour or day. The period must be specified after the / separator using s, m, h or d, respectively. For increased clarity, extended units such as second, minute, hour, day or even abbreviations like sec, min, hr are allowed, as only the first character is relevant to identify the rate.
+      Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.

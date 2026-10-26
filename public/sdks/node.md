@@ -1,34 +1,19 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description =
-  'SDK to integrate Phase in applications running Node.js.'
-
-export const sections = [
-  { title: 'Install', id: 'install-the-sdk' },
-  { title: 'Import', id: 'import-the-sdk' },
-  { title: 'Initialize', id: 'initialize-the-sdk' },
-  { title: 'Usage', id: 'usage' },
-  { title: 'Types', id: 'type-reference' }
-]
-
-<Tag variant="small">SDK</Tag>
+---
+title: "Node.js SDK"
+description: "SDK to integrate Phase in applications running Node.js."
+url: https://docs.phase.dev/sdks/node
+---
 
 # Node.js SDK
 
 The Node.js SDK allows you to securely manage secrets in your applications, from simple scripts, to complex systems.
 
-<DocActions /> 
-
 - [@phase.dev/phase-node](https://www.npmjs.com/package/@phase.dev/phase-node)
 - [github.com/phasehq/node-sdk](https://github.com/phasehq/node-sdk)
 
-<Note>
-The secret management tools documented here are only available in SDK version `3.0.0` or higher. Please make sure to install the most recent version of the SDK, or upgrade if using an older version.
-</Note>
+> **Note:** The secret management tools documented here are only available in SDK version `3.0.0` or higher. Please make sure to install the most recent version of the SDK, or upgrade if using an older version.
 
-
-To use the Node SDK, you need to create a new App on the Phase Console. Add the service account token or user token (PAT) to your application, preferably using environment variables. [Quick start &raquo;](/quickstart)
+To use the Node SDK, you need to create a new App on the Phase Console. Add the service account token or user token (PAT) to your application, preferably using environment variables. [Quick start &raquo;](https://docs.phase.dev/quickstart.md)
 
 ---
 
@@ -36,21 +21,25 @@ To use the Node SDK, you need to create a new App on the Phase Console. Add the 
 
 The Node.js SDK is distributed via [npm](https://www.npmjs.com/package/@phase.dev/phase-node). You can install it using the following command for your preferred package manager.
 
-<CodeGroup title="Install">
+**Install**
 
-    ```fish {{ title: 'npm' }}
+    **npm**
+
+    ```fish
     npm i @phase.dev/phase-node
     ```
 
-    ```fish {{ title: 'yarn' }}
+    **yarn**
+
+    ```fish
     yarn add @phase.dev/phase-node
     ```
 
-    ```fish {{ title: 'pnpm' }}
+    **pnpm**
+
+    ```fish
     pnpm i @phase.dev/phase-node
     ```
-
-</CodeGroup>
 
 ---
 
@@ -74,16 +63,14 @@ const token = 'pss_service...' // or process.env.PHASE_TOKEN
 const phase = new Phase(token)
 ```
 
-<Note>
-If you are self-hosting Phase, you must also provide the protocol and host for your Phase instance:
-
-```typescript
-const token = 'pss_service...' // or process.env.PHASE_TOKEN
-const host = 'https://console.phase.dev' // default
-
-const phase = new Phase(token, host)
-```
-</Note>
+> **Note:** If you are self-hosting Phase, you must also provide the protocol and host for your Phase instance:
+>
+> ```typescript
+> const token = 'pss_service...' // or process.env.PHASE_TOKEN
+> const host = 'https://console.phase.dev' // default
+>
+> const phase = new Phase(token, host)
+> ```
 
 ## Usage
 
@@ -91,9 +78,7 @@ const phase = new Phase(token, host)
 
 You can get secrets by using the `get(options)` class method, where `options` are of type [GetSecretOptions](#get-secret-options). The method resolves with an array of [Secret](#secret) objects.
 
-<Note>
-The `override` field is only returned when using a Personal Access Token.
-</Note>
+> **Note:** The `override` field is only returned when using a Personal Access Token.
 
 Get all secrets in an environment:
 
@@ -172,9 +157,7 @@ console.log("Secrets created successfully");
 
 Update existing secrets in a specified application and environment using the `update(options)` method, where options are of type [UpdateSecretOptions](#update-secret-options).
 
-<Note>
-The `override` field is only parsed when using a Personal Access Token.
-</Note>
+> **Note:** The `override` field is only parsed when using a Personal Access Token.
 
 Update a secret value:
 
@@ -237,7 +220,6 @@ await phase.delete(deleteOptions);
 console.log("Secrets deleted successfully");
 ```
 
-
 ---
 
 ## Type Reference
@@ -295,7 +277,6 @@ The `SecretInput` object defines the structure for creating a new secret.
 | `path`    | `string \| undefined` | (Optional) The path to store the secret. |
 | `tags`    | `string[] \| undefined` | (Optional) A list of tags to apply to the secret. |
 
-
 ### CreateSecretOptions Object Reference
 
 The `CreateSecretOptions` object specifies the parameters for creating secrets in a given application and environment.
@@ -314,8 +295,6 @@ The `CreateSecretOptions` object specifies the parameters for creating secrets i
 | `envName`  | `string` |  The name of the environment where the secrets exist. |
 | `secrets`  | `Array<Partial<SecretInput> & { id: string, override?: SecretValueOverride }>` |  An array of secret objects to update. Each object must include the secret ID, and optionally, updated values or an override. |
 
-
-
 ### DeleteSecretOptions
 
 | Property   | Type       |  Description |
@@ -323,4 +302,3 @@ The `CreateSecretOptions` object specifies the parameters for creating secrets i
 | `appId`    | `string`  |  The ID of the application where the secrets are stored. |
 | `envName`  | `string`  |  The name of the environment from which secrets will be deleted. |
 | `secretIds` | `string[]` |  An array of secret UUIDs to delete. |
-

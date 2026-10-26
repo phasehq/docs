@@ -1,16 +1,12 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description =
-  'Deploy Phase via Helm on your AWS Elastic Kubernetes Service (EKS) cluster.'
-
-<Tag variant="small">SELF-HOSTING</Tag>
+---
+title: "AWS EKS Helm Deployment"
+description: "Deploy Phase via Helm on your AWS Elastic Kubernetes Service (EKS) cluster."
+url: https://docs.phase.dev/self-hosting/aws-eks
+---
 
 # AWS EKS Helm Deployment
 
-Learn how to set up the Phase Console using Helm on AWS Elastic Kubernetes Service (EKS). {{ className: 'lead' }}
-
-<DocActions />
+Learn how to set up the Phase Console using Helm on AWS Elastic Kubernetes Service (EKS).
 
 This guide will walk you through installing the Phase Console on an AWS EKS cluster. This setup utilizes AWS native services where appropriate, such as an AWS Load Balancer to expose the NGINX Ingress controller and Let's Encrypt for TLS. You can choose between two database configurations:
 
@@ -18,11 +14,6 @@ This guide will walk you through installing the Phase Console on an AWS EKS clus
 - **External managed databases** — Amazon RDS for PostgreSQL and Amazon ElastiCache for Redis. Recommended for production deployments with automated backups, Multi-AZ failover, and managed scaling.
 
 Both paths share the same cluster setup steps and diverge at the database and deployment configuration.
-
-<SkillBox
-  skill="eks"
-  triggerPhrase="deploy Phase on EKS"
-/>
 
 ## Prerequisites
 
@@ -45,9 +36,7 @@ curl --silent --location \
 sudo mv /tmp/eksctl /usr/local/bin
 ```
 
-<Note>
-Set `ARCH=arm64` if you are on an Apple Silicon Mac or an ARM/Graviton machine — otherwise you will download an x86 binary. You can check with `uname -m` (`arm64` or `aarch64` means ARM).
-</Note>
+> **Note:** Set `ARCH=arm64` if you are on an Apple Silicon Mac or an ARM/Graviton machine — otherwise you will download an x86 binary. You can check with `uname -m` (`arm64` or `aarch64` means ARM).
 
 Install `helm`:
 
@@ -145,8 +134,7 @@ kubectl apply -f cluster-issuer.yaml
 
 ### 5. Set Up Databases
 
-<TabGroup title="Database Configuration" subtitle="Choose where your databases will run." slug="database">
-  <TabPanel title="In-cluster" slug="in-cluster">
+**In-cluster**
 
 #### Create Default StorageClass for PostgreSQL
 
@@ -176,8 +164,7 @@ kubectl apply -f storage-class.yaml
 
 This `StorageClass` named `auto-ebs-sc` will be used by PostgreSQL for data persistence. No further database setup is needed — PostgreSQL and Redis will be deployed inside the cluster by the Helm chart.
 
-  </TabPanel>
-  <TabPanel title="External (RDS + ElastiCache)" slug="external">
+**External (RDS + ElastiCache)**
 
 For production deployments, we recommend using managed database services: Amazon RDS for PostgreSQL and Amazon ElastiCache for Redis.
 
@@ -313,9 +300,6 @@ aws elasticache describe-replication-groups \
 
 Wait until both show `available`. Note down the endpoint addresses — you'll need them for the Helm values configuration.
 
-  </TabPanel>
-</TabGroup>
-
 ### 6. Install NGINX Ingress Controller
 
 The Phase Helm chart specifies `ingress.className: "nginx"`. You need to install an NGINX ingress controller that will manage an IngressClass named `nginx`.
@@ -366,8 +350,7 @@ helm repo update
 
 ### 10. Create Kubernetes Secret
 
-<TabGroup title="Secret Configuration" subtitle="Choose based on your database setup." slug="database">
-  <TabPanel title="In-cluster" slug="in-cluster">
+**In-cluster**
 
 Create a secret with auto-generated passwords for in-cluster databases:
 
@@ -379,8 +362,7 @@ kubectl create secret generic phase-console-secret \
   --from-literal=REDIS_PASSWORD=$(openssl rand -hex 32)
 ```
 
-  </TabPanel>
-  <TabPanel title="External (RDS + ElastiCache)" slug="external">
+**External (RDS + ElastiCache)**
 
 Create a secret using the database passwords you generated earlier:
 
@@ -394,16 +376,11 @@ kubectl create secret generic phase-console-secret \
 
 Replace `your_rds_password` and `your_elasticache_auth_token` with the passwords you generated when creating the RDS and ElastiCache instances.
 
-
-  </TabPanel>
-</TabGroup>
-
 ### 11. Create Values File
 
 Create a file named `phase-values.yaml`:
 
-<TabGroup title="Values Configuration" subtitle="Choose based on your database setup." slug="database">
-  <TabPanel title="In-cluster" slug="in-cluster">
+**In-cluster**
 
 ```yaml
 global:
@@ -423,8 +400,7 @@ certManager:
   issuerKind: "ClusterIssuer"
 ```
 
-  </TabPanel>
-  <TabPanel title="External (RDS + ElastiCache)" slug="external">
+**External (RDS + ElastiCache)**
 
 ```yaml
 global:
@@ -521,12 +497,7 @@ certManager:
   issuerKind: "ClusterIssuer"
 ```
 
-<Note>
-When using external databases (`database.external: true` and `redis.external: true`), the chart will not deploy in-cluster PostgreSQL or Redis pods.
-</Note>
-
-  </TabPanel>
-</TabGroup>
+> **Note:** When using external databases (`database.external: true` and `redis.external: true`), the chart will not deploy in-cluster PostgreSQL or Redis pods.
 
 You can find additional configuration options in the [`values.yaml`](https://github.com/phasehq/kubernetes-secrets-operator/blob/main/phase-console/values.yaml) file. You can find the latest version of the Phase Console on the [GitHub releases](https://github.com/phasehq/console/releases) page.
 
@@ -544,9 +515,7 @@ kubectl get ingress
 kubectl get certificate
 ```
 
-<Note>
-This process may take up to 10 minutes to complete. You may run `watch kubectl get pods` to monitor progress. Wait for the cert-manager ACME solver pod to complete successfully — this means the certificate has been issued and the ingress is ready to use.
-</Note>
+> **Note:** This process may take up to 10 minutes to complete. You may run `watch kubectl get pods` to monitor progress. Wait for the cert-manager ACME solver pod to complete successfully — this means the certificate has been issued and the ingress is ready to use.
 
 ### 14. Access Phase Console
 
@@ -570,7 +539,7 @@ The Helm chart enables email and password authentication by default ([`ENABLE_PA
 2. Enter your name, email address and a password. The first account you create becomes the owner of your organisation.
 3. Choose an organisation name, then **copy or download your recovery kit**. The **Finish** button stays disabled until you do — the recovery kit is the only way to regain access if you forget your `sudo` password, and it cannot be retrieved later.
 
-Because no [SMTP server](/self-hosting/configuration/envars#email-gateway-configuration) is configured in this guide, email verification is skipped automatically and the account is active immediately. If you configure SMTP (for example via [SES](#irsa-iam-roles-for-service-accounts)), new users must verify their email before logging in — set [`SKIP_EMAIL_VERIFICATION`](/self-hosting/configuration/envars#email-verification) to `true` to keep signup instant.
+Because no [SMTP server](https://docs.phase.dev/self-hosting/configuration/envars.md#email-gateway-configuration) is configured in this guide, email verification is skipped automatically and the account is active immediately. If you configure SMTP (for example via [SES](#irsa-iam-roles-for-service-accounts)), new users must verify their email before logging in — set [`SKIP_EMAIL_VERIFICATION`](/self-hosting/configuration/envars#email-verification) to `true` to keep signup instant.
 
 To run an SSO-only instance instead, configure a provider under [`sso.providers`](/self-hosting/configuration/envars#single-sign-on-sso) and set `passwordAuth.enabled: false` in your values file. Make sure at least one SSO provider works before disabling password auth, or the instance will have no usable sign-in path.
 
@@ -622,9 +591,7 @@ To uninstall Phase Console from your EKS cluster:
 helm uninstall phase-console
 ```
 
-<Note>
-You may also need to manually delete related resources like PersistentVolumeClaims (EBS volumes) if they are not automatically removed, and clean up DNS records. If using external databases, the RDS instance and ElastiCache cluster must be deleted separately via the AWS Console or CLI.
-</Note>
+> **Note:** You may also need to manually delete related resources like PersistentVolumeClaims (EBS volumes) if they are not automatically removed, and clean up DNS records. If using external databases, the RDS instance and ElastiCache cluster must be deleted separately via the AWS Console or CLI.
 
 `helm uninstall` does not remove everything. These are intentionally left behind so that data and certificates survive a reinstall:
 
@@ -635,15 +602,13 @@ kubectl get secret phase-console-tls     # the issued TLS certificate
 kubectl get configmap phase-console-config
 ```
 
-<Note>
-**If you ran with both an external RDS *and* an external ElastiCache**, the `phase-console-config` ConfigMap is rendered as a Helm hook. Helm does not track hook resources as part of the release, so `helm uninstall` leaves it behind. A later install that renders it as a normal resource — for example, moving PostgreSQL or Redis back in-cluster — will then fail with an ownership error. Delete it before reinstalling:
-
-```fish
-kubectl delete configmap phase-console-config
-```
-
-See [ConfigMap ownership error](/self-hosting/kubernetes#troubleshooting) for the full error message and explanation.
-</Note>
+> **Note:** **If you ran with both an external RDS *and* an external ElastiCache**, the `phase-console-config` ConfigMap is rendered as a Helm hook. Helm does not track hook resources as part of the release, so `helm uninstall` leaves it behind. A later install that renders it as a normal resource — for example, moving PostgreSQL or Redis back in-cluster — will then fail with an ownership error. Delete it before reinstalling:
+>
+> ```fish
+> kubectl delete configmap phase-console-config
+> ```
+>
+> See [ConfigMap ownership error](https://docs.phase.dev/self-hosting/kubernetes.md#troubleshooting) for the full error message and explanation.
 
 Deleting `phase-console-secret` destroys your `SERVER_SECRET`, which is required to decrypt existing data. Do not delete it unless you are also discarding the database.
 
@@ -673,9 +638,7 @@ curl -sI http://phase.your-domain.com/ | head -2
 #           Location: https://phase.your-domain.com/
 ```
 
-<Note>
-Only enable this once your certificate has been issued. Let's Encrypt solves the HTTP-01 challenge over plain HTTP, and `force-ssl-redirect` applies to the whole host — turning it on before the certificate exists can prevent issuance or renewal.
-</Note>
+> **Note:** Only enable this once your certificate has been issued. Let's Encrypt solves the HTTP-01 challenge over plain HTTP, and `force-ssl-redirect` applies to the whole host — turning it on before the certificate exists can prevent issuance or renewal.
 
 ### Client IP Forwarding
 
@@ -701,13 +664,11 @@ This configures two things:
 
 The change may take up to a minute to propagate after applying.
 
-<Note>
-With Proxy Protocol enabled, the NLB embeds the original client IP in the TCP stream. The NGINX ingress controller extracts it and sets the `X-Real-IP` and `X-Forwarded-For` headers for upstream services. Headers from untrusted sources cannot override this, preventing client-side IP spoofing.
-
-**Important:** Both the annotation and NGINX config must be set together. If NGINX expects Proxy Protocol headers but the NLB is not sending them (or vice versa), all connections will fail with `PR_CONNECT_RESET_ERROR`.
-
-**EKS Auto Mode:** Do not use the `service.beta.kubernetes.io/aws-load-balancer-proxy-protocol` annotation — it is not supported in EKS Auto Mode and will be ignored. Do not manually modify NLB target group attributes via the AWS CLI either, as EKS Auto Mode continuously reconciles target group settings and will revert manual changes. Use the `aws-load-balancer-target-group-attributes` annotation shown above instead.
-</Note>
+> **Note:** With Proxy Protocol enabled, the NLB embeds the original client IP in the TCP stream. The NGINX ingress controller extracts it and sets the `X-Real-IP` and `X-Forwarded-For` headers for upstream services. Headers from untrusted sources cannot override this, preventing client-side IP spoofing.
+>
+> **Important:** Both the annotation and NGINX config must be set together. If NGINX expects Proxy Protocol headers but the NLB is not sending them (or vice versa), all connections will fail with `PR_CONNECT_RESET_ERROR`.
+>
+> **EKS Auto Mode:** Do not use the `service.beta.kubernetes.io/aws-load-balancer-proxy-protocol` annotation — it is not supported in EKS Auto Mode and will be ignored. Do not manually modify NLB target group attributes via the AWS CLI either, as EKS Auto Mode continuously reconciles target group settings and will revert manual changes. Use the `aws-load-balancer-target-group-attributes` annotation shown above instead.
 
 ## IRSA (IAM Roles for Service Accounts)
 
@@ -719,8 +680,7 @@ The primary use case for IRSA with Phase is **integration credentials** — allo
 
 Create an IAM policy with the permissions your Phase Console needs. Choose the policy based on which AWS integrations you plan to use:
 
-<TabGroup title="IAM Policy" subtitle="Choose the AWS integration you want to enable." slug="irsa-policy">
-  <TabPanel title="Secrets Manager" slug="secrets-manager">
+**Secrets Manager**
 
 Allows Phase to create, read, update, and delete secrets in AWS Secrets Manager:
 
@@ -746,8 +706,7 @@ Allows Phase to create, read, update, and delete secrets in AWS Secrets Manager:
 }
 ```
 
-  </TabPanel>
-  <TabPanel title="SSM Parameter Store" slug="ssm">
+**SSM Parameter Store**
 
 Allows Phase to create, read, update, and delete parameters in AWS Systems Manager Parameter Store:
 
@@ -773,8 +732,7 @@ Allows Phase to create, read, update, and delete parameters in AWS Systems Manag
 }
 ```
 
-  </TabPanel>
-  <TabPanel title="SES (Email)" slug="ses">
+**SES (Email)**
 
 Allows Phase to send email via Amazon SES (used for notifications and invites):
 
@@ -793,9 +751,6 @@ Allows Phase to send email via Amazon SES (used for notifications and invites):
   ]
 }
 ```
-
-  </TabPanel>
-</TabGroup>
 
 Save the policy JSON to a file (e.g., `phase-policy.json`) and create it in IAM:
 
@@ -832,15 +787,13 @@ serviceAccount:
   name: "phase-backend-sa"
 ```
 
-<Note>
-Do not set `serviceAccount.annotations` here when `create: false`. The chart only renders a ServiceAccount (and therefore only applies these annotations) when `serviceAccount.create` is `true` — with `create: false` the annotations are silently ignored. In this flow `eksctl create iamserviceaccount` already created the ServiceAccount *and* attached the `eks.amazonaws.com/role-arn` annotation to it, so the chart just needs the name.
-
-Verify the annotation is present on the ServiceAccount eksctl created:
-
-```fish
-kubectl get serviceaccount phase-backend-sa -o jsonpath='{.metadata.annotations}'
-```
-</Note>
+> **Note:** Do not set `serviceAccount.annotations` here when `create: false`. The chart only renders a ServiceAccount (and therefore only applies these annotations) when `serviceAccount.create` is `true` — with `create: false` the annotations are silently ignored. In this flow `eksctl create iamserviceaccount` already created the ServiceAccount *and* attached the `eks.amazonaws.com/role-arn` annotation to it, so the chart just needs the name.
+>
+> Verify the annotation is present on the ServiceAccount eksctl created:
+>
+> ```fish
+> kubectl get serviceaccount phase-backend-sa -o jsonpath='{.metadata.annotations}'
+> ```
 
 Apply the change:
 

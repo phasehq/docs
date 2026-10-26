@@ -1,9 +1,8 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description = 'Integrate Phase with GCP Secret Manager'
-
-<Tag variant="small">INTEGRATE</Tag>
+---
+title: "GCP Secret Manager"
+description: "Integrate Phase with GCP Secret Manager"
+url: https://docs.phase.dev/integrations/platforms/gcp-secret-manager
+---
 
 # GCP Secret Manager
 
@@ -14,23 +13,19 @@ You can use Phase to sync secrets to Google Cloud Secret Manager. Phase supports
 
 Phase authenticates with [Workload Identity Federation](https://cloud.google.com/iam/docs/workload-identity-federation). No service account key is created, and Phase Cloud and self-hosted instances are set up the same way, with nothing to configure on the instance.
 
-<DocActions />
-
 ### Prerequisites
 
 - A Google Cloud project with billing enabled
 - The `gcloud` CLI, or [Cloud Shell](https://shell.cloud.google.com/?show=terminal)
 - Permission to enable APIs, create Workload Identity pools and grant IAM roles in the project, for example the Owner role, or IAM Workload Identity Pool Admin, Project IAM Admin and Service Usage Admin
 
-<Warning>
-  When secret syncing is enabled, secrets stored inside Phase are treated as the
-  source of truth. Secrets in Google Cloud with the same names are
-  **overwritten** and managed by Phase from then on, secrets that Phase manages
-  are **disabled** when their keys are removed from Phase, and versions older
-  than the previous one are **destroyed**. Import your existing secrets into Phase before continuing. See
-  [Import existing secrets from GCP Secret
-  Manager](#optional-import-existing-secrets-from-gcp-secret-manager-into-phase).
-</Warning>
+> **Warning:** When secret syncing is enabled, secrets stored inside Phase are treated as the
+>   source of truth. Secrets in Google Cloud with the same names are
+>   **overwritten** and managed by Phase from then on, secrets that Phase manages
+>   are **disabled** when their keys are removed from Phase, and versions older
+>   than the previous one are **destroyed**. Import your existing secrets into Phase before continuing. See
+>   [Import existing secrets from GCP Secret
+>   Manager](#optional-import-existing-secrets-from-gcp-secret-manager-into-phase).
 
 ## Set up Google Cloud credentials in Phase
 
@@ -38,24 +33,23 @@ Phase authenticates with [Workload Identity Federation](https://cloud.google.com
 
 1. Go to **Integrations** from the sidebar and click on **Third-party credentials**.
 
-![Go to integrations](/assets/images/platform-integrations/integrations-sidebar.webp)
+![Go to integrations](https://docs.phase.dev/assets/images/platform-integrations/integrations-sidebar.webp)
 
 2. Click on **Google Cloud**. Phase generates a signing key for the new credential.
 
-![Select Google Cloud](/assets/images/platform-integrations/gcp/create-credentials-gcp.webp)
+![Select Google Cloud](https://docs.phase.dev/assets/images/platform-integrations/gcp/create-credentials-gcp.webp)
 
 ### Step 2: Add the Phase public key to your Workload Identity Pool
 
 Pick one of the four ways below. They all create the same resources.
 
-<TabGroup>
-  <TabPanel title="Setup script (recommended)" slug="setup-script">
+**Setup script (recommended)**
 
 1. Enter the **project number** of the Google Cloud project that will hold the Workload Identity pool. Use **List your projects in the Google Cloud console** to find it: open the project and its dashboard shows the project ID and number. Google identifies Workload Identity providers by project number, not ID, and Phase picks the pool and provider IDs, so the number is all Phase needs to complete the setup.
 
 2. Phase generates a setup script for the project, in a tab per Phase integration. Pick the **GCP Secret Manager** tab and click **Copy**.
 
-![Enter the project number and copy the setup script](/assets/images/platform-integrations/gcp/input-gcp-credentials.webp)
+![Enter the project number and copy the setup script](https://docs.phase.dev/assets/images/platform-integrations/gcp/input-gcp-credentials.webp)
 
 3. Run the script in [Cloud Shell](https://shell.cloud.google.com/?show=terminal), or in any terminal where `gcloud` is signed in to the project.
 
@@ -68,8 +62,7 @@ The script:
 
 It's safe to run again: it restores a pool or provider deleted in the last 30 days, and brings an existing provider back in line with the credential. It runs in a subshell that stops at the first error, so a failure never closes your Cloud Shell session.
 
-  </TabPanel>
-  <TabPanel title="Google Cloud Console" slug="google-cloud-console">
+**Google Cloud Console**
 
 Use exactly the pool ID `phase` and the provider ID Phase shows (for example `phase-3f9a1b2c`): Phase builds the provider name from them and your project number.
 
@@ -86,8 +79,7 @@ Use exactly the pool ID `phase` and the provider ID Phase shows (for example `ph
    - **Attribute condition**: `assertion.sub == "SUBJECT"`, with the `SUBJECT` value from the setup script in Phase, e.g. `assertion.sub == "phase:org:ORG_ID:key:3f9a1b2c..."`
 5. Open **IAM & Admin** > **IAM**, click **Grant access**, and add the principal `principal://iam.googleapis.com/projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/phase/subject/SUBJECT`, with your project number and the subject filled in. Give it the **Secret Manager Editor** and **Secret Manager Secret Accessor** roles.
 
-  </TabPanel>
-  <TabPanel title="Manual setup (gcloud)" slug="manual-setup">
+**Manual setup (gcloud)**
 
 Run each command in [Cloud Shell](https://shell.cloud.google.com/?show=terminal), or in any terminal where `gcloud` is signed in to the project. Enter the project number in Phase first: Phase then shows the provider ID and **Copy JWKS** below the setup script, and the issuer and subject at the top of the script.
 
@@ -134,8 +126,7 @@ gcloud projects add-iam-policy-binding my-project --role=roles/secretmanager.sec
   --member="principal://iam.googleapis.com/projects/123456789012/locations/global/workloadIdentityPools/phase/subject/phase:org:ORG_ID:key:3f9a1b2c..."
 ```
 
-  </TabPanel>
-  <TabPanel title="Terraform" slug="terraform">
+**Terraform**
 
 In Phase, enter the project number, then save the JWKS (**Copy JWKS**) as `phase-jwks.json` next to your configuration. Replace the subject, issuer and provider ID below with the values Phase shows, and keep the pool ID `phase`:
 
@@ -171,9 +162,6 @@ resource "google_project_iam_member" "phase" {
 
 ```
 
-  </TabPanel>
-</TabGroup>
-
 ### Step 3: Verify and save
 
 Give the credential a descriptive name and click **Verify and save**. There's nothing to copy back from Google Cloud: Phase already knows the provider's name.
@@ -208,11 +196,11 @@ A credential's setup covers the project that holds its Workload Identity pool. T
 
 ### Step 1: Choose a destination
 
-1. Enable Server-side Encryption (SSE) for the App from the [Settings](/console/apps#enabling-sse) tab if not enabled already.
+1. Enable Server-side Encryption (SSE) for the App from the [Settings](https://docs.phase.dev/console/apps.md#enabling-sse) tab if not enabled already.
 
 2. Go to your App in the Phase Console and open the **Syncing** tab. Select **GCP Secret Manager** under the 'Create a new Sync' menu.
 
-![Create a GCP Secret Manager sync](/assets/images/platform-integrations/gcp/create-gcp-sm-sync-button.webp)
+![Create a GCP Secret Manager sync](https://docs.phase.dev/assets/images/platform-integrations/gcp/create-gcp-sm-sync-button.webp)
 
 3. Select your Google Cloud credential. The **Project** defaults to the project that holds the credential's Workload Identity pool, where the setup script granted access.
 
@@ -222,12 +210,10 @@ A credential's setup covers the project that holds its Workload Identity pool. T
 
 5. Click **Next**. Phase lists the project's secrets to check that it has access.
 
-![Choose credentials and a destination](/assets/images/platform-integrations/gcp/select-gcp-credentials.webp)
+![Choose credentials and a destination](https://docs.phase.dev/assets/images/platform-integrations/gcp/select-gcp-credentials.webp)
 
-<Note>
-  If Phase can't access the project, the error from Google is shown. IAM
-  changes can take a few minutes to take effect.
-</Note>
+> **Note:** If Phase can't access the project, the error from Google is shown. IAM
+>   changes can take a few minutes to take effect.
 
 ### Step 2: Configure the sync
 
@@ -235,8 +221,7 @@ A credential's setup covers the project that holds its Workload Identity pool. T
 
 2. Choose how secrets are mapped:
 
-<TabGroup>
-  <TabPanel title="One secret per key" slug="one-secret-per-key">
+**One secret per key**
 
 Each Phase secret becomes a Secret Manager secret with the same name, plus an optional **prefix**, so several environments can share a project:
 
@@ -246,7 +231,7 @@ Each Phase secret becomes a Secret Manager secret with the same name, plus an op
 | `DATABASE_URL` | `PROD_` | `PROD_DATABASE_URL` |
 | `stripe-key` | `staging-` | `staging-stripe-key` |
 
-![Sync mode - one secret per key](/assets/images/platform-integrations/gcp/configure-gcp-sm-sync-individual.webp)
+![Sync mode - one secret per key](https://docs.phase.dev/assets/images/platform-integrations/gcp/configure-gcp-sm-sync-individual.webp)
 
 Secret names may only contain letters, numbers, hyphens (`-`) and underscores (`_`), up to 255 characters including the prefix. Phase doesn't rename keys: if any key doesn't fit, for example `spring.datasource.url`, the sync fails before writing anything and lists the keys to rename.
 
@@ -257,12 +242,11 @@ gcloud run deploy my-service --image=IMAGE \
   --set-secrets=DATABASE_URL=DATABASE_URL:latest
 ```
 
-  </TabPanel>
-  <TabPanel title="Single JSON secret" slug="single-json-secret">
+**Single JSON secret**
 
 All secrets are stored as one JSON object in a single secret. Create a new secret or pick an existing one.
 
-![Sync mode - single JSON secret](/assets/images/platform-integrations/gcp/configure-gcp-sm-sync-json.webp)
+![Sync mode - single JSON secret](https://docs.phase.dev/assets/images/platform-integrations/gcp/configure-gcp-sm-sync-json.webp)
 
 The secret holds a JSON object like this:
 
@@ -282,14 +266,11 @@ gcloud secrets versions access latest --secret=my-app-production | jq -r .DATABA
 
 Google caps a secret at 64 KiB, so this mode suits environments with a moderate number of secrets. If the JSON would be larger, the sync fails before writing anything.
 
-  </TabPanel>
-</TabGroup>
-
 3. Optionally, enter a **Customer-managed encryption key**. Phase then shows a script that gives your project's Secret Manager service agent access to the key. Run it before you create the sync. See [Encrypt secrets with a customer-managed key](#advanced-encrypt-secrets-with-customer-managed-encryption-keys-cmek).
 
 4. Confirm that you understand how Phase will overwrite, disable and prune secrets, then click **Create**. The sync starts right away, and runs again whenever secrets change in Phase.
 
-![GCP Secret Manager sync card](/assets/images/platform-integrations/gcp/gcp-sm-sync-card.webp)
+![GCP Secret Manager sync card](https://docs.phase.dev/assets/images/platform-integrations/gcp/gcp-sm-sync-card.webp)
 
 ## Limits & Behavior
 

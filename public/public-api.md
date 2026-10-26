@@ -1,17 +1,12 @@
-import { Tag } from '@/components/Tag'
-import { HeroPattern } from '@/components/HeroPattern'
-import { DocActions } from '@/components/DocActions'
-
-export const description =
-  'This guide will explain how to work with the Phase REST API.'
-
-<HeroPattern />
+---
+title: "API"
+description: "This guide will explain how to work with the Phase REST API."
+url: https://docs.phase.dev/public-api
+---
 
 # API
 
-The Phase HTTP REST API allows you to manage secrets programmatically via an HTTP client. The API enables you to create, fetch, update, and delete secrets across all your Apps, Environments, and Folders. {{ className: 'lead' }}
-
-<DocActions /> 
+The Phase HTTP REST API allows you to manage secrets programmatically via an HTTP client. The API enables you to create, fetch, update, and delete secrets across all your Apps, Environments, and Folders.
 
 ## Overview
 
@@ -21,7 +16,7 @@ The Phase API is organized around [REST](https://en.wikipedia.org/wiki/Represent
 
 Supported HTTP methods are `GET`, `POST`, `PUT`, and `DELETE`. `PATCH` is not supported on any endpoint and returns `405 Method Not Allowed`.
 
-Error responses are always JSON of the form `{"error": "<message>"}`. Check out the API [errors page](/public-api/errors) for more details.
+Error responses are always JSON of the form `{"error": "<message>"}`. Check out the API [errors page](https://docs.phase.dev/public-api/errors.md) for more details.
 
 ## Base URL
 
@@ -29,47 +24,47 @@ If you are using Phase Cloud, the API can be accessed at `https://api.phase.dev`
 
 Example:
 
-<CodeGroup>
+**Phase Cloud**
 
-```fish {{ title: 'Phase Cloud' }}
+```fish
 curl https://api.phase.dev/v1/secrets/?app_id=<app_id>&env=development \
   -H "Authorization: Bearer {token}"
 ```
 
-```fish {{ title: 'Self-hosted' }}
+**Self-hosted**
+
+```fish
 curl https://acme.com/service/public/v1/secrets/?app_id=<app_id>&env=development \
   -H "Authorization: Bearer {token}"
 ```
 
-</CodeGroup>
-
 ## Authentication
 
-All API requests must be authenticated with a bearer token in the `Authorization` header of each request, followed by the type of token used and the token. You can find more information about the token types [here](/access-control/authentication#programmatic-authentication).
+All API requests must be authenticated with a bearer token in the `Authorization` header of each request, followed by the type of token used and the token. You can find more information about the token types [here](https://docs.phase.dev/access-control/authentication.md#programmatic-authentication).
 
 When deciding between authentication token types, you may consider:
-- **Service Account Token**: Belongs to a [Service Account](/access-control/service-accounts). Inherits the Access Control policies and Roles from a service account.
-- **Personal Access Token (PAT)**: Belongs to a human user. Inherits the Access Control policies and Roles from a user. Has access to all Apps and Environments that a particular user has access to. Will return any [Personal Secret Overrides](/console/secrets#override-a-secret-personal-secrets) you might have set for a given secret.
+- **Service Account Token**: Belongs to a [Service Account](https://docs.phase.dev/access-control/service-accounts.md). Inherits the Access Control policies and Roles from a service account.
+- **Personal Access Token (PAT)**: Belongs to a human user. Inherits the Access Control policies and Roles from a user. Has access to all Apps and Environments that a particular user has access to. Will return any [Personal Secret Overrides](https://docs.phase.dev/console/secrets.md#override-a-secret-personal-secrets) you might have set for a given secret.
 
 Example:
 
-<CodeGroup>
+**Service Account Token**
 
-```fish {{ title: 'Service Account Token' }}
+```fish
 curl https://api.phase.dev/v1/secrets/?app_id=8d8fde43-ceb6-4c92-a776-827433512ff9&env=production \
   -H "Authorization: Bearer ServiceAccount ac671c7556ec51cec52baa15168339dcbe96b360f81575873d0c31607148f378"
 ```
 
-```fish {{ title: 'Personal Access Token (PAT)' }}
+**Personal Access Token (PAT)**
+
+```fish
 curl https://api.phase.dev/v1/secrets/?app_id=8d8fde43-ceb6-4c92-a776-827433512ff9&env=development \
   -H "Authorization: Bearer User f3c817bda98bc37d8f3c9a176ae54ec485725de5705c52c403fc0ad96cd9be57"
 ```
 
-</CodeGroup>
-
 ## Encryption Mode
 
-Certain API endpoints that allow manipulation of encrypted data such as Secrets require Server-side Encryption (SSE) to be enabled for the App. You can enable SSE for an App from the [App settings page](/console/apps#settings).
+Certain API endpoints that allow manipulation of encrypted data such as Secrets require Server-side Encryption (SSE) to be enabled for the App. You can enable SSE for an App from the [App settings page](https://docs.phase.dev/console/apps.md#settings).
 
 ## Rate Limits
 
@@ -81,14 +76,12 @@ The Phase Cloud API enforces rate limiting to ensure fair usage and maintain opt
 | Pro  | 240                 |
 | Enterprise | Custom |
 
-<Note>
-The rate limits are enforced per account (User or Service Account) across an organisation.
-</Note>
+> **Note:** The rate limits are enforced per account (User or Service Account) across an organisation.
 
 If you exceed the allowed number of requests within a given time frame, you will receive a `429 Too Many Requests` response. The response will include information about when you can retry your request in the `retry-after` header.
 
 ```bash
-HTTP/2 429 
+HTTP/2 429
 server: nginx
 date: Fri, 05 Dec 2025 07:18:01 GMT
 content-type: application/json
@@ -102,4 +95,4 @@ referrer-policy: same-origin
 cross-origin-opener-policy: same-origin
 ```
 
-Self-hosted Phase instances do not enforce rate limiting by default. However, administrators can configure rate limiting based on their requirements via the `RATE_LIMIT_DEFAULT` environment variable. Please see the self-hosting [deployment configuration documentation](/self-hosting/configuration/envars#additional-environment-variables) for more details.
+Self-hosted Phase instances do not enforce rate limiting by default. However, administrators can configure rate limiting based on their requirements via the `RATE_LIMIT_DEFAULT` environment variable. Please see the self-hosting [deployment configuration documentation](https://docs.phase.dev/self-hosting/configuration/envars.md#additional-environment-variables) for more details.

@@ -1,19 +1,16 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description = 'Integrate Phase with Claude Code'
-
-<Tag variant="small">INTEGRATE</Tag>
+---
+title: "Claude Code"
+description: "Integrate Phase with Claude Code"
+url: https://docs.phase.dev/integrations/agents/claude-code
+---
 
 # Claude Code
 
 Manage Phase secrets directly from [Claude Code](https://docs.anthropic.com/en/docs/claude-code). Claude can list, create, update, and delete secrets, run processes with injected secrets, and manage your Phase environments — all from natural language.
 
-<DocActions />
-
 ## Prerequisites
 
-- [Phase CLI installed and authenticated](/cli/usage)
+- [Phase CLI installed and authenticated](https://docs.phase.dev/cli/usage.md)
 - [Claude Code](https://docs.anthropic.com/en/docs/claude-code) installed
 
 ## Setup
@@ -65,9 +62,7 @@ Phase supports three secret types with different security levels:
 | `secret` | Controlled by `phase ai enable` | Standard encrypted secrets |
 | `sealed` | **Never visible** | Write-only secrets (API keys, tokens, passwords) |
 
-<Warning>
-Sealed secret values are **never** exposed to AI agents regardless of configuration. When Claude creates or rotates a sealed secret, it uses `--random` generation — the actual value never appears in the conversation.
-</Warning>
+> **Warning:** Sealed secret values are **never** exposed to AI agents regardless of configuration. When Claude creates or rotates a sealed secret, it uses `--random` generation — the actual value never appears in the conversation.
 
 ---
 

@@ -1,24 +1,14 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
+---
+title: "Secrets"
+description: "Explore the Phase Secrets API."
+url: https://docs.phase.dev/public-api/secrets
+---
 
-export const metadata = {
-  title: 'Secrets API',
-  description:
-    'Explore the Phase Secrets API.',
-}
+# Secrets
 
+Secrets are key/value pairs used to store application secrets or environment variables for your applications. Secrets in Phase can additionally have tags and comments associated with them. On this page, we'll dive into the Secrets API and how you can use it to manage your application secrets programmatically. We'll look at how to query, create, update, and delete secrets.
 
-<Tag variant="small">API</Tag>
-
-# Secrets 
-
-Secrets are key/value pairs used to store application secrets or environment variables for your applications. Secrets in Phase can additionally have tags and comments associated with them. On this page, we'll dive into the Secrets API and how you can use it to manage your application secrets programmatically. We'll look at how to query, create, update, and delete secrets. {{ className: 'lead' }}
-
-<Note>
-To use the Secrets API to manage secrets in an App, you must enable server-side encryption (SSE) from the [App settings page](/console/apps#settings). 
-</Note>
-
-<DocActions /> 
+> **Note:** To use the Secrets API to manage secrets in an App, you must enable server-side encryption (SSE) from the [App settings page](https://docs.phase.dev/console/apps.md#settings).
 
 ## The Secret model
 
@@ -26,103 +16,47 @@ The secret model contains the basic key / value pairs that define your environme
 
 ### Properties
 
-<Properties>
-  <Property name="id" type="string">
-    Unique identifier for the secret.
-  </Property>
-  <Property name="environment" type="string">
-    Unique identifier for the environment in which this secret exists.
-  </Property>
-  <Property name="key" type="string">
-    The key of the secret, in plaintext.
-  </Property>
-  <Property name="value" type="string">
-    The value of the secret, in plaintext.
-  </Property>
-  <Property name="type" type="string">
-    The secret type. One of `secret` (default), `sealed`, or `config`. Sealed secrets have their values redacted in the Console UI after saving, and their type cannot be changed once saved. Config secrets are non-sensitive values displayed in plaintext by default.
-  </Property>
-  <Property name="lifecycle" type="string">
-    Indicates how this secret's value is managed. One of `static` (default — user-managed) or `rotating` (engine-managed, auto-rotated against a third-party provider). `rotating` secrets reject `PUT` and `DELETE` on this endpoint — manage them via the rotating-secret controls in the Console. See [Rotating Secrets](/console/rotating-secrets).
-  </Property>
-  <Property name="comment" type="string">
-    The comment for the secret, if provided.
-  </Property>
-  <Property name="tags" type="array">
-    An array of tag names associated with the secret.
-  </Property>
-  <Property name="override" type="object">
-    A personal secret override, if set by the authenticated user making the request. Overrides are only returned when authenticating via a Personal Access Token.
-  </Property>
-  <Property name="path" type="string">
-    The absolute path for the secret.
-  </Property>
-  <Property name="folder" type="string | null">
-    Unique identifier of the folder that holds this secret, or `null` if the secret lives at the root path (`/`). Derived from `path` — you only set `path` on writes; `folder` is read-only in responses.
-  </Property>
-  <Property name="version" type="number">
-    The secret version.
-  </Property>
-  <Property name="keyDigest" type="string">
-    The hash of the secret key.
-  </Property>
-  <Property name="createdAt" type="timestamp">
-    Timestamp of when the secret was created.
-  </Property>
-  <Property name="updatedAt" type="timestamp">
-    Timestamp of when the secret was last updated.
-  </Property>
-</Properties>
+  - `id` (string): Unique identifier for the secret.
+  - `environment` (string): Unique identifier for the environment in which this secret exists.
+  - `key` (string): The key of the secret, in plaintext.
+  - `value` (string): The value of the secret, in plaintext.
+  - `type` (string): The secret type. One of `secret` (default), `sealed`, or `config`. Sealed secrets have their values redacted in the Console UI after saving, and their type cannot be changed once saved. Config secrets are non-sensitive values displayed in plaintext by default.
+  - `lifecycle` (string): Indicates how this secret's value is managed. One of `static` (default — user-managed) or `rotating` (engine-managed, auto-rotated against a third-party provider). `rotating` secrets reject `PUT` and `DELETE` on this endpoint — manage them via the rotating-secret controls in the Console. See [Rotating Secrets](https://docs.phase.dev/console/rotating-secrets.md).
+  - `comment` (string): The comment for the secret, if provided.
+  - `tags` (array): An array of tag names associated with the secret.
+  - `override` (object): A personal secret override, if set by the authenticated user making the request. Overrides are only returned when authenticating via a Personal Access Token.
+  - `path` (string): The absolute path for the secret.
+  - `folder` (string | null): Unique identifier of the folder that holds this secret, or `null` if the secret lives at the root path (`/`). Derived from `path` — you only set `path` on writes; `folder` is read-only in responses.
+  - `version` (number): The secret version.
+  - `keyDigest` (string): The hash of the secret key.
+  - `createdAt` (timestamp): Timestamp of when the secret was created.
+  - `updatedAt` (timestamp): Timestamp of when the secret was last updated.
 
 ---
 
-## Get Secrets {{ tag: 'GET', label: '/v1/secrets' }}
-
-<Row>
-  <Col>
+## Get Secrets
 
     Retrieve all secrets in a given environment. You can optionally filter secrets by a specific path and / or secret key.
 
     ### Required parameters
 
-    <Properties>
-      <Property name="app_id" type="string">
-        Unique identifier for the Phase App you wish to get secrets from.
-      </Property>
-      <Property name="env" type="string">
-        The environment name, ex: `development`
-      </Property>
-    </Properties>
-    
+      - `app_id` (string): Unique identifier for the Phase App you wish to get secrets from.
+      - `env` (string): The environment name, ex: `development`
+
     ### Optional parameters
 
-    <Properties>
-      <Property name="path" type="string">
-        Get secrets at a specific path.
-      </Property>
-      <Property name="key" type="string">
-        The key of a specific secret to fetch.
-      </Property>
-      <Property name="tags" type="string">
-        A comma separated list of tags (ex: `aws`, `aws,postgres`). Returns secrets that match ANY of the specified tags.
-      </Property>
-      <Property name="dynamic" type="boolean">
-        Whether to include dynamic secrets in the response. 
-      </Property>
-      <Property name="lease" type="boolean">
-        Whether to generate leases for dynamic secrets in the response. Must be used along with the `dynamic` parameter.
-      </Property>
-      <Property name="lease_ttl" type="boolean">
-        The TTL to use when generating leases for dynamic secrets, in seconds. Must be used along with the `lease` parameter.
-      </Property>
-    </Properties>
+      - `path` (string): Get secrets at a specific path.
+      - `key` (string): The key of a specific secret to fetch.
+      - `tags` (string): A comma separated list of tags (ex: `aws`, `aws,postgres`). Returns secrets that match ANY of the specified tags.
+      - `dynamic` (boolean): Whether to include dynamic secrets in the response.
+      - `lease` (boolean): Whether to generate leases for dynamic secrets in the response. Must be used along with the `dynamic` parameter.
+      - `lease_ttl` (boolean): The TTL to use when generating leases for dynamic secrets, in seconds. Must be used along with the `lease` parameter.
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="GET" label="/v1/secrets">
+    **cURL**
 
-    ```fish {{ title: 'cURL' }}
+    ```fish
     curl -G https://api.phase.dev/v1/secrets/ \
       -H "Authorization: Bearer {token}" \
       -d app_id=72b9ddd5-8fce-49ab-89d9-c431d53a9552 \
@@ -146,7 +80,7 @@ The secret model contains the basic key / value pairs that define your environme
     };
 
     fetch(`${url}?${new URLSearchParams(params)}`, {
-        method: 'GET', 
+        method: 'GET',
         headers: headers
     })
     .then(response => {
@@ -169,7 +103,7 @@ The secret model contains the basic key / value pairs that define your environme
         'tags': 'aws,postgres'
     }
     headers = {
-        'Authorization': f"Bearer {token}"  
+        'Authorization': f"Bearer {token}"
     }
 
     response = requests.get(url, params=params, headers=headers)
@@ -240,9 +174,9 @@ The secret model contains the basic key / value pairs that define your environme
 
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```json {{ title: 'Response' }}
+    ```json
     [
         {
             "id": "36fc2244-47f5-4ff4-8b72-deed1bf876da",
@@ -269,71 +203,40 @@ The secret model contains the basic key / value pairs that define your environme
     ]
     ```
 
-  </Col>
-</Row>
-
 ---
 
-## Create Secrets {{ tag: 'POST', label: '/v1/secrets' }}
+## Create Secrets
 
-<Row>
-  <Col>
-
-    Create one or more secrets in a specific environment. You can optionally supply a path, comment and tags for the secret. 
+    Create one or more secrets in a specific environment. You can optionally supply a path, comment and tags for the secret.
 
     ### Required parameters
 
-    <Properties>
-      <Property name="app_id" type="string">
-        Unique identifier for the Phase App.
-      </Property>
-      <Property name="env" type="string">
-        The environment name, ex: `development`
-      </Property>
-    </Properties>
+      - `app_id` (string): Unique identifier for the Phase App.
+      - `env` (string): The environment name, ex: `development`
 
     ### JSON Body
-    
+
     Secret data must be supplied in the JSON request body as an array in the `secrets` field. Each secret must have a key and value, and you can optionally add a comment, list of tags and a specified path.
     You can add multiple secrets in the `secrets` array to create multiple secrets in a single request.
-    
+
     #### **Required fields**
 
-    <Properties>
-      <Property name="key" type="string">
-        The secret key.
-      </Property>
-      <Property name="value" type="string">
-        The secret value.
-      </Property>
-    </Properties>
+      - `key` (string): The secret key.
+      - `value` (string): The secret value.
 
     #### **Optional fields**
 
-    <Properties>
-      <Property name="type" type="string">
-        The secret type. One of `secret`, `sealed`, or `config`. Defaults to `secret`.
-      </Property>
-      <Property name="comment" type="string">
-        A comment to associate with the secret.
-      </Property>
-      <Property name="tags" type="array">
-        A list of tags to associate with the secret. Tag names must be valid.
-      </Property>
-      <Property name="path" type="string">
-        The path at which to create this secret. Defaults to `/` if not provided.
-      </Property>
-      <Property name="override" type="object">
-        A personal secret override to be used in place of the default value. The override must be supplied with fields `value` and `isActive`
-      </Property>
-    </Properties>
+      - `type` (string): The secret type. One of `secret`, `sealed`, or `config`. Defaults to `secret`.
+      - `comment` (string): A comment to associate with the secret.
+      - `tags` (array): A list of tags to associate with the secret. Tag names must be valid.
+      - `path` (string): The path at which to create this secret. Defaults to `/` if not provided.
+      - `override` (object): A personal secret override to be used in place of the default value. The override must be supplied with fields `value` and `isActive`
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="POST" label="/v1/secrets">
+    **cURL**
 
-    ```fish {{ title: 'cURL' }}
+    ```fish
     curl --location 'https://api.phase.dev/v1/secrets/?app_id=72b9ddd5-8fce-49ab-89d9-c431d53a9552&env=development' \
     --header 'Authorization: Bearer {token}' \
     --header 'Content-Type: application/json' \
@@ -363,7 +266,7 @@ The secret model contains the basic key / value pairs that define your environme
         'app_id': '72b9ddd5-8fce-49ab-89d9-c431d53a9552',
         'env': 'development',
     }
-    
+
     const raw = JSON.stringify({
     "secrets": [
         {
@@ -522,9 +425,9 @@ The secret model contains the basic key / value pairs that define your environme
 
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```json {{ title: 'Response' }}
+    ```json
     [
         {
             "id": "36fc2244-47f5-4ff4-8b72-deed1bf876da",
@@ -550,78 +453,43 @@ The secret model contains the basic key / value pairs that define your environme
     ]
     ```
 
-  </Col>
-</Row>
-
 ---
 
-## Update Secrets {{ tag: 'PUT', label: '/v1/secrets' }}
-
-<Row>
-  <Col>
+## Update Secrets
 
     Update one or more secrets in an environment.
 
-    <Note>
-      Secrets with `lifecycle: "rotating"` are managed by the Phase rotation engine and cannot be updated via this endpoint — the request is rejected with `400`. Manage rotating secrets from the Console; only the engine writes their value, path, and key.
-    </Note>
+> **Note:** Secrets with `lifecycle: "rotating"` are managed by the Phase rotation engine and cannot be updated via this endpoint — the request is rejected with `400`. Manage rotating secrets from the Console; only the engine writes their value, path, and key.
 
     ### Required parameters
 
-    <Properties>
-      <Property name="app_id" type="string">
-        Unique identifier for the Phase App.
-      </Property>
-      <Property name="env" type="string">
-        The environment name, ex: `development`
-      </Property>
-    </Properties>
+      - `app_id` (string): Unique identifier for the Phase App.
+      - `env` (string): The environment name, ex: `development`
 
     ### JSON Body
-    
+
     Secret data must be supplied in the JSON request body as an array in the `secrets` field. You must supply an `id` for each secret you want to update. Optionally you can supply the specific fields you wish to update for this secret.
     You can add multiple secrets in the `secrets` array to update multiple secrets in a single request.
-    
+
     #### **Required fields**
 
-    <Properties>
-      <Property name="id" type="string">
-        Unique identifier for the Secret.
-      </Property>
-    </Properties>
+      - `id` (string): Unique identifier for the Secret.
 
     #### **Optional fields**
 
-    <Properties>
-      <Property name="key" type="string">
-        The secret key.
-      </Property>
-      <Property name="value" type="string">
-        The secret value.
-      </Property>
-      <Property name="type" type="string">
-        The secret type. One of `secret`, `sealed`, or `config`. Note: sealed secrets cannot have their type changed.
-      </Property>
-      <Property name="comment" type="string">
-        A comment to associate with the secret.
-      </Property>
-      <Property name="tags" type="array">
-        A list of tags to associate with the secret. Tag names must be valid. The supplied list will overwrite any existing tags.
-      </Property>
-      <Property name="path" type="string">
-        The path for this secret.
-      </Property>
-      <Property name="override" type="object">
-        A personal secret override to be used in place of the default value. The override must be supplied with fields `value` and `isActive`
-      </Property>
-    </Properties>
+      - `key` (string): The secret key.
+      - `value` (string): The secret value.
+      - `type` (string): The secret type. One of `secret`, `sealed`, or `config`. Note: sealed secrets cannot have their type changed.
+      - `comment` (string): A comment to associate with the secret.
+      - `tags` (array): A list of tags to associate with the secret. Tag names must be valid. The supplied list will overwrite any existing tags.
+      - `path` (string): The path for this secret.
+      - `override` (object): A personal secret override to be used in place of the default value. The override must be supplied with fields `value` and `isActive`
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="PUT" label="/v1/secrets">
+    **cURL**
 
-    ```fish {{ title: 'cURL' }}
+    ```fish
     curl --location --request PUT 'https://api.phase.dev/v1/secrets/?app_id=72b9ddd5-8fce-49ab-89d9-c431d53a9552&env=development' \
     --header 'Authorization: Bearer {token}' \
     --header 'Content-Type: application/json' \
@@ -651,7 +519,7 @@ The secret model contains the basic key / value pairs that define your environme
         'app_id': '72b9ddd5-8fce-49ab-89d9-c431d53a9552',
         'env': 'development',
     }
-    
+
     const raw = JSON.stringify({
     "secrets": [
         {
@@ -802,9 +670,9 @@ The secret model contains the basic key / value pairs that define your environme
 
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```json {{ title: 'Response' }}
+    ```json
     [
         {
             "id": "36fc2244-47f5-4ff4-8b72-deed1bf876da",
@@ -830,51 +698,32 @@ The secret model contains the basic key / value pairs that define your environme
     ]
     ```
 
-  </Col>
-</Row>
-
 ---
 
-## Delete Secrets {{ tag: 'DELETE', label: '/v1/secrets' }}
-
-<Row>
-  <Col>
+## Delete Secrets
 
     Delete one or more secrets from an environment.
 
-    <Note>
-      Secrets with `lifecycle: "rotating"` are managed by the Phase rotation engine and cannot be deleted via this endpoint — the request is rejected with `400`. To delete a rotating secret, use the **Delete** action in its management dialog in the Console, which also revokes all live credentials at the provider and cancels scheduled rotation jobs.
-    </Note>
+> **Note:** Secrets with `lifecycle: "rotating"` are managed by the Phase rotation engine and cannot be deleted via this endpoint — the request is rejected with `400`. To delete a rotating secret, use the **Delete** action in its management dialog in the Console, which also revokes all live credentials at the provider and cancels scheduled rotation jobs.
 
     ### Required parameters
-    
-    <Properties>
-      <Property name="app_id" type="string">
-        Unique identifier for the Phase App you wish to delete secrets from.
-      </Property>
-      <Property name="env" type="string">
-        The environment name, ex: `development`
-      </Property>
-    </Properties>
+
+      - `app_id` (string): Unique identifier for the Phase App you wish to delete secrets from.
+      - `env` (string): The environment name, ex: `development`
 
     ### JSON Body
-    
+
     Data must be supplied in the JSON request body as an array in the `secrets` field. You must supply an `id` for each secret you want to delete.
-    
+
     #### **Required fields**
 
-    <Properties>
-      <Property name="id" type="string">
-        Unique identifier for the secret.
-      </Property>
-    </Properties>
+      - `id` (string): Unique identifier for the secret.
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="DELETE" label="/v1/secrets">
+    **cURL**
 
-    ```fish {{ title: 'cURL' }}
+    ```fish
     curl --location --request DELETE 'https://api.phase.dev/v1/secrets/?app_id=72b9ddd5-8fce-49ab-89d9-c431d53a9552&env=development' \
     --header 'Authorization: Bearer {token}' \
     --header 'Content-Type: application/json' \
@@ -892,7 +741,7 @@ The secret model contains the basic key / value pairs that define your environme
         'app_id': '72b9ddd5-8fce-49ab-89d9-c431d53a9552',
         'env': 'development',
     }
-    
+
     const raw = JSON.stringify({
         "secrets": ["f8621d1a-6903-4b60-8e8d-2085a2475871"]
     });
@@ -996,13 +845,11 @@ The secret model contains the basic key / value pairs that define your environme
     puts response.read_body
 
     ```
-    </CodeGroup>
 
-    ```json {{ title: 'Response' }}
+    **Response**
+
+    ```json
     {
         "message": "Deleted 1 secret"
     }
     ```
-
-  </Col>
-</Row>

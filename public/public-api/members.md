@@ -1,67 +1,38 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const metadata = {
-  title: 'Members API',
-  description:
-    'Explore the Phase Members API for managing organisation members and their access programmatically.',
-}
-
-<Tag variant="small">API</Tag>
+---
+title: "Members"
+description: "Explore the Phase Members API for managing organisation members and their access programmatically."
+url: https://docs.phase.dev/public-api/members
+---
 
 # Members
 
-Organisation members are human users who belong to your Phase organisation, each assigned a Role that governs their permissions. On this page, we'll look at the API endpoints for listing members, updating roles, managing app and environment access, and removing members. {{ className: 'lead' }}
+Organisation members are human users who belong to your Phase organisation, each assigned a Role that governs their permissions. On this page, we'll look at the API endpoints for listing members, updating roles, managing app and environment access, and removing members.
 
-<Note>
-To add a new member, send an invite via the [Invites API](/public-api/invites) â€” the invitee accepts the invite and completes a client-side key ceremony before they become an active organisation member. The `POST /v1/members/` endpoint is reserved for the future direct-member-creation flow and currently returns `405 Method Not Allowed`.
-</Note>
-
-<DocActions />
+> **Note:** To add a new member, send an invite via the [Invites API](https://docs.phase.dev/public-api/invites.md) â€” the invitee accepts the invite and completes a client-side key ceremony before they become an active organisation member. The `POST /v1/members/` endpoint is reserved for the future direct-member-creation flow and currently returns `405 Method Not Allowed`.
 
 ## The Member model
 
 ### Properties
 
-<Properties>
-  <Property name="id" type="string">
-    Unique identifier for the organisation membership.
-  </Property>
-  <Property name="username" type="string">
-    The member's username.
-  </Property>
-  <Property name="fullName" type="string">
-    The member's full name, populated from their OAuth profile if available.
-  </Property>
-  <Property name="email" type="string">
-    The member's email address.
-  </Property>
-  <Property name="role" type="object">
-    The assigned role, with `id` and `name`.
-  </Property>
-  <Property name="createdAt" type="timestamp">
-    Timestamp of when the member joined the organisation.
-  </Property>
-  <Property name="updatedAt" type="timestamp">
-    Timestamp of when the membership was last updated.
-  </Property>
-</Properties>
+  - `id` (string): Unique identifier for the organisation membership.
+  - `username` (string): The member's username.
+  - `fullName` (string): The member's full name, populated from their OAuth profile if available.
+  - `email` (string): The member's email address.
+  - `role` (object): The assigned role, with `id` and `name`.
+  - `createdAt` (timestamp): Timestamp of when the member joined the organisation.
+  - `updatedAt` (timestamp): Timestamp of when the membership was last updated.
 
 ---
 
-## List Members {{ tag: 'GET', label: '/v1/members' }}
-
-<Row>
-  <Col>
+## List Members
 
     Retrieve all active members of the organisation.
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="GET" label="/v1/members">
+    **cURL**
 
-    ```fish {{ title: 'cURL' }}
+    ```fish
     curl https://api.phase.dev/v1/members/ \
       -H "Authorization: Bearer {token}"
     ```
@@ -78,9 +49,9 @@ To add a new member, send an invite via the [Invites API](/public-api/invites) â
     data = response.json()
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```json {{ title: 'Response' }}
+    ```json
     {
         "data": [
             {
@@ -99,32 +70,21 @@ To add a new member, send an invite via the [Invites API](/public-api/invites) â
     }
     ```
 
-  </Col>
-</Row>
-
 ---
 
-## Get Member {{ tag: 'GET', label: '/v1/members/:id' }}
-
-<Row>
-  <Col>
+## Get Member
 
     Retrieve a single member by their membership ID.
 
     ### URL parameters
 
-    <Properties>
-      <Property name="id" type="string">
-        The unique identifier of the organisation membership.
-      </Property>
-    </Properties>
+      - `id` (string): The unique identifier of the organisation membership.
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="GET" label="/v1/members/:id">
+    **cURL**
 
-    ```fish {{ title: 'cURL' }}
+    ```fish
     curl https://api.phase.dev/v1/members/3f2e1d0c-9b8a-7654-3210-fedcba987654/ \
       -H "Authorization: Bearer {token}"
     ```
@@ -142,9 +102,9 @@ To add a new member, send an invite via the [Invites API](/public-api/invites) â
     data = response.json()
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```json {{ title: 'Response' }}
+    ```json
     {
         "id": "3f2e1d0c-9b8a-7654-3210-fedcba987654",
         "username": "alice",
@@ -159,15 +119,9 @@ To add a new member, send an invite via the [Invites API](/public-api/invites) â
     }
     ```
 
-  </Col>
-</Row>
-
 ---
 
-## Update Member Role {{ tag: 'PUT', label: '/v1/members/:id' }}
-
-<Row>
-  <Col>
+## Update Member Role
 
     Update a member's assigned role.
 
@@ -181,28 +135,19 @@ To add a new member, send an invite via the [Invites API](/public-api/invites) â
 
     ### URL parameters
 
-    <Properties>
-      <Property name="id" type="string">
-        The unique identifier of the organisation membership.
-      </Property>
-    </Properties>
+      - `id` (string): The unique identifier of the organisation membership.
 
     ### JSON Body
 
     #### Required fields
 
-    <Properties>
-      <Property name="role_id" type="string">
-        The ID of the new role to assign.
-      </Property>
-    </Properties>
+      - `role_id` (string): The ID of the new role to assign.
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="PUT" label="/v1/members/:id">
+    **cURL**
 
-    ```fish {{ title: 'cURL' }}
+    ```fish
     curl -X PUT https://api.phase.dev/v1/members/3f2e1d0c-9b8a-7654-3210-fedcba987654/ \
       -H "Authorization: Bearer {token}" \
       -H "Content-Type: application/json" \
@@ -228,9 +173,9 @@ To add a new member, send an invite via the [Invites API](/public-api/invites) â
     data = response.json()
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```json {{ title: 'Response' }}
+    ```json
     {
         "id": "3f2e1d0c-9b8a-7654-3210-fedcba987654",
         "username": "alice",
@@ -245,15 +190,9 @@ To add a new member, send an invite via the [Invites API](/public-api/invites) â
     }
     ```
 
-  </Col>
-</Row>
-
 ---
 
-## Remove Member {{ tag: 'DELETE', label: '/v1/members/:id' }}
-
-<Row>
-  <Col>
+## Remove Member
 
     Remove a member from the organisation. The user retains their account and can be re-invited later.
 
@@ -263,24 +202,17 @@ To add a new member, send an invite via the [Invites API](/public-api/invites) â
     - Users cannot remove themselves from the organisation (`403`).
     - Service Account callers cannot remove a member who holds a global-access role (`403`).
 
-    <Note>
-    Members provisioned via SCIM are routed through the SCIM deactivation flow on removal. This revokes all of the member's team-granted environment keys, wipes their wrapped keyring, and detaches their SCIM identity so the next provider sync can cleanly re-adopt them. Org owners cannot be deactivated this way (`403`); transfer ownership first.
-    </Note>
+> **Note:** Members provisioned via SCIM are routed through the SCIM deactivation flow on removal. This revokes all of the member's team-granted environment keys, wipes their wrapped keyring, and detaches their SCIM identity so the next provider sync can cleanly re-adopt them. Org owners cannot be deactivated this way (`403`); transfer ownership first.
 
     ### URL parameters
 
-    <Properties>
-      <Property name="id" type="string">
-        The unique identifier of the organisation membership.
-      </Property>
-    </Properties>
+      - `id` (string): The unique identifier of the organisation membership.
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="DELETE" label="/v1/members/:id">
+    **cURL**
 
-    ```fish {{ title: 'cURL' }}
+    ```fish
     curl -X DELETE https://api.phase.dev/v1/members/3f2e1d0c-9b8a-7654-3210-fedcba987654/ \
       -H "Authorization: Bearer {token}"
     ```
@@ -298,21 +230,15 @@ To add a new member, send an invite via the [Invites API](/public-api/invites) â
     # Returns 204 No Content on success
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```text {{ title: 'Response' }}
+    ```text
     204 No Content
     ```
 
-  </Col>
-</Row>
-
 ---
 
-## Manage Access {{ tag: 'PUT', label: '/v1/members/:id/access' }}
-
-<Row>
-  <Col>
+## Manage Access
 
     Set the app and environment access for a member. This is a **declarative** endpoint â€” the request body represents the entire desired access state.
 
@@ -322,38 +248,27 @@ To add a new member, send an invite via the [Invites API](/public-api/invites) â
 
     The server handles cryptographic key wrapping for each environment â€” it re-encrypts environment keys for the member's identity key using server-side encryption.
 
-    <Note>
-    This endpoint only works for apps with **Server-side Encryption (SSE) enabled**. SSE can be enabled from the App settings page. Non-SSE apps return `400 Bad Request`.
-
-    The target member must also have logged in to the Phase console at least once so their identity key is registered. If the member's identity key is missing or blank, the endpoint returns `400 Bad Request` with `{"error": "Member has not set up their identity key yet. They must log in to the console first."}`.
-    </Note>
+> **Note:** This endpoint only works for apps with **Server-side Encryption (SSE) enabled**. SSE can be enabled from the App settings page. Non-SSE apps return `400 Bad Request`.
+>
+>     The target member must also have logged in to the Phase console at least once so their identity key is registered. If the member's identity key is missing or blank, the endpoint returns `400 Bad Request` with `{"error": "Member has not set up their identity key yet. They must log in to the console first."}`.
 
     ### URL parameters
 
-    <Properties>
-      <Property name="id" type="string">
-        The unique identifier of the organisation membership.
-      </Property>
-    </Properties>
+      - `id` (string): The unique identifier of the organisation membership.
 
     ### JSON Body
 
-    <Properties>
-      <Property name="apps" type="array">
-        An array of app access objects. Each object must have:
-        - `id` (string): The app ID.
-        - `environments` (array): A list of environment IDs to grant access to. Must not be empty.
+      - `apps` (array): An array of app access objects. Each object must have:
+          - `id` (string): The app ID.
+          - `environments` (array): A list of environment IDs to grant access to. Must not be empty.
 
-        To revoke all access, pass an empty array.
-      </Property>
-    </Properties>
+          To revoke all access, pass an empty array.
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="PUT" label="/v1/members/:id/access">
+    **cURL (grant access)**
 
-    ```fish {{ title: 'cURL (grant access)' }}
+    ```fish
     curl -X PUT https://api.phase.dev/v1/members/3f2e1d0c-9b8a-7654-3210-fedcba987654/access/ \
       -H "Authorization: Bearer {token}" \
       -H "Content-Type: application/json" \
@@ -370,7 +285,9 @@ To add a new member, send an invite via the [Invites API](/public-api/invites) â
       }'
     ```
 
-    ```fish {{ title: 'cURL (revoke all access)' }}
+    **cURL (revoke all access)**
+
+    ```fish
     curl -X PUT https://api.phase.dev/v1/members/3f2e1d0c-9b8a-7654-3210-fedcba987654/access/ \
       -H "Authorization: Bearer {token}" \
       -H "Content-Type: application/json" \
@@ -404,9 +321,9 @@ To add a new member, send an invite via the [Invites API](/public-api/invites) â
     data = response.json()
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```json {{ title: 'Response' }}
+    ```json
     {
         "id": "3f2e1d0c-9b8a-7654-3210-fedcba987654",
         "username": "alice",
@@ -439,32 +356,21 @@ To add a new member, send an invite via the [Invites API](/public-api/invites) â
     }
     ```
 
-  </Col>
-</Row>
-
 ---
 
-## Get Access {{ tag: 'GET', label: '/v1/members/:id/access' }}
-
-<Row>
-  <Col>
+## Get Access
 
     Read the current app and environment access for a member.
 
     ### URL parameters
 
-    <Properties>
-      <Property name="id" type="string">
-        The unique identifier of the organisation membership.
-      </Property>
-    </Properties>
+      - `id` (string): The unique identifier of the organisation membership.
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="GET" label="/v1/members/:id/access">
+    **cURL**
 
-    ```fish {{ title: 'cURL' }}
+    ```fish
     curl https://api.phase.dev/v1/members/3f2e1d0c-9b8a-7654-3210-fedcba987654/access/ \
       -H "Authorization: Bearer {token}"
     ```
@@ -480,9 +386,9 @@ To add a new member, send an invite via the [Invites API](/public-api/invites) â
     data = response.json()
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```json {{ title: 'Response' }}
+    ```json
     {
         "id": "3f2e1d0c-9b8a-7654-3210-fedcba987654",
         "username": "alice",
@@ -509,6 +415,3 @@ To add a new member, send an invite via the [Invites API](/public-api/invites) â
         ]
     }
     ```
-
-  </Col>
-</Row>

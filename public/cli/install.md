@@ -1,16 +1,12 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description =
-  'Manage your secrets and environment variables with the Phase CLI'
-
-<Tag variant="small">CLI</Tag>
+---
+title: "Install"
+description: "Manage your secrets and environment variables with the Phase CLI"
+url: https://docs.phase.dev/cli/install
+---
 
 # Install
 
 Install the Phase CLI on the platform or operating system of your choice.
-
-<DocActions />
 
 ## Supported platforms
 
@@ -23,27 +19,33 @@ Install the Phase CLI on the platform or operating system of your choice.
 | OpenBSD | x86_64 | binary |
 | NetBSD | x86_64 | binary |
 
-## Installation {{ className: 'lead' }}
+## Installation
 
-<CodeGroup>
+**MacOS**
 
-```fish {{ title: 'MacOS' }}
+```fish
 brew tap phasehq/cli && brew trust phasehq/cli
 brew install phase
 ```
 
-```fish {{ title: 'Linux' }}
+**Linux**
+
+```fish
 curl -fsSL https://pkg.phase.dev/install.sh | sh
 
 # curl -fsSL https://pkg.phase.dev/install.sh | sh -s -- --version 2.0.0
 ```
 
-```fish {{ title: 'Scoop' }}
+**Scoop**
+
+```fish
 scoop bucket add phasehq https://github.com/phasehq/scoop-cli.git
 scoop install phase
 ```
 
-```fish {{ title: 'Windows (.exe)' }}
+**Windows (.exe)**
+
+```fish
 # Download the latest .exe for your architecture from:
 # https://github.com/phasehq/cli/releases/latest
 #
@@ -53,61 +55,75 @@ scoop install phase
 # Rename to phase.exe and add it to a directory on your PATH.
 ```
 
-```fish {{ title: 'Alpine Linux' }}
+**Alpine Linux**
+
+```fish
 apk add --no-cache curl
 curl -fsSL https://pkg.phase.dev/install.sh | sh
 ```
 
-```fish {{ title: 'NixOS' }}
+**NixOS**
+
+```fish
 nix-channel --update
 nix-shell -p phase-cli
 ```
 
-```fish {{ title: 'Docker' }}
+**Docker**
+
+```fish
 # Run the latest version
 docker run phasehq/cli
 
 # Optional: run a specific version - docker run phasehq/cli:<version>
 ```
 
-</CodeGroup>
+## Updates
 
-## Updates {{ className: 'lead' }}
+**MacOS**
 
-<CodeGroup>
-
-```fish {{ title: 'MacOS' }}
+```fish
 brew trust phasehq/cli
 brew update && brew upgrade phase
 ```
 
-```fish {{ title: 'Linux' }}
+**Linux**
+
+```fish
 phase update
 ```
 
-```fish {{ title: 'Scoop' }}
+**Scoop**
+
+```fish
 scoop update phase
 ```
 
-```fish {{ title: 'Windows (.exe)' }}
+**Windows (.exe)**
+
+```fish
 # Re-download the latest .exe from:
 # https://github.com/phasehq/cli/releases/latest
 # and replace your existing phase.exe.
 ```
 
-```fish {{ title: 'Alpine Linux' }}
+**Alpine Linux**
+
+```fish
 phase update
 ```
 
-```fish {{ title: 'NixOS' }}
+**NixOS**
+
+```fish
 nix-channel --update && nix-shell -p phase-cli
 ```
 
-```fish {{ title: 'Docker' }}
+**Docker**
+
+```fish
 # Pull the latest version
 docker pull phasehq/cli:latest
 
 # Optional: pull a specific version - docker pull phasehq/cli:<version>
 ```
-
-</CodeGroup>

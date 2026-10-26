@@ -1,24 +1,20 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description =
-  'This guide will explain how user accounts work in Phase'
-
-<Tag variant="small">CONSOLE</Tag>
+---
+title: "Users"
+description: "This guide will explain how user accounts work in Phase"
+url: https://docs.phase.dev/console/users
+---
 
 # Users
 
 Learn how User accounts work in Phase.
 
-<DocActions /> 
-
 ## Account keys & Signup
 
-Phase is end-to-end encrypted, which means that each member of an [Organisation](/console/organisation) has a unique set of encryption keys that only they have access to.
+Phase is end-to-end encrypted, which means that each member of an [Organisation](https://docs.phase.dev/console/organisation.md) has a unique set of encryption keys that only they have access to.
 
 You can sign up for Phase using your email and password or via an SSO provider (Google, GitHub, GitLab, etc.). Email/password signups on Phase Cloud require email verification before the account is activated.
 
-![Sign up for Phase](/assets/images/console/users/users-signup.webp)
+![Sign up for Phase](https://docs.phase.dev/assets/images/console/users/users-signup.webp)
 
 ### Step 1: Create a sudo password
 
@@ -30,28 +26,24 @@ The sudo password must:
 
 We suggest using a long phrase that you can easily remember.
 
-![sudo password](/assets/images/console/users/create-sudo-password.webp)
+![sudo password](https://docs.phase.dev/assets/images/console/users/create-sudo-password.webp)
 
 By default, the "Remember password on this device" option is turned on. If you are not on a trusted machine, you may want to toggle this off for increased security.
 
 ### Step 2: Save your account recovery kit
 
-In case you lose or forget your `sudo` password, you will need a recovery phrase to restore your account keys. This step provides you with a downloadable recovery kit that you can print out and store somewhere safe. 
-You can also copy the entire contents of the recovery kit to store as a secure note in a password manager or digital wallet. You can choose either option, but we recommend both. 
+In case you lose or forget your `sudo` password, you will need a recovery phrase to restore your account keys. This step provides you with a downloadable recovery kit that you can print out and store somewhere safe.
+You can also copy the entire contents of the recovery kit to store as a secure note in a password manager or digital wallet. You can choose either option, but we recommend both.
 
-<Note>
-  The recovery phrase in the account recovery kit is read left to right, top to bottom. You may simply highlight all the words and copy paste them in the recovery box. The recovery box will auto detect the order.
-</Note>
+> **Note:** The recovery phrase in the account recovery kit is read left to right, top to bottom. You may simply highlight all the words and copy paste them in the recovery box. The recovery box will auto detect the order.
 
-![account recovery](/assets/images/console/users/users-account-recovery.webp)
+![account recovery](https://docs.phase.dev/assets/images/console/users/users-account-recovery.webp)
 
-<Warning>
-  Make sure to save your recovery kit in a safe place! If you forget your `sudo`
-  password, it is the **only** way to regain access to your account.
+> **Warning:** Make sure to save your recovery kit in a safe place! If you forget your `sudo`
+>   password, it is the **only** way to regain access to your account.
+>
 
-</Warning>
-
-If a non-owner user forgets their account sudo password and cannot access their recovery phrase, they can be removed from the organisation and re-added by another user. However, if the Organisation **Owner** forgets their sudo password and cannot access their account recovery phrase they will have lost access to the account permanently. To mitigate this risk, ownership can be [transferred](/console/organisation#transfer-ownership) to another Admin member who has access to their recovery kit.
+If a non-owner user forgets their account sudo password and cannot access their recovery phrase, they can be removed from the organisation and re-added by another user. However, if the Organisation **Owner** forgets their sudo password and cannot access their account recovery phrase they will have lost access to the account permanently. To mitigate this risk, ownership can be [transferred](https://docs.phase.dev/console/organisation.md#transfer-ownership) to another Admin member who has access to their recovery kit.
 
 ## The `sudo` password
 
@@ -59,7 +51,7 @@ Your `sudo` password is used to encrypt your account keys. Performing certain pr
 
 If you chose not to remember your password during onboarding, you will be prompted to enter your `sudo` password when you first perform a privileged action. This unlock screen will look like this:
 
-![sudo password](/assets/images/console/users/phase-console-sudo-password.webp)
+![sudo password](https://docs.phase.dev/assets/images/console/users/phase-console-sudo-password.webp)
 
 When entered correctly, your account keys will be decrypted and held in memory. You will not need to enter this password again for the duration of your session, unless you close the tab or reload the page using the browser 'refresh' action.
 
@@ -73,41 +65,36 @@ If you find entering the password frequently inconvenient, you can enable the "R
 
 Remember: Your `sudo` password is a critical security measure. Always use a strong, unique password and be cautious about where you choose to remember it.
 
-
 ## Add users to an Organisation
 
-You can add a user as an Organisation member by inviting them from the [Organisation members](/console/organisation#members) screen.
+You can add a user as an Organisation member by inviting them from the [Organisation members](https://docs.phase.dev/console/organisation.md#members) screen.
 
-To invite a new member, click on the "Add a member" button, enter the email of the user you wish to invite. An email invite with a link to join your organisation will be sent to their email address. 
+To invite a new member, click on the "Add a member" button, enter the email of the user you wish to invite. An email invite with a link to join your organisation will be sent to their email address.
 You will also be shown an invite link that can be copied and shared if required.
 
-![invite user](/assets/images/console/users/users-invite.webp)
+![invite user](https://docs.phase.dev/assets/images/console/users/users-invite.webp)
 
 Pending invites are listed on the Members page until they are accepted. You can copy the invite link again or delete the invite from there.
 
-![Pending invites](/assets/images/console/users/users-pending-invite.webp)
+![Pending invites](https://docs.phase.dev/assets/images/console/users/users-pending-invite.webp)
 
-![Delete a pending invite](/assets/images/console/users/users-delete-invite.webp)
+![Delete a pending invite](https://docs.phase.dev/assets/images/console/users/users-delete-invite.webp)
 
-<Note>
-Note: Invited members will not have access to any Apps or Environments after joining your organisation. Once they accept your invite, you can grant them access to specific Apps and Environments from the App Members screen.
-
-</Note>
+> **Note:** Note: Invited members will not have access to any Apps or Environments after joining your organisation. Once they accept your invite, you can grant them access to specific Apps and Environments from the App Members screen.
+>
 
 ## Remove a member from an Organisation
 
-You can permanently remove a member from an Organisation from the [Organisation members](/console/organisation#members) screen. To remove a member, click on the "Remove member" button beside their name.
+You can permanently remove a member from an Organisation from the [Organisation members](https://docs.phase.dev/console/organisation.md#members) screen. To remove a member, click on the "Remove member" button beside their name.
 
-![Remove member button](/assets/images/console/users/users-remove-member.webp)
+![Remove member button](https://docs.phase.dev/assets/images/console/users/users-remove-member.webp)
 
-![Confirm member removal](/assets/images/console/users/users-remove-member-confirm.webp)
+![Confirm member removal](https://docs.phase.dev/assets/images/console/users/users-remove-member-confirm.webp)
 
 ## User Roles
 
-Users in Phase must be given a role. By default, users are given the managed "Developer" role when they join an Organisation. This role can be changed once they join. 
+Users in Phase must be given a role. By default, users are given the managed "Developer" role when they join an Organisation. This role can be changed once they join.
 
-<Note>
-  When you invite a member or change a member's role, you can only select a role whose permissions your own role also has. This limit does not apply to users with the "Owner" or "Admin" role.
-</Note>
+> **Note:** When you invite a member or change a member's role, you can only select a role whose permissions your own role also has. This limit does not apply to users with the "Owner" or "Admin" role.
 
-[Learn about how roles work](/access-control/roles).
+[Learn about how roles work](https://docs.phase.dev/access-control/roles.md).

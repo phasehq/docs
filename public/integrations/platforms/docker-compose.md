@@ -1,25 +1,20 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description = 'Integrate Phase with Docker Compose'
-
-<Tag variant="small">INTEGRATE</Tag>
+---
+title: "Docker Compose"
+description: "Integrate Phase with Docker Compose"
+url: https://docs.phase.dev/integrations/platforms/docker-compose
+---
 
 # Docker Compose
 
 You can use Phase Run to inject secrets to your application process during runtime. There's no need for you to change any code or add a dependency.
-
-<DocActions />
 
 ## Prerequisites
 
 - Have signed up for the [Phase Console](https://console.phase.dev) and created an application.
 - `PHASE_SERVICE_TOKEN` (Ideally for each of your services).
 
-<Note>
-  If you are using a Self-Hosted instance of the Phase Console, you may supply
-  the `PHASE_HOST` environment variable with your URL (`https://<HOST>`).
-</Note>
+> **Note:** If you are using a Self-Hosted instance of the Phase Console, you may supply
+>   the `PHASE_HOST` environment variable with your URL (`https://<HOST>`).
 
 ## Using Phase Run
 
@@ -27,11 +22,9 @@ This method uses the Phase CLI to inject secrets into your `docker compose` serv
 
 1. Reference the required environment variables directly in your `docker-compose.yml`:
 
-<Note>
-  Only the secrets explicitly listed inside the `environment:` map will be
-  supplied to your services. Make sure to update the list every time you add a
-  new secret in Phase.
-</Note>
+> **Note:** Only the secrets explicitly listed inside the `environment:` map will be
+>   supplied to your services. Make sure to update the list every time you add a
+>   new secret in Phase.
 
 ```yaml
 services:
@@ -92,10 +85,8 @@ phase run --app "my application name" docker compose up -d
 
 This method combines Phase Run's secret injection with Docker Compose's native secrets feature, without writing any secrets on disk for enhanced security. Environment variables are often available to all processes; it can be difficult to track access. They can also be printed in logs when debugging errors without your knowledge. Using secrets mitigates these risks. Instead of passing sensitive data as environment variables, secrets are mounted as files inside the container. More information over at Docker Compose [docs](https://docs.docker.com/compose/how-tos/use-secrets).
 
-<Note>
-  This approach requires your application to be configured to read secrets from files
-  rather than environment variables.
-</Note>
+> **Note:** This approach requires your application to be configured to read secrets from files
+>   rather than environment variables.
 
 1. Reference the required secrets directly in your `docker-compose.yml` using the top-level `secrets` element along with the services which require access to each secret using the `secrets` attribute:
 
@@ -149,24 +140,26 @@ This method uses the Phase CLI running inside each of your Docker containers to 
 
 To maintain deterministic Docker builds and prevent accidentally breaking things, it's recommended to specify the `--version` flag. You can find the latest versions of the CLI at the [GitHub releases](https://github.com/phasehq/cli/releases). If no version flag is provided then the latest version of the CLI will be installed.
 
-<CodeGroup>
+**Alpine Linux**
 
-```fish {{ title: 'Alpine Linux' }}
+```fish
 ENV VERSION=<X.XX.XX>
 RUN apk add --no-cache curl && curl -fsSL https://pkg.phase.dev/install.sh | sh -s -- --version $VERSION
 ```
 
-```fish {{ title: 'RedHat/CentOS/Amazon Linux' }}
+**RedHat/CentOS/Amazon Linux**
+
+```fish
 ENV VERSION=<X.XX.XX>
 RUN yum -y install bash sudo curl wget && curl -fsSL https://pkg.phase.dev/install.sh | bash -s -- --version $VERSION
 ```
 
-```fish {{ title: 'Ubuntu/Debian' }}
+**Ubuntu/Debian**
+
+```fish
 ENV VERSION=<X.XX.XX>
 RUN apt-get update && apt-get install -y bash sudo curl wget && curl -fsSL https://pkg.phase.dev/install.sh | bash -s -- --version $VERSION
 ```
-
-</CodeGroup>
 
 2. **Defining Your Container's Start Command**
 
@@ -218,14 +211,7 @@ services:
       - PHASE_SERVICE_TOKEN=${PHASE_SERVICE_TOKEN_FOR_API}
 ```
 
-<div className="not-prose">
-  <Button
-    href="https://docs.docker.com/compose/environment-variables/set-environment-variables/"
-    variant="text"
-    arrow="right"
-    children="Learn more about Docker Compose environment variables"
-  />
-</div>
+[Learn more about Docker Compose environment variables](https://docs.docker.com/compose/environment-variables/set-environment-variables/)
 
 ## Using `eval`
 
@@ -288,14 +274,7 @@ volumes:
   pgdata:
 ```
 
-<div className="not-prose">
-  <Button
-    href="https://docs.docker.com/engine/reference/run/#env-environment-variables"
-    variant="text"
-    arrow="right"
-    children="Docker Run - Docs"
-  />
-</div>
+[Docker Run - Docs](https://docs.docker.com/engine/reference/run/#env-environment-variables)
 
 ## Using Phase Export
 
@@ -349,11 +328,4 @@ volumes:
   pgdata:
 ```
 
-<div className="not-prose">
-  <Button
-    href="https://docs.docker.com/engine/reference/run/#env-environment-variables"
-    variant="text"
-    arrow="right"
-    children="Docker Run - Docs"
-  />
-</div>
+[Docker Run - Docs](https://docs.docker.com/engine/reference/run/#env-environment-variables)

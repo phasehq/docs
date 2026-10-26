@@ -1,21 +1,18 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description = 'Cryptographic algorithms used in Phase Encryption'
-
-<Tag variant="small">SECURITY</Tag>
+---
+title: "Cryptographic Algorithms"
+description: "Cryptographic algorithms used in Phase Encryption"
+url: https://docs.phase.dev/security/cryptography
+---
 
 # Cryptographic Algorithms
 
-Low level details of cryptographic algorithms and implementations used to secure data in Phase. {{ className: 'lead' }}
-
-<DocActions /> 
+Low level details of cryptographic algorithms and implementations used to secure data in Phase.
 
 ## Data Encryption - `XChaCha20-Poly1305`
 
 `ChaCha20-Poly1305` is an authenticated encryption with additional data (AEAD) algorithm, that combines the ChaCha20 stream cipher with the Poly1305 message authentication code. Its usage in IETF protocols is standardized in RFC 8439.
 
-![ChaCha20-Poly1305](/assets/ChaCha20-Poly1305_Encryption.png)
+![ChaCha20-Poly1305](https://docs.phase.dev/assets/ChaCha20-Poly1305_Encryption.png)
 
 - `XChaCha20`: This is a variant of the ChaCha20 stream cipher, but it has a longer nonce size. The original ChaCha20 uses a 64-bit nonce, which is a number that should only be used once per key. However, managing nonces can be difficult in practice and reusing a nonce can lead to serious vulnerabilities. XChaCha20 increases the nonce size to 192 bits, significantly reducing the risk of nonce reuse.
 - `Poly1305`: This is a message authentication code (MAC) that is used to ensure the integrity and authenticity of a message. It's secure and efficient, helping to ensure that an encrypted message hasn't been tampered with.
@@ -63,7 +60,7 @@ The following table splits the SafeCurves requirements into:
 | `E-222`                                                        | ✅    | ✅                                              | ✅                                                    | ✅                                            | ✅                                          | ✅                                                    | ✅                                            | ✅                                              | ✅                                                | ✅                                              | ✅                                                    | ✅                                          |
 | `NIST P-224`                                                   | ❌    | ✅                                              | ✅                                                    | ✅                                            | ✅                                          | ✅                                                    | ✅                                            | ❌                                              | ❌                                                | ❌                                              | ❌                                                    | ❌                                          |
 | `Curve1174`                                                    | ✅    | ✅                                              | ✅                                                    | ✅                                            | ✅                                          | ✅                                                    | ✅                                            | ✅                                              | ✅                                                | ✅                                              | ✅                                                    | ✅                                          |
-| <code className="text-emerald-500 font-bold">Curve25519</code> | ✅    | ✅                                              | ✅                                                    | ✅                                            | ✅                                          | ✅                                                    | ✅                                            | ✅                                              | ✅                                                | ✅                                              | ✅                                                    | ✅                                          |
+| `Curve25519` | ✅    | ✅                                              | ✅                                                    | ✅                                            | ✅                                          | ✅                                                    | ✅                                            | ✅                                              | ✅                                                | ✅                                              | ✅                                                    | ✅                                          |
 | `BN(2,254)`                                                    | ❌    | ✅                                              | ✅                                                    | ✅                                            | ✅                                          | ❌                                                    | ❌                                            | ✅                                              | ❌                                                | ❌                                              | ❌                                                    | ❌                                          |
 | `brainpoolP256t1`                                              | ❌    | ✅                                              | ✅                                                    | ✅                                            | ✅                                          | ✅                                                    | ✅                                            | ✅                                              | ❌                                                | ❌                                              | ❌                                                    | ❌                                          |
 | `ANSSI FRP256v1`                                               | ❌    | ✅                                              | ✅                                                    | ✅                                            | ✅                                          | ✅                                                    | ✅                                            | ❌                                              | ❌                                                | ❌                                              | ❌                                                    | ❌                                          |
@@ -79,14 +76,7 @@ The following table splits the SafeCurves requirements into:
 | `M-511`                                                        | ✅    | ✅                                              | ✅                                                    | ✅                                            | ✅                                          | ✅                                                    | ✅                                            | ✅                                              | ✅                                                | ✅                                              | ✅                                                    | ✅                                          |
 | `E-521`                                                        | ✅    | ✅                                              | ✅                                                    | ✅                                            | ✅                                          | ✅                                                    | ✅                                            | ✅                                              | ✅                                                | ✅                                              | ✅                                                    | ✅                                          |
 
-<div className="not-prose">
-  <Button
-    href="https://safecurves.cr.yp.to/"
-    variant="text"
-    arrow="right"
-    children="Read more at SafeCurves"
-  />
-</div>
+[Read more at SafeCurves](https://safecurves.cr.yp.to/)
 
 Fun fact: `Curve25519` is currently being used in TLS 1.3, Signal, Wireguard, Tor and others!
 
@@ -102,7 +92,7 @@ Here's how it works:
 - **Share Creation**: We generate a random, high-entropy offset key which is equal in length to the `privKey`, `offsetKey0`. One share of the secret `share0` is set to be this `offsetKey0`. The second share `share1` is the ⊕ result of `privKey` and `offsetKey0`.
 - **Secret Reconstruction**: To reconstruct the secret, both shares are required. The original secret `privKey` can be recovered by calculating `share0 ⊕ share1` (i.e., `offsetKey0 ⊕ (privKey ⊕ offsetKey0)`).
 
-The scheme ensures that each share individually provides no information about the original secret; only when combined do they reveal the secret. It's a simple, yet effective, method of secret sharing with symmetric properties - it doesn't matter which share is labeled as `share0` and which as `share1`. As long as they are stored securely, and not used across multiple secrets, this scheme can provide a solid layer of security. Phase Console also encrypts the share that is deployed via the KMS service with a key only you have access to, for an added layer of security. [Read more](/security/architecture#app-keys-and-secret-generation)
+The scheme ensures that each share individually provides no information about the original secret; only when combined do they reveal the secret. It's a simple, yet effective, method of secret sharing with symmetric properties - it doesn't matter which share is labeled as `share0` and which as `share1`. As long as they are stored securely, and not used across multiple secrets, this scheme can provide a solid layer of security. Phase Console also encrypts the share that is deployed via the KMS service with a key only you have access to, for an added layer of security. [Read more](https://docs.phase.dev/security/architecture.md#app-keys-and-secret-generation)
 
 ---
 

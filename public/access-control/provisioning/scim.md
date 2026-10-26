@@ -1,19 +1,14 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description = 'Set up SCIM v2 provisioning to automatically sync users and groups from your identity provider to Phase.'
-
-<Tag variant="small">PROVISIONING</Tag>
+---
+title: "SCIM Provisioning"
+description: "Set up SCIM v2 provisioning to automatically sync users and groups from your identity provider to Phase."
+url: https://docs.phase.dev/access-control/provisioning/scim
+---
 
 # SCIM Provisioning
 
 SCIM (System for Cross-domain Identity Management) v2 enables automatic user and group provisioning from your identity provider (IdP) to Phase. When configured, your IdP can automatically create, update, and deactivate user accounts in Phase, eliminating the need for manual user management.
 
-<DocActions />
-
-<Note>
-  SCIM provisioning is available for organisations with an `Enterprise` tier subscription. See [Pricing](https://phase.dev/pricing).
-</Note>
+> **Note:** SCIM provisioning is available for organisations with an `Enterprise` tier subscription. See [Pricing](https://phase.dev/pricing).
 
 ## How it works
 
@@ -31,11 +26,9 @@ When SCIM is enabled, your identity provider communicates with Phase's SCIM v2 A
 3. **User completes account setup** → User sets up their sudo password and recovery phrase, enabling them to decrypt secrets
 4. **IdP unassigns user** → SCIM deactivates the user, revokes environment keys, and removes them from the organisation
 
-<Warning>
-  **Limitation: users with an existing Phase identity**
-
-  To prevent account takeover, Phase won't silently link a SCIM-provisioned account to an existing Phase user who already has a password, a linked SSO / social login, or an active membership in another organisation. The provision succeeds and the user appears under **Members** with `SCIM` and `Pending` badges, but their first SSO login to the new organisation is refused. A consent-based linking flow is planned as a follow-up.
-</Warning>
+> **Warning:** **Limitation: users with an existing Phase identity**
+>
+>   To prevent account takeover, Phase won't silently link a SCIM-provisioned account to an existing Phase user who already has a password, a linked SSO / social login, or an active membership in another organisation. The provision succeeds and the user appears under **Members** with `SCIM` and `Pending` badges, but their first SSO login to the new organisation is refused. A consent-based linking flow is planned as a follow-up.
 
 ## Enable SCIM in Phase
 
@@ -45,7 +38,7 @@ Before configuring your identity provider, enable SCIM in the Phase Console and 
 
 2. Navigate to **Access** > **SCIM** in the sidebar.
 
-   ![SCIM page](/assets/images/console/access-control/scim/1-scim-page.webp)
+   ![SCIM page](https://docs.phase.dev/assets/images/console/access-control/scim/1-scim-page.webp)
 
 3. Toggle **Enable SCIM** to on.
 
@@ -55,21 +48,19 @@ Before configuring your identity provider, enable SCIM in the Phase Console and 
    https://[YOUR_PHASE_HOST]/service/v1/scim/v2/
    ```
 
-   ![SCIM enabled with the base URL](/assets/images/console/access-control/scim/2-scim-enabled.webp)
+   ![SCIM enabled with the base URL](https://docs.phase.dev/assets/images/console/access-control/scim/2-scim-enabled.webp)
 
 5. Click **Create token** to generate a SCIM bearer token. Give it a descriptive name (e.g., "Azure Entra ID") and select an expiry period.
 
-   ![Create SCIM token dialog](/assets/images/console/access-control/scim/3-create-token.webp)
+   ![Create SCIM token dialog](https://docs.phase.dev/assets/images/console/access-control/scim/3-create-token.webp)
 
 6. Copy the generated token immediately — it will not be shown again. This token will be used as the **Secret Token** in your identity provider's SCIM configuration.
 
-   ![SCIM token shown once after creation](/assets/images/console/access-control/scim/4-token-created.webp)
+   ![SCIM token shown once after creation](https://docs.phase.dev/assets/images/console/access-control/scim/4-token-created.webp)
 
-   ![SCIM token list](/assets/images/console/access-control/scim/5-token-list.webp)
+   ![SCIM token list](https://docs.phase.dev/assets/images/console/access-control/scim/5-token-list.webp)
 
-<Warning>
-  Treat the SCIM token like a password. Anyone with this token can provision and deprovision users in your Phase organisation.
-</Warning>
+> **Warning:** Treat the SCIM token like a password. Anyone with this token can provision and deprovision users in your Phase organisation.
 
 ## Microsoft Entra ID (Azure AD)
 
@@ -79,11 +70,9 @@ Microsoft Entra ID supports SCIM-based provisioning through Enterprise Applicati
 
 - A Microsoft Entra ID tenant with a P1 or P2 license (required for enterprise app provisioning)
 - An existing Phase Enterprise organisation with SCIM enabled and a SCIM token (see above)
-- OIDC SSO configured for Microsoft Entra ID (see [Entra ID OIDC setup](/access-control/authentication/oidc-sso#microsoft-entra-id--azure-ad))
+- OIDC SSO configured for Microsoft Entra ID (see [Entra ID OIDC setup](https://docs.phase.dev/access-control/authentication/oidc-sso.md#microsoft-entra-id--azure-ad))
 
-<Note>
-  SCIM provisioning and OIDC SSO are complementary features. SCIM handles account lifecycle (creation, deactivation), while OIDC handles authentication (login). You should configure both for the best experience.
-</Note>
+> **Note:** SCIM provisioning and OIDC SSO are complementary features. SCIM handles account lifecycle (creation, deactivation), while OIDC handles authentication (login). You should configure both for the best experience.
 
 ### Step 1: Create an Enterprise Application
 
@@ -132,9 +121,7 @@ Note: if the attribute mappings remain locked or inaccessible after setting up t
    | `name.givenName` | `givenName` | | Direct |
    | `name.familyName` | `surname` | | Direct |
 
-   <Note>
-     The `mail` → `emails[type eq "work"].value` mapping is important. Phase uses this email to link the SCIM-provisioned account with the SSO login. If your users don't have the `mail` attribute populated in Entra ID, you can map `userPrincipalName` to `emails[type eq "work"].value` instead.
-   </Note>
+> **Note:** The `mail` → `emails[type eq "work"].value` mapping is important. Phase uses this email to link the SCIM-provisioned account with the SSO login. If your users don't have the `mail` attribute populated in Entra ID, you can map `userPrincipalName` to `emails[type eq "work"].value` instead.
 
 3. Click **Save**.
 
@@ -160,9 +147,7 @@ Note: if the attribute mappings remain locked or inaccessible after setting up t
 
 3. Select the users and/or groups you want to provision to Phase, then click **Assign**.
 
-<Note>
-  Only users and groups explicitly assigned to the Enterprise Application will be provisioned. The default scope setting is "Sync only assigned users and groups".
-</Note>
+> **Note:** Only users and groups explicitly assigned to the Enterprise Application will be provisioned. The default scope setting is "Sync only assigned users and groups".
 
 ### Step 5: Start Provisioning
 
@@ -198,9 +183,7 @@ To clear a quarantine and resume normal provisioning:
 3. Click **Start provisioning** — this clears the quarantine state and triggers a fresh initial sync.
 4. Verify the **Provisioning Status** toggle is set to **On**, then click **Save**.
 
-<Note>
-  "Restart provisioning" clears the quarantine but does not always re-enable the provisioning toggle. Always verify the toggle is **On** and click **Save** after restarting.
-</Note>
+> **Note:** "Restart provisioning" clears the quarantine but does not always re-enable the provisioning toggle. Always verify the toggle is **On** and click **Save** after restarting.
 
 #### User can't log in after SCIM provisioning
 
@@ -233,11 +216,9 @@ Okta supports SCIM-based provisioning through its application integration platfo
 
 - An Okta organisation with the ability to create custom SCIM integrations
 - An existing Phase Enterprise organisation with SCIM enabled and a SCIM token (see [Enable SCIM in Phase](#enable-scim-in-phase))
-- OIDC SSO configured for Okta (see [Okta OIDC setup](/access-control/authentication/oidc-sso#okta))
+- OIDC SSO configured for Okta (see [Okta OIDC setup](https://docs.phase.dev/access-control/authentication/oidc-sso.md#okta))
 
-<Note>
-  SCIM provisioning and OIDC SSO are complementary features. SCIM handles account lifecycle (creation, deactivation), while OIDC handles authentication (login). You should configure both for the best experience.
-</Note>
+> **Note:** SCIM provisioning and OIDC SSO are complementary features. SCIM handles account lifecycle (creation, deactivation), while OIDC handles authentication (login). You should configure both for the best experience.
 
 ### Step 1: Create a SCIM application in Okta
 
@@ -253,9 +234,7 @@ Okta does not support attaching SCIM provisioning to an OIDC integration ([Okta 
 
 5. (Optional) Under **App Visibility**, check **Do not display application icon to users** so the SCIM-only app doesn't appear on user dashboards.
 
-<Note>
-  Sign-in settings (Who sets the credentials, Application username, etc.) only affect the SWA sign-in flow, which you're not using — accept the defaults.
-</Note>
+> **Note:** Sign-in settings (Who sets the credentials, Application username, etc.) only affect the SWA sign-in flow, which you're not using — accept the defaults.
 
 6. Click **Finish**.
 
@@ -305,9 +284,7 @@ Okta does not support attaching SCIM provisioning to an OIDC integration ([Okta 
    | `email` | `emails[type eq "work"].value` | `user.email` |
    | `displayName` | `displayName` | `user.displayName` |
 
-   <Note>
-     Okta uses `userName` (typically the user's email address) as the primary identifier. Ensure that the `userName` in Okta matches the email address used for SSO login, so Phase can link the SCIM-provisioned account with the OIDC identity.
-   </Note>
+> **Note:** Okta uses `userName` (typically the user's email address) as the primary identifier. Ensure that the `userName` in Okta matches the email address used for SSO login, so Phase can link the SCIM-provisioned account with the OIDC identity.
 
 ### Step 5: Assign Users and Groups
 
@@ -322,9 +299,7 @@ Okta does not support attaching SCIM provisioning to an OIDC integration ([Okta 
    - Select the groups you want to push to Phase
    - Click **Save**
 
-<Note>
-  In Okta, assigning a group under **Assignments** grants group members access to the app (user provisioning). The **Push Groups** tab controls whether the group itself is synced to Phase as a Team. You typically need both: assign the group for user provisioning, and push the group for team creation.
-</Note>
+> **Note:** In Okta, assigning a group under **Assignments** grants group members access to the app (user provisioning). The **Push Groups** tab controls whether the group itself is synced to Phase as a Team. You typically need both: assign the group for user provisioning, and push the group for team creation.
 
 ### Step 6: Verify Provisioning
 

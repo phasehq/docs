@@ -1,26 +1,18 @@
-import { Tag } from '@/components/Tag'
-import { HeroPattern } from '@/components/HeroPattern'
-import { UserAuthProviders } from '@/components/UserAuthProviders'
-import { DocActions } from '@/components/DocActions'
-
-export const description =
-  'This guide explains how to authenticate with Phase and manage access with the Access Control system.'
-
-<HeroPattern />
-
-<Tag variant="small">ACCESS CONTROL</Tag>
+---
+title: "Authentication & Access Control"
+description: "This guide explains how to authenticate with Phase and manage access with the Access Control system."
+url: https://docs.phase.dev/access-control
+---
 
 # Authentication & Access Control
 
 Learn how to authenticate with Phase and manage access with the Access Control system.
 
-<DocActions /> 
-
 ## Overview
 
-Phase employs a Role-Based Access Control (RBAC) system to manage permissions for both human users and programmatic access via Service Accounts. 
+Phase employs a Role-Based Access Control (RBAC) system to manage permissions for both human users and programmatic access via Service Accounts.
 
-Phase supports native email/password authentication as well as third-party authentication systems for access control. Password authentication works out of the box with no additional configuration. You can also delegate authentication to external providers such as Google, AWS IAM, GitHub, Kubernetes, GitLab, or Microsoft Azure to best suit your setup. When choosing an authentication provider, consider whether the access to Phase will be programmatic (machine-access) via REST API, SDK, CLI, etc., or user access (human-access). 
+Phase supports native email/password authentication as well as third-party authentication systems for access control. Password authentication works out of the box with no additional configuration. You can also delegate authentication to external providers such as Google, AWS IAM, GitHub, Kubernetes, GitLab, or Microsoft Azure to best suit your setup. When choosing an authentication provider, consider whether the access to Phase will be programmatic (machine-access) via REST API, SDK, CLI, etc., or user access (human-access).
 
 Phase's access control system is based on roles that define policies governing the behavior and access of clients, whether they are human Users or Service Accounts. The system allows for fine-grained control over resources at both the organization and application levels.
 
@@ -28,19 +20,19 @@ Phase's access control system is based on roles that define policies governing t
 
 User authentication in Phase is designed for seamless and secure access for human users. Phase supports native email/password authentication out of the box, as well as various Single Sign-On (SSO) providers, allowing organizations to leverage their existing identity management systems.
 
-[Read more](/access-control/authentication#user-authentication) about how user accounts can authenticate with the Phase platform.
+[Read more](https://docs.phase.dev/access-control/authentication.md#user-authentication) about how user accounts can authenticate with the Phase platform.
 
 ## Service Accounts
 
 Programmatic access to secrets in Phase is facilitated by Service Accounts. A Service Account is a special type of account that represents non-human users, such as applications, automation processes, or CI/CD pipelines, that need to interact with Phase programmatically through the API, SDK, or CLI.
 
-[Read more](/access-control/service-accounts) about how service accounts work.
+[Read more](https://docs.phase.dev/access-control/service-accounts.md) about how service accounts work.
 
 ## Teams
 
 Teams let you group members and service accounts together and grant them scoped access to apps and environments. Instead of managing access individually, you assign access at the team level — when someone joins the team, they automatically receive the right encryption keys. Teams support optional role overrides and work with SCIM provisioning for automated group sync.
 
-[Read more](/access-control/teams) about how teams work.
+[Read more](https://docs.phase.dev/access-control/teams.md) about how teams work.
 
 ## Access Control - Key Concepts
 
@@ -89,7 +81,7 @@ The Phase End-to-End encryption implementation works in conjunction with the acc
 
 Global access is a special type of permission that grants users with a "global access" role implicit access to all Apps and Environments across the organization. Currently, Global access is reserved exclusively for the Phase managed `Owner` and `Admin` roles.
 
-Users can only grant permissions that their own role holds. The `Owner` and `Admin` roles are exempt from this limit. [Read more](/access-control/roles) about how roles work.
+Users can only grant permissions that their own role holds. The `Owner` and `Admin` roles are exempt from this limit. [Read more](https://docs.phase.dev/access-control/roles.md) about how roles work.
 
 ### External Auth Method Considerations
 

@@ -1,17 +1,14 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description = 'Integrate Phase with OpenAI to automatically rotate project service-account API keys.'
-
-<Tag variant="small">INTEGRATE</Tag>
+---
+title: "OpenAI — Rotating Secrets"
+description: "Integrate Phase with OpenAI to automatically rotate project service-account API keys."
+url: https://docs.phase.dev/integrations/platforms/openai
+---
 
 # OpenAI — Rotating Secrets
 
 Phase rotates [OpenAI](https://platform.openai.com/) **project service-account** API keys on a schedule. Each rotation creates a new service account in the project you pick, surfaces its API key as the active value in your Environment, and deletes the previous service account after the configured revocation delay. Minted keys are scoped to a single project — never to your whole organization.
 
-See [Rotating Secrets](/console/rotating-secrets) for the general lifecycle.
-
-<DocActions />
+See [Rotating Secrets](https://docs.phase.dev/console/rotating-secrets.md) for the general lifecycle.
 
 ### Prerequisites
 
@@ -31,22 +28,22 @@ Phase needs an OpenAI admin API key to manage project service accounts. Create a
 
 In the Phase Console, go to **Integrations → Third-party credentials** and click **Add credential**. Choose **OpenAI** and paste your admin key into **Admin API Key**. Phase validates the key against OpenAI before saving — a bad key is rejected up front.
 
-![Select OpenAI](/assets/images/platform-integrations/openai/create-credentials-openai.webp)
+![Select OpenAI](https://docs.phase.dev/assets/images/platform-integrations/openai/create-credentials-openai.webp)
 
-![OpenAI credentials](/assets/images/platform-integrations/openai/input-openai-credentials.webp)
+![OpenAI credentials](https://docs.phase.dev/assets/images/platform-integrations/openai/input-openai-credentials.webp)
 
 ## Create a Rotating Secret for OpenAI
 
 Open an Environment, click **New Secret → Rotating Secret**, and pick **OpenAI**.
 
-![Rotating Secret with OpenAI: provider and root credentials](/assets/images/console/rotating-secrets/create-rotating-secret-step-1.webp)
+![Rotating Secret with OpenAI: provider and root credentials](https://docs.phase.dev/assets/images/console/rotating-secrets/create-rotating-secret-step-1.webp)
 
 ### Provider config
 
 - **Project** — dropdown of every active project in your organization. Pick the project the minted service accounts will belong to. The minted API key is scoped to this project only; it has no access to other projects or to org-level admin operations.
 - **Service Account Name Template** — defaults to `phase-rs-{id}`, where `{id}` expands to `<rotating-secret-id>-<unix-epoch>` on every mint. Deterministic naming makes orphaned service accounts (if any) easy to identify in the OpenAI dashboard.
 
-![OpenAI provider config](/assets/images/console/rotating-secrets/openai-provider-config.webp)
+![OpenAI provider config](https://docs.phase.dev/assets/images/console/rotating-secrets/openai-provider-config.webp)
 
 ### Outputs
 
@@ -56,7 +53,7 @@ OpenAI yields three values per minted service account. Choose env-variable names
 - **key_id** — the OpenAI-side api_key id.
 - **service_account_id** — the OpenAI-side `svc_acct_…` id used internally by Phase for revocation.
 
-![OpenAI outputs and schedule](/assets/images/console/rotating-secrets/create-rotating-secret-step-3.webp)
+![OpenAI outputs and schedule](https://docs.phase.dev/assets/images/console/rotating-secrets/create-rotating-secret-step-3.webp)
 
 Click **Create and mint**. Phase calls `POST /v1/organization/projects/{project_id}/service_accounts` and the first credential's API key appears under the name you chose.
 

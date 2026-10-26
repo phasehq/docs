@@ -1,17 +1,12 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description =
-  'Run Phase on your Raspberry Pi with docker-compose.'
-
-<Tag variant="small">SELF-HOSTING</Tag>
-
+---
+title: "Raspberry Pi"
+description: "Run Phase on your Raspberry Pi with docker-compose."
+url: https://docs.phase.dev/self-hosting/raspberrypi
+---
 
 # Raspberry Pi
 
-Learn how to set up the Phase Console using the Docker Compose template on your Raspberry Pi. {{ className: 'lead' }}
-
-<DocActions /> 
+Learn how to set up the Phase Console using the Docker Compose template on your Raspberry Pi.
 
 Keep in mind the steps listed below serve as a rough outline on how to self-host Phase Services on your own infrastructure.
 
@@ -79,10 +74,9 @@ wget -O ./nginx/Dockerfile https://raw.githubusercontent.com/phasehq/console/mai
 
 ### 4. Update your configuration
 
-Modify the `.env` file to match your environment settings. 
+Modify the `.env` file to match your environment settings.
 
-
-### Generate secrets 
+### Generate secrets
 
 ```fish
 sed -i.bak "s|DATABASE_PASSWORD=.*|DATABASE_PASSWORD=$(openssl rand -hex 32)|g" .env && \
@@ -91,11 +85,9 @@ sed -i.bak "s|SERVER_SECRET=.*|SERVER_SECRET=$(openssl rand -hex 32)|g" .env && 
 rm .env.bak
 ```
 
-For a complete list of available options, refer to the [environment variables](/self-hosting/configuration/envars) documentation.
+For a complete list of available options, refer to the [environment variables](https://docs.phase.dev/self-hosting/configuration/envars.md) documentation.
 
-<Note>
-For a production deployment, please use a more secure method than a `.env` file to store your secrets. Please see our guide on [Docker Compose secrets](https://phase.dev/blog/docker-compose-secrets/) for more information.
-</Note>
+> **Note:** For a production deployment, please use a more secure method than a `.env` file to store your secrets. Please see our guide on [Docker Compose secrets](https://phase.dev/blog/docker-compose-secrets/) for more information.
 
 ### 5. Start services
 

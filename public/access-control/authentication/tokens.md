@@ -1,16 +1,12 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description =
-  'Learn how to create and manage authentication tokens in Phase.'
-
-<Tag variant="small">AUTHENTICATION</Tag>
+---
+title: "Authentication Tokens"
+description: "Learn how to create and manage authentication tokens in Phase."
+url: https://docs.phase.dev/access-control/authentication/tokens
+---
 
 # Authentication Tokens
 
-Phase provides secure authentication tokens for both human users and service accounts. These tokens enable programmatic access to Phase through our API, CLI, and SDKs while maintaining strict access controls and security standards. {{ className: 'lead' }}
-
-<DocActions /> 
+Phase provides secure authentication tokens for both human users and service accounts. These tokens enable programmatic access to Phase through our API, CLI, and SDKs while maintaining strict access controls and security standards.
 
 ## Service Account Tokens
 
@@ -22,31 +18,31 @@ Follow these steps to create a new Service Account Token:
 
 1. Navigate to Service Account Management by heading to Access Control and clicking on the Service Accounts tab
    From the Service Account tab in Access Control, find the Service Account you want to create a Service Token for and click the **Manage** button.
-   ![Click manage service account button](/assets/images/console/access-control/service-accounts/create-new-service-tokens/3-click-manage-service-accounts.webp)
+   ![Click manage service account button](https://docs.phase.dev/assets/images/console/access-control/service-accounts/create-new-service-tokens/3-click-manage-service-accounts.webp)
 
 2. Create New Token
    Click the **+ Create Token** button to begin the token creation process.
-   ![Click create a new service token button](/assets/images/console/access-control/service-accounts/create-new-service-tokens/4-click-create-new-token.webp)
+   ![Click create a new service token button](https://docs.phase.dev/assets/images/console/access-control/service-accounts/create-new-service-tokens/4-click-create-new-token.webp)
 
 3. Configure Token Settings
    - Provide a suitable **Token name**
    - Set an Expiry date
    - Click **Create** to generate the token
-   ![Enter service token name create](/assets/images/console/access-control/service-accounts/create-new-service-tokens/5-enter-service-token-name-choose-expiry.webp)
+   ![Enter service token name create](https://docs.phase.dev/assets/images/console/access-control/service-accounts/create-new-service-tokens/5-enter-service-token-name-choose-expiry.webp)
 
 #### Personal Secret Token
-This token contains cryptographic key material and is intended for use with clients such as the [CLI](/cli), [SDKs](/sdks), or the [Kubernetes operator](/integrations/platforms/kubernetes).
+This token contains cryptographic key material and is intended for use with clients such as the [CLI](https://docs.phase.dev/cli.md), [SDKs](https://docs.phase.dev/sdks.md), or the [Kubernetes operator](https://docs.phase.dev/integrations/platforms/kubernetes.md).
 
 4. Copy the Token
-   Copy the token based on your client needs. 
+   Copy the token based on your client needs.
    **Important**: For security reasons, you won't be able to view the token after exiting the page or closing the popup.
-   ![Copy created service token](/assets/images/console/access-control/service-accounts/create-new-service-tokens/6-copy-created-service-token.webp)
+   ![Copy created service token](https://docs.phase.dev/assets/images/console/access-control/service-accounts/create-new-service-tokens/6-copy-created-service-token.webp)
 
 #### REST API Token
-The REST API token is an alternative authentication method that can be used to fetch application secrets when [Server-side Encryption](/console/apps#enabling-sse) is enabled on a particular app.
+The REST API token is an alternative authentication method that can be used to fetch application secrets when [Server-side Encryption](https://docs.phase.dev/console/apps.md#enabling-sse) is enabled on a particular app.
 
 Save this token securely - it's required for API authentication.
-![Copy REST API Token](/assets/images/console/access-control/service-accounts/create-new-service-tokens/6-copy-rest-api-token.webp)
+![Copy REST API Token](https://docs.phase.dev/assets/images/console/access-control/service-accounts/create-new-service-tokens/6-copy-rest-api-token.webp)
 
 ## Personal Access Tokens (PATs)
 
@@ -58,27 +54,26 @@ Follow these steps to create a new Personal Access Token:
 
 1. Navigate to Personal Access Tokens management by heading to Access Control and clicking on the Authentication tab
 
-   ![Authentication tab](/assets/images/console/access-control/tokens/user/2-authentication-tab.webp)
+   ![Authentication tab](https://docs.phase.dev/assets/images/console/access-control/tokens/user/2-authentication-tab.webp)
 
 2. Create New Token
    Click the "Create New Token" button to start the token creation process.
-   ![Create New Token](/assets/images/console/access-control/tokens/user/3-click-create-new-token.webp)
+   ![Create New Token](https://docs.phase.dev/assets/images/console/access-control/tokens/user/3-click-create-new-token.webp)
 
 3. Configure Token Settings
    - Enter a descriptive name for your token
    - Select an expiry date
    - Click "Create" to generate the token
-   ![Configure Token Settings](/assets/images/console/access-control/tokens/user/4-name-expiry-click-create.webp)
-
+   ![Configure Token Settings](https://docs.phase.dev/assets/images/console/access-control/tokens/user/4-name-expiry-click-create.webp)
 
 #### Personal Secret Token
-This token contains cryptographic key material and is intended for use with clients such as the [CLI](/cli), [SDKs](/sdks), or the [Kubernetes operator](/integrations/platforms/kubernetes).
+This token contains cryptographic key material and is intended for use with clients such as the [CLI](https://docs.phase.dev/cli.md), [SDKs](https://docs.phase.dev/sdks.md), or the [Kubernetes operator](https://docs.phase.dev/integrations/platforms/kubernetes.md).
 
 **Important**: Copy this token immediately after creation - you won't be able to access it again.
-![Copy PSS Token](/assets/images/console/access-control/tokens/user/5-copy-pat-pss.webp)
+![Copy PSS Token](https://docs.phase.dev/assets/images/console/access-control/tokens/user/5-copy-pat-pss.webp)
 
 #### REST API Token
-The REST API token is an alternative authentication method that can be used to fetch application secrets when [Server-side Encryption](/console/apps#enabling-sse) is enabled on a particular app.
+The REST API token is an alternative authentication method that can be used to fetch application secrets when [Server-side Encryption](https://docs.phase.dev/console/apps.md#enabling-sse) is enabled on a particular app.
 
 Save this token securely - it's required for API authentication.
-![Copy REST API Token](/assets/images/console/access-control/tokens/user/6-copy-rest-api-token.webp)
+![Copy REST API Token](https://docs.phase.dev/assets/images/console/access-control/tokens/user/6-copy-rest-api-token.webp)

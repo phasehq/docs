@@ -1,16 +1,12 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description =
-  'Maintaining your Phase instance.'
-
-<Tag variant="small">SELF-HOSTING</Tag>
+---
+title: "Database Migrations when Upgrading Phase"
+description: "Maintaining your Phase instance."
+url: https://docs.phase.dev/self-hosting/maintenance
+---
 
 # Database Migrations when Upgrading Phase
 
 Certain versions of Phase may require migrations to the database schema. Understanding how migrations work is crucial for maintaining a healthy Phase instance, especially when upgrading to a new version.
-
-<DocActions /> 
 
 ## Migration Requirements
 
@@ -22,13 +18,13 @@ Always check the release notes before upgrading to ensure you're aware of any mi
 
 ## Migration Configuration
 
-By default, the backend container will automatically run migrations upon starting if the `EXTERNAL_MIGRATION` environment variable is not set or is set to `false`. For more information on this setting, see the [environment variables documentation](/self-hosting/configuration/envars#database-configuration).
+By default, the backend container will automatically run migrations upon starting if the `EXTERNAL_MIGRATION` environment variable is not set or is set to `false`. For more information on this setting, see the [environment variables documentation](https://docs.phase.dev/self-hosting/configuration/envars.md#database-configuration).
 
 ## Automatic Migrations
 
 If you're using the official Phase deployment methods such as:
-- [Docker Compose deployment template](/self-hosting/docker-compose)
-- [Phase Helm chart deployment](/self-hosting/kubernetes)
+- [Docker Compose deployment template](https://docs.phase.dev/self-hosting/docker-compose.md)
+- [Phase Helm chart deployment](https://docs.phase.dev/self-hosting/kubernetes.md)
 
 Migrations will be handled externally by a dedicated job running a standalone version of the backend container. The backend and worker services will depend on this migration job completing successfully before they start. So no additional configuration or action is required on your part.
 
@@ -58,9 +54,7 @@ Phase keeps detailed audit logs of secret access, particularly read events. Thes
 
 You can use the `purge_app_logs` utility command to safely remove old audit logs. Execute this command from within the `backend` container:
 
-<Note>
-Secret creation logs will not be deleted as they are required for the functioning of other features like secret history and point in time recovery.
-</Note>
+> **Note:** Secret creation logs will not be deleted as they are required for the functioning of other features like secret history and point in time recovery.
 
 ```fish
 python manage.py purge_app_logs -h
@@ -105,7 +99,7 @@ This utility is available on the `backend` and `worker` service containers. You 
 
 Examples:
 ```fish
-# Via Docker 
+# Via Docker
 docker exec -it <container_id> python manage.py purge_app_logs SpaceX --retain 90
 
 # Via Docker compose
@@ -119,13 +113,11 @@ kubectl exec -it <pod_name> python manage.py purge_app_logs SpaceX --retain 90
 
 The performance impact of log purging depends on your database instance specifications. For Phase instances with a large number of audit-log events (100+ million), we recommend running the `purge_app_logs` command for the first time during off-peak hours to avoid performance degradation. In our testing, it took about 2.5 minutes to delete 1 million read events on a modest AWS RDS `db.t3.micro` instance.
 
-![Graph showing log deletion performance on AWS RDS](/assets/images/self-hosting/maintenance/rds-log-delete-graph.png)
+![Graph showing log deletion performance on AWS RDS](https://docs.phase.dev/assets/images/self-hosting/maintenance/rds-log-delete-graph.png)
 
 ### Reclaiming Disk Space
 
-<Note>
-To reclaim disk space, you will need to run `VACUUM` on the database after purging the logs. See [PostgreSQL documentation](https://www.postgresql.org/docs/current/app-vacuum.html) for more information.
-</Note>
+> **Note:** To reclaim disk space, you will need to run `VACUUM` on the database after purging the logs. See [PostgreSQL documentation](https://www.postgresql.org/docs/current/app-vacuum.html) for more information.
 
 After purging logs, follow these steps to reclaim disk space in your PostgreSQL database:
 
@@ -156,7 +148,7 @@ SELECT
 Example output:
 
 ```fish
- table_data | indexes | total 
+ table_data | indexes | total
 ------------+---------+-------
  8334 MB    | 2393 MB | 10 GB
 ```
@@ -179,7 +171,7 @@ WHERE relname = 'api_secretevent';
 
 Example output:
 ```fish
-     relname     | n_live_tup | n_dead_tup | last_vacuum |        last_autovacuum        | last_analyze |       last_autoanalyze        
+     relname     | n_live_tup | n_dead_tup | last_vacuum |        last_autovacuum        | last_analyze |       last_autoanalyze
 -----------------+------------+------------+-------------+-------------------------------+--------------+-------------------------------
  api_secretevent |    1433160 |      16660 |             | 2025-05-18 04:02:32.280993+00 |              | 2025-05-19 09:05:24.915207+00
 
@@ -211,7 +203,7 @@ WHERE relname = 'api_secretevent';
 After vacuuming, the `n_dead_tup` count should be significantly reduced or zero.
 
 ```fish
-     relname     | n_live_tup | n_dead_tup | last_vacuum |        last_autovacuum        | last_analyze |       last_autoanalyze        
+     relname     | n_live_tup | n_dead_tup | last_vacuum |        last_autovacuum        | last_analyze |       last_autoanalyze
 -----------------+------------+------------+-------------+-------------------------------+--------------+-------------------------------
  api_secretevent |    1433160 |      0     |             | 2025-05-18 04:02:32.280993+00 |              | 2025-05-19 09:05:24.915207+00
 # 1,433,160 rows are live and 0 ☝️ rows are dead
@@ -219,11 +211,9 @@ After vacuuming, the `n_dead_tup` count should be significantly reduced or zero.
 
 7. **Optional**: For more aggressive space reclamation, you can use `VACUUM FULL`:
 
-<Warning>
-`VACUUM FULL` will place an `ACCESS EXCLUSIVE` lock on your table, preventing reads and writes to the `api_secretevent` table. Only run this command during maintenance windows as you will not be able to access, create or update secrets when this is running.
-
-This method also requires extra disk space, since it writes a new copy of the table and doesn't release the old copy until the operation is complete.
-</Warning>
+> **Warning:** `VACUUM FULL` will place an `ACCESS EXCLUSIVE` lock on your table, preventing reads and writes to the `api_secretevent` table. Only run this command during maintenance windows as you will not be able to access, create or update secrets when this is running.
+>
+> This method also requires extra disk space, since it writes a new copy of the table and doesn't release the old copy until the operation is complete.
 
 ```sql
 VACUUM FULL ANALYZE api_secretevent;
@@ -232,7 +222,7 @@ VACUUM FULL ANALYZE api_secretevent;
 This command physically removes dead rows and returns disk space to the operating system. Checking the table size afterwards should show a significant reduction:
 
 ```sql
-SELECT                              
+SELECT
   pg_size_pretty(pg_relation_size('api_secretevent')) AS table_data,
   pg_size_pretty(pg_indexes_size('api_secretevent')) AS indexes,
   pg_size_pretty(pg_total_relation_size('api_secretevent')) AS total;
@@ -240,7 +230,7 @@ SELECT
 
 Example output after `VACUUM FULL`:
 ```fish
- table_data | indexes | total  
+ table_data | indexes | total
 ------------+---------+--------
  386 MB     | 103 MB  | 490 MB
 ```
@@ -249,7 +239,7 @@ As shown in this example, table size was reduced from 10GB to **490MB**.
 
 # Resetting Global Network Access Policies
 
-When using [Network Access Policies](/access-control/network), there's a possibility of accidentally locking yourself out of your Phase instance by enabling a global policy that doesn't include your current IP address. If this happens, you can use the following emergency procedure to reset all global network policies.
+When using [Network Access Policies](https://docs.phase.dev/access-control/network.md), there's a possibility of accidentally locking yourself out of your Phase instance by enabling a global policy that doesn't include your current IP address. If this happens, you can use the following emergency procedure to reset all global network policies.
 
 ## Emergency Global Policy Reset
 
@@ -258,7 +248,7 @@ Follow these steps to reset all global network access policies across **all orga
 1. Gain shell access to the backend container:
 
 ```fish
-# Via Docker 
+# Via Docker
 docker exec -it <container_id> /bin/sh
 
 # Via Docker compose
@@ -291,13 +281,11 @@ You may have to copy the above code and execute it one line at a time. Given thi
 
 6. You should now be able to log in to your Phase Console and access your organisation.
 
-<Note>
-This procedure should only be used in emergency situations when you've been locked out of your Phase instance. After regaining access, review and reconfigure your network access policies appropriately to ensure proper security.
-</Note>
+> **Note:** This procedure should only be used in emergency situations when you've been locked out of your Phase instance. After regaining access, review and reconfigure your network access policies appropriately to ensure proper security.
 
 # SSO Enforcement Recovery
 
-When using [SSO](/access-control/authentication/sso) with enforcement enabled, there's a possibility that every administrator of an organisation becomes unable to sign in — for example, if the SSO provider is misconfigured, the identity provider is temporarily unavailable, or no admin has a working account on the configured provider. If this happens, you can use the `disable_org_sso` management command to restore access without touching the database directly.
+When using [SSO](https://docs.phase.dev/access-control/authentication/sso.md) with enforcement enabled, there's a possibility that every administrator of an organisation becomes unable to sign in — for example, if the SSO provider is misconfigured, the identity provider is temporarily unavailable, or no admin has a working account on the configured provider. If this happens, you can use the `disable_org_sso` management command to restore access without touching the database directly.
 
 ## Inspecting SSO State
 
@@ -316,7 +304,7 @@ Follow these steps to disable SSO enforcement and regain access:
 1. Gain shell access to the backend container:
 
 ```fish
-# Via Docker 
+# Via Docker
 docker exec -it <container_id> /bin/sh
 
 # Via Docker compose
@@ -340,9 +328,7 @@ python manage.py disable_org_sso --org <organisation-name> --disable-providers
 
 4. Administrators can now sign in to the organisation via password or any remaining enabled SSO provider.
 
-<Note>
-This procedure should only be used in emergency situations when an organisation has been locked out of its Phase Console. After regaining access, review the SSO provider configuration in **Access → Single Sign-On** and re-enable enforcement once a working provider is in place.
-</Note>
+> **Note:** This procedure should only be used in emergency situations when an organisation has been locked out of its Phase Console. After regaining access, review the SSO provider configuration in **Access → Single Sign-On** and re-enable enforcement once a working provider is in place.
 
 # Client IP Detection Behind Reverse Proxies
 
@@ -352,9 +338,7 @@ Phase uses the `X-Real-IP` header to identify the actual client IP address for a
 
 If you're running Phase behind a reverse proxy like Cloudflare or Amazon ALB before Nginx (e.g., Cloudflare → ALB → Nginx → Phase services), you must configure Nginx to trust and extract the client IP from the upstream service's headers.
 
-<Warning>
-For security reasons, ensure your Nginx instance only accepts IP information from trusted sources (Cloudflare or ALB IP ranges). Use the [`ngx_http_realip_module`](https://nginx.org/en/docs/http/ngx_http_realip_module.html) to configure this properly. This is to make sure an attacker cannot spoof the client IP address to bypass any Network Access Policies or audit logs.
-</Warning>
+> **Warning:** For security reasons, ensure your Nginx instance only accepts IP information from trusted sources (Cloudflare or ALB IP ranges). Use the [`ngx_http_realip_module`](https://nginx.org/en/docs/http/ngx_http_realip_module.html) to configure this properly. This is to make sure an attacker cannot spoof the client IP address to bypass any Network Access Policies or audit logs.
 
 ### Nginx Configuration Example
 

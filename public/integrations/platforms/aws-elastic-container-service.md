@@ -1,15 +1,12 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description = 'Integrate Phase with AWS Elastic Container Service'
-
-<Tag variant="small">INTEGRATE</Tag>
+---
+title: "AWS Elastic Container Service"
+description: "Integrate Phase with AWS Elastic Container Service"
+url: https://docs.phase.dev/integrations/platforms/aws-elastic-container-service
+---
 
 # AWS Elastic Container Service
 
 You can use Phase to securely supply secrets to your AWS Elastic Container Service (ECS) Tasks.
-
-<DocActions /> 
 
 ## Prerequisites
 
@@ -17,7 +14,7 @@ You can use Phase to securely supply secrets to your AWS Elastic Container Servi
   - Elastic Container Service (ECS)
   - Identity and Access Management (IAM)
   - EC2 Services
-- Sign up for the [Phase Console](/quickstart) and [create an App](/console/apps#create-an-app).
+- Sign up for the [Phase Console](https://docs.phase.dev/quickstart.md) and [create an App](https://docs.phase.dev/console/apps.md#create-an-app).
 - Obtain a [`PHASE_SERVICE_TOKEN`](/access-control/authentication/tokens#creating-a-service-account-token) for your application, that has access to the environment you are trying to fetch secrets from.
 - Your Phase Application ID (found in your application settings under the App section UUID)
 
@@ -49,7 +46,7 @@ Here's a complete ECS task definition implementing this approach:
             "cpu": 0,
             "essential": true,
             "entryPoint": [
-                "/bin/sh", 
+                "/bin/sh",
                 "-c"
             ],
             "command": [
@@ -141,26 +138,12 @@ Here's a complete ECS task definition implementing this approach:
 
 ### Configuration
 
-<Properties>
-  <Property name="--app-id" type="required">
-    Your Phase application ID. Replace `00000000-0000-0000-0000-000000000000` with your actual application ID from the Phase console.
-  </Property>
-  <Property name="--env" type="optional">
-    The Phase application secrets environment to deploy from. Defaults to `development`.
-  </Property>
-  <Property name="--format" type="optional">
-    The output format for secrets. Available options: `json`, `csv`, `yaml`, `xml`, `toml`, `hcl`, `ini`, `java_properties`. Defaults to `dotenv`.
-  </Property>
-  <Property name="PHASE_SERVICE_TOKEN" type="required">
-    Your Phase service token. Update this environment variable with a valid service token from your Phase account.
-  </Property>
-  <Property name="PHASE_HOST" type="optional">
-    The Phase host URL. Only modify this if you're using a self-hosted Phase instance. Defaults to `https://console.phase.dev`.
-  </Property>
-  <Property name="executionRoleArn" type="required">
-    AWS IAM execution role ARN. Update this to match your ECS execution role.
-  </Property>
-</Properties>
+  - `--app-id` (required): Your Phase application ID. Replace `00000000-0000-0000-0000-000000000000` with your actual application ID from the Phase console.
+  - `--env` (optional): The Phase application secrets environment to deploy from. Defaults to `development`.
+  - `--format` (optional): The output format for secrets. Available options: `json`, `csv`, `yaml`, `xml`, `toml`, `hcl`, `ini`, `java_properties`. Defaults to `dotenv`.
+  - `PHASE_SERVICE_TOKEN` (required): Your Phase service token. Update this environment variable with a valid service token from your Phase account.
+  - `PHASE_HOST` (optional): The Phase host URL. Only modify this if you're using a self-hosted Phase instance. Defaults to `https://console.phase.dev`.
+  - `executionRoleArn` (required): AWS IAM execution role ARN. Update this to match your ECS execution role.
 
 ### Important Considerations
 

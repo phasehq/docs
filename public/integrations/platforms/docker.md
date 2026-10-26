@@ -1,25 +1,20 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description = 'Integrate Phase with Docker'
-
-<Tag variant="small">INTEGRATE</Tag>
+---
+title: "Docker"
+description: "Integrate Phase with Docker"
+url: https://docs.phase.dev/integrations/platforms/docker
+---
 
 # Docker
 
 You can use Phase run to inject secrets to your application process during runtime. There is no need for you to change any code or add a dependency.
-
-<DocActions />
 
 ## Prerequisites
 
 - Have signed up for the [Phase Console](https://console.phase.dev) and created an application
 - `PHASE_SERVICE_TOKEN`
 
-<Note>
-  If you are using a Self-Hosted instance of the Phase Console, you may supply the
-  `PHASE_HOST` environment variable with your URL (`https://<HOST>`).
-</Note>
+> **Note:** If you are using a Self-Hosted instance of the Phase Console, you may supply the
+>   `PHASE_HOST` environment variable with your URL (`https://<HOST>`).
 
 ## Docker Run
 
@@ -43,21 +38,12 @@ If not you can manually pass your application name and environment:
 docker run --rm --env-file <(phase secrets export --app my-application-name --env production) alpine:latest printenv
 ```
 
-<Note>
-  Docker by default does not support multi-line secrets when using the
-  --env-file flag.
-</Note>
+> **Note:** Docker by default does not support multi-line secrets when using the
+>   --env-file flag.
 
 This technique uses a feature that's available in Bash and some other shells, but might not be available in all environments. If you face any issues, ensure your shell supports process substitution (`<()` syntax).
 
-<div className="not-prose">
-  <Button
-    href="https://docs.docker.com/engine/reference/run/#env-environment-variables"
-    variant="text"
-    arrow="right"
-    children="Docker Run - Docs"
-  />
-</div>
+[Docker Run - Docs](https://docs.docker.com/engine/reference/run/#env-environment-variables)
 
 ---
 
@@ -67,24 +53,26 @@ This technique uses a feature that's available in Bash and some other shells, bu
 
 To maintain deterministic Docker builds and prevent accidentally breaking things, it's highly recommended to specify the `--version` flag for production deployments. You can find the latest versions of the CLI at the [Phase CLI GitHub releases](https://github.com/phasehq/cli/releases). If no `--version` flag is provided then the latest version of the CLI will be installed.
 
-<CodeGroup>
+**Alpine Linux**
 
-```fish {{ title: 'Alpine Linux' }}
+```fish
 ENV VERSION=<X.XX.XX>
 RUN apk add --no-cache curl && curl -fsSL https://pkg.phase.dev/install.sh | sh -s -- --version $VERSION
 ```
 
-```fish {{ title: 'RedHat/CentOS/Amazon Linux' }}
+**RedHat/CentOS/Amazon Linux**
+
+```fish
 ENV VERSION=<X.XX.XX>
 RUN yum -y install bash sudo curl wget && curl -fsSL https://pkg.phase.dev/install.sh | bash -s -- --version $VERSION
 ```
 
-```fish {{ title: 'Ubuntu/Debian' }}
+**Ubuntu/Debian**
+
+```fish
 ENV VERSION=<X.XX.XX>
 RUN apt-get update && apt-get install -y bash sudo curl wget && curl -fsSL https://pkg.phase.dev/install.sh | bash -s -- --version $VERSION
 ```
-
-</CodeGroup>
 
 2. **Defining Your Container's Start Command**
 
@@ -124,12 +112,4 @@ export PHASE_SERVICE_TOKEN=pss_service:v2:...
 docker run -e PHASE_SERVICE_TOKEN="$PHASE_SERVICE_TOKEN" your-application-container
 ```
 
-<div className="not-prose">
-  <Button
-    href="https://docs.docker.com/engine/reference/builder/#cmd"
-    variant="text"
-    arrow="right"
-    children="Learn more about Docker CMD"
-  />
-</div>
-
+[Learn more about Docker CMD](https://docs.docker.com/engine/reference/builder/#cmd)

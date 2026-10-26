@@ -1,21 +1,16 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description = 'Authenticating via various OIDC Single sign-on providers with Phase.'
-
-<Tag variant="small">AUTHENTICATION</Tag>
+---
+title: "OpenID Connect (OIDC) Single Sign-On (SSO)"
+description: "Authenticating via various OIDC Single sign-on providers with Phase."
+url: https://docs.phase.dev/access-control/authentication/oidc-sso
+---
 
 # OpenID Connect (OIDC) Single Sign-On (SSO)
 
 OpenID Connect (OIDC) is an identity layer built on top of OAuth 2.0 that allows applications to verify user identities. It enables secure authentication through trusted identity providers while eliminating the need for separate credentials. Phase supports OIDC-based SSO integration with major providers like Google, allowing seamless and secure access to your applications.
 
-This page walks through registering an application with each supported OIDC provider. Once you have the Client ID / Secret / Tenant values, you can plug them into Phase in two ways: the **Per-organisation (recommended)** path — configure SSO from the Console via [SSO](/access-control/authentication/sso) (Microsoft Entra ID and Okta today) — or the **Instance-wide (legacy)** path — inject them as environment variables on a self-hosted deployment. Each provider section below ends with tabs for both paths where available.
+This page walks through registering an application with each supported OIDC provider. Once you have the Client ID / Secret / Tenant values, you can plug them into Phase in two ways: the **Per-organisation (recommended)** path — configure SSO from the Console via [SSO](https://docs.phase.dev/access-control/authentication/sso.md) (Microsoft Entra ID and Okta today) — or the **Instance-wide (legacy)** path — inject them as environment variables on a self-hosted deployment. Each provider section below ends with tabs for both paths where available.
 
-<DocActions /> 
-
-<Note>
- OIDC SSO as an authentication method is only available for organizations with an `Enterprise` tier subscription. See [Pricing](https://phase.dev/pricing).
-</Note>
+> **Note:** OIDC SSO as an authentication method is only available for organizations with an `Enterprise` tier subscription. See [Pricing](https://phase.dev/pricing).
 
 ## Google
 
@@ -25,56 +20,56 @@ Follow these steps to set up Google SSO for your Phase application:
 
 1. Go to your [Google Cloud Platform Console](https://console.cloud.google.com/) and click the **Select a project** dropdown.
 
-   ![Select a project](/assets/images/auth/sso/google/1-select-a-project.png)
+   ![Select a project](https://docs.phase.dev/assets/images/auth/sso/google/1-select-a-project.png)
 
 2. Click **New project**. If you already have a project you want to use, select it from the list and skip to step 5.
 
-   ![New project select](/assets/images/auth/sso/google/2-new-project-select.png)
+   ![New project select](https://docs.phase.dev/assets/images/auth/sso/google/2-new-project-select.png)
 
 3. Enter a valid Project Name and click **Create**.
 
-   ![New project create](/assets/images/auth/sso/google/3-new-project-create.png)
+   ![New project create](https://docs.phase.dev/assets/images/auth/sso/google/3-new-project-create.png)
 
 4. Go to your newly created project by clicking **SELECT PROJECT** from the notifications.
 
-   ![Go to new project](/assets/images/auth/sso/google/4-go-to-new-project.png)
+   ![Go to new project](https://docs.phase.dev/assets/images/auth/sso/google/4-go-to-new-project.png)
 
 5. In your console's search box, type "Credentials" and click on the result that says **Credentials - APIs & Services**.
 
-   ![Search credentials](/assets/images/auth/sso/google/5-search-credentials.png)
+   ![Search credentials](https://docs.phase.dev/assets/images/auth/sso/google/5-search-credentials.png)
 
 6. Click on **+ CREATE CREDENTIALS** and select **OAuth client ID**. If this is your first time creating an OAuth credential, you'll need to set up a consent screen. If you've already set up a consent screen, skip to Step 13.
 
-   ![Create OAuth client ID](/assets/images/auth/sso/google/6-create-oauth-client-id.png)
+   ![Create OAuth client ID](https://docs.phase.dev/assets/images/auth/sso/google/6-create-oauth-client-id.png)
 
 7. When prompted to configure an OAuth consent screen, click the **CONFIGURE CONSENT SCREEN** button.
 
-   ![Configure consent screen](/assets/images/auth/sso/google/7-first-time-consent-screen-config.png)
+   ![Configure consent screen](https://docs.phase.dev/assets/images/auth/sso/google/7-first-time-consent-screen-config.png)
 
 8. Choose **External** as the User Type for the OAuth consent screen.
 
-   ![Create external consent screen](/assets/images/auth/sso/google/8-create-external-consent-screen.png)
+   ![Create external consent screen](https://docs.phase.dev/assets/images/auth/sso/google/8-create-external-consent-screen.png)
 
 9. Enter details for mandatory fields such as **App name**, **User support email**, and **Developer contact information**. Click **SAVE AND CONTINUE**.
 
-   ![Consent screen app information](/assets/images/auth/sso/google/9-consent-screen-app-information.png)
-   ![Consent screen app information save and continue](/assets/images/auth/sso/google/10-consent-screen-app-information-save-continue.png)
+   ![Consent screen app information](https://docs.phase.dev/assets/images/auth/sso/google/9-consent-screen-app-information.png)
+   ![Consent screen app information save and continue](https://docs.phase.dev/assets/images/auth/sso/google/10-consent-screen-app-information-save-continue.png)
 
 10. Continue through the Scopes step by clicking **SAVE AND CONTINUE**.
 
-    ![Consent screen scope save and continue](/assets/images/auth/sso/google/11-consent-screen-scope-save-continue.png)
+    ![Consent screen scope save and continue](https://docs.phase.dev/assets/images/auth/sso/google/11-consent-screen-scope-save-continue.png)
 
 11. Continue through the Test user setup screen by clicking **SAVE AND CONTINUE**.
 
-    ![Consent screen test users save and continue](/assets/images/auth/sso/google/12-consent-screen-test-users-save-continue.png)
+    ![Consent screen test users save and continue](https://docs.phase.dev/assets/images/auth/sso/google/12-consent-screen-test-users-save-continue.png)
 
 12. Review the details of your Consent screen app registration and click **BACK TO DASHBOARD**.
 
-    ![Consent screen back to dashboard](/assets/images/auth/sso/google/13-consent-screen-back-to-dashboard.png)
+    ![Consent screen back to dashboard](https://docs.phase.dev/assets/images/auth/sso/google/13-consent-screen-back-to-dashboard.png)
 
 13. In the APIs & Services dashboard, click **+ CREATE CREDENTIALS** and select **OAuth client ID** from the dropdown.
 
-    ![Select a project](/assets/images/auth/sso/google/13-5-create-oauth-app.png)
+    ![Select a project](https://docs.phase.dev/assets/images/auth/sso/google/13-5-create-oauth-app.png)
 
 14. In the Application type dropdown, select **Web application**. Enter a recognizable name in the **Name** field, add the **Authorized redirect URI** (e.g., https://[**YOUR_DOMAIN**].com/api/auth/callback/google-oidc), and click **CREATE**.
 
@@ -84,48 +79,47 @@ Follow these steps to set up Google SSO for your Phase application:
    /api/auth/callback/google-oidc
    ```
 
-    ![Create OAuth client ID config](/assets/images/auth/sso/oidc/google/14-create-oauth-client-id-config.png)
+    ![Create OAuth client ID config](https://docs.phase.dev/assets/images/auth/sso/oidc/google/14-create-oauth-client-id-config.png)
 
 15. You will be presented with the **OAuth Client ID** and **Client secret**. Copy these by clicking the clipboard icon next to each.
 
-    ![Copy OAuth credentials](/assets/images/auth/sso/google/15-copy-oauth-creds.png)
+    ![Copy OAuth credentials](https://docs.phase.dev/assets/images/auth/sso/google/15-copy-oauth-creds.png)
 
-16. Supply these credentials to your Phase Console deployment as [environment variables](/self-hosting/configuration/envars#google-oidc).
+16. Supply these credentials to your Phase Console deployment as [environment variables](https://docs.phase.dev/self-hosting/configuration/envars.md#google-oidc).
 
 You can find detailed official instructions for setting up SSO with a Google OAuth Application [here](https://support.google.com/cloud/answer/6158849?hl=en).
-
 
 ## JumpCloud
 
 You can use JumpCloud as an OIDC provider to set up SSO for your Phase instance. Follow these steps to set up a JumpCloud SSO application for Phase:
 
-1. Log in to your [JumpCloud Admin Console](https://console.jumpcloud.com/login/admin) and click **SSO Applications** from the sidebar. 
+1. Log in to your [JumpCloud Admin Console](https://console.jumpcloud.com/login/admin) and click **SSO Applications** from the sidebar.
 
-   ![Access JumpCloud SSO Applications](/assets/images/auth/sso/oidc/jumpcloud/1-click-SSO-applications-sidebar.png)
+   ![Access JumpCloud SSO Applications](https://docs.phase.dev/assets/images/auth/sso/oidc/jumpcloud/1-click-SSO-applications-sidebar.png)
 
 2. In the SSO Applications section, click **Get Started** if you haven't configured any apps before, or **+ Add New Application** if you already have existing applications.
 
-   ![Add New Application](/assets/images/auth/sso/oidc/jumpcloud/2-click-get-started-if-no-apps-click-add-new-if-app-exists.png)
+   ![Add New Application](https://docs.phase.dev/assets/images/auth/sso/oidc/jumpcloud/2-click-get-started-if-no-apps-click-add-new-if-app-exists.png)
 
 3. Select **Custom Application** from the available options (located at the bottom right).
 
-   ![Select Custom Application](/assets/images/auth/sso/oidc/jumpcloud/3-select-custom-application-bottom-right-tile.png)
+   ![Select Custom Application](https://docs.phase.dev/assets/images/auth/sso/oidc/jumpcloud/3-select-custom-application-bottom-right-tile.png)
 
 4. On the custom application screen, click **Next** to proceed.
 
-   ![Proceed with Custom Application](/assets/images/auth/sso/oidc/jumpcloud/4-custom-application-click-next.png)
+   ![Proceed with Custom Application](https://docs.phase.dev/assets/images/auth/sso/oidc/jumpcloud/4-custom-application-click-next.png)
 
 5. Choose **Configure SSO with OIDC** as your authentication method and click **Next**.
 
-   ![Configure SSO with OIDC](/assets/images/auth/sso/oidc/jumpcloud/5-select-configure-SSO-with-OIDC-click-next.png)
+   ![Configure SSO with OIDC](https://docs.phase.dev/assets/images/auth/sso/oidc/jumpcloud/5-select-configure-SSO-with-OIDC-click-next.png)
 
 6. Fill in the general information for your application, including the **Display Label** and **Description**, then click **Next**.
 
-   ![Enter General Information](/assets/images/auth/sso/oidc/jumpcloud/6-enter-general-info-click-next.png)
+   ![Enter General Information](https://docs.phase.dev/assets/images/auth/sso/oidc/jumpcloud/6-enter-general-info-click-next.png)
 
 7. Review your configuration settings and click **Configure Application**.
 
-   ![Review Configuration](/assets/images/auth/sso/oidc/jumpcloud/7-review-config-click-configure-application.png)
+   ![Review Configuration](https://docs.phase.dev/assets/images/auth/sso/oidc/jumpcloud/7-review-config-click-configure-application.png)
 
 8. Add your Phase application's **Redirect URI** (e.g., https://[**YOUR_DOMAIN**].com/api/auth/callback/jumpcloud-oidc) and **Login URL**.
 
@@ -135,35 +129,35 @@ You can use JumpCloud as an OIDC provider to set up SSO for your Phase instance.
    /api/auth/callback/jumpcloud-oidc
    ```
 
-   ![Add Redirect URIs](/assets/images/auth/sso/oidc/jumpcloud/8-add-redirect-uris-login-url.png)
+   ![Add Redirect URIs](https://docs.phase.dev/assets/images/auth/sso/oidc/jumpcloud/8-add-redirect-uris-login-url.png)
 
 9. Under the Standard Scopes section, ensure **Email** and **Profile** are selected. (This information is required for user provisioning.)
 
-   ![Select Standard Scopes](/assets/images/auth/sso/oidc/jumpcloud/9-select-email-profile-from-standard-scope.png)
+   ![Select Standard Scopes](https://docs.phase.dev/assets/images/auth/sso/oidc/jumpcloud/9-select-email-profile-from-standard-scope.png)
 
 10. Click the **Activate** button at the bottom right of the screen to enable the application.
 
-    ![Activate Application](/assets/images/auth/sso/oidc/jumpcloud/10-click-activate.png)
+    ![Activate Application](https://docs.phase.dev/assets/images/auth/sso/oidc/jumpcloud/10-click-activate.png)
 
-11. Please copy the **Client ID** and **Client Secret** provided. You'll need to supply these as environment variables to your Phase instance. Please see [deployment configuration](/self-hosting/configuration/envars#jump-cloud-oidc).
+11. Please copy the **Client ID** and **Client Secret** provided. You'll need to supply these as environment variables to your Phase instance. Please see [deployment configuration](https://docs.phase.dev/self-hosting/configuration/envars.md#jump-cloud-oidc).
 
-    ![Copy Credentials](/assets/images/auth/sso/oidc/jumpcloud/11-copy-client-id-client-secret.png)
+    ![Copy Credentials](https://docs.phase.dev/assets/images/auth/sso/oidc/jumpcloud/11-copy-client-id-client-secret.png)
 
 12. Next, we need to provision user access to your JumpCloud application. Please navigate to the **User Groups** tab to manage access.
 
-    ![Access User Groups](/assets/images/auth/sso/oidc/jumpcloud/12-click-user-groups-tab.png)
+    ![Access User Groups](https://docs.phase.dev/assets/images/auth/sso/oidc/jumpcloud/12-click-user-groups-tab.png)
 
 13. Select the user groups that should have access to Phase by clicking the checkbox.
 
-    ![Select User Groups](/assets/images/auth/sso/oidc/jumpcloud/13-select-the-group-provision-access.png)
+    ![Select User Groups](https://docs.phase.dev/assets/images/auth/sso/oidc/jumpcloud/13-select-the-group-provision-access.png)
 
 14. Click **Save** to provision access.
 
-    ![Save Group Settings](/assets/images/auth/sso/oidc/jumpcloud/14-click-save.png)
+    ![Save Group Settings](https://docs.phase.dev/assets/images/auth/sso/oidc/jumpcloud/14-click-save.png)
 
 Your JumpCloud SSO integration is now configured! Users can access Phase through their JumpCloud application launchpad.
 
-![JumpCloud Application Launchpad](/assets/images/auth/sso/oidc/jumpcloud/jumpcloud-application-launchpad.png)
+![JumpCloud Application Launchpad](https://docs.phase.dev/assets/images/auth/sso/oidc/jumpcloud/jumpcloud-application-launchpad.png)
 
 For more detailed information about JumpCloud SSO configuration, refer to the [official JumpCloud documentation](https://support.jumpcloud.com/s/article/Single-Sign-On-SSO-with-OIDC).
 
@@ -173,112 +167,107 @@ You can integrate Microsoft Entra ID (formerly Azure Active Directory) as an OID
 
 1. Sign in to the [Azure Portal](https://portal.azure.com) with your Microsoft account.
 
-   ![Sign in to Azure Portal](/assets/images/auth/sso/oidc/microsoft-entra-id/0-signup-login-to-azure-portal.png)
+   ![Sign in to Azure Portal](https://docs.phase.dev/assets/images/auth/sso/oidc/microsoft-entra-id/0-signup-login-to-azure-portal.png)
 
 2. Select **Microsoft Entra ID** from the side navigation blade or from Azure services. You can also search for **Microsoft Entra ID** in the search bar.
 
-   ![Select Microsoft Entra ID](/assets/images/auth/sso/oidc/microsoft-entra-id/1-select-microsoft-entra-id-from-the-side-blade-or-from-azure-services.png)
+   ![Select Microsoft Entra ID](https://docs.phase.dev/assets/images/auth/sso/oidc/microsoft-entra-id/1-select-microsoft-entra-id-from-the-side-blade-or-from-azure-services.png)
 
 3. In the Microsoft Entra ID dashboard, select **App registrations** from the Manage dropdown section in the sidebar.
 
-   ![Select App registrations](/assets/images/auth/sso/oidc/microsoft-entra-id/2-select-app-registrations-from-under-the-manage-dropdown-in-entra-id-sidebar.png)
+   ![Select App registrations](https://docs.phase.dev/assets/images/auth/sso/oidc/microsoft-entra-id/2-select-app-registrations-from-under-the-manage-dropdown-in-entra-id-sidebar.png)
 
 4. Click the **New registration** button in the top menu.
 
-   ![Click New registration](/assets/images/auth/sso/oidc/microsoft-entra-id/3-click-new-registration-button-from-the-top-option-bar.png)
+   ![Click New registration](https://docs.phase.dev/assets/images/auth/sso/oidc/microsoft-entra-id/3-click-new-registration-button-from-the-top-option-bar.png)
 
 5. Provide a name for your application, select the supported account types, you will have a choice between:
    1. Accounts in this organizational directory only (Single tenant)
-   2. Accounts in any organizational directory (Any Azure AD directory - Multitenant) 
+   2. Accounts in any organizational directory (Any Azure AD directory - Multitenant)
    3. Accounts in any organizational directory (Any Azure AD directory - Multitenant) and personal Microsoft accounts (Multi-tenant)
 
-   For most users this will be Option 1: **Accounts in this organizational directory only - Single tenant** 
-   
+   For most users this will be Option 1: **Accounts in this organizational directory only - Single tenant**
+
    In the Redirect URI section, select **Web** and add the appropriate redirect URI for your Phase instance. This will be the hostname of your instance, followed by:
-   
+
    ```
    /api/auth/callback/entra-id-oidc
    ```
-   
-   (e.g., `https://[YOUR_PHASE_HOST]/api/auth/callback/entra-id-oidc`).
 
+   (e.g., `https://[YOUR_PHASE_HOST]/api/auth/callback/entra-id-oidc`).
 
    Click **Register** to create the application.
 
-   ![Configure application registration](/assets/images/auth/sso/oidc/microsoft-entra-id/4-supply-a-name-select-scope-of-access-add-redirection-uri-click-register.png)
+   ![Configure application registration](https://docs.phase.dev/assets/images/auth/sso/oidc/microsoft-entra-id/4-supply-a-name-select-scope-of-access-add-redirection-uri-click-register.png)
 
 6. Once your application is registered, copy the **Application (client) ID** from the Overview page. This will be used as your `ENTRA_ID_OIDC_CLIENT_ID`.
 
-   ![Copy Application Client ID](/assets/images/auth/sso/oidc/microsoft-entra-id/5-copy-application-client-id.png)
+   ![Copy Application Client ID](https://docs.phase.dev/assets/images/auth/sso/oidc/microsoft-entra-id/5-copy-application-client-id.png)
 
 7. Still on the Overview page, copy the **Directory (tenant) ID**. This will be used as your `ENTRA_ID_OIDC_TENANT_ID`.
 
-   ![Copy Directory Tenant ID](/assets/images/auth/sso/oidc/microsoft-entra-id/6-copy-directory-tenand-id.png)
+   ![Copy Directory Tenant ID](https://docs.phase.dev/assets/images/auth/sso/oidc/microsoft-entra-id/6-copy-directory-tenand-id.png)
 
 8. Select **Certificates & secrets** under the *Manage* dropdown section in the sidebar.
 
-   ![Select Certificates & secrets](/assets/images/auth/sso/oidc/microsoft-entra-id/7-select-certificates-&-secrets-from-under-the-manage-dropdown-in-the-app-sidebar.png)
+   ![Select Certificates & secrets](https://docs.phase.dev/assets/images/auth/sso/oidc/microsoft-entra-id/7-select-certificates-&-secrets-from-under-the-manage-dropdown-in-the-app-sidebar.png)
 
 9. In the *Client secrets* tab, click **New client secret**.
 
-   ![Create new client secret](/assets/images/auth/sso/oidc/microsoft-entra-id/8-click-new-client-secret-under-the-client-secrets-tab.png)
+   ![Create new client secret](https://docs.phase.dev/assets/images/auth/sso/oidc/microsoft-entra-id/8-click-new-client-secret-under-the-client-secrets-tab.png)
 
 10. Provide a description for your client secret and select an appropriate expiration period, we suggest >= 730 days (24 months) then click **Add**.
 
-   <Note>
-    Your Entra ID OIDC authentication will stop working, once the client secret expires. To prevent being locked out of your Phase instance unexpectedly, please set a reminder on your calendar to duly renew it.
-   </Note>
+> **Note:** Your Entra ID OIDC authentication will stop working, once the client secret expires. To prevent being locked out of your Phase instance unexpectedly, please set a reminder on your calendar to duly renew it.
 
-    ![Configure client secret](/assets/images/auth/sso/oidc/microsoft-entra-id/9-provide-client-secret-description-and-expiry.png)
+    ![Configure client secret](https://docs.phase.dev/assets/images/auth/sso/oidc/microsoft-entra-id/9-provide-client-secret-description-and-expiry.png)
 
 11. Immediately copy the generated client secret value. This will be used as your `ENTRA_ID_OIDC_CLIENT_SECRET`. Note that you will not be able to view this value again after leaving this page.
 
-    ![Copy client secret value](/assets/images/auth/sso/oidc/microsoft-entra-id/10-copy-the-client-secret-value.png)
+    ![Copy client secret value](https://docs.phase.dev/assets/images/auth/sso/oidc/microsoft-entra-id/10-copy-the-client-secret-value.png)
 
 12. You now have the three values needed to configure Phase — **Tenant ID**, **Client ID**, and **Client Secret**. See the **Per-organisation** / **Instance-wide** tabs at the end of this section for where to plug them in.
 
 13. (Optional) Configure additional application properties by navigating to **Entra ID** > **Enterprise Applications** > **All applications** > select the app you just created (Phase Console) > under the *Manage* dropdown in the left sidebar, select **Properties**. These settings help customize the appearance and access controls for your application.
 
-    ![Application Properties Options](/assets/images/auth/sso/oidc/microsoft-entra-id/11-optional-visibility-assignment-options.png)
+    ![Application Properties Options](https://docs.phase.dev/assets/images/auth/sso/oidc/microsoft-entra-id/11-optional-visibility-assignment-options.png)
 
     You can configure:
-    
+
     - **Homepage URL**: Set this to your Phase application's homepage (e.g., https://acme.com)
-    
+
     - **Logo**: Upload a custom logo for your application that will appear in the Microsoft Entra ID portal and user sign-in experiences
-    
+
     - **Assignment required**: This important setting controls access to your application:
       - If set to **Yes**: Users or groups must be explicitly assigned to the application before they can access it
       - If set to **No**: All users or groups in your directory can access the application without assignment
-    
+
     - **Visibility options**: These settings control whether the application appears in user portals (e.g., https://myapplications.microsoft.com)
 
 Your Microsoft Entra ID SSO application is now configured! You can now provision user access to your Phase instance by adding the application to individual users in your Microsoft Entra ID directory or to groups of users.
 
 For more detailed information about Microsoft Entra ID application registration and OIDC configuration, refer to the [official Microsoft documentation](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app).
 
-<TabGroup title="Where to plug in the credentials" slug="entra-id-config">
-  <TabPanel title="Per-organisation (recommended)" slug="per-org">
+**Per-organisation (recommended)**
+
     Paste the values into the Console at **Access Control → Single Sign-On → Microsoft Entra ID**:
 
     - **Tenant ID** ← *Directory (tenant) ID*
     - **Client ID** ← *Application (client) ID*
     - **Client Secret** ← the client secret value
 
-    Applies to this organisation only. No redeploy needed, and you can [enforce SSO](/access-control/authentication/sso#enforce-sso) so every member must sign in via Entra ID. Full walkthrough: [SSO](/access-control/authentication/sso).
+    Applies to this organisation only. No redeploy needed, and you can [enforce SSO](https://docs.phase.dev/access-control/authentication/sso.md#enforce-sso) so every member must sign in via Entra ID. Full walkthrough: [SSO](https://docs.phase.dev/access-control/authentication/sso.md).
 
-    ![Entra ID setup dialog in the Phase Console](/assets/images/auth/sso/org/03-entra-setup-dialog-filled.webp)
-  </TabPanel>
-  <TabPanel title="Instance-wide (legacy)" slug="instance-wide">
+    ![Entra ID setup dialog in the Phase Console](https://docs.phase.dev/assets/images/auth/sso/org/03-entra-setup-dialog-filled.webp)
+**Instance-wide (legacy)**
+
     Supply the values as environment variables on your self-hosted deployment:
 
     - `ENTRA_ID_OIDC_TENANT_ID`
     - `ENTRA_ID_OIDC_CLIENT_ID`
     - `ENTRA_ID_OIDC_CLIENT_SECRET`
 
-    Applies instance-wide — every organisation on this deployment can sign in via this provider. See the [deployment configuration reference](/self-hosting/configuration/envars#microsoft-entra-id-oidc) for all options.
-  </TabPanel>
-</TabGroup>
+    Applies instance-wide — every organisation on this deployment can sign in via this provider. See the [deployment configuration reference](https://docs.phase.dev/self-hosting/configuration/envars.md#microsoft-entra-id-oidc) for all options.
 
 ### Troubleshooting: Microsoft Entra ID
 
@@ -286,7 +275,7 @@ For more detailed information about Microsoft Entra ID application registration 
 
 If users encounter a "Need admin approval" screen while trying to log into the Phase Console, asking them to either sign in with an admin account or return to the application without granting consent:
 
-![Need Admin Approval Screen](/assets/images/auth/sso/oidc/microsoft-entra-id/need-admin-approval-error.png)
+![Need Admin Approval Screen](https://docs.phase.dev/assets/images/auth/sso/oidc/microsoft-entra-id/need-admin-approval-error.png)
 
 Resolve this by following these steps:
 
@@ -296,7 +285,7 @@ Resolve this by following these steps:
 4. Under the *Security* dropdown in the left sidebar, select **Permissions**
 5. Click **Grant admin consent for \<Your Organization\>** as shown in the screenshot below
 
-![Granting Admin Consent](/assets/images/auth/sso/oidc/microsoft-entra-id/grant-admin-consent-security-permission.png)
+![Granting Admin Consent](https://docs.phase.dev/assets/images/auth/sso/oidc/microsoft-entra-id/grant-admin-consent-security-permission.png)
 
 After granting admin consent, users should be able to log in without seeing the "Need admin approval" message on the consent screen.
 
@@ -310,9 +299,7 @@ phase-frontend-dev | message: 'User does not have a valid email'.
 
 This error suggests that the Phase Console was unable to fetch the user's email during authentication. This is most common for users that have been created in Entra ID manually by an administrator without an email address.
 
-<Note>
-A valid email address is a requirement to sign up or log in to the Phase Console.
-</Note>
+> **Note:** A valid email address is a requirement to sign up or log in to the Phase Console.
 
 To resolve this:
 
@@ -327,22 +314,21 @@ To resolve this:
 
 After adding the email address to the user's profile, they should be able to log in successfully.
 
-
 ## Okta
 
 You can use Okta as an OIDC provider to set up SSO for your Phase instance. Follow these steps to set up an Okta SSO application for Phase:
 
 1.  Go to the [Okta Admin Dashboard](https://admin.okta.com/), enter your organization URL, and log in. In the sidebar, navigate to **Applications** > **Applications**.
 
-    ![Access Okta Applications](/assets/images/auth/sso/oidc/okta/1-click-on-applications.png)
+    ![Access Okta Applications](https://docs.phase.dev/assets/images/auth/sso/oidc/okta/1-click-on-applications.png)
 
 2.  Click on the **Create App Integration** button.
 
-    ![Create App Integration](/assets/images/auth/sso/oidc/okta/2-create-app-integration.png)
+    ![Create App Integration](https://docs.phase.dev/assets/images/auth/sso/oidc/okta/2-create-app-integration.png)
 
 3.  For the **Sign-in method**, select **OIDC - OpenID Connect**. For the **Application type**, choose **Web Application**. Then, click **Next**.
 
-    ![Select OIDC Web Application](/assets/images/auth/sso/oidc/okta/3-select-oidc-web-application.png)
+    ![Select OIDC Web Application](https://docs.phase.dev/assets/images/auth/sso/oidc/okta/3-select-oidc-web-application.png)
 
 4.  On the **New Web App Integration** page, configure the following:
     -   Enter an **App integration name** (e.g., "Phase Console").
@@ -355,48 +341,43 @@ You can use Okta as an OIDC provider to set up SSO for your Phase instance. Foll
 
     - For sign-out redirect URIs, add your Phase application's sign-out redirect URI. This will be the hostname of your instance. e.g., `https://[YOUR_PHASE_HOST]`.
 
-    ![Configure App Name and Redirect URI](/assets/images/auth/sso/oidc/okta/4-setup-app-enter-name-redirection-url.png)
+    ![Configure App Name and Redirect URI](https://docs.phase.dev/assets/images/auth/sso/oidc/okta/4-setup-app-enter-name-redirection-url.png)
 
 5.  Next, scroll down to view the **Assignments** section, select who should have access to this application. For the purposes of this guide we are going to choose **Allow everyone in your organization to access**. Please feel free to scope this down to a specific group of users if you prefer. Click **Save**.
 
-    ![Configure Assignments and Save](/assets/images/auth/sso/oidc/okta/5-setup-assginemnts-click-save.png)
+    ![Configure Assignments and Save](https://docs.phase.dev/assets/images/auth/sso/oidc/okta/5-setup-assginemnts-click-save.png)
 
 6.  After the application is created, you will be taken to its settings page. In the **General** tab, under **Client Credentials**, copy the **Client ID** and **Client secret**.
 
-    ![Copy Client Credentials](/assets/images/auth/sso/oidc/okta/6-copy-credentials.png)
+    ![Copy Client Credentials](https://docs.phase.dev/assets/images/auth/sso/oidc/okta/6-copy-credentials.png)
 
 7.  To find your Okta domain, click the drop-down in the top right corner. Copy the host listed under your name and email (e.g., `acme-1234567.okta.com`). Prefix it with `https://` — this is your **Issuer URL**.
 
-    ![Copy Okta OIDC Issuer Host](/assets/images/auth/sso/oidc/okta/7-copy-okta-oidc-issuer-host.png)
+    ![Copy Okta OIDC Issuer Host](https://docs.phase.dev/assets/images/auth/sso/oidc/okta/7-copy-okta-oidc-issuer-host.png)
 
-    <Note>
-    From inside the Okta admin console, the drop-down can show the admin host (`…-admin.okta.com`). Remove the `-admin` suffix: the issuer is the org domain. Okta issues tokens under the org domain, and Phase rejects an admin-host issuer at save time.
-    </Note>
+> **Note:** From inside the Okta admin console, the drop-down can show the admin host (`…-admin.okta.com`). Remove the `-admin` suffix: the issuer is the org domain. Okta issues tokens under the org domain, and Phase rejects an admin-host issuer at save time.
 
 You now have the three values needed to configure Phase — **Issuer URL**, **Client ID**, and **Client Secret**. See the **Per-organisation** / **Instance-wide** tabs below for where to plug them in.
 
-<TabGroup title="Where to plug in the credentials" slug="okta-config">
-  <TabPanel title="Per-organisation (recommended)" slug="per-org">
+**Per-organisation (recommended)**
+
     Paste the values into the Console at **Access Control → Single Sign-On → Okta**:
 
     - **Issuer URL** ← `https://<your-okta-domain>`
     - **Client ID** ← Okta Application Client ID
     - **Client Secret** ← Okta Application Client Secret
 
-    Applies to this organisation only. No redeploy needed, and you can [enforce SSO](/access-control/authentication/sso#enforce-sso) so every member must sign in via Okta. Full walkthrough: [SSO](/access-control/authentication/sso).
+    Applies to this organisation only. No redeploy needed, and you can [enforce SSO](https://docs.phase.dev/access-control/authentication/sso.md#enforce-sso) so every member must sign in via Okta. Full walkthrough: [SSO](https://docs.phase.dev/access-control/authentication/sso.md).
 
-    ![Okta setup dialog in the Phase Console](/assets/images/auth/sso/org/02b-okta-setup-dialog-filled.webp)
-  </TabPanel>
-  <TabPanel title="Instance-wide (legacy)" slug="instance-wide">
+    ![Okta setup dialog in the Phase Console](https://docs.phase.dev/assets/images/auth/sso/org/02b-okta-setup-dialog-filled.webp)
+**Instance-wide (legacy)**
+
     Supply the values as environment variables on your self-hosted deployment:
 
     - `OKTA_OIDC_CLIENT_ID`
     - `OKTA_OIDC_CLIENT_SECRET`
     - `OKTA_OIDC_ISSUER` — your Okta domain URL, prefixed with `https://`
 
-    Applies instance-wide — every organisation on this deployment can sign in via this provider. See the [deployment configuration reference](/self-hosting/configuration/envars#okta-oidc) for all options.
-  </TabPanel>
-</TabGroup>
+    Applies instance-wide — every organisation on this deployment can sign in via this provider. See the [deployment configuration reference](https://docs.phase.dev/self-hosting/configuration/envars.md#okta-oidc) for all options.
 
 You can find more detailed information in the [official Okta documentation](https://help.okta.com/oie/en-us/content/topics/apps/apps_app_integration_wizard_oidc.htm).
-

@@ -1,16 +1,12 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description =
-  'Inject secrets into JetBrains IDE run configurations (IntelliJ IDEA, PyCharm, GoLand, WebStorm) using the EnvFile plugin'
-
-<Tag variant="small">INTEGRATE</Tag>
+---
+title: "JetBrains IDEs"
+description: "Inject secrets into JetBrains IDE run configurations (IntelliJ IDEA, PyCharm, GoLand, WebStorm) using the EnvFile plugin"
+url: https://docs.phase.dev/integrations/platforms/jetbrains
+---
 
 # JetBrains IDEs
 
 Inject secrets from Phase directly into your JetBrains IDE run configurations — IntelliJ IDEA, PyCharm, GoLand, WebStorm, RubyMine and others — using the [EnvFile](https://plugins.jetbrains.com/plugin/7861-envfile) plugin. No plaintext `.env` on disk, no code changes, and your existing run configuration stays exactly as-is. This is especially useful for users who either don't have their application set up to read secrets from environment variables or can't start their application stack using a single entrypoint.
-
-<DocActions />
 
 ## Why not `phase run`?
 
@@ -21,14 +17,12 @@ Instead, point the EnvFile plugin at a small script that pulls secrets from Phas
 ## Prerequisites
 
 - Have signed up for the [Phase Console](https://console.phase.dev) and created an application
-- [Install the CLI](/cli/install) and authenticate the `phase` CLI
+- [Install the CLI](https://docs.phase.dev/cli/install.md) and authenticate the `phase` CLI
 - Install the [EnvFile plugin](https://plugins.jetbrains.com/plugin/7861-envfile) (**Settings → Plugins → Marketplace → "EnvFile"**)
 
-<Note>
-  If you are using a Self-Hosted instance of the Phase Console, supply the
-  `PHASE_HOST` environment variable with your URL (`https://<HOST>`) inside the
-  script below.
-</Note>
+> **Note:** If you are using a Self-Hosted instance of the Phase Console, supply the
+>   `PHASE_HOST` environment variable with your URL (`https://<HOST>`) inside the
+>   script below.
 
 ## Setup
 
@@ -44,7 +38,9 @@ phase init
 
 Create `phase-env.sh` in the root of your project and make it executable. EnvFile runs it on every launch and parses its output as environment variables.
 
-```bash {{ title: 'phase-env.sh' }}
+**phase-env.sh**
+
+```bash
 #!/usr/bin/env bash
 set -euo pipefail
 cd "$(dirname "$0")"          # so .phase.json is picked up
@@ -55,11 +51,9 @@ exec phase secrets export --env dev
 chmod +x phase-env.sh
 ```
 
-<Note>
-  GUI-launched IDEs (especially via JetBrains Toolbox) often start with a
-  minimal `PATH` and may not find `phase`. If the script fails, replace `phase`
-  with the absolute path from `which phase`.
-</Note>
+> **Note:** GUI-launched IDEs (especially via JetBrains Toolbox) often start with a
+>   minimal `PATH` and may not find `phase`. If the script fails, replace `phase`
+>   with the absolute path from `which phase`.
 
 3. **Wire it into your run configuration**
 
@@ -81,11 +75,4 @@ This produces the following in your run configuration XML:
 
 Start your run configuration as usual. Secrets are pulled fresh from Phase and injected as environment variables — your application reads them with `System.getenv("MY_SECRET")` (or `@Value("${MY_SECRET}")` / `Environment` in Spring) with no code changes.
 
-<div className="not-prose">
-  <Button
-    href="https://plugins.jetbrains.com/plugin/7861-envfile"
-    variant="text"
-    arrow="right"
-    children="EnvFile plugin — JetBrains Marketplace"
-  />
-</div>
+[EnvFile plugin — JetBrains Marketplace](https://plugins.jetbrains.com/plugin/7861-envfile)

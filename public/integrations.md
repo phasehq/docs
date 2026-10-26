@@ -1,14 +1,12 @@
-import { Tag } from '@/components/Tag'
-import { HeroPattern } from '@/components/HeroPattern'
+---
+title: "Integrations"
+description: "Manage your secrets and environment variables with the Phase CLI"
+url: https://docs.phase.dev/integrations
+---
 
-export const description =
-  'Manage your secrets and environment variables with the Phase CLI'
+# Integrations
 
-<HeroPattern />
-
-# Integrations 
-
-You can use Phase run to inject secrets to your application process during runtime. There is no need for you to change any code or add a dependency. {{ className: 'lead' }}
+You can use Phase run to inject secrets to your application process during runtime. There is no need for you to change any code or add a dependency.
 
 Examples:
 

@@ -1,19 +1,14 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description = 'Organize members and service accounts into Teams with scoped app access and optional role overrides.'
-
-<Tag variant="small">ACCESS CONTROL</Tag>
+---
+title: "Teams"
+description: "Organize members and service accounts into Teams with scoped app access and optional role overrides."
+url: https://docs.phase.dev/access-control/teams
+---
 
 # Teams
 
 Teams let you group members and service accounts together and grant them access to specific apps and environments. Instead of managing access for each individual, you assign access at the team level — when someone joins the team, they automatically get the right keys.
 
-<DocActions />
-
-<Note>
-  Teams require apps with [Server-Side Encryption (SSE)](/console/apps#encryption-mode) enabled, since the server provisions encryption keys on behalf of team members.
-</Note>
+> **Note:** Teams require apps with [Server-Side Encryption (SSE)](https://docs.phase.dev/console/apps.md#encryption-mode) enabled, since the server provisions encryption keys on behalf of team members.
 
 ## How it works
 
@@ -42,7 +37,7 @@ When a member is added to a team that already has app access, keys are provision
 
 1. Navigate to **Access** > **Teams** in the sidebar.
 
-   ![Teams tab](/assets/images/console/access-control/teams/teams-list.webp)
+   ![Teams tab](https://docs.phase.dev/assets/images/console/access-control/teams/teams-list.webp)
 
 2. Click **Create Team**.
 
@@ -52,13 +47,13 @@ When a member is added to a team that already has app access, keys are provision
 
 5. Click **Create**. The team is created with no members or app access — you'll add those next. You are automatically set as the team **owner**.
 
-   ![Create a new Team dialog](/assets/images/console/access-control/teams/2-create-team.webp)
+   ![Create a new Team dialog](https://docs.phase.dev/assets/images/console/access-control/teams/2-create-team.webp)
 
 ## Team ownership
 
 Each team has an **owner** — a team member with elevated management privileges. The team owner can always manage the team's app access and environment scope, even if their effective role (via a team role override) would not normally grant those permissions.
 
-When a team is created manually, the creator is automatically set as the owner. Teams created via [SCIM provisioning](/access-control/provisioning/scim) start with no owner, since the SCIM specification does not include group ownership information.
+When a team is created manually, the creator is automatically set as the owner. Teams created via [SCIM provisioning](https://docs.phase.dev/access-control/provisioning/scim.md) start with no owner, since the SCIM specification does not include group ownership information.
 
 ### Who can set or transfer ownership
 
@@ -79,15 +74,13 @@ The new owner must be an existing member of the team.
 
 4. Select a team member from the list and confirm.
 
-   ![Transfer team ownership dialog](/assets/images/console/access-control/teams/5-transfer-ownership.webp)
+   ![Transfer team ownership dialog](https://docs.phase.dev/assets/images/console/access-control/teams/5-transfer-ownership.webp)
 
-<Note>
-  If a team has no owner, only organisation Owner and Admin roles can assign one. This is relevant for SCIM-managed teams, where the team is created automatically without a designated owner.
-</Note>
+> **Note:** If a team has no owner, only organisation Owner and Admin roles can assign one. This is relevant for SCIM-managed teams, where the team is created automatically without a designated owner.
 
 ## Managing team members
 
-![Team detail page](/assets/images/console/access-control/teams/team-detail.webp)
+![Team detail page](https://docs.phase.dev/assets/images/console/access-control/teams/team-detail.webp)
 
 ### Adding members
 
@@ -99,9 +92,9 @@ The new owner must be an existing member of the team.
 
 4. Click **Add**. If the team already has app access, encryption keys are provisioned immediately for the new members.
 
-   ![Add members to team dialog](/assets/images/console/access-control/teams/3-add-members.webp)
+   ![Add members to team dialog](https://docs.phase.dev/assets/images/console/access-control/teams/3-add-members.webp)
 
-   ![Add service accounts to team dialog](/assets/images/console/access-control/teams/3-add-service-accounts.webp)
+   ![Add service accounts to team dialog](https://docs.phase.dev/assets/images/console/access-control/teams/3-add-service-accounts.webp)
 
 ### Removing members
 
@@ -111,7 +104,7 @@ The new owner must be an existing member of the team.
 
 3. Confirm the removal. Phase will revoke the member's team-granted environment keys. If the member also has individual access to the same environments, those keys are preserved.
 
-   ![Remove a member from a team](/assets/images/console/access-control/teams/remove-member.webp)
+   ![Remove a member from a team](https://docs.phase.dev/assets/images/console/access-control/teams/remove-member.webp)
 
 ## Managing team app access
 
@@ -125,7 +118,7 @@ The new owner must be an existing member of the team.
 
 4. Click **Save**. Phase provisions environment encryption keys for all active team members. Members who haven't completed their account setup yet (e.g. SCIM-provisioned users who haven't logged in) will receive keys on their first login.
 
-   ![Manage app access dialog](/assets/images/console/access-control/teams/4-manage-app-access.webp)
+   ![Manage app access dialog](https://docs.phase.dev/assets/images/console/access-control/teams/4-manage-app-access.webp)
 
 ### Updating environment access
 
@@ -143,7 +136,7 @@ After a team has been added to an app, you can change which environments it has 
 
 2. Confirm the removal. All team-granted environment keys for that app are revoked for every team member.
 
-   ![Remove an app from a team](/assets/images/console/access-control/teams/remove-app.webp)
+   ![Remove an app from a team](https://docs.phase.dev/assets/images/console/access-control/teams/remove-app.webp)
 
 ## Role overrides
 
@@ -151,7 +144,7 @@ By default, team members use their **org role's app-level permissions** when acc
 
 Teams support two optional role overrides that change what permissions members have when accessing apps through that team:
 
-![Team role override dropdown](/assets/images/console/access-control/teams/role-overrides.webp)
+![Team role override dropdown](https://docs.phase.dev/assets/images/console/access-control/teams/role-overrides.webp)
 
 | Override | Applies to | Description |
 |----------|-----------|-------------|
@@ -172,13 +165,11 @@ Individual access uses the user's org role. Each team uses its role override (or
 
 ## SSE requirement
 
-Teams require [Server-Side Encryption (SSE)](/console/apps#encryption-mode) to be enabled on any app they access. This is because the server needs to provision environment encryption keys on behalf of team members — it uses the server-held copy of the environment key to create individually-wrapped copies for each member.
+Teams require [Server-Side Encryption (SSE)](https://docs.phase.dev/console/apps.md#encryption-mode) to be enabled on any app they access. This is because the server needs to provision environment encryption keys on behalf of team members — it uses the server-held copy of the environment key to create individually-wrapped copies for each member.
 
 If an app has SSE disabled, it won't appear in the app selection dialog when adding apps to a team. You can enable SSE on an app from the app's settings page under **Encryption Mode**.
 
-<Warning>
-  Enabling SSE changes the encryption model for the app — the server gains the ability to decrypt secrets. This is required for Teams, all third-party sync integrations, and REST API access. See [Encryption Mode](/console/apps#encryption-mode) for details.
-</Warning>
+> **Warning:** Enabling SSE changes the encryption model for the app — the server gains the ability to decrypt secrets. This is required for Teams, all third-party sync integrations, and REST API access. See [Encryption Mode](https://docs.phase.dev/console/apps.md#encryption-mode) for details.
 
 ## Team-owned service accounts
 
@@ -186,19 +177,17 @@ Service accounts can be **owned by a team**, meaning their lifecycle and visibil
 
 ### Creating a team-owned service account
 
-<Note>
-  You can only select a role whose permissions your own role also has. If the team has a **Member role** override, Phase adds the permissions of that override to your own permissions for this check. This limit does not apply to users with the `Owner` or `Admin` role.
-</Note>
+> **Note:** You can only select a role whose permissions your own role also has. If the team has a **Member role** override, Phase adds the permissions of that override to your own permissions for this check. This limit does not apply to users with the `Owner` or `Admin` role.
 
 1. On the team detail page, click **Create Team Service Account** in the Service Accounts section.
 
-2. Enter a name for the account. 
+2. Enter a name for the account.
 
-3. If the team has a defined Service Account role, the role for this account will be fixed. If there is no defined role for service accounts in the team, select a role for this account. 
+3. If the team has a defined Service Account role, the role for this account will be fixed. If there is no defined role for service accounts in the team, select a role for this account.
 
 4. Click **Create**. The service account is automatically added as a member of the team and can access all apps and environments that the team has access to.
 
-   ![Create a Team Service Account dialog](/assets/images/console/access-control/teams/6-create-team-service-account.webp)
+   ![Create a Team Service Account dialog](https://docs.phase.dev/assets/images/console/access-control/teams/6-create-team-service-account.webp)
 
 Team-owned service accounts always use **Server-side KMS**, which is enabled automatically on creation. This allows any team member with the appropriate `ServiceAccountTokens` permissions to generate tokens for the account — without needing to be a designated Service Account Handler. This is essential for dynamic team membership, including [SCIM-managed teams](#scim-managed-teams), where members may join or leave at any time.
 
@@ -225,7 +214,7 @@ A team-owned service account cannot be removed from its owning team. To dissocia
 
 ## SCIM-managed teams
 
-When [SCIM provisioning](/access-control/provisioning/scim) is configured, your identity provider can create and manage teams automatically by syncing IdP groups to Phase teams. SCIM-managed teams have the following restrictions:
+When [SCIM provisioning](https://docs.phase.dev/access-control/provisioning/scim.md) is configured, your identity provider can create and manage teams automatically by syncing IdP groups to Phase teams. SCIM-managed teams have the following restrictions:
 
 - Cannot be renamed, deleted, or have members manually added/removed from the Phase Console
 - Membership changes must be made in the identity provider
@@ -245,10 +234,10 @@ This prevents a common pitfall: if a user has both individual and team access to
 
 Each member's detail page (under **Access** > **Members** > member name) shows a **Teams** section listing all teams the member belongs to, along with links to each team's detail page.
 
-![Teams section on a member page](/assets/images/console/access-control/teams/member-page-teams.webp)
+![Teams section on a member page](https://docs.phase.dev/assets/images/console/access-control/teams/member-page-teams.webp)
 
 ### App access page
 
 Each app's **Access** > **Teams** tab shows all teams that have access to the app, the environments they can access, and their role overrides. You can add/remove teams and manage environment scoping directly from this page.
 
-![Teams tab under App access](/assets/images/console/access-control/teams/app-access-teams-tab.webp)
+![Teams tab under App access](https://docs.phase.dev/assets/images/console/access-control/teams/app-access-teams-tab.webp)

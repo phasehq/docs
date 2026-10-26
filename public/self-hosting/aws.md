@@ -1,16 +1,12 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description =
-  'Run Phase on your own Amazon Web Services infrastructure.'
-
-<Tag variant="small">SELF-HOSTING</Tag>
+---
+title: "AWS"
+description: "Run Phase on your own Amazon Web Services infrastructure."
+url: https://docs.phase.dev/self-hosting/aws
+---
 
 # AWS
 
-Learn how to set up the Phase Console using AWS EC2 and managed PostgreSQL RDS via the Docker Compose template. {{ className: 'lead' }}
-
-<DocActions /> 
+Learn how to set up the Phase Console using AWS EC2 and managed PostgreSQL RDS via the Docker Compose template.
 
 Keep in mind the steps listed below serve as a rough outline on how to self-host Phase Services on your own infrastructure.
 
@@ -155,9 +151,7 @@ You may:
    sudo usermod -aG docker $USER
    ```
 
-   <Note>
-   You will need to log out and log back in for the group changes to take effect. You may use `Ctrl + D` to log out and then SSH back in.
-   </Note>
+> **Note:** You will need to log out and log back in for the group changes to take effect. You may use `Ctrl + D` to log out and then SSH back in.
 
    Verify that Docker is running:
 
@@ -196,7 +190,7 @@ You may:
 
    ### Authentication
 
-   Password authentication works out of the box with no additional configuration. If you want to enable SSO, set the `SSO_PROVIDERS` environment variable along with the SSO credentials for the provider you wish to use. For more instructions on configuring authentication, please refer to the [authentication documentation](/access-control/authentication).
+   Password authentication works out of the box with no additional configuration. If you want to enable SSO, set the `SSO_PROVIDERS` environment variable along with the SSO credentials for the provider you wish to use. For more instructions on configuring authentication, please refer to the [authentication documentation](https://docs.phase.dev/access-control/authentication.md).
 
    ### Generate secrets
 
@@ -208,11 +202,9 @@ You may:
    rm .env.bak
    ```
 
-   For a complete list of available options, refer to the [environment variables](/self-hosting/configuration/envars) documentation.
+   For a complete list of available options, refer to the [environment variables](https://docs.phase.dev/self-hosting/configuration/envars.md) documentation.
 
-   <Note>
-   For a production deployment, please use a more secure method than a `.env` file to store your secrets. Please see our guide on [Docker Compose secrets](https://phase.dev/blog/docker-compose-secrets/) for more information.
-   </Note>
+> **Note:** For a production deployment, please use a more secure method than a `.env` file to store your secrets. Please see our guide on [Docker Compose secrets](https://phase.dev/blog/docker-compose-secrets/) for more information.
 
 5. **Edit `docker-compose.yml`**:
 

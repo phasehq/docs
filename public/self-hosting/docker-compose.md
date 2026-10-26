@@ -1,23 +1,14 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description =
-  'Run Phase on your own infrastructure with Docker Compose.'
-
-<Tag variant="small">SELF-HOSTING</Tag>
+---
+title: "Docker Compose"
+description: "Run Phase on your own infrastructure with Docker Compose."
+url: https://docs.phase.dev/self-hosting/docker-compose
+---
 
 # Docker Compose
 
-Learn how to set up the Phase Console using the Docker Compose template. {{ className: 'lead' }}
+Learn how to set up the Phase Console using the Docker Compose template.
 
-<DocActions />
-
-<SkillBox
-  skill="docker-compose"
-  triggerPhrase="deploy Phase with Docker Compose"
-/>
-
-The steps outlined below provide a general guide for self-hosting Phase Services on your own infrastructure. 
+The steps outlined below provide a general guide for self-hosting Phase Services on your own infrastructure.
 
 Important considerations:
 - It's recommended to run the Phase Service behind a VPN or within a VPC, rather than exposing it directly to the internet.
@@ -45,9 +36,7 @@ Add your user to the Docker group:
 sudo usermod -aG docker $USER
 ```
 
-<Note>
-You will need to log out and log back in for the group changes to take effect. You may use `Ctrl + D` to log out and then SSH back in.
-</Note>
+> **Note:** You will need to log out and log back in for the group changes to take effect. You may use `Ctrl + D` to log out and then SSH back in.
 
 Verify that Docker is running:
 
@@ -85,10 +74,9 @@ wget -O ./nginx/Dockerfile https://raw.githubusercontent.com/phasehq/console/mai
 
 ## 3. Update your configuration
 
-Modify the `.env` file to match your environment settings. 
+Modify the `.env` file to match your environment settings.
 
-
-### Generate secrets 
+### Generate secrets
 
 ```fish
 sed -i.bak "s|DATABASE_PASSWORD=.*|DATABASE_PASSWORD=$(openssl rand -hex 32)|g" .env && \
@@ -97,11 +85,9 @@ sed -i.bak "s|SERVER_SECRET=.*|SERVER_SECRET=$(openssl rand -hex 32)|g" .env && 
 rm .env.bak
 ```
 
-For a complete list of available options, refer to the [environment variables](/self-hosting/configuration/envars) documentation.
+For a complete list of available options, refer to the [environment variables](https://docs.phase.dev/self-hosting/configuration/envars.md) documentation.
 
-<Note>
-For a production deployment, please use a more secure method than a `.env` file to store your secrets. Please see our guide on [Docker Compose secrets](https://phase.dev/blog/docker-compose-secrets/) for more information.
-</Note>
+> **Note:** For a production deployment, please use a more secure method than a `.env` file to store your secrets. Please see our guide on [Docker Compose secrets](https://phase.dev/blog/docker-compose-secrets/) for more information.
 
 ## 4. Start services
 

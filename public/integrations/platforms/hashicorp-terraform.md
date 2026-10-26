@@ -1,22 +1,18 @@
-import { Tag } from '@/components/Tag'
-import { Button } from '@/components/Button'
-import { DocActions } from '@/components/DocActions'
-
-export const description = 'Use Phase with Terraform to manage your secrets'
-
-<Tag variant="small">INTEGRATE</Tag>
+---
+title: "Terraform Provider"
+description: "Use Phase with Terraform to manage your secrets"
+url: https://docs.phase.dev/integrations/platforms/hashicorp-terraform
+---
 
 # Terraform Provider
 
 The Phase Terraform Provider allows you to securely manage and retrieve secrets directly from your Terraform configurations. This integration enables you to incorporate secure secret management into your infrastructure-as-code workflows.
 
-<DocActions /> 
-
 ## Prerequisites
 
 - [Terraform](https://www.terraform.io/downloads.html) 0.13.x or later
-- Sign up for the [Phase Console](/quickstart) and [create an App](/console/apps#create-an-app).
-- Enable Server-side Encryption (SSE) for the App from the [Settings](/console/apps#settings) tab.
+- Sign up for the [Phase Console](https://docs.phase.dev/quickstart.md) and [create an App](https://docs.phase.dev/console/apps.md#create-an-app).
+- Enable Server-side Encryption (SSE) for the App from the [Settings](https://docs.phase.dev/console/apps.md#settings) tab.
 
 ## Demo
 
@@ -30,7 +26,7 @@ A quick demo showing creating 100 secrets inside of the production environment a
 
 2. Fetch your Phase **Application ID** (AppID) by going to your application settings in the Phase Console, hovering over UUID under the App section and clicking the `Copy` button:
 
-![Application ID](/assets/images/console/settings/application-id.webp)
+![Application ID](https://docs.phase.dev/assets/images/console/settings/application-id.webp)
 
 ## Step 1: Install the Provider
 
@@ -56,7 +52,7 @@ To configure the provider, you need to provide your Phase API credentials. We re
 ```hcl
 provider "phase" {
   phase_token = "pss_service:v2:..." # or "pss_user:v1:..." // A Phase Service Account Token or a Phase User Token (PAT)
-  // Alternatively supply a PHASE_TOKEN environment variable 
+  // Alternatively supply a PHASE_TOKEN environment variable
 }
 ```
 
@@ -70,9 +66,7 @@ provider "phase" {
 }
 ```
 
-<Note>
-You can provide the `phase_token` at runtime through the interactive menu or as an environment variable using any of the following: `PHASE_TOKEN`, `PHASE_SERVICE_TOKEN`, `PHASE_PAT_TOKEN`.
-</Note>
+> **Note:** You can provide the `phase_token` at runtime through the interactive menu or as an environment variable using any of the following: `PHASE_TOKEN`, `PHASE_SERVICE_TOKEN`, `PHASE_PAT_TOKEN`.
 
 ## Step 3: Using the Provider
 
@@ -195,7 +189,7 @@ terraform {
   required_providers {
     phase = {
       source = "phasehq/phase"
-      version = "0.2.0" 
+      version = "0.2.0"
     }
   }
 }
@@ -231,9 +225,7 @@ resource "phase_secret" "example" {
 }
 ```
 
-<Note>
-To be able to assign tags to secrets, the tags must already be created in the Phase Console beforehand.
-</Note>
+> **Note:** To be able to assign tags to secrets, the tags must already be created in the Phase Console beforehand.
 
 Example:
 

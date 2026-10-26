@@ -1,39 +1,33 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description = 'Integrate Phase with AWS Secrets Manager'
-
-<Tag variant="small">INTEGRATE</Tag>
+---
+title: "AWS Secrets Manager"
+description: "Integrate Phase with AWS Secrets Manager"
+url: https://docs.phase.dev/integrations/platforms/aws-secrets-manager
+---
 
 # AWS Secrets Manager
 
 You can use Phase to sync secrets to your AWS infrastructure via AWS Secrets Manager.
-
-<DocActions /> 
 
 ### Prerequisites
 
 - AWS CLI / AWS CloudShell
 - An AWS account with permissions to create IAM users and attach policies
 
-<Warning>
-  When secret syncing is enabled, secrets stored inside Phase will be treated as
-  the source of truth. Any secrets on the target service will be overwritten or
-  deleted. Please import your secrets into Phase before continuing. For guidance,
-  see: [Import secrets from AWS Secrets
-  Manager](/integrations/platforms/aws-secrets-manager#optional-import-existing-secrets-from-aws-secrets-manager-in-phase)
-</Warning>
+> **Warning:** When secret syncing is enabled, secrets stored inside Phase will be treated as
+>   the source of truth. Any secrets on the target service will be overwritten or
+>   deleted. Please import your secrets into Phase before continuing. For guidance,
+>   see: [Import secrets from AWS Secrets
+>   Manager](/integrations/platforms/aws-secrets-manager#optional-import-existing-secrets-from-aws-secrets-manager-in-phase)
 
 **Note**: If you don't have `aws-cli` installed locally on your system you can use AWS CloudShell by logging in to your AWS Console and clicking the terminal icon in the top left.
 
-![aws-cloudshell](/assets/images/platform-integrations/aws/aws-cloudshell-enable.png)
+![aws-cloudshell](https://docs.phase.dev/assets/images/platform-integrations/aws/aws-cloudshell-enable.png)
 
 ## AWS Authentication Setup
 
 Choose your preferred method for authenticating Phase with AWS:
 
-<TabGroup title="Authentication Methods" subtitle="Select an authentication method.">
-  <TabPanel title="Assume Role (Recommended)" slug="assume-role">
+**Assume Role (Recommended)**
 
 ## Phase Cloud
 
@@ -78,7 +72,7 @@ An External ID is a security measure that helps prevent the "confused deputy" pr
 2.  Click on **AWS** to create new AWS credentials.
 3.  Select the **Assume Role** tab.
 4.  You will see a field for **EXTERNAL ID (Optional)**. Click the **Generate** button next to it, as shown in the UI below.
-    ![Generate External ID in Phase Console UI](/assets/images/platform-integrations/aws/assumerole/aws-assumerole.webp)
+    ![Generate External ID in Phase Console UI](https://docs.phase.dev/assets/images/platform-integrations/aws/assumerole/aws-assumerole.webp)
 5.  **Copy the generated External ID**. You will need this for the trust policy of the IAM role in the next step. Keep this ID secure.
 
 ### Step 3: Create IAM Role (in your AWS account)
@@ -88,7 +82,6 @@ This role will be assumed by Phase Cloud. It needs to trust Phase's AWS role and
 1.  **Prepare the trust policy JSON.** Create a file named `phase-cloud-trust-policy.json` with the following content.
     *   Replace `YOUR_PHASE_GENERATED_EXTERNAL_ID` with the External ID you copied from the Phase Console in Step 2.
     *   The `Principal.AWS` value `arn:aws:iam::499502749186:role/PhaseIntegrationTrustAnchor` is Phase's designated role ARN that will assume this role.
-
 
 ```json
 {
@@ -137,15 +130,13 @@ aws iam attach-role-policy --role-name phase-console-aws-secrets-manager-integra
 5.  Provide a descriptive **Name** for these credentials in Phase (e.g., "AWS Secrets Manager Assume role integration credentials").
 6.  Click **Save**.
 
-    ![Assume Role credentials filled in the Phase Console](/assets/images/platform-integrations/aws/assumerole/aws-assumerole.webp)
+    ![Assume Role credentials filled in the Phase Console](https://docs.phase.dev/assets/images/platform-integrations/aws/assumerole/aws-assumerole.webp)
 
 Phase is now configured to securely access your AWS Secrets Manager using the Assume Role method.
 
 ## Self-hosted Phase
 
-<Note>
-Please make sure to have set up the [AWS integration](/self-hosting/configuration/envars#aws-integration) for your self-hosted Phase instance. This setup provides the primary IAM Role or User that Phase will use to assume other roles, including the one we are about to create for Secrets Manager access.
-</Note>
+> **Note:** Please make sure to have set up the [AWS integration](https://docs.phase.dev/self-hosting/configuration/envars.md#aws-integration) for your self-hosted Phase instance. This setup provides the primary IAM Role or User that Phase will use to assume other roles, including the one we are about to create for Secrets Manager access.
 
 To allow your self-hosted Phase instance to securely access AWS Secrets Manager, you need to create a dedicated IAM Role in your AWS account. This role will have permissions to manage secrets in Secrets Manager and will trust the primary IAM principal (Role or User) already configured for your Phase instance.
 
@@ -192,14 +183,14 @@ aws iam create-policy \
 
 This role will be assumed by your Phase instance's primary AWS integration principal. It needs the Secrets Manager access policy (created in Step 1) attached.
 
-1.  **Prepare the trust policy JSON.** 
-    The trust policy must allow your self-hosted Phase instance's primary AWS IAM principal to assume this role. This principal is the IAM Role or User that you configured when setting up the [AWS integration for your self-hosted Phase instance](/self-hosting/configuration/envars#aws-integration).
+1.  **Prepare the trust policy JSON.**
+    The trust policy must allow your self-hosted Phase instance's primary AWS IAM principal to assume this role. This principal is the IAM Role or User that you configured when setting up the [AWS integration for your self-hosted Phase instance](https://docs.phase.dev/self-hosting/configuration/envars.md#aws-integration).
 
     Create a file named `phase-sm-trust-policy.json` with the following content. You will need to replace `"<ARN_OF_YOUR_PHASE_INTEGRATION_PRINCIPAL>"` with the actual ARN of the IAM role or user that your self-hosted Phase instance uses.
 
-    *   If your Phase instance uses **IMDSv2 (EC2 Instance Profile Role)**, the ARN will be like `arn:aws:iam::YOUR_ACCOUNT_ID:role/PhaseEC2InstanceRole`. Refer to the [IMDS setup guide](/self-hosting/configuration/envars?tab=imds) for your specific role name.
-    *   If your Phase instance uses **Kubernetes IRSA (IAM Role for Service Account)**, the ARN will be like `arn:aws:iam::YOUR_ACCOUNT_ID:role/PhaseGlobalAssumeRoleEKS`. Refer to the [IRSA setup guide](/self-hosting/configuration/envars?tab=isra) for your specific role name.
-    *   If your Phase instance uses **Access Keys (IAM User)**, the ARN will be like `arn:aws:iam::YOUR_ACCOUNT_ID:user/phase-integration-user`. Refer to the [Access Keys setup guide](/self-hosting/configuration/envars?tab=access-keys) for your specific user name.
+    *   If your Phase instance uses **IMDSv2 (EC2 Instance Profile Role)**, the ARN will be like `arn:aws:iam::YOUR_ACCOUNT_ID:role/PhaseEC2InstanceRole`. Refer to the [IMDS setup guide](https://docs.phase.dev/self-hosting/configuration/envars?tab=imds) for your specific role name.
+    *   If your Phase instance uses **Kubernetes IRSA (IAM Role for Service Account)**, the ARN will be like `arn:aws:iam::YOUR_ACCOUNT_ID:role/PhaseGlobalAssumeRoleEKS`. Refer to the [IRSA setup guide](https://docs.phase.dev/self-hosting/configuration/envars?tab=isra) for your specific role name.
+    *   If your Phase instance uses **Access Keys (IAM User)**, the ARN will be like `arn:aws:iam::YOUR_ACCOUNT_ID:user/phase-integration-user`. Refer to the [Access Keys setup guide](https://docs.phase.dev/self-hosting/configuration/envars?tab=access-keys) for your specific user name.
 
 ```json
 {
@@ -243,7 +234,7 @@ aws iam attach-role-policy \
 2.  Click on **Add credentials**, select **AWS** to create new AWS credentials (or edit existing ones if appropriate).
 3.  Select the **Assume Role** tab.
 
-![Generate External ID in Phase Console UI](/assets/images/platform-integrations/aws/assumerole/aws-assumerole.webp)
+![Generate External ID in Phase Console UI](https://docs.phase.dev/assets/images/platform-integrations/aws/assumerole/aws-assumerole.webp)
 
 4.  In the **ARN OF ROLE TO BE ASSUMED** field, paste the Role ARN of the `phase-console-aws-secrets-manager-integration-policy` (or your custom name) that you just created (from Step 2.3).
 5.  The **EXTERNAL ID** field can be **left blank**. If you are using a different AWS account than the one with the integration user, you can generate an External ID in the Phase Console.
@@ -251,9 +242,8 @@ aws iam attach-role-policy \
 7.  Provide a descriptive **Name** for these credentials in Phase (e.g., "AWS Secrets Manager Self-Hosted Integration").
 8.  Click **Save**.
 
-  </TabPanel>
-  <TabPanel title="Access Keys" slug="access-keys">
-    
+**Access Keys**
+
 ### Step 1: Create the IAM Policy
 
 1. **Run the following command**, feel free to replace `phase-console-aws-secrets-manager-integration-policy` with a unique name for your policy:
@@ -286,7 +276,7 @@ EOF
 
 Note: This policy assumes you want to encrypt secrets in AWS Secrets Manager using AWS Managed Keys. If you want to encrypt secrets with self managed keys you can follow:
 
-[Encrypt secrets in AWS Secrets Manager with AWS KMS customer managed keys (CMK)](/integrations/platforms/aws-secrets-manager#advanced-encrypt-secrets-in-aws-secrets-manager-with-aws-kms-customer-managed-keys-cmk)
+[Encrypt secrets in AWS Secrets Manager with AWS KMS customer managed keys (CMK)](https://docs.phase.dev/integrations/platforms/aws-secrets-manager.md#advanced-encrypt-secrets-in-aws-secrets-manager-with-aws-kms-customer-managed-keys-cmk)
 
 2. **Make a note of the `Arn` returned**
 
@@ -373,9 +363,6 @@ Example:
 }
 ```
 
-  </TabPanel>
-</TabGroup>
-
 ## Optional: Import existing secrets from AWS Secrets Manager in Phase
 
 1. List secrets
@@ -443,11 +430,9 @@ rm .env
 
 AWS secrets manager encrypts all secrets stored in it via keys owned and managed by AWS (Encryption key: `alias/aws/secretsmanager`). For security and compliance reasons you may want to use your own keys to encrypt secrets.
 
-<Note>
-  Phase Console supports syncing secrets to AWS Secrets Manager and encrypting
-  them via a customer managed (CMK) `Symmetric` key with `SYMMETRIC_DEFAULT` key
-  spec.
-</Note>
+> **Note:** Phase Console supports syncing secrets to AWS Secrets Manager and encrypting
+>   them via a customer managed (CMK) `Symmetric` key with `SYMMETRIC_DEFAULT` key
+>   spec.
 
 1. Get the AWS KMS CMK key ARN
 
@@ -505,48 +490,46 @@ You first need to set up credentials to use for the sync, and then choose a sour
 
 2. Go to **Integrations** from the sidebar and click on **Third-party credentials** in the integrations tab.
 
-![Go to integrations](/assets/images/platform-integrations/integrations-sidebar.webp)
+![Go to integrations](https://docs.phase.dev/assets/images/platform-integrations/integrations-sidebar.webp)
 
 3. Click on **AWS**
 
-![Click on AWS](/assets/images/platform-integrations/aws/create-credentials-aws.webp)
+![Click on AWS](https://docs.phase.dev/assets/images/platform-integrations/aws/create-credentials-aws.webp)
 
 4. Copy and paste your `AccessKeyId` and `SecretAccessKey` from the AWS Console.
    Select the correct region code and add a descriptive name for these credentials. Click **Save**.
 
-![Input AWS credentials](/assets/images/platform-integrations/aws/input-aws-credentials.webp)
+![Input AWS credentials](https://docs.phase.dev/assets/images/platform-integrations/aws/input-aws-credentials.webp)
 
 ### Step 2: Configure Sync
 
-1. Enable Server-side Encryption (SSE) for the App from the [Settings](/console/apps#settings) tab if not enabled already.
+1. Enable Server-side Encryption (SSE) for the App from the [Settings](https://docs.phase.dev/console/apps.md#settings) tab if not enabled already.
 
 2. Go to your App in the Phase Console and go to the **Syncing** tab. Select **AWS Secrets Manager** under the 'Create a new Sync' menu.
 
-![Create AWS SM Sync](/assets/images/platform-integrations/aws/create-aws-sm-sync-button.webp)
+![Create AWS SM Sync](https://docs.phase.dev/assets/images/platform-integrations/aws/create-aws-sm-sync-button.webp)
 
 3. Select the credentials stored in the previous step as the authentication method for this sync, and click **Next**
 
-![Choose sync authentication credentials](/assets/images/platform-integrations/aws/select-aws-credentials.webp)
+![Choose sync authentication credentials](https://docs.phase.dev/assets/images/platform-integrations/aws/select-aws-credentials.webp)
 
-<Note>
-  If you see an error message and cannot proceed to the next screen, it is most
-  likely an issue with the `AccessKeyId` or `SecretAccessKey`. Verify that you
-  created the AWS credentials correctly and update them from the Integrations
-  screen if needed.
-</Note>
+> **Note:** If you see an error message and cannot proceed to the next screen, it is most
+>   likely an issue with the `AccessKeyId` or `SecretAccessKey`. Verify that you
+>   created the AWS credentials correctly and update them from the Integrations
+>   screen if needed.
 
 4. Choose the source and destination to sync secrets. Select an Environment as the source for Secrets.
    Next, either enter a name for a new AWS Secret, or click on "Use existing AWS Secret" and select a Secret from the dropdown list.
 
-![Choose sync source and destination](/assets/images/platform-integrations/aws/configure-aws-sm-sync-basic.webp)
+![Choose sync source and destination](https://docs.phase.dev/assets/images/platform-integrations/aws/configure-aws-sm-sync-basic.webp)
 
 5. (Optional) Use a Customer Managed Key (CMK) to encrypt secrets. If you would like to use an AWS KMS CMK to encrypt your AWS Secret,
    click on the **Advanced** pane to expand it, and paste the ARN of the key to use.
 
-![Set up KMS CMK](/assets/images/platform-integrations/aws/configure-aws-sm-sync-advanced.webp)
+![Set up KMS CMK](https://docs.phase.dev/assets/images/platform-integrations/aws/configure-aws-sm-sync-advanced.webp)
 
 6. Once you have selected your desired source and destination, click **Create**.
    The sync has been set up! Secrets will automatically be Synced from your chosen Phase Environment to the AWS Secret.
    You can click on the **Manage** button on the Sync card to view sync logs, pause syncing or update authentication credentials.
 
-![Sync card](/assets/images/platform-integrations/aws/aws-sm-sync-card.webp)
+![Sync card](https://docs.phase.dev/assets/images/platform-integrations/aws/aws-sm-sync-card.webp)

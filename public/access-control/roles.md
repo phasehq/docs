@@ -1,29 +1,26 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-<Tag variant="small">ACCESS CONTROL</Tag>
+---
+title: "Roles"
+description: ""
+url: https://docs.phase.dev/access-control/roles
+---
 
 # Roles
 
 Roles in Phase define the level of access and permissions granted to users within an organization. They determine what actions a user can perform and what resources they can access. Phase offers both managed roles with predefined permissions and the ability to create custom roles for more specific access control needs.
-
-<DocActions /> 
 
 ## Assigning Roles to Users
 
 To assign a role to a user or change a user's role:
 
 1. Navigate to the Access Control page from the sidebar and click on the Members tab.
-![1-navigate-to-access-control](/assets/images/console/access-control/roles/switch-user-role/1-navigate-to-access-control.webp)
+![1-navigate-to-access-control](https://docs.phase.dev/assets/images/console/access-control/roles/switch-user-role/1-navigate-to-access-control.webp)
 2. Find the user whose role you want to update and click the manage button.
-![2-manage-user](/assets/images/console/access-control/roles/switch-user-role/2-manage-user.webp)
+![2-manage-user](https://docs.phase.dev/assets/images/console/access-control/roles/switch-user-role/2-manage-user.webp)
 3. In the Role section, select the desired role from the dropdown.
-![3-click-current-role](/assets/images/console/access-control/roles/switch-user-role/3-switch-user-role.webp)
+![3-click-current-role](https://docs.phase.dev/assets/images/console/access-control/roles/switch-user-role/3-switch-user-role.webp)
 4. Once selected, you will see a toast notification confirming that the role has been updated.
 
-<Note>
- You can only assign a role whose permissions your own role also has. The dropdown disables roles with permissions that your role does not have. This limit does not apply to users with the `Owner` or `Admin` role.
-</Note>
+> **Note:** You can only assign a role whose permissions your own role also has. The dropdown disables roles with permissions that your role does not have. This limit does not apply to users with the `Owner` or `Admin` role.
 
 ## Managed Roles
 
@@ -31,7 +28,7 @@ Phase provides managed roles out of the box to every organization.
 
 ### Owner
 
-The organization owner. This role is automatically assigned when a user creates a new organization. It is unique to a single user and grants access to all resources and actions. Ownership can be [transferred](/console/organisation#transfer-ownership) to another Admin member from the Organisation Settings. Only the Owner can [delete the organisation](/console/organisation#delete-an-organisation).
+The organization owner. This role is automatically assigned when a user creates a new organization. It is unique to a single user and grants access to all resources and actions. Ownership can be [transferred](https://docs.phase.dev/console/organisation.md#transfer-ownership) to another Admin member from the Organisation Settings. Only the Owner can [delete the organisation](https://docs.phase.dev/console/organisation.md#delete-an-organisation).
 
 #### Organization-level permissions:
 
@@ -111,7 +108,7 @@ Admin users have access to most resources and permissions, and have global acces
 | **Encryption Mode** | Full access | ✅ |  | ✅ |  |
 | **Teams** | Full access | ✅ | ✅ | ✅ | ✅ |
 
-The `Owner` and `Admin` roles have global access. Learn more about global access [here](/access-control#global-access).
+The `Owner` and `Admin` roles have global access. Learn more about global access [here](https://docs.phase.dev/access-control.md#global-access).
 
 ### Manager
 
@@ -238,38 +235,32 @@ Developers have limited permissions at the organization level and must be given 
 
 ## Custom Roles
 
-<Note>
- The ability to create and manage custom roles is available for organizations with a `Pro` or an `Enterprise` tier subscription.
-</Note>
+> **Note:** The ability to create and manage custom roles is available for organizations with a `Pro` or an `Enterprise` tier subscription.
 
 In addition to the managed roles, Phase allows you to create custom roles tailored to your organization's specific security needs.
 
 ### Creating Custom Roles
 
-<Warning>
-Please make sure to follow the [Principle of least privilege](https://en.wikipedia.org/wiki/Principle_of_least_privilege) when setting the access policy for roles. Casting a wider scope may inadvertently lead to [Privilege escalation](https://en.wikipedia.org/wiki/Privilege_escalation). 
-</Warning>
+> **Warning:** Please make sure to follow the [Principle of least privilege](https://en.wikipedia.org/wiki/Principle_of_least_privilege) when setting the access policy for roles. Casting a wider scope may inadvertently lead to [Privilege escalation](https://en.wikipedia.org/wiki/Privilege_escalation).
 
-<Note>
- You can only grant permissions that your own role has. Phase disables the toggles for permissions that your role does not have. This limit does not apply to users with the `Owner` or `Admin` role.
-</Note>
+> **Note:** You can only grant permissions that your own role has. Phase disables the toggles for permissions that your role does not have. This limit does not apply to users with the `Owner` or `Admin` role.
 
 1. Navigate to the Access Control page from the sidebar and click on the Roles tab.
-![1-navigate-to-access-control](/assets/images/console/access-control/roles/create-custom-roles/1-navigate-to-access-control.webp)
-![2-navigate-to-access-control-roles](/assets/images/console/access-control/roles/create-custom-roles/2-navigate-to-access-control-roles.webp)
+![1-navigate-to-access-control](https://docs.phase.dev/assets/images/console/access-control/roles/create-custom-roles/1-navigate-to-access-control.webp)
+![2-navigate-to-access-control-roles](https://docs.phase.dev/assets/images/console/access-control/roles/create-custom-roles/2-navigate-to-access-control-roles.webp)
 2. Click on "Create Role".
-![3-click-create-role](/assets/images/console/access-control/roles/create-custom-roles/3-click-create-role.webp)
+![3-click-create-role](https://docs.phase.dev/assets/images/console/access-control/roles/create-custom-roles/3-click-create-role.webp)
 3. Provide a name and description for the role. (Role name is mandatory)
-![4-create-a-new-role](/assets/images/console/access-control/roles/create-custom-roles/4-create-a-new-role.webp)
+![4-create-a-new-role](https://docs.phase.dev/assets/images/console/access-control/roles/create-custom-roles/4-create-a-new-role.webp)
 4. Expand the Organisation and the App permissions sections by clicking on each of them and select the desired policy permissions by clicking the dropdown for each resource in the Access column and selecting one of the following:
     - 🚫 No access
     - 👁️ Read access
     - ❄️ Full access
     - 📝 Custom access
 
-Alternatively, you may provision a custom access policy by toggling switches in each of the CRUD operations for a given resource.  
+Alternatively, you may provision a custom access policy by toggling switches in each of the CRUD operations for a given resource.
 
-![5-configure-permissions](/assets/images/console/access-control/roles/create-custom-roles/5-configure-permissions.webp)
+![5-configure-permissions](https://docs.phase.dev/assets/images/console/access-control/roles/create-custom-roles/5-configure-permissions.webp)
 
 5. Save the new role.
 
@@ -277,7 +268,7 @@ Alternatively, you may provision a custom access policy by toggling switches in 
 
 Some actions require a combination of permissions across multiple resources. Below is a list of common actions that require a combination of two or more permissions:
 
-- To update the role of a user in your Organization: 
+- To update the role of a user in your Organization:
     - `Members:update`
     - `Roles:read`
 - Adding members to Apps or managing the scope of a member's access to Environments:
@@ -313,14 +304,12 @@ Some actions require a combination of permissions across multiple resources. Bel
 ### Editing Custom Roles
 
 1. Navigate to the Access Control page from the sidebar and click on the Roles tab.
-![1-navigate-to-access-control](/assets/images/console/access-control/roles/create-custom-roles/1-navigate-to-access-control.webp)
-![2-navigate-to-access-control-roles](/assets/images/console/access-control/roles/create-custom-roles/2-navigate-to-access-control-roles.webp)
+![1-navigate-to-access-control](https://docs.phase.dev/assets/images/console/access-control/roles/create-custom-roles/1-navigate-to-access-control.webp)
+![2-navigate-to-access-control-roles](https://docs.phase.dev/assets/images/console/access-control/roles/create-custom-roles/2-navigate-to-access-control-roles.webp)
 2. Find the custom role you want to edit, hover over it and click ⚙️ Manage.
-![3-edit-custom-role-click-manage](/assets/images/console/access-control/roles/edit-custom-roles/3-edit-custom-role-click-manage.webp)
+![3-edit-custom-role-click-manage](https://docs.phase.dev/assets/images/console/access-control/roles/edit-custom-roles/3-edit-custom-role-click-manage.webp)
 3. Modify the role as needed.
 4. Save your changes.
-![4-save-modified-role](/assets/images/console/access-control/roles/edit-custom-roles/4-save-modified-role.webp)
+![4-save-modified-role](https://docs.phase.dev/assets/images/console/access-control/roles/edit-custom-roles/4-save-modified-role.webp)
 
-<Note>
- You can only add permissions that your own role has. If the role already has permissions that your role does not have, you can keep them or remove them, but you cannot add them back. This limit does not apply to users with the `Owner` or `Admin` role.
-</Note>
+> **Note:** You can only add permissions that your own role has. If the role already has permissions that your role does not have, you can keep them or remove them, but you cannot add them back. This limit does not apply to users with the `Owner` or `Admin` role.

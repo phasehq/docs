@@ -1,59 +1,32 @@
-import { Tag } from '@/components/Tag'
-import { HeroPattern } from '@/components/HeroPattern'
-import { UserAuthProviders } from '@/components/UserAuthProviders'
-import { ProgrammaticAuth } from '@/components/ProgrammaticAuth'
-import { DocActions } from '@/components/DocActions'
-
-export const description = 'Authenticating with Phase.'
-
-<HeroPattern />
-
-<Tag variant="small">AUTHENTICATION</Tag>
+---
+title: "Authentication Methods"
+description: "Authenticating with Phase."
+url: https://docs.phase.dev/access-control/authentication
+---
 
 # Authentication Methods
 
 Phase supports native email/password authentication as well as third-party authentication systems for access control. Password authentication works out of the box with no additional configuration. You can also delegate authentication to external providers such as Google, AWS IAM, GitHub, Kubernetes, GitLab, or Microsoft Azure to best suit your setup. When choosing an authentication provider, consider whether the access to Phase will be programmatic (machine-access) via REST API, SDK, CLI, etc., or user access (human-access).
 
-<DocActions /> 
-
 ## User Authentication
 
-User authentication in Phase is designed for seamless and secure web access. Phase supports [native email/password authentication](/access-control/authentication/password) out of the box, as well as both OAuth 2.0 and OpenID Connect (OIDC) protocols for Single Sign-On (SSO), allowing organizations to leverage their existing identity providers like Google, GitHub, GitLab, and JumpCloud.
+User authentication in Phase is designed for seamless and secure web access. Phase supports [native email/password authentication](https://docs.phase.dev/access-control/authentication/password.md) out of the box, as well as both OAuth 2.0 and OpenID Connect (OIDC) protocols for Single Sign-On (SSO), allowing organizations to leverage their existing identity providers like Google, GitHub, GitLab, and JumpCloud.
 
 ### Password Authentication
 
 Email and password authentication is available out of the box on Phase Cloud, and on self-hosted deployments using the official Helm chart or docker-compose template. Users can sign up with their email address and a password, verify their email, and log in.
 
-
-<div className="not-prose">
-  <Button
-    href="authentication/password"
-    variant="text"
-    arrow="right"
-    children="Explore"
-  />
-</div>
-
-<UserAuthProviders />
+[Explore](https://docs.phase.dev/access-control/authentication/password.md)
 
 ## User Provisioning
 
 Phase supports the SCIM v2 protocol to automatically synchronize users and groups from your identity provider. SCIM manages the full account lifecycle — automatic provisioning and deprovisioning of users, along with group-to-team mapping — so changes in your directory are reflected in Phase without manual user management. SCIM provisioning is available on the Enterprise tier.
 
-<div className="not-prose">
-  <Button
-    href="provisioning/scim"
-    variant="text"
-    arrow="right"
-    children="Explore supported providers"
-  />
-</div>
+[Explore supported providers](https://docs.phase.dev/access-control/provisioning/scim.md)
 
 ## Programmatic Authentication
 
 Programmatic authentication enables secure machine-to-machine access to Phase through tokens. This authentication method is essential for automated processes, CI/CD pipelines, and applications that need to interact with Phase programmatically.
-
-<ProgrammaticAuth />
 
 ### Third party authentication
 

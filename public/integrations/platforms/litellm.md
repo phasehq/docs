@@ -1,17 +1,14 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description = 'Integrate Phase with LiteLLM to automatically rotate virtual API keys.'
-
-<Tag variant="small">INTEGRATE</Tag>
+---
+title: "LiteLLM — Rotating Secrets"
+description: "Integrate Phase with LiteLLM to automatically rotate virtual API keys."
+url: https://docs.phase.dev/integrations/platforms/litellm
+---
 
 # LiteLLM — Rotating Secrets
 
 Phase rotates [LiteLLM](https://docs.litellm.ai/) virtual API keys on a schedule. Each rotation mints a new key against your LiteLLM proxy, surfaces it as the active value in your Environment, and revokes the previous key after a configurable delay.
 
-See [Rotating Secrets](/console/rotating-secrets) for the general lifecycle.
-
-<DocActions />
+See [Rotating Secrets](https://docs.phase.dev/console/rotating-secrets.md) for the general lifecycle.
 
 ### Prerequisites
 
@@ -23,8 +20,7 @@ See [Rotating Secrets](/console/rotating-secrets) for the general lifecycle.
 
 Phase needs a bearer token to call LiteLLM's management endpoints. You can use the master key directly; we recommend a scoped management key for production.
 
-<TabGroup title="Authentication Method" subtitle="Choose how Phase authenticates against LiteLLM.">
-  <TabPanel title="Scoped key (Recommended)" slug="scoped">
+**Scoped key (Recommended)**
 
 A scoped key restricts Phase to the four management endpoints it actually uses. With the master key, Phase has full proxy access.
 
@@ -45,9 +41,7 @@ curl -X POST <gateway-url>/user/new \
 
 **Step 2.** Mint a scoped key under that user.
 
-<Warning>
-  The response contains both a `key` (`sk-…`) and a `token` (64-char hex). LiteLLM's auth layer **only accepts the `key` value** as a bearer token. Use `key`, not `token`.
-</Warning>
+> **Warning:** The response contains both a `key` (`sk-…`) and a `token` (64-char hex). LiteLLM's auth layer **only accepts the `key` value** as a bearer token. Use `key`, not `token`.
 
 ```bash
 curl -X POST <gateway-url>/key/generate \
@@ -67,13 +61,9 @@ curl -X POST <gateway-url>/key/generate \
 
 The `proxy_admin` role is required for the scoped key to delete keys it didn't mint itself.
 
-  </TabPanel>
-  <TabPanel title="Master key" slug="master">
+**Master key**
 
 For development, use the value of the `LITELLM_MASTER_KEY` env var on your proxy.
-
-  </TabPanel>
-</TabGroup>
 
 ## Add LiteLLM credentials to Phase
 
@@ -84,15 +74,15 @@ In the Phase Console, go to **Integrations → Third-party credentials** and cli
 
 Phase validates the credentials against `/health/readiness` before saving.
 
-![Select LiteLLM](/assets/images/platform-integrations/litellm/create-credentials-litellm.webp)
+![Select LiteLLM](https://docs.phase.dev/assets/images/platform-integrations/litellm/create-credentials-litellm.webp)
 
-![LiteLLM credentials](/assets/images/platform-integrations/litellm/input-litellm-credentials.webp)
+![LiteLLM credentials](https://docs.phase.dev/assets/images/platform-integrations/litellm/input-litellm-credentials.webp)
 
 ## Create a Rotating Secret for LiteLLM
 
 Open an Environment, click **New Secret → Rotating Secret**, and pick **LiteLLM**. The **Provider config** step offers two ways to specify the policy each minted key will carry.
 
-![Rotating Secret with LiteLLM: provider and root credentials](/assets/images/console/rotating-secrets/litellm-step-1.webp)
+![Rotating Secret with LiteLLM: provider and root credentials](https://docs.phase.dev/assets/images/console/rotating-secrets/litellm-step-1.webp)
 
 ### Import from an existing key
 
@@ -105,13 +95,13 @@ In the **Import config** tab:
 
 Phase calls `GET /key/info?key=<your-key>` and shows the full policy as editable JSON. Every field your template key sets — including object fields like `metadata`, `aliases`, `permissions` — is included. The imported policy is captured at create time; re-import if you change the template later.
 
-![Imported LiteLLM key policy](/assets/images/console/rotating-secrets/litellm-import-config.webp)
+![Imported LiteLLM key policy](https://docs.phase.dev/assets/images/console/rotating-secrets/litellm-import-config.webp)
 
 ### Configure manually
 
 Switch to the **Manual config** tab and fill in the curated set: allowed models, budgets, TPM/RPM limits, parallel request cap, team/user id, tags, and a `blocked` toggle.
 
-![Manual LiteLLM config](/assets/images/console/rotating-secrets/litellm-manual-config.webp)
+![Manual LiteLLM config](https://docs.phase.dev/assets/images/console/rotating-secrets/litellm-manual-config.webp)
 
 ### Outputs
 
@@ -120,7 +110,7 @@ LiteLLM yields two values per minted key:
 - **api_key** — the bearer token your application uses (e.g. `LITELLM_API_KEY`).
 - **key_id** — the LiteLLM-side token id, used internally for revocation.
 
-![LiteLLM outputs and schedule](/assets/images/console/rotating-secrets/litellm-outputs.webp)
+![LiteLLM outputs and schedule](https://docs.phase.dev/assets/images/console/rotating-secrets/litellm-outputs.webp)
 
 Click **Create and mint**.
 

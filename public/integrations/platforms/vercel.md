@@ -1,26 +1,21 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description = 'Integrate Phase with Vercel'
-
-<Tag variant="small">INTEGRATE</Tag>
+---
+title: "Vercel"
+description: "Integrate Phase with Vercel"
+url: https://docs.phase.dev/integrations/platforms/vercel
+---
 
 # Vercel
 
 You can use Phase to sync secrets with your Vercel projects.
 
-<DocActions /> 
-
-<Warning>
-  When secret syncing is enabled, secrets stored inside Phase will be treated as
-  the source of truth. Any secrets in the target Vercel environment will be overwritten. 
-  Please import your secrets into Phase before continuing.
-</Warning>
+> **Warning:** When secret syncing is enabled, secrets stored inside Phase will be treated as
+>   the source of truth. Any secrets in the target Vercel environment will be overwritten.
+>   Please import your secrets into Phase before continuing.
 
 ### Prerequisites
 
-- Sign up for the [Phase Console](/quickstart) and [create an App](/console/apps#create-an-app).
-- Enable Server-side Encryption (SSE) for the App from the [Settings](/console/apps#settings) tab.
+- Sign up for the [Phase Console](https://docs.phase.dev/quickstart.md) and [create an App](https://docs.phase.dev/console/apps.md#create-an-app).
+- Enable Server-side Encryption (SSE) for the App from the [Settings](https://docs.phase.dev/console/apps.md#settings) tab.
 
 ## Step 1: Authentication
 
@@ -30,54 +25,53 @@ You can use Phase to sync secrets with your Vercel projects.
 
 2. Click on your user icon in the top right and select **Account Settings**.
 
-![Vercel dashboard](/assets/images/platform-integrations/vercel/1.png)
+![Vercel dashboard](https://docs.phase.dev/assets/images/platform-integrations/vercel/1.png)
 
 3. In account settings, click on **Tokens** from the menu bar in the left.
 
-![Vercel dashboard account settings](/assets/images/platform-integrations/vercel/2.png)
+![Vercel dashboard account settings](https://docs.phase.dev/assets/images/platform-integrations/vercel/2.png)
 
 4. Create a new **Token** with a descriptive name (eg. `phase-console-vercel-sync`) , set the **Scope** to `Full Account`, choose an **Expiration** and click **Create**. (Note: If you choose an expiry option other than `No Expiration`, you will need to manually update this token in Phase when it expires.)
 
 Alternatively, you may create a token with a narrower scope to a specific team. Keep in mind that this will prevent the Phase Console from being able to list your projects and sync secrets to them.
 
-![Vercel dashboard account settings token create](/assets/images/platform-integrations/vercel/3.png)
+![Vercel dashboard account settings token create](https://docs.phase.dev/assets/images/platform-integrations/vercel/3.png)
 
 5. Once the `Token` has been created simply copy it by clicking the clipboard.
 
-![Vercel dashboard account settings token copy](/assets/images/platform-integrations/vercel/4.png)
-
+![Vercel dashboard account settings token copy](https://docs.phase.dev/assets/images/platform-integrations/vercel/4.png)
 
 ### Store authentication credentials in Phase
 
 1. Go to **Integrations** from the sidebar and click on **Third-party credentials** in the integrations tab.
 
-![Go to integrations](/assets/images/platform-integrations/integrations-sidebar.webp)
+![Go to integrations](https://docs.phase.dev/assets/images/platform-integrations/integrations-sidebar.webp)
 
 2. Click on **Vercel**
 
-![Select Vercel](/assets/images/platform-integrations/vercel/1-vercel-create-new-service-credential.webp)
+![Select Vercel](https://docs.phase.dev/assets/images/platform-integrations/vercel/1-vercel-create-new-service-credential.webp)
 
 3. Paste your Vercel  `API Token` and add a descriptive name for the service credential and click **Save**
 
-![Add vercel token as service credential](/assets/images/platform-integrations/vercel/2-vercel-save-new-service-credentials.webp)
+![Add vercel token as service credential](https://docs.phase.dev/assets/images/platform-integrations/vercel/2-vercel-save-new-service-credentials.webp)
 
 ## Step 2: Set up a secret sync
 
 1. Go to your App in the Phase Console and go to the **Syncing** tab. Select **Vercel** under the 'Create a new Sync' menu.
 
-![Set up a vercel secret sync](/assets/images/platform-integrations/vercel/1-create-new-sync-select-vercel.webp)
+![Set up a vercel secret sync](https://docs.phase.dev/assets/images/platform-integrations/vercel/1-create-new-sync-select-vercel.webp)
 
 2. Choose the credentials you added in the previous step as the authentication mode, and click **Next**.
 
-![Select service credentials for the sync](/assets/images/platform-integrations/vercel/2-create-new-sync-select-vercel-service-credentials.webp)
+![Select service credentials for the sync](https://docs.phase.dev/assets/images/platform-integrations/vercel/2-create-new-sync-select-vercel-service-credentials.webp)
 
 3. Next, configure the source and destination for your secrets. Pick an Environment from your App as the source. To configure the destination for the sync, choose a Vercel Project from the list of available Projects, as well as the Target Environment and the Secret Type.
 
-![Set up the sync config](/assets/images/platform-integrations/vercel/3-create-new-sync-choose-secret-config.webp)
+![Set up the sync config](https://docs.phase.dev/assets/images/platform-integrations/vercel/3-create-new-sync-choose-secret-config.webp)
 
 4. Once set up, your secrets will automatically be synced to the chosen destination project in Vercel. You can manage your sync from the *Syncing* tab of your App, or from the *Integrations* screen.
 
-![Sync status](/assets/images/platform-integrations/vercel/4-create-new-sync-sync-status-success.webp)
+![Sync status](https://docs.phase.dev/assets/images/platform-integrations/vercel/4-create-new-sync-sync-status-success.webp)
 
 ### Important considerations
 - Environment variables that you may have already created in Vercel scoped to 'All Environments' will remain untouched and not managed by Phase. This may lead to unwanted duplication of environment variables, if the same secret key exists in Phase. While supplying secrets to your applications, Vercel will prioritize values of environment variables created in specific environments managed by Phase over those scoped to 'All Environments'. Example: `FOO=BAR` (in Production environment) will be supplied to your application over `FOO=BAZ` (in All Environments). This is a fundamental limitation of the Vercel platform.
@@ -93,13 +87,11 @@ Secrets in Vercel:
   -  CustomEnv: `FOO=BAR`
   -  Production: `FOO=BAR`
 
-
-
 ## Reserved environment variable keys by Vercel
 
 The following secret keys are reserved or prepopulated by Vercel for technical reasons on their end that Phase will automatically filter for and not sync with Vercel to avoid errors.
 
-### Environment variables that are reserved by Vercel Serverless Function runtimes that Phase will filter for. 
+### Environment variables that are reserved by Vercel Serverless Function runtimes that Phase will filter for.
 
 - `AWS_SECRET_KEY`
 - `AWS_EXECUTION_ENV`
@@ -121,14 +113,7 @@ The following secret keys are reserved or prepopulated by Vercel for technical r
 - `AWS_REGION`
 - `AWS_DEFAULT_REGION`
 
-<div className="not-prose">
-  <Button
-    href="https://vercel.com/docs/projects/environment-variables/reserved-environment-variables"
-    variant="text"
-    arrow="right"
-    children="Reserved Environment Variables - Vercel Docs"
-  />
-</div>
+[Reserved Environment Variables - Vercel Docs](https://vercel.com/docs/projects/environment-variables/reserved-environment-variables)
 
 ### System environment variables:
 
@@ -156,20 +141,13 @@ Vercel provides a set of Environment Variables that are automatically populated 
 - `VERCEL_GIT_PREVIOUS_SHA` - The git SHA of the last successful deployment for the project and branch. Example: `fa1eade47b73733d6312d5abfad33ce9e4068080`. Note: This Variable is only exposed when an Ignored Build Step is provided.
 - `VERCEL_GIT_PULL_REQUEST_ID` - The pull request id the deployment was triggered by. If a deployment is created on a branch before a pull request is made, this value will be an empty string.
 
-<div className="not-prose">
-  <Button
-    href="https://vercel.com/docs/projects/environment-variables/system-environment-variables#system-environment-variables"
-    variant="text"
-    arrow="right"
-    children="System Environment Variables - Vercel Docs"
-  />
-</div>
+[System Environment Variables - Vercel Docs](https://vercel.com/docs/projects/environment-variables/system-environment-variables#system-environment-variables)
 
 ### Framework environment variables
 
-<CodeGroup>
+**Next.js**
 
-```fish {{ title: 'Next.js' }}
+```fish
 # Next.js
 "NEXT_PUBLIC_VERCEL_ENV",  # The Environment that the app is deployed and running on. The value can be either production, preview, or development.
 "NEXT_PUBLIC_VERCEL_URL",  # The domain name of the generated deployment URL. Example: *.vercel.app. The value does not include the protocol schemehttps://. Note: This Variable cannot be used in conjunction with Standard Deployment Protection. See Migrating to Standard Protection.
@@ -188,7 +166,9 @@ Vercel provides a set of Environment Variables that are automatically populated 
 "NEXT_PUBLIC_VERCEL_GIT_PULL_REQUEST_ID",  # The pull request id the deployment was triggered by. If a deployment is created on a branch before a pull request is made, this value will be an empty string. Example: 23.
 ```
 
-```fish {{ title: 'Nuxt.js' }}
+**Nuxt.js**
+
+```fish
 # Nuxt.js
 "NUXT_ENV_VERCEL_ENV",  # The Environment that the app is deployed and running on. The value can be either production, preview, or development.
 "NUXT_ENV_VERCEL_URL",  # The domain name of the generated deployment URL. Example: *.vercel.app. The value does not include the protocol schemehttps://. Note: This Variable cannot be used in conjunction with Standard Deployment Protection. See Migrating to Standard Protection.
@@ -207,7 +187,9 @@ Vercel provides a set of Environment Variables that are automatically populated 
 "NUXT_ENV_VERCEL_GIT_PULL_REQUEST_ID",  # The pull request id the deployment was triggered by. If a deployment is created on a branch before a pull request is made, this value will be an empty string. Example: 23.
 ```
 
-```fish {{ title: 'Create React App' }}
+**Create React App**
+
+```fish
 # Create React App
 "REACT_APP_VERCEL_ENV",  # The Environment that the app is deployed and running on. The value can be either production, preview, or development.
 "REACT_APP_VERCEL_URL",  # The domain name of the generated deployment URL. Example: *.vercel.app. The value does not include the protocol schemehttps://. Note: This Variable cannot be used in conjunction with Standard Deployment Protection. See Migrating to Standard Protection.
@@ -226,7 +208,9 @@ Vercel provides a set of Environment Variables that are automatically populated 
 "REACT_APP_VERCEL_GIT_PULL_REQUEST_ID",  # The pull request id the deployment was triggered by. If a deployment is created on a branch before a pull request is made, this value will be an empty string. Example: 23.
 ```
 
-```fish {{ title: 'Gatsby' }}
+**Gatsby**
+
+```fish
 # Gatsby
 "GATSBY_VERCEL_ENV",  # The Environment that the app is deployed and running on. The value can be either production, preview, or development.
 "GATSBY_VERCEL_URL",  # The domain name of the generated deployment URL. Example: *.vercel.app. The value does not include the protocol schemehttps://. Note: This Variable cannot be used in conjunction with Standard Deployment Protection. See Migrating to Standard Protection.
@@ -245,7 +229,9 @@ Vercel provides a set of Environment Variables that are automatically populated 
 "GATSBY_VERCEL_GIT_PULL_REQUEST_ID",  # The pull request id the deployment was triggered by. If a deployment is created on a branch before a pull request is made, this value will be an empty string. Example: 23.
 ```
 
-```fish {{ title: 'SolidStart' }}
+**SolidStart**
+
+```fish
 # SolidStart
 "VITE_VERCEL_ENV",  # The Environment that the app is deployed and running on. The value can be either production, preview, or development.
 "VITE_VERCEL_URL",  # The domain name of the generated deployment URL. Example: *.vercel.app. The value does not include the protocol schemehttps://. Note: This Variable cannot be used in conjunction with Standard Deployment Protection. See Migrating to Standard Protection.
@@ -264,7 +250,9 @@ Vercel provides a set of Environment Variables that are automatically populated 
 "VITE_VERCEL_GIT_PULL_REQUEST_ID",  # The pull request id the deployment was triggered by. If a deployment is created on a branch before a pull request is made, this value will be an empty string. Example: 23.
 ```
 
-```fish {{ title: 'SvelteKit' }}
+**SvelteKit**
+
+```fish
 # SvelteKit
 "VITE_VERCEL_ENV",  # The Environment that the app is deployed and running on. The value can be either production, preview, or development.
 "VITE_VERCEL_URL",  # The domain name of the generated deployment URL. Example: *.vercel.app. The value does not include the protocol schemehttps://. Note: This Variable cannot be used in conjunction with Standard Deployment Protection. See Migrating to Standard Protection.
@@ -283,7 +271,9 @@ Vercel provides a set of Environment Variables that are automatically populated 
 "VITE_VERCEL_GIT_PULL_REQUEST_ID",  # The pull request id the deployment was triggered by. If a deployment is created on a branch before a pull request is made, this value will be an empty string. Example: 23.
 ```
 
-```fish {{ title: 'Astro' }}
+**Astro**
+
+```fish
 # Astro
 "PUBLIC_VERCEL_ENV",  # The Environment that the app is deployed and running on. The value can be either production, preview, or development.
 "PUBLIC_VERCEL_URL",  # The domain name of the generated deployment URL. Example: *.vercel.app. The value does not include the protocol schemehttps://. Note: This Variable cannot be used in conjunction with Standard Deployment Protection. See Migrating to Standard Protection.
@@ -302,7 +292,9 @@ Vercel provides a set of Environment Variables that are automatically populated 
 "PUBLIC_VERCEL_GIT_PULL_REQUEST_ID",  # The pull request id the deployment was triggered by. If a deployment is created on a branch before a pull request is made, this value will be an empty string. Example: 23.
 ```
 
-```fish {{ title: 'Solid Start v1' }}
+**Solid Start v1**
+
+```fish
 # Solid Start v1
 "VITE_VERCEL_ENV",  # The Environment that the app is deployed and running on. The value can be either production, preview, or development.
 "VITE_VERCEL_URL",  # The domain name of the generated deployment URL. Example: *.vercel.app. The value does not include the protocol scheme https://. Note: This Variable cannot be used in conjunction with Standard Deployment Protection. See Migrating to Standard Protection.
@@ -321,7 +313,9 @@ Vercel provides a set of Environment Variables that are automatically populated 
 "VITE_VERCEL_GIT_PULL_REQUEST_ID",  # The pull request id the deployment was triggered by. If a deployment is created on a branch before a pull request is made, this value will be an empty string. Example: 23.
 ```
 
-```fish {{ title: 'Vue.js' }}
+**Vue.js**
+
+```fish
 # Vue.js
 "VUE_APP_VERCEL_ENV",  # The Environment that the app is deployed and running on. The value can be either production, preview, or development.
 "VUE_APP_VERCEL_URL",  # The domain name of the generated deployment URL. Example: *.vercel.app. The value does not include the protocol scheme https://. Note: This Variable cannot be used in conjunction with Standard Deployment Protection. See Migrating to Standard Protection.
@@ -340,7 +334,9 @@ Vercel provides a set of Environment Variables that are automatically populated 
 "VUE_APP_VERCEL_GIT_PULL_REQUEST_ID",  # The pull request id the deployment was triggered by. If a deployment is created on a branch before a pull request is made, this value will be an empty string. Example: 23.
 ```
 
-```fish {{ title: 'RedwoodJS' }}
+**RedwoodJS**
+
+```fish
 # RedwoodJS
 "REDWOOD_ENV_VERCEL_ENV",  # The Environment that the app is deployed and running on. The value can be either production, preview, or development.
 "REDWOOD_ENV_VERCEL_URL",  # The domain name of the generated deployment URL. Example: *.vercel.app. The value does not include the protocol scheme https://. Note: This Variable cannot be used in conjunction with Standard Deployment Protection. See Migrating to Standard Protection.
@@ -359,7 +355,9 @@ Vercel provides a set of Environment Variables that are automatically populated 
 "REDWOOD_ENV_VERCEL_GIT_PULL_REQUEST_ID",  # The pull request id the deployment was triggered by. If a deployment is created on a branch before a pull request is made, this value will be an empty string. Example: 23.
 ```
 
-```fish {{ title: 'Sanity' }}
+**Sanity**
+
+```fish
 # Sanity
 "SANITY_STUDIO_VERCEL_ENV",  # The Environment that the app is deployed and running on. The value can be either production, preview, or development.
 "SANITY_STUDIO_VERCEL_URL",  # The domain name of the generated deployment URL. Example: *.vercel.app. The value does not include the protocol scheme https://. Note: This Variable cannot be used in conjunction with Standard Deployment Protection. See Migrating to Standard Protection.
@@ -378,13 +376,4 @@ Vercel provides a set of Environment Variables that are automatically populated 
 "SANITY_STUDIO_VERCEL_GIT_PULL_REQUEST_ID",  # The pull request id the deployment was triggered by. If a deployment is created on a branch before a pull request is made, this value will be an empty string. Example: 23.
 ```
 
-</CodeGroup>
-
-<div className="not-prose">
-  <Button
-    href="https://vercel.com/docs/projects/environment-variables/system-environment-variables#framework-environment-variables"
-    variant="text"
-    arrow="right"
-    children="Framework Environment Variables - Vercel Docs"
-  />
-</div>
+[Framework Environment Variables - Vercel Docs](https://vercel.com/docs/projects/environment-variables/system-environment-variables#framework-environment-variables)

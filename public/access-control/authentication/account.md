@@ -1,19 +1,16 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description = 'Manage your Phase account: linked sign-in methods, email address, display name, and account deletion.'
-
-<Tag variant="small">AUTHENTICATION</Tag>
+---
+title: "Account Management"
+description: "Manage your Phase account: linked sign-in methods, email address, display name, and account deletion."
+url: https://docs.phase.dev/access-control/authentication/account
+---
 
 # Account Management
 
 The Account page lets you manage everything about how you sign in to Phase. It is personal to you and applies across all of your organisations. Open it from the user menu in the top right corner of the Console: click your avatar, then click your profile card (your name and email) at the top of the menu.
 
-![The profile card in the user menu opens the Account page](/assets/images/auth/account/user-menu.webp)
+![The profile card in the user menu opens the Account page](https://docs.phase.dev/assets/images/auth/account/user-menu.webp)
 
-<DocActions />
-
-![The Account page](/assets/images/auth/account/account-page.webp)
+![The Account page](https://docs.phase.dev/assets/images/auth/account/account-page.webp)
 
 ## Sensitive action re-authentication
 
@@ -21,11 +18,11 @@ Changes to your sign-in methods, email address, two-factor authentication, and a
 
 If your last sign-in is older than that, a **Confirm it's you** dialog appears when you start the change. You can cancel, or sign in again to continue. This limits what a stolen or unattended session can do.
 
-![Confirm it's you dialog](/assets/images/auth/account/reauth-dialog.webp)
+![Confirm it's you dialog](https://docs.phase.dev/assets/images/auth/account/reauth-dialog.webp)
 
 The login page shows why you are back, and offers only the sign-in methods linked to your account.
 
-![Login page during re-authentication](/assets/images/auth/account/reauth-login.webp)
+![Login page during re-authentication](https://docs.phase.dev/assets/images/auth/account/reauth-login.webp)
 
 Signing in again does not lose your place. Phase returns you to the Account page and restores the interrupted flow: the same dialog, the same step, and anything you had entered. Codes and passwords are never carried over, so you enter them again.
 
@@ -37,15 +34,13 @@ Your account can have multiple sign-in identities linked to it, for example a Go
 
 1. On the Account page, find **Sign-in methods**. Providers configured on your instance are shown, along with any organisation-level SSO providers for organisations you are a member of. Active methods show a badge: *Linked* for identities, *Enabled* for a password.
 
-   ![Sign-in methods on the Account page](/assets/images/auth/account/sign-in-methods.webp)
+   ![Sign-in methods on the Account page](https://docs.phase.dev/assets/images/auth/account/sign-in-methods.webp)
 2. Hover the card of an unlinked provider and click **Link**.
 3. Authenticate with the provider. You will be returned to the Account page with the new identity linked.
 
 Identities are matched by the provider's stable account ID, not by email address. **The email on the linked identity does not need to match your Phase account email.** This makes linking the right tool for moving to a new identity provider. For example: you signed up with Google, and your organisation later adopts Microsoft Entra ID SSO. Link your Entra ID identity from the Account page, and you can sign in with either from then on.
 
-<Note>
-If you see *"An account with this email already exists"* when signing in with a new provider, this is Phase's account takeover protection: a new sign-in identity is never automatically attached to an existing account based on a matching email. Sign in with your existing method and link the new provider from the Account page instead. If you hold a pending invite to the organisation, the message directs you to accept the invite with your existing sign-in method first. The organisation's SSO works after you join.
-</Note>
+> **Note:** If you see *"An account with this email already exists"* when signing in with a new provider, this is Phase's account takeover protection: a new sign-in identity is never automatically attached to an existing account based on a matching email. Sign in with your existing method and link the new provider from the Account page instead. If you hold a pending invite to the organisation, the message directs you to accept the invite with your existing sign-in method first. The organisation's SSO works after you join.
 
 Linking an identity that is already attached to a different Phase account is refused. Phase never merges accounts. Linking is also refused when the provider reports the identity's email as unverified. Verify it with your provider first, then try again.
 
@@ -53,13 +48,13 @@ You will receive an email notification whenever a sign-in method is linked to or
 
 ### Migrating an organisation to enforced SSO
 
-If your organisation plans to [enforce SSO](/access-control/authentication/sso#enforce-sso), have every member link the new provider from their Account page **before** enforcement is switched on. Members who have not linked the organisation's provider cannot sign in to the organisation after enforcement. Admins can track linking progress in the organisation's audit log. Each link creates a member audit event.
+If your organisation plans to [enforce SSO](https://docs.phase.dev/access-control/authentication/sso.md#enforce-sso), have every member link the new provider from their Account page **before** enforcement is switched on. Members who have not linked the organisation's provider cannot sign in to the organisation after enforcement. Admins can track linking progress in the organisation's audit log. Each link creates a member audit event.
 
 ### Unlinking a sign-in method
 
 Hover the card of a linked identity, click **Unlink**, and confirm. You can no longer sign in with that identity afterwards. Unlinking is blocked when:
 
-![Unlink sign-in method confirmation](/assets/images/auth/account/unlink-sign-in-method.webp)
+![Unlink sign-in method confirmation](https://docs.phase.dev/assets/images/auth/account/unlink-sign-in-method.webp)
 
 - It is your **only** sign-in method (a password counts as a method when password authentication is enabled on the instance).
 - The identity belongs to an organisation SSO provider that is currently **enforced** for an organisation you are a member of.
@@ -69,7 +64,7 @@ Hover the card of a linked identity, click **Unlink**, and confirm. You can no l
 
 Your name and profile picture are initially taken from the identity provider you first signed up with. To set a custom display name, click the pencil icon next to your name on the Account page. A custom name takes precedence over provider-reported names and is used in emails and member lists. It survives unlinking the identity it originally came from.
 
-![Editing the display name](/assets/images/auth/account/display-name-edit.webp)
+![Editing the display name](https://docs.phase.dev/assets/images/auth/account/display-name-edit.webp)
 
 ## Changing your email address
 
@@ -79,19 +74,17 @@ Your account email is used for sign-in identification, notifications, and organi
 2. Enter the new address. Phase sends a verification code to it. The code is valid for 15 minutes.
 3. Enter the code, along with your password (or sudo password if your account has no login password), to confirm the change.
 
-   ![Change email address dialog](/assets/images/auth/account/change-email-1.webp)
+   ![Change email address dialog](https://docs.phase.dev/assets/images/auth/account/change-email-1.webp)
 
-   ![Confirm the email change with the verification code](/assets/images/auth/account/change-email-2.webp)
+   ![Confirm the email change with the verification code](https://docs.phase.dev/assets/images/auth/account/change-email-2.webp)
 
-The new address does not need to match a linked sign-in identity. An address already used by another account is refused. On self-hosted instances with an [email domain allowlist](/self-hosting/configuration/envars), the new address must be in the allowlist. A security alert is sent to your **old** address whenever the change completes.
+The new address does not need to match a linked sign-in identity. An address already used by another account is refused. On self-hosted instances with an [email domain allowlist](https://docs.phase.dev/self-hosting/configuration/envars.md), the new address must be in the allowlist. A security alert is sent to your **old** address whenever the change completes.
 
-<Note>
-Your account email is a cryptographic input to your local device key. Confirming the change therefore re-encrypts your account keyrings for **all** of your organisations in one step. This is why your password or sudo password is required. Nothing changes about your organisation keys or secrets; only the encrypted wrapper is rotated.
-</Note>
+> **Note:** Your account email is a cryptographic input to your local device key. Confirming the change therefore re-encrypts your account keyrings for **all** of your organisations in one step. This is why your password or sudo password is required. Nothing changes about your organisation keys or secrets; only the encrypted wrapper is rotated.
 
 Email changes are not available for SCIM-provisioned accounts, where the identity provider manages the email address.
 
-On self-hosted instances without an [email gateway](/self-hosting/configuration/envars#email-gateway-configuration) configured (or with `SKIP_EMAIL_VERIFICATION` set), the verification code step is skipped, the same convention as password signup.
+On self-hosted instances without an [email gateway](https://docs.phase.dev/self-hosting/configuration/envars.md#email-gateway-configuration) configured (or with `SKIP_EMAIL_VERIFICATION` set), the verification code step is skipped, the same convention as password signup.
 
 ## Deleting your account
 
@@ -99,7 +92,7 @@ You can permanently delete your Phase account from the **Delete account** sectio
 
 Deletion is blocked while:
 
-- You are the **only owner** of an organisation. [Transfer ownership](/console/organisation) to another member first. Organisations with another owner do not block deletion.
+- You are the **only owner** of an organisation. [Transfer ownership](https://docs.phase.dev/console/organisation.md) to another member first. Organisations with another owner do not block deletion.
 - Your account is **SCIM-provisioned** in any organisation. Ask your administrator to deprovision you from the identity provider instead.
 
 On self-hosted instances, accounts with Django staff or superuser access cannot be deleted from the Console.
@@ -108,12 +101,10 @@ When deletion completes, Phase sends a confirmation email to the deleted address
 
 To confirm deletion, type your email address into the confirmation dialog.
 
-![Delete account section](/assets/images/auth/account/delete-account-section.webp)
+![Delete account section](https://docs.phase.dev/assets/images/auth/account/delete-account-section.webp)
 
-![Delete account confirmation dialog](/assets/images/auth/account/delete-account-dialog.webp)
+![Delete account confirmation dialog](https://docs.phase.dev/assets/images/auth/account/delete-account-dialog.webp)
 
-<Note>
-Organisation audit logs are preserved for compliance. Events you performed remain in your organisations' logs, with the actor shown as *"Deleted account"*. Your account and its personal data are removed. Audit records can still contain identifying fields captured at the time of each event.
-</Note>
+> **Note:** Organisation audit logs are preserved for compliance. Events you performed remain in your organisations' logs, with the actor shown as *"Deleted account"*. Your account and its personal data are removed. Audit records can still contain identifying fields captured at the time of each event.
 
 Any active dynamic secret leases you hold are revoked at the provider before your account is removed. Existing service account tokens and organisation resources you created, such as network policies, are unaffected: they belong to the organisation, not to you.

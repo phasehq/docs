@@ -1,57 +1,28 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const metadata = {
-  title: 'Teams API',
-  description:
-    'Explore the Phase Teams API for managing teams, team membership, and team-scoped app access programmatically.',
-}
-
-<Tag variant="small">API</Tag>
+---
+title: "Teams"
+description: "Explore the Phase Teams API for managing teams, team membership, and team-scoped app access programmatically."
+url: https://docs.phase.dev/public-api/teams
+---
 
 # Teams
 
-Teams group users and service accounts together and grant shared, scoped access to specific app environments. Each team can carry optional role overrides that apply only to apps accessed via that team's grants, so the same member can hold different effective permissions in different teams. On this page, we'll look at the Teams API endpoints for managing teams, their membership, and their app-environment scope. {{ className: 'lead' }}
+Teams group users and service accounts together and grant shared, scoped access to specific app environments. Each team can carry optional role overrides that apply only to apps accessed via that team's grants, so the same member can hold different effective permissions in different teams. On this page, we'll look at the Teams API endpoints for managing teams, their membership, and their app-environment scope.
 
-<Note>
-Teams require a Pro or Enterprise plan. `POST /v1/teams/` returns `403` on the Free plan.
-</Note>
-
-<DocActions />
+> **Note:** Teams require a Pro or Enterprise plan. `POST /v1/teams/` returns `403` on the Free plan.
 
 ## The Team model
 
 ### Properties
 
-<Properties>
-  <Property name="id" type="string">
-    Unique identifier for the team.
-  </Property>
-  <Property name="name" type="string">
-    The team name. Maximum 64 characters.
-  </Property>
-  <Property name="description" type="string">
-    An optional team description.
-  </Property>
-  <Property name="isScimManaged" type="boolean">
-    Whether this team is provisioned and synced by your SCIM identity provider. SCIM-managed teams cannot be renamed, deleted, or have user members added or removed via this API — those operations must be performed through the SCIM provider. Service account membership is unaffected and remains manageable via the API.
-  </Property>
-  <Property name="memberRole" type="object">
-    The optional role override for human members of the team. When set, the role unions with each member's organisation role for app-level permissions on apps the team has access to. `null` means no override — members keep their organisation role on team-accessed apps.
-  </Property>
-  <Property name="serviceAccountRole" type="object">
-    The optional role override for service-account members of the team. Same semantics as `memberRole`, applied to service accounts.
-  </Property>
-  <Property name="owner" type="object">
-    The OrganisationMember that owns the team (the team creator by default). Team owners can transfer access scope and add other members. Team owners retain their organisation role on team-accessed apps regardless of `memberRole`.
-  </Property>
-  <Property name="createdAt" type="timestamp">
-    Timestamp of when the team was created.
-  </Property>
-  <Property name="updatedAt" type="timestamp">
-    Timestamp of when the team was last updated.
-  </Property>
-</Properties>
+  - `id` (string): Unique identifier for the team.
+  - `name` (string): The team name. Maximum 64 characters.
+  - `description` (string): An optional team description.
+  - `isScimManaged` (boolean): Whether this team is provisioned and synced by your SCIM identity provider. SCIM-managed teams cannot be renamed, deleted, or have user members added or removed via this API — those operations must be performed through the SCIM provider. Service account membership is unaffected and remains manageable via the API.
+  - `memberRole` (object): The optional role override for human members of the team. When set, the role unions with each member's organisation role for app-level permissions on apps the team has access to. `null` means no override — members keep their organisation role on team-accessed apps.
+  - `serviceAccountRole` (object): The optional role override for service-account members of the team. Same semantics as `memberRole`, applied to service accounts.
+  - `owner` (object): The OrganisationMember that owns the team (the team creator by default). Team owners can transfer access scope and add other members. Team owners retain their organisation role on team-accessed apps regardless of `memberRole`.
+  - `createdAt` (timestamp): Timestamp of when the team was created.
+  - `updatedAt` (timestamp): Timestamp of when the team was last updated.
 
 ### Permission model
 
@@ -61,19 +32,15 @@ Server-side Encryption (SSE) is required for an app to be granted to a team — 
 
 ---
 
-## List Teams {{ tag: 'GET', label: '/v1/teams' }}
-
-<Row>
-  <Col>
+## List Teams
 
     Retrieve all teams in the organisation. Requires the `Teams.read` org permission. Teams are returned without `members` or `apps` detail — fetch the [Team Detail](#get-team) endpoint for those.
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="GET" label="/v1/teams">
+    **cURL**
 
-    ```fish {{ title: 'cURL' }}
+    ```fish
     curl https://api.phase.dev/v1/teams/ \
       -H "Authorization: Bearer {token}"
     ```
@@ -90,9 +57,9 @@ Server-side Encryption (SSE) is required for an app to be granted to a team — 
     data = response.json()
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```json {{ title: 'Response' }}
+    ```json
     {
         "data": [
             {
@@ -113,15 +80,9 @@ Server-side Encryption (SSE) is required for an app to be granted to a team — 
     }
     ```
 
-  </Col>
-</Row>
-
 ---
 
-## Create Team {{ tag: 'POST', label: '/v1/teams' }}
-
-<Row>
-  <Col>
+## Create Team
 
     Create a new team. The calling user becomes the team's owner and is automatically added as a member. Service-account callers create the team without an owner and no auto-membership.
 
@@ -131,36 +92,21 @@ Server-side Encryption (SSE) is required for an app to be granted to a team — 
 
     #### Required fields
 
-    <Properties>
-      <Property name="name" type="string">
-        The team name. Maximum 64 characters. HTML tags and ASCII control characters are stripped; whitespace is trimmed.
-      </Property>
-    </Properties>
+      - `name` (string): The team name. Maximum 64 characters. HTML tags and ASCII control characters are stripped; whitespace is trimmed.
 
     #### Optional fields
 
-    <Properties>
-      <Property name="description" type="string">
-        A description for the team. Maximum 10,000 characters.
-      </Property>
-      <Property name="member_role_id" type="string">
-        Role ID to apply as the team's `memberRole` override. Must reference a role in the same organisation. The role can only include permissions that the caller's own role has. Otherwise the request returns `403 Forbidden` and the error lists each extra permission. Callers with a global-access role are exempt. Phase adds this override to the permissions of a user caller who creates or updates a team-owned service account.
-      </Property>
-      <Property name="service_account_role_id" type="string">
-        Role ID to apply as the team's `serviceAccountRole` override. Must reference a role in the same organisation. The role can only include permissions that the caller's own role has. Otherwise the request returns `403 Forbidden` and the error lists each extra permission. Callers with a global-access role are exempt. Phase adds this override to the permissions of a service account caller who creates or updates a team-owned service account.
-      </Property>
-    </Properties>
+      - `description` (string): A description for the team. Maximum 10,000 characters.
+      - `member_role_id` (string): Role ID to apply as the team's `memberRole` override. Must reference a role in the same organisation. The role can only include permissions that the caller's own role has. Otherwise the request returns `403 Forbidden` and the error lists each extra permission. Callers with a global-access role are exempt. Phase adds this override to the permissions of a user caller who creates or updates a team-owned service account.
+      - `service_account_role_id` (string): Role ID to apply as the team's `serviceAccountRole` override. Must reference a role in the same organisation. The role can only include permissions that the caller's own role has. Otherwise the request returns `403 Forbidden` and the error lists each extra permission. Callers with a global-access role are exempt. Phase adds this override to the permissions of a service account caller who creates or updates a team-owned service account.
 
-    <Note>
-    The `is_scim_managed` flag is set automatically by the SCIM provisioning flow. Passing it in the request body returns `400 Bad Request`.
-    </Note>
+> **Note:** The `is_scim_managed` flag is set automatically by the SCIM provisioning flow. Passing it in the request body returns `400 Bad Request`.
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="POST" label="/v1/teams">
+    **cURL**
 
-    ```fish {{ title: 'cURL' }}
+    ```fish
     curl -X POST https://api.phase.dev/v1/teams/ \
       -H "Authorization: Bearer {token}" \
       -H "Content-Type: application/json" \
@@ -187,9 +133,7 @@ Server-side Encryption (SSE) is required for an app to be granted to a team — 
     data = response.json()
     ```
 
-    </CodeGroup>
-
-    ```json {{ title: 'Response', statusCode: '201' }}
+    ```json
     {
         "id": "cf3c159d-3edb-4da6-8dbf-0af4959dabf4",
         "name": "backend-eng",
@@ -215,32 +159,21 @@ Server-side Encryption (SSE) is required for an app to be granted to a team — 
     }
     ```
 
-  </Col>
-</Row>
-
 ---
 
-## Get Team {{ tag: 'GET', label: '/v1/teams/:id' }}
-
-<Row>
-  <Col>
+## Get Team
 
     Retrieve a single team with its members and app-environment scope. Non-team-members can list teams via [List Teams](#list-teams) but cannot fetch detail unless they hold a global-access role (Owner or Admin).
 
     ### URL parameters
 
-    <Properties>
-      <Property name="id" type="string">
-        The unique identifier of the team.
-      </Property>
-    </Properties>
+      - `id` (string): The unique identifier of the team.
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="GET" label="/v1/teams/:id">
+    **cURL**
 
-    ```fish {{ title: 'cURL' }}
+    ```fish
     curl https://api.phase.dev/v1/teams/cf3c159d-3edb-4da6-8dbf-0af4959dabf4/ \
       -H "Authorization: Bearer {token}"
     ```
@@ -258,9 +191,9 @@ Server-side Encryption (SSE) is required for an app to be granted to a team — 
     data = response.json()
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```json {{ title: 'Response' }}
+    ```json
     {
         "id": "cf3c159d-3edb-4da6-8dbf-0af4959dabf4",
         "name": "backend-eng",
@@ -303,15 +236,9 @@ Server-side Encryption (SSE) is required for an app to be granted to a team — 
     }
     ```
 
-  </Col>
-</Row>
-
 ---
 
-## Update Team {{ tag: 'PUT', label: '/v1/teams/:id' }}
-
-<Row>
-  <Col>
+## Update Team
 
     Update a team's name, description, or role overrides. At least one field must be provided.
 
@@ -320,35 +247,20 @@ Server-side Encryption (SSE) is required for an app to be granted to a team — 
 
     ### URL parameters
 
-    <Properties>
-      <Property name="id" type="string">
-        The unique identifier of the team.
-      </Property>
-    </Properties>
+      - `id` (string): The unique identifier of the team.
 
     ### JSON Body
 
-    <Properties>
-      <Property name="name" type="string">
-        The new team name. Maximum 64 characters.
-      </Property>
-      <Property name="description" type="string">
-        The new description. Maximum 10,000 characters.
-      </Property>
-      <Property name="member_role_id" type="string">
-        New role override for human members. Pass `""` to clear the existing override. If the override changes, the new role can only include permissions that the caller's own role has. Otherwise the request returns `403 Forbidden` and the error lists each extra permission. Callers with a global-access role are exempt. Phase adds this override to the permissions of a user caller who creates or updates a team-owned service account.
-      </Property>
-      <Property name="service_account_role_id" type="string">
-        New role override for service-account members. Pass `""` to clear the existing override. If the override changes, the new role can only include permissions that the caller's own role has. Otherwise the request returns `403 Forbidden` and the error lists each extra permission. Callers with a global-access role are exempt. Phase adds this override to the permissions of a service account caller who creates or updates a team-owned service account.
-      </Property>
-    </Properties>
+      - `name` (string): The new team name. Maximum 64 characters.
+      - `description` (string): The new description. Maximum 10,000 characters.
+      - `member_role_id` (string): New role override for human members. Pass `""` to clear the existing override. If the override changes, the new role can only include permissions that the caller's own role has. Otherwise the request returns `403 Forbidden` and the error lists each extra permission. Callers with a global-access role are exempt. Phase adds this override to the permissions of a user caller who creates or updates a team-owned service account.
+      - `service_account_role_id` (string): New role override for service-account members. Pass `""` to clear the existing override. If the override changes, the new role can only include permissions that the caller's own role has. Otherwise the request returns `403 Forbidden` and the error lists each extra permission. Callers with a global-access role are exempt. Phase adds this override to the permissions of a service account caller who creates or updates a team-owned service account.
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="PUT" label="/v1/teams/:id">
+    **cURL**
 
-    ```fish {{ title: 'cURL' }}
+    ```fish
     curl -X PUT https://api.phase.dev/v1/teams/cf3c159d-3edb-4da6-8dbf-0af4959dabf4/ \
       -H "Authorization: Bearer {token}" \
       -H "Content-Type: application/json" \
@@ -376,9 +288,9 @@ Server-side Encryption (SSE) is required for an app to be granted to a team — 
     data = response.json()
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```json {{ title: 'Response' }}
+    ```json
     {
         "id": "cf3c159d-3edb-4da6-8dbf-0af4959dabf4",
         "name": "backend-engineering",
@@ -400,15 +312,9 @@ Server-side Encryption (SSE) is required for an app to be granted to a team — 
     }
     ```
 
-  </Col>
-</Row>
-
 ---
 
-## Delete Team {{ tag: 'DELETE', label: '/v1/teams/:id' }}
-
-<Row>
-  <Col>
+## Delete Team
 
     Delete a team. This soft-deletes the team and cascades:
 
@@ -419,18 +325,13 @@ Server-side Encryption (SSE) is required for an app to be granted to a team — 
 
     ### URL parameters
 
-    <Properties>
-      <Property name="id" type="string">
-        The unique identifier of the team.
-      </Property>
-    </Properties>
+      - `id` (string): The unique identifier of the team.
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="DELETE" label="/v1/teams/:id">
+    **cURL**
 
-    ```fish {{ title: 'cURL' }}
+    ```fish
     curl -X DELETE https://api.phase.dev/v1/teams/cf3c159d-3edb-4da6-8dbf-0af4959dabf4/ \
       -H "Authorization: Bearer {token}"
     ```
@@ -448,21 +349,15 @@ Server-side Encryption (SSE) is required for an app to be granted to a team — 
     # Returns 204 No Content on success
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```text {{ title: 'Response' }}
+    ```text
     204 No Content
     ```
 
-  </Col>
-</Row>
-
 ---
 
-## Add Team Members {{ tag: 'POST', label: '/v1/teams/:id/members' }}
-
-<Row>
-  <Col>
+## Add Team Members
 
     Add one or more members (users or service accounts) to a team. The server provisions per-member `EnvironmentKey` records for every SSE-enabled app the team already has access to.
 
@@ -471,29 +366,18 @@ Server-side Encryption (SSE) is required for an app to be granted to a team — 
 
     ### URL parameters
 
-    <Properties>
-      <Property name="id" type="string">
-        The unique identifier of the team.
-      </Property>
-    </Properties>
+      - `id` (string): The unique identifier of the team.
 
     ### JSON Body
 
-    <Properties>
-      <Property name="member_type" type="string">
-        Either `user` or `service_account`. Defaults to `user`.
-      </Property>
-      <Property name="member_ids" type="array">
-        Array of OrganisationMember IDs (for `user`) or ServiceAccount IDs (for `service_account`). Must be a non-empty list.
-      </Property>
-    </Properties>
+      - `member_type` (string): Either `user` or `service_account`. Defaults to `user`.
+      - `member_ids` (array): Array of OrganisationMember IDs (for `user`) or ServiceAccount IDs (for `service_account`). Must be a non-empty list.
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="POST" label="/v1/teams/:id/members">
+    **cURL**
 
-    ```fish {{ title: 'cURL' }}
+    ```fish
     curl -X POST https://api.phase.dev/v1/teams/cf3c159d-3edb-4da6-8dbf-0af4959dabf4/members/ \
       -H "Authorization: Bearer {token}" \
       -H "Content-Type: application/json" \
@@ -523,9 +407,9 @@ Server-side Encryption (SSE) is required for an app to be granted to a team — 
     data = response.json()
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```json {{ title: 'Response' }}
+    ```json
     {
         "id": "cf3c159d-3edb-4da6-8dbf-0af4959dabf4",
         "name": "backend-engineering",
@@ -546,15 +430,9 @@ Server-side Encryption (SSE) is required for an app to be granted to a team — 
     }
     ```
 
-  </Col>
-</Row>
-
 ---
 
-## Remove Team Member {{ tag: 'DELETE', label: '/v1/teams/:id/members/:member_id' }}
-
-<Row>
-  <Col>
+## Remove Team Member
 
     Remove a single member from a team. The server revokes the member's team-granted `EnvironmentKey` records; keys carrying an additional individual grant are preserved.
 
@@ -563,29 +441,18 @@ Server-side Encryption (SSE) is required for an app to be granted to a team — 
 
     ### URL parameters
 
-    <Properties>
-      <Property name="id" type="string">
-        The unique identifier of the team.
-      </Property>
-      <Property name="member_id" type="string">
-        The OrganisationMember ID or ServiceAccount ID to remove.
-      </Property>
-    </Properties>
+      - `id` (string): The unique identifier of the team.
+      - `member_id` (string): The OrganisationMember ID or ServiceAccount ID to remove.
 
     ### Query parameters
 
-    <Properties>
-      <Property name="member_type" type="string">
-        Either `user` or `service_account`. Defaults to `user`. Required to disambiguate when the same ID exists in both tables.
-      </Property>
-    </Properties>
+      - `member_type` (string): Either `user` or `service_account`. Defaults to `user`. Required to disambiguate when the same ID exists in both tables.
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="DELETE" label="/v1/teams/:id/members/:member_id">
+    **cURL**
 
-    ```fish {{ title: 'cURL' }}
+    ```fish
     curl -X DELETE "https://api.phase.dev/v1/teams/cf3c159d-3edb-4da6-8dbf-0af4959dabf4/members/3f2e1d0c-9b8a-7654-3210-fedcba987654/?member_type=user" \
       -H "Authorization: Bearer {token}"
     ```
@@ -605,21 +472,15 @@ Server-side Encryption (SSE) is required for an app to be granted to a team — 
     # Returns 204 No Content on success
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```text {{ title: 'Response' }}
+    ```text
     204 No Content
     ```
 
-  </Col>
-</Row>
-
 ---
 
-## Manage Access {{ tag: 'PUT', label: '/v1/teams/:id/access' }}
-
-<Row>
-  <Col>
+## Manage Access
 
     Set the apps and environments the team has access to. This is a **declarative** endpoint — the request body represents the entire desired access state.
 
@@ -633,30 +494,21 @@ Server-side Encryption (SSE) is required for an app to be granted to a team — 
 
     ### URL parameters
 
-    <Properties>
-      <Property name="id" type="string">
-        The unique identifier of the team.
-      </Property>
-    </Properties>
+      - `id` (string): The unique identifier of the team.
 
     ### JSON Body
 
-    <Properties>
-      <Property name="apps" type="array">
-        An array of app access objects. Each object must have:
-        - `id` (string): The app ID.
-        - `environments` (array): A list of environment IDs to grant access to. Must not be empty.
+      - `apps` (array): An array of app access objects. Each object must have:
+          - `id` (string): The app ID.
+          - `environments` (array): A list of environment IDs to grant access to. Must not be empty.
 
-        To revoke all team access, pass an empty array.
-      </Property>
-    </Properties>
+          To revoke all team access, pass an empty array.
 
-  </Col>
-  <Col sticky>
+**Request**
 
-    <CodeGroup title="Request" tag="PUT" label="/v1/teams/:id/access">
+    **cURL (grant access)**
 
-    ```fish {{ title: 'cURL (grant access)' }}
+    ```fish
     curl -X PUT https://api.phase.dev/v1/teams/cf3c159d-3edb-4da6-8dbf-0af4959dabf4/access/ \
       -H "Authorization: Bearer {token}" \
       -H "Content-Type: application/json" \
@@ -673,7 +525,9 @@ Server-side Encryption (SSE) is required for an app to be granted to a team — 
       }'
     ```
 
-    ```fish {{ title: 'cURL (revoke all)' }}
+    **cURL (revoke all)**
+
+    ```fish
     curl -X PUT https://api.phase.dev/v1/teams/cf3c159d-3edb-4da6-8dbf-0af4959dabf4/access/ \
       -H "Authorization: Bearer {token}" \
       -H "Content-Type: application/json" \
@@ -705,9 +559,9 @@ Server-side Encryption (SSE) is required for an app to be granted to a team — 
     data = response.json()
     ```
 
-    </CodeGroup>
+    **Response**
 
-    ```json {{ title: 'Response' }}
+    ```json
     {
         "id": "cf3c159d-3edb-4da6-8dbf-0af4959dabf4",
         "name": "backend-engineering",
@@ -723,6 +577,3 @@ Server-side Encryption (SSE) is required for an app to be granted to a team — 
         ]
     }
     ```
-
-  </Col>
-</Row>

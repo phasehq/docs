@@ -1,56 +1,61 @@
-import { Tag } from '@/components/Tag'
-
-export const description =
-  'This guide will get you all set up and ready to use the Phase console.'
-
-<Tag variant="small">GET STARTED</Tag>
+---
+title: "Quickstart"
+description: "This guide will get you all set up and ready to use the Phase console."
+url: https://docs.phase.dev/quickstart
+---
 
 # Quickstart
 
 Set up your account and start using Phase to manage your application secrets in just a few minutes. This guide will walk you through the following:
 
 - Create a new account on the [Phase Console](https://console.phase.dev)
-- Create an [App](/console/apps)
-- Link the [Phase CLI](/cli/commands) to your local project and import [Secrets](/console/secrets)
+- Create an [App](https://docs.phase.dev/console/apps.md)
+- Link the [Phase CLI](https://docs.phase.dev/cli/commands.md) to your local project and import [Secrets](https://docs.phase.dev/console/secrets.md)
 - Inject secrets to your app at runtime
 
 ## 1. Login and create an Organisation
 
-You can login to the <a href="https://console.phase.dev" target="_blank"> Phase Console</a> with email and password, or via SSO with Google, GitHub or GitLab.
+You can login to the [Phase Console](https://console.phase.dev) with email and password, or via SSO with Google, GitHub or GitLab.
 
-![Phase Console login page](/assets/images/console/quickstart/login-email.webp)
+![Phase Console login page](https://docs.phase.dev/assets/images/console/quickstart/login-email.webp)
 
-[Setup your account](/console/users#account-keys-and-setup) and [create an Organisation](/console/organisation#create-an-organisation).
+[Setup your account](https://docs.phase.dev/console/users.md#account-keys-and-setup) and [create an Organisation](https://docs.phase.dev/console/organisation.md#create-an-organisation).
 
 ## 1.1 Create an App
 
-In order to use Phase with your application, you'll need to [create an App](/console/apps#create-an-app).
+In order to use Phase with your application, you'll need to [create an App](https://docs.phase.dev/console/apps.md#create-an-app).
 
 Enter a suitable name for your App, such as 'TestApp'. Click "Create".
 
-![create an app](/assets/images/console/quickstart/quickstart-create-app.webp)
+![create an app](https://docs.phase.dev/assets/images/console/quickstart/quickstart-create-app.webp)
 
 ## 2. Install the CLI
 
 Next, install the Phase CLI on the platform or operating system of your choice.
 
-<CodeGroup>
+**MacOS**
 
-```fish {{ title: 'MacOS' }}
+```fish
 brew tap phasehq/cli && brew trust phasehq/cli
 brew install phase
 ```
 
-```fish {{ title: 'Linux' }}
+**Linux**
+
+```fish
 curl -fsSL https://pkg.phase.dev/install.sh | sh
 ```
 
-```fish {{ title: 'Scoop' }}
+**Scoop**
+
+```fish
 scoop bucket add phasehq https://github.com/phasehq/scoop-cli.git
 scoop install phase
 ```
 
-```fish {{ title: 'Windows (.exe)' }}
+**Windows (.exe)**
+
+```fish
 # Download the latest .exe for your architecture from:
 # https://github.com/phasehq/cli/releases/latest
 #
@@ -60,43 +65,46 @@ scoop install phase
 # Rename to phase.exe and add it to a directory on your PATH.
 ```
 
-```fish {{ title: 'Alpine Linux' }}
+**Alpine Linux**
+
+```fish
 curl -fsSL https://pkg.phase.dev/install.sh | sh
 ```
 
-```fish {{ title: 'NixOS' }}
+**NixOS**
+
+```fish
 nix-shell -p phase-cli
 ```
 
-```fish {{ title: 'Python pip' }}
+**Python pip**
+
+```fish
 pip install phase-cli
 ```
 
-```fish {{ title: 'Docker' }}
+**Docker**
+
+```fish
 # Run the latest version
 docker run phasehq/cli
 
 # Optional: run a specific version - docker run phasehq/cli:<version>
 ```
 
-```fish {{ title: 'Raspberry Pi' }}
+**Raspberry Pi**
+
+```fish
 curl -fsSL https://pkg.phase.dev/install.sh | sh
 ```
 
-```fish {{ title: 'ARM64' }}
+**ARM64**
+
+```fish
 curl -fsSL https://pkg.phase.dev/install.sh | sh
 ```
 
-</CodeGroup>
-
-<div className="not-prose">
-  <Button
-    href="/cli/install"
-    variant="text"
-    arrow="right"
-    children="Explore CLI Installation"
-  />
-</div>
+[Explore CLI Installation](https://docs.phase.dev/cli/install.md)
 
 ## 2.1 Authenticate the CLI
 
@@ -113,11 +121,11 @@ Run `phase auth` and choose the "Phase Cloud" option:
 
 This will open the Phase Console in a new tab. Enter your `sudo` password when prompted.
 
-![webauth password](/assets/images/console/quickstart/webauth-password.webp)
+![webauth password](https://docs.phase.dev/assets/images/console/quickstart/webauth-password.webp)
 
 Once completed, you should see the success screen:
 
-![webauth success](/assets/images/console/quickstart/webauth-success.webp)
+![webauth success](https://docs.phase.dev/assets/images/console/quickstart/webauth-success.webp)
 
 Go back to your terminal. You should see the following:
 
@@ -130,14 +138,7 @@ Go back to your terminal. You should see the following:
 💻 Bug reports / feature requests: https://github.com/phasehq/cli
 ```
 
-<div className="not-prose">
-  <Button
-    href="/cli/commands"
-    variant="text"
-    arrow="right"
-    children="Explore CLI Usage"
-  />
-</div>
+[Explore CLI Usage](https://docs.phase.dev/cli/commands.md)
 
 ## 2.2 Link your project with Phase
 
@@ -194,12 +195,10 @@ rm .env
 
 Alternatively, you can import your secrets by dragging and dropping your `.env` file into the App's *Secrets* tab or a specific environment in the Phase Console. This may be more suitable if you want to quickly import secrets from your `.env` file across multiple environments.
 
-<div className="video-container">
   <video controls>
     <source src="/assets/images/console/secrets/import/single-env-drag-drop-demo.mp4" type="video/mp4" />
     Your browser does not support the video tag.
   </video>
-</div>
 
 ## 3. Inject secrets
 
@@ -221,17 +220,5 @@ For example, instead of `yarn dev`, simply run `phase run yarn dev`. Your secret
 
 Now that you have setup your account and connected it to your local project, you can explore all that Phase has to offer.
 
-<div className="not-prose mb-16 mt-6 flex gap-3">
-  <Button
-    href="/console"
-    variant="secondary"
-    arrow="right"
-    children="🎛️ Phase Console"
-  />
-  <Button
-    href="/cli/commands"
-    variant="secondary"
-    arrow="right"
-    children="⌨ Phase CLI"
-  />
-</div>
+[🎛️ Phase Console](https://docs.phase.dev/console.md)
+[⌨ Phase CLI](https://docs.phase.dev/cli/commands.md)

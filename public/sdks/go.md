@@ -1,23 +1,12 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description =
-  'SDK to integrate Phase in server-side applications running Go.'
-
-export const sections = [
-  { title: 'Install', id: 'install-the-sdk' },
-  { title: 'Import', id: 'import-the-sdk' },
-  { title: 'Initialize', id: 'initialize-the-sdk' },
-  { title: 'Usage', id: 'usage' },
-]
-
-<Tag variant="small">RESOURCES</Tag>
+---
+title: "Go SDK"
+description: "SDK to integrate Phase in server-side applications running Go."
+url: https://docs.phase.dev/sdks/go
+---
 
 # Go SDK
 
 SDK to integrate Phase in server-side applications running Go.
-
-<DocActions />
 
 - [github.com/phasehq/golang-sdk](https://github.com/phasehq/golang-sdk)
 
@@ -28,39 +17,37 @@ SDK to integrate Phase in server-side applications running Go.
 
 ---
 
-<Note>
-  Starting from version `2.0.0`, the Phase Go SDK is a pure Go implementation and no longer requires `libsodium` or `CGO`.
-
-  **Upgrading from v1.x:** Update your module dependency and imports from `github.com/phasehq/golang-sdk` to `github.com/phasehq/golang-sdk/v2`:
-
-  ```bash
-  go get github.com/phasehq/golang-sdk/v2/phase
-  ```
-
-  Then update your imports:
-
-  ```go
-  // 1.x.x
-  import "github.com/phasehq/golang-sdk/phase"
-
-  // 2.x.x
-  import "github.com/phasehq/golang-sdk/v2/phase"
-  ```
-
-  Users on `v1.x` are unaffected and can continue using `github.com/phasehq/golang-sdk` without changes.
-</Note>
+> **Note:** Starting from version `2.0.0`, the Phase Go SDK is a pure Go implementation and no longer requires `libsodium` or `CGO`.
+>
+>   **Upgrading from v1.x:** Update your module dependency and imports from `github.com/phasehq/golang-sdk` to `github.com/phasehq/golang-sdk/v2`:
+>
+>   ```bash
+>   go get github.com/phasehq/golang-sdk/v2/phase
+>   ```
+>
+>   Then update your imports:
+>
+>   ```go
+>   // 1.x.x
+>   import "github.com/phasehq/golang-sdk/phase"
+>
+>   // 2.x.x
+>   import "github.com/phasehq/golang-sdk/v2/phase"
+>   ```
+>
+>   Users on `v1.x` are unaffected and can continue using `github.com/phasehq/golang-sdk` without changes.
 
 ## Install the SDK
 
 Install the SDK using `go get`.
 
-<CodeGroup title="Install">
+**Install**
 
-    ```fish {{ title: 'Go Get' }}
+    **Go Get**
+
+    ```fish
     go get github.com/phasehq/golang-sdk/v2/phase
     ```
-
-</CodeGroup>
 
 ---
 
@@ -110,13 +97,11 @@ func main() {
 
 ## Usage
 
-<Note>
-  All operations accept either `AppID` or `AppName` to identify your application. `AppID` is recommended as it avoids ambiguity when multiple applications share the same name.
-</Note>
+> **Note:** All operations accept either `AppID` or `AppName` to identify your application. `AppID` is recommended as it avoids ambiguity when multiple applications share the same name.
 
 You can get the AppID by going to your application settings in the Phase Console, hovering over UUID under the App section and clicking the `Copy` button:
 
-![hello world](/assets/images/console/settings/application-id.webp)
+![hello world](https://docs.phase.dev/assets/images/console/settings/application-id.webp)
 
 ### Secret Types
 
@@ -139,7 +124,7 @@ The `Lifecycle` field on `SecretResult` indicates how a secret's value is manage
 | `phase.SecretLifecycleStatic` | `"static"` | Default — the value is managed by the user |
 | `phase.SecretLifecycleRotating` | `"rotating"` | The value is automatically rotated by the Phase rotation engine |
 
-Secrets with a `rotating` lifecycle are managed by the Phase rotation engine and cannot be updated or deleted through the SDK — manage them via the rotating-secret controls in the Console. See [Rotating Secrets](/console/rotating-secrets). Dynamic secrets (`IsDynamic: true`) are leased credentials and carry no lifecycle value.
+Secrets with a `rotating` lifecycle are managed by the Phase rotation engine and cannot be updated or deleted through the SDK — manage them via the rotating-secret controls in the Console. See [Rotating Secrets](https://docs.phase.dev/console/rotating-secrets.md). Dynamic secrets (`IsDynamic: true`) are leased credentials and carry no lifecycle value.
 
 ### Creating Secrets
 
@@ -403,9 +388,7 @@ if err != nil {
 }
 ```
 
-<Note>
-  `FailOnReferenceResolutionError` has no effect when `Raw: true`, since raw mode skips reference resolution entirely.
-</Note>
+> **Note:** `FailOnReferenceResolutionError` has no effect when `Raw: true`, since raw mode skips reference resolution entirely.
 
 ### Overrides
 

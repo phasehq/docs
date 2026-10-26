@@ -1,30 +1,17 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description =
-  'SDK to integrate Phase secret management in Python applications.'
-
-export const sections = [
-  { title: 'Install', id: 'install-the-sdk' },
-  { title: 'Import', id: 'import-the-sdk' },
-  { title: 'Initialize', id: 'initialize-the-sdk' },
-  { title: 'Usage', id: 'usage' },
-]
-
-<Tag variant="small">SDK</Tag>
+---
+title: "Python SDK"
+description: "SDK to integrate Phase secret management in Python applications."
+url: https://docs.phase.dev/sdks/python
+---
 
 # Python SDK
 
 The Python SDK allows you to securely manage secrets in your applications, from simple scripts to complex server-side systems.
 
-<DocActions /> 
-
 - [phase-dev](https://pypi.org/project/phase-dev/) on PyPI
 - [github.com/phasehq/python-sdk](https://github.com/phasehq/python-sdk)
 
-<Note>
-  To use the Python SDK, you need to create a new App on the Phase Console. Add the service token or user token (PAT) to your application, preferably using environment variables. [Quick start &raquo;](/quickstart)
-</Note>
+> **Note:** To use the Python SDK, you need to create a new App on the Phase Console. Add the service token or user token (PAT) to your application, preferably using environment variables. [Quick start &raquo;](https://docs.phase.dev/quickstart.md)
 
 ---
 
@@ -32,11 +19,13 @@ The Python SDK allows you to securely manage secrets in your applications, from 
 
 The Python SDK is distributed via [PyPI](https://pypi.org/project/phase-dev/). You can install it using the following command:
 
-<CodeGroup title="Install">
-  ```fish {{ title: 'pip' }}
+**Install**
+
+  **pip**
+
+  ```fish
   pip install phase-dev
   ```
-</CodeGroup>
 
 ---
 
@@ -63,9 +52,7 @@ phase = Phase(
 )
 ```
 
-<Note>
-  If you are self-hosting Phase, make sure to use the correct host URL for your Phase instance.
-</Note>
+> **Note:** If you are self-hosting Phase, make sure to use the correct host URL for your Phase instance.
 
 ---
 
@@ -155,9 +142,7 @@ print(f"Delete result: {result}")
 
 ### Personal Secrets
 
-<Note>
-  Personal secrets are only accessible when using a user token (prefixed with `pss_user:v1`). They allow individual users to create and manage their own secret overrides without affecting the shared secrets.
-</Note>
+> **Note:** Personal secrets are only accessible when using a user token (prefixed with `pss_user:v1`). They allow individual users to create and manage their own secret overrides without affecting the shared secrets.
 
 To work with personal secrets, first initialize the SDK with a user token:
 
@@ -209,6 +194,4 @@ if secret:
 
 When using a user token, `get_secret` and `get_all_secrets` will automatically return personal overrides if they exist and are active. The `overridden` attribute indicates whether the returned value is a personal override.
 
-<Note>
-  Remember to handle exceptions appropriately in your application. Wrap SDK calls in try-except blocks to handle potential errors.
-</Note>
+> **Note:** Remember to handle exceptions appropriately in your application. Wrap SDK calls in try-except blocks to handle potential errors.

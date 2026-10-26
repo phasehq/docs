@@ -1,21 +1,12 @@
-import { Tag } from '@/components/Tag'
-import { DocActions } from '@/components/DocActions'
-
-export const description =
-'Deploy Phase via the official Helm chart on your Kubernetes cluster.'
-
-<Tag variant="small">SELF-HOSTING</Tag>
+---
+title: "Kubernetes Helm Deployment"
+description: "Deploy Phase via the official Helm chart on your Kubernetes cluster."
+url: https://docs.phase.dev/self-hosting/kubernetes
+---
 
 # Kubernetes Helm Deployment
 
-Learn how to set up the Phase Console using Helm on Kubernetes. {{ className: 'lead' }}
-
-<DocActions />
-
-<SkillBox
-  skill="k8s"
-  triggerPhrase="deploy Phase on Kubernetes"
-/>
+Learn how to set up the Phase Console using Helm on Kubernetes.
 
 This guide will walk you through installing the Phase Console on a Kubernetes cluster. By default, the installation includes:
 
@@ -92,9 +83,7 @@ helm install ingress-nginx ingress-nginx/ingress-nginx \
   --set controller.publishService.enabled=true
 ```
 
-<Note>
-This installs the ingress controller into its own `ingress-nginx` namespace, which is where the [Client IP Forwarding](#client-ip-forwarding) ConfigMap and the troubleshooting steps below expect to find it. If you omit `--namespace`, Helm installs it into whatever namespace your kubectl context currently points at, and those later steps will not match your cluster.
-</Note>
+> **Note:** This installs the ingress controller into its own `ingress-nginx` namespace, which is where the [Client IP Forwarding](#client-ip-forwarding) ConfigMap and the troubleshooting steps below expect to find it. If you omit `--namespace`, Helm installs it into whatever namespace your kubectl context currently points at, and those later steps will not match your cluster.
 
 ### 4. Get the LoadBalancer IP
 
@@ -129,8 +118,7 @@ kubectl create secret generic phase-console-secret \
   --from-literal=REDIS_PASSWORD=$(openssl rand -hex 32)
 ```
 
-
-Please see the [Secret and deployment configuration](/self-hosting/configuration/envars) for more information on the required secrets. 
+Please see the [Secret and deployment configuration](https://docs.phase.dev/self-hosting/configuration/envars.md) for more information on the required secrets.
 
 ### 8. Create a values file
 
@@ -140,7 +128,6 @@ Create a file named `phase-values.yaml` with the following config:
 global:
   host: "phase.your-domain.com" # 👈 Replace with your domain
   version: "latest" # 👈 Replace with your preferred version https://github.com/phasehq/console/releases
-
 
 phaseSecrets: phase-console-secret # 👈 The name of the secret you have created previously
 
@@ -173,9 +160,7 @@ kubectl get ingress
 kubectl get certificate
 ```
 
-<Note>
-This process may take up to 10 minutes to complete. You may run `watch kubectl get pods` and keep an eye out for the `cert-manager` pod to exit successfully. This would mean that the certificate is issued and the ingress is ready to use.
-</Note>
+> **Note:** This process may take up to 10 minutes to complete. You may run `watch kubectl get pods` and keep an eye out for the `cert-manager` pod to exit successfully. This would mean that the certificate is issued and the ingress is ready to use.
 
 ### 11. Access Phase Console
 
@@ -189,7 +174,7 @@ The Helm chart enables email and password authentication by default ([`ENABLE_PA
 2. Enter your name, email address and a password. The first account you create becomes the owner of your organisation.
 3. Choose an organisation name, then **copy or download your recovery kit**. The **Finish** button stays disabled until you do — the recovery kit is the only way to regain access if you forget your `sudo` password, and it cannot be retrieved later.
 
-Because no [SMTP server](/self-hosting/configuration/envars#email-gateway-configuration) is configured in this guide, email verification is skipped automatically and the account is active immediately. If you do configure SMTP, new users must verify their email before logging in — set [`SKIP_EMAIL_VERIFICATION`](/self-hosting/configuration/envars#email-verification) to `true` to keep signup instant.
+Because no [SMTP server](https://docs.phase.dev/self-hosting/configuration/envars.md#email-gateway-configuration) is configured in this guide, email verification is skipped automatically and the account is active immediately. If you do configure SMTP, new users must verify their email before logging in — set [`SKIP_EMAIL_VERIFICATION`](/self-hosting/configuration/envars#email-verification) to `true` to keep signup instant.
 
 To run an SSO-only instance instead, configure a provider under [`sso.providers`](/self-hosting/configuration/envars#single-sign-on-sso) and set `passwordAuth.enabled: false` in your values file. Make sure at least one SSO provider works before disabling password auth, or the instance will have no usable sign-in path.
 
@@ -250,15 +235,13 @@ kubectl get secret phase-console-tls     # the issued TLS certificate
 kubectl get configmap phase-console-config
 ```
 
-<Note>
-Deleting `phase-console-secret` destroys your `SERVER_SECRET`, which is required to decrypt existing data. Do not delete it unless you are also discarding the database.
-
-If you ran with **both** an external PostgreSQL *and* an external Redis, also delete the ConfigMap before reinstalling — see [ConfigMap ownership error](#troubleshooting) below for why:
-
-```fish
-kubectl delete configmap phase-console-config
-```
-</Note>
+> **Note:** Deleting `phase-console-secret` destroys your `SERVER_SECRET`, which is required to decrypt existing data. Do not delete it unless you are also discarding the database.
+>
+> If you ran with **both** an external PostgreSQL *and* an external Redis, also delete the ConfigMap before reinstalling — see [ConfigMap ownership error](#troubleshooting) below for why:
+>
+> ```fish
+> kubectl delete configmap phase-console-config
+> ```
 
 ## Security
 
@@ -286,9 +269,7 @@ curl -sI http://phase.your-domain.com/ | head -2
 #           Location: https://phase.your-domain.com/
 ```
 
-<Note>
-Only enable this once your certificate has been issued. Let's Encrypt solves the HTTP-01 challenge over plain HTTP, and `force-ssl-redirect` applies to the whole host — turning it on before the certificate exists can prevent issuance or renewal. If you use the DNS-01 solver instead, this does not apply.
-</Note>
+> **Note:** Only enable this once your certificate has been issued. Let's Encrypt solves the HTTP-01 challenge over plain HTTP, and `force-ssl-redirect` applies to the whole host — turning it on before the certificate exists can prevent issuance or renewal. If you use the DNS-01 solver instead, this does not apply.
 
 ### Client IP Forwarding
 
@@ -313,11 +294,9 @@ Apply the ConfigMap:
 kubectl apply -f ingress-nginx-configmap.yaml
 ```
 
-<Note>
-The `compute-real-ip-from` setting defines which source IPs are trusted to send `X-Forwarded-For` headers. Only headers from IPs matching these CIDRs are trusted — all others are overwritten with the actual TCP source IP, preventing client-side IP spoofing.
-
-Set this to the CIDR range of your load balancer or VPC. For example, if your cluster VPC uses `10.0.0.0/16`, set `compute-real-ip-from: "10.0.0.0/16"`.
-</Note>
+> **Note:** The `compute-real-ip-from` setting defines which source IPs are trusted to send `X-Forwarded-For` headers. Only headers from IPs matching these CIDRs are trusted — all others are overwritten with the actual TCP source IP, preventing client-side IP spoofing.
+>
+> Set this to the CIDR range of your load balancer or VPC. For example, if your cluster VPC uses `10.0.0.0/16`, set `compute-real-ip-from: "10.0.0.0/16"`.
 
 ## Troubleshooting
 
@@ -420,4 +399,3 @@ kubectl describe certificate phase-console-tls -n your-phase-namespace # Replace
    ```
 
    Then retry your Helm install or upgrade command.
-

@@ -1,15 +1,10 @@
-import { Tag } from '@/components/Tag'
-import CliDemo from '@/components/CliDemo'
-import { DocActions } from '@/components/DocActions'
-
-export const description =
-  'Manage your secrets and environment variables with the Phase CLI'
-
-<Tag variant="small">CLI</Tag>
+---
+title: "Commands and usage"
+description: "Manage your secrets and environment variables with the Phase CLI"
+url: https://docs.phase.dev/cli/commands
+---
 
 # Commands and usage
-
-<DocActions /> 
 
 ```
 λ phase --help
@@ -62,7 +57,7 @@ Flags:
 Use "phase [command] --help" for more information about a command.
 ```
 
-## Available commands {{ className: 'lead' }}
+## Available commands
 
 To use Phase CLI, simply run:
 
@@ -86,18 +81,14 @@ To view all available commands and their descriptions, run:
 
 Authenticate with Phase using the CLI on your own machine. The `phase auth` command lets you log in to either Phase Cloud or a Self-hosted instance of Phase.
 
-<Note>
-Phase CLI will automatically look for `PHASE_HOST` and/or `PHASE_SERVICE_TOKEN` environment variables to authenticate with the Phase Service. If any are present, this will override any authentication medium previously chosen.
-For more details, see [Environment Variables](commands#environment-variables).
-</Note>
-
+> **Note:** Phase CLI will automatically look for `PHASE_HOST` and/or `PHASE_SERVICE_TOKEN` environment variables to authenticate with the Phase Service. If any are present, this will override any authentication medium previously chosen.
+> For more details, see [Environment Variables](https://docs.phase.dev/cli/commands.md#environment-variables).
 
 ### Auth Methods:
 
 1. **Webauth (Default)**: This automated method opens the Phase Console in your default browser for authentication. You'll simply enter your `sudo` password to authenticate the CLI seamlessly. For Self-Hosted instances, you'll be prompted to enter the host URL.
 
 Note that during this process, an ephemeral X25519 keypair is generated and a crypto sealed box is used for enhanced security and no tokens or private keys are exchanged in plain text.
-
 
 Example:
 
@@ -109,7 +100,6 @@ Please authenticate via the Phase Console: https://console.phase.dev/webauth/OTM
 
 This opens the Phase Console in a new tab. Enter your `sudo` password when prompted. The CLI securely receives your credentials via encrypted POST requests to finalize authentication. If you are already authenticated, it will display your email address and provide instructions for switching accounts.
 
-
 2. **Token**: This allows you to authenticate to Phase directly using a Personal Access Token (PAT) or a Service Account Token that you may have manually created in the Phase Console.
 
 For `token` mode, provide the following:
@@ -120,10 +110,9 @@ For `token` mode, provide the following:
 
 Obtain a Personal Access Token (PAT) from the [Phase Console](https://console.phase.dev) by going to Access Control -> Authentication -> Personal Access Tokens -> + `Create Token`.
 
-
 3. **AWS IAM**: Authenticate using your current AWS identity from the standard AWS credential chain (env vars, shared config/credentials, SSO, role assumption, instance profile, etc). Optionally bind the external identity to a Phase Service Account and set a TTL for the issued token. You'll need to have configured an external identity to a service account in the Phase Console first.
 
-See [External Identities](/access-control/external-identities) for more details.
+See [External Identities](https://docs.phase.dev/access-control/external-identities.md) for more details.
 
 Usage:
 
@@ -136,7 +125,6 @@ Options:
 - `--service-account-id` (Required): Service Account ID to map this external AWS identity to a Phase Service Account.
 - `--ttl` (Optional): Token TTL in seconds for tokens created using external identities. Defaults to the configured Default TTL of the external identity.
 - `--no-store` (Optional): Print the authentication token to STDOUT without storing credentials in the keyring.
-
 
 Examples:
 
@@ -158,13 +146,11 @@ phase auth --mode aws-iam --service-account=2115a1fc-0a78-4a7b-ad8c-6fa6cc15f489
 }
 ```
 
-<Note>
-The CLI will auto detect the AWS region you are in and use it to authenticate with the AWS API. You can also use `aws configure` to set the region.
-</Note>
+> **Note:** The CLI will auto detect the AWS region you are in and use it to authenticate with the AWS API. You can also use `aws configure` to set the region.
 
 4. **Azure**: Authenticate using your current Azure identity via `DefaultAzureCredential` (Managed Identity, Service Principal, Workload Identity, Azure CLI, etc). You'll need to have configured an Azure external identity on a service account in the Phase Console first.
 
-See [External Identities](/access-control/external-identities#azure) for more details.
+See [External Identities](https://docs.phase.dev/access-control/external-identities.md#azure) for more details.
 
 Usage:
 
@@ -191,9 +177,7 @@ Examples:
 > phase auth --mode azure --service-account-id 0f1a2b3c-4d5e-6789-abcd-ef0123456789 --azure-resource "https://management.azure.com/" --ttl 3600 --no-store
 ```
 
-<Note>
-`DefaultAzureCredential` automatically tries (in order): environment variables (`AZURE_TENANT_ID`, `AZURE_CLIENT_ID`, `AZURE_CLIENT_SECRET`), Workload Identity (Kubernetes), Managed Identity (IMDS), Azure CLI (`az login`), and Azure Developer CLI (`azd login`).
-</Note>
+> **Note:** `DefaultAzureCredential` automatically tries (in order): environment variables (`AZURE_TENANT_ID`, `AZURE_CLIENT_ID`, `AZURE_CLIENT_SECRET`), Workload Identity (Kubernetes), Managed Identity (IMDS), Azure CLI (`az login`), and Azure Developer CLI (`azd login`).
 
 #### Auth Options Summary
 
@@ -260,7 +244,7 @@ Choosing an app will create a `.phase.json` configuration file in your project's
 }
 ```
 
-**Tips**: 
+**Tips**:
 - Modify the `defaultEnv` in `.phase.json` to set the default environment context for the Phase CLI. For example, `"defaultEnv": "production"`.
 - When monorepo support is enabled, the CLI will search parent directories for a `.phase.json` config up to a maximum depth of 8 directories (configurable via `PHASE_CONFIG_PARENT_DIR_SEARCH_DEPTH`). This allows you to have a single config at the root of your monorepo that applies to all sub-projects.
 
@@ -284,8 +268,6 @@ In this example, running Phase CLI commands from any subdirectory will use the r
 ## 🚀 `run`
 
 Run and inject secrets into your app with the ability to override default settings.
-
-<CliDemo castFile="phase-run.cast" terminalFontSize="small" />
 
 Usage:
 
@@ -315,7 +297,7 @@ Examples:
 DJANGO_SECRET_KEY=7842cc89c5a703acdf4797e0f063e1851734cea0677ad9382158cfcee26195df
 ```
 
-Injecting [Referenced secrets](/cli/commands#secret-referencing):
+Injecting [Referenced secrets](https://docs.phase.dev/cli/commands.md#secret-referencing):
 
 ```fish
 > phase secrets get PROD_AWS_KEY --env dev
@@ -382,7 +364,7 @@ Examples:
 [15:32:00] 🐚 Initialized zsh with 15 secrets from Application: example-app, Environment: Development
            Remember: Secrets are only available in this session. Type exit or press Ctrl+D to exit.
 
-> echo $POSTGRES_CONNECTION_STRING 
+> echo $POSTGRES_CONNECTION_STRING
 postgresql://postgres:dbc76c4d...@localhost:5432/mydb
 
 # Exit the shell using Ctrl+D or by typing 'exit'
@@ -438,8 +420,6 @@ Manage your secrets with various sub-commands.
 ### 📇 `secrets list`
 
 List all the secrets in a specified environment, with options to show uncensored secrets, filter by app, and filter by tags.
-
-<CliDemo castFile="phase-secrets-list.cast" terminalFontSize="small" />
 
 Usage:
 
@@ -551,7 +531,7 @@ Multiple keys example:
 - The `get` command provides a JSON-formatted output including key details such as the secret value, whether it's overridden, tags associated with it, and any comments.
 - Using the `--tags` option allows you to filter the secret based on specific tags.
 - If you have dynamic secrets configured and try to fetch one by key, the CLI will automatically generate a lease and return the value of the freshly created dynamic secret.
-- The `lifecycle` field is `static` for normal, user-managed secrets and `rotating` for secrets whose value is automatically rotated by Phase against a third-party provider (see [Rotating Secrets](/console/rotating-secrets)).
+- The `lifecycle` field is `static` for normal, user-managed secrets and `rotating` for secrets whose value is automatically rotated by Phase against a third-party provider (see [Rotating Secrets](https://docs.phase.dev/console/rotating-secrets.md)).
 - When invoked by an AI agent, sealed and secret-type values are redacted based on `ai.json` configuration.
 
 ### 💳 `secrets create`
@@ -1085,7 +1065,7 @@ Notes:
 
 Configure AI integrations for Phase. The `ai` command group controls how AI coding agents interact with your Phase secrets. When enabled, the CLI installs a skill document to your AI tool's global skill directory and applies security guardrails automatically.
 
-See [AI agent integration pages](/integrations/platforms/claude-code) for setup guides for each supported tool.
+See [AI agent integration pages](https://docs.phase.dev/integrations/platforms/claude-code) for setup guides for each supported tool.
 
 ### 🪄 `ai enable`
 
@@ -1118,9 +1098,7 @@ Interactive mode first asks which AI agent to install for, then prompts for secr
   No — allow AI to read secret values (e.g. development environments)
 ```
 
-<Note>
-Sealed secret values are **always** hidden from AI tools regardless of this setting. This is a hard security boundary — sealed secrets (API keys, tokens, passwords) can only be created/updated with random generation and their values never appear in AI conversations.
-</Note>
+> **Note:** Sealed secret values are **always** hidden from AI tools regardless of this setting. This is a hard security boundary — sealed secrets (API keys, tokens, passwords) can only be created/updated with random generation and their values never appear in AI conversations.
 
 **Value visibility by type and setting:**
 
@@ -1322,7 +1300,7 @@ You can set a value of a secret to a value of another by simply pointing to it v
 | `${backend_api::production.SECRET_KEY}` | `production` (in `backend_api` app) | `/` (root of backend_api app) | SECRET_KEY | Cross-application reference to a secret at the root path within another application. |
 | `${backend_api::production./frontend/SECRET_KEY}` | `production` (in `backend_api` app) | `/frontend/` | SECRET_KEY | Cross-application reference to a secret in a specific path within another application. |
 
-For more information see: [Phase Console Secrets](/console/secrets)
+For more information see: [Phase Console Secrets](https://docs.phase.dev/console/secrets.md)
 
 Values prefixed with a `🔗` indicate a local secret being referenced, whereas values prefixed with `🌐` indicate a cross-environment secret value being referenced ie. development, staging, prod.
 
@@ -1391,9 +1369,7 @@ DATABASE_URL=postgresql://j_mclaren:6c37810ec6e74ec3228416d2844564fceb99ebd94b29
 
 The Phase CLI supports offline access to your secrets. After authenticating and fetching secrets at least once, encrypted copies of the API responses are cached locally. If the network becomes unavailable, the CLI can decrypt and serve secrets from this cache.
 
-<Note>
-  The offline cache stores **encrypted** API responses, not plaintext secrets. Decryption happens at read time using key material from your authentication token — the same process as online mode.
-</Note>
+> **Note:** The offline cache stores **encrypted** API responses, not plaintext secrets. Decryption happens at read time using key material from your authentication token — the same process as online mode.
 
 ### Behavior
 
