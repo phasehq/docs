@@ -152,7 +152,7 @@ Here's a complete ECS task definition implementing this approach:
     The output format for secrets. Available options: `json`, `csv`, `yaml`, `xml`, `toml`, `hcl`, `ini`, `java_properties`. Defaults to `dotenv`.
   </Property>
   <Property name="PHASE_SERVICE_TOKEN" type="required">
-    Your Phase service token. Update this environment variable with a valid service token from your Phase account.
+    Your Phase service account token. Update this environment variable with a valid service account token from your Phase account.
   </Property>
   <Property name="PHASE_HOST" type="optional">
     The Phase host URL. Only modify this if you're using a self-hosted Phase instance. Defaults to `https://console.phase.dev`.
@@ -164,7 +164,7 @@ Here's a complete ECS task definition implementing this approach:
 
 ### Important Considerations
 
-1. **Service Token Management**: Currently, the Phase Account Service Token must be supplied in the task definition. Service tokens require manual provisioning and rotation to maintain security best practices. This requirement will be addressed soon with the addition of AWS IAM authentication as a native authentication method for Phase, eliminating the need for manual token management.
+1. **Service Account Token Management**: Currently, the Phase service account token must be supplied in the task definition. Service account tokens require manual provisioning and rotation to maintain security best practices. This requirement will be addressed soon with the addition of AWS IAM authentication as a native authentication method for Phase, eliminating the need for manual token management.
 
 2. **Special Characters**: Be cautious with special characters in secret keys or values, as they can cause export failures. For example:
 
