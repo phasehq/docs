@@ -391,6 +391,7 @@ export const navigation = [
       { title: 'Railway', href: '/integrations/platforms/railway' },
       { title: 'Render', href: '/integrations/platforms/render' },
       { title: 'Supabase', href: '/integrations/platforms/supabase' },
+      { title: 'Coolify', href: '/integrations/platforms/coolify' },
       { title: 'Jenkins', href: '/integrations/platforms/jenkins' },
       { title: 'CircleCI', href: '/integrations/platforms/circleci' },
       { title: 'AWS CodeBuild', href: '/integrations/platforms/aws-codebuild' },
