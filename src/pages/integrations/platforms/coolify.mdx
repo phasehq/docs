@@ -55,7 +55,7 @@ Phase encrypts and saves your credentials. You can view and manage them under *S
 
 3. Select an Environment from your App as the source. If you want to sync from a specific folder, set the Path. Then select a Coolify application from the dropdown.
 
-4. Turn on **Sync preview deployments** if pull request previews should get the same values. It is off by default, and Phase then leaves the preview variables alone.
+4. Turn on **Sync preview deployments** if pull request previews should get the same values. It is off by default. Then new secrets stay out of previews, and preview values already in Coolify are left as they are.
 
 5. Confirm that Phase may delete variables, then click **Create**.
 
@@ -73,8 +73,10 @@ Coolify doesn't redeploy when variables change. New values apply on the applicat
 
 Each sync deletes application variables that aren't in the Phase environment and path. Phase keeps:
 
-- Variables Coolify manages itself, such as `NIXPACKS_*` build settings
+- Variables Coolify manages itself, such as `NIXPACKS_*` and `RAILPACK_*` build settings
 - Variables that start with `SERVICE_`
+
+Coolify treats `NIXPACKS_*` and `RAILPACK_*` variables as build settings. If you add one in Phase, the sync writes it, but deleting it in Phase doesn't remove it from Coolify. Remove it in Coolify instead.
 
 If the environment and path have no secrets but the application has variables, the sync stops without changing anything. This protects you from a mistyped path.
 
