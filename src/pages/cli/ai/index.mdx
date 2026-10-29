@@ -1,0 +1,218 @@
+import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
+
+export const metadata = {
+  title: 'Phase AI',
+  description:
+    'Give AI coding agents workflow-scoped access to third-party services through the Phase CLI, without exposing live credentials.',
+}
+
+<Tag variant="small">CLI</Tag>
+
+# Phase AI
+
+Phase AI gives AI coding agents access to third-party services, such as HTTP APIs, AWS and PostgreSQL, through Connections approved in the Phase Console. The Agent's processes only ever see decoy credentials. A local proxy run by the Phase CLI swaps them for the live credential on the way out, enforces which Connections the Agent can use, and blocks calls that would mint new credentials. {{ className: 'lead' }}
+
+<DocActions />
+
+## How it works
+
+- An **Agent** is an AI coding agent registered in the Phase Console. Each Agent has one or more **Workflows**, and each Workflow has its own **Connections**.
+- A **Connection** links a Workflow to a service through an **Integration credential**, for example an AWS access key or a PostgreSQL login.
+- On your machine, the CLI runs a proxy at `127.0.0.1:9543` (and a PostgreSQL adapter at `127.0.0.1:9544` when the Workflow has a PostgreSQL Connection). Processes behind it get decoy credentials and proxy settings in their environment.
+- When a request goes to a host bound to one of the Workflow's Connections, the proxy checks it, replaces the decoy with the live credential, and reports an event to the Console. Requests to other hosts pass through untouched.
+- Agents use the [Phase AI control API](/cli/ai/control-api) at `http://phase.invalid` to see their Connections and to ask a human for a new or updated credential. The human approves the request in the Console.
+
+The live credential never leaves the proxy, and the Agent never sees your Phase login.
+
+## Prerequisites
+
+- The [Phase CLI](/cli/install), installed and up to date.
+- An Agent and a Workflow in the Phase Console, with at least one Connection, or permission to approve the Agent's requests for one.
+- A supported harness: Claude Code, Cursor, Codex, OpenCode, Devin (preview) or VS Code Copilot. Any other Agent can run through [`phase ai run`](#run-an-agent-or-a-command).
+
+## Set up
+
+### 1. Log in
+
+Phase AI needs a login that names a Workflow. There are two ways to get one.
+
+**With an Agent token** (recommended). Create a token for the Agent's Workflow in the Phase Console, then log in with it:
+
+```fish
+phase auth --mode token
+```
+
+Paste the token when prompted. It looks like `pss_agent:v1:…`. The token is stored only in your OS keyring, and the Workflow comes from the token itself.
+
+```
+✅ AI Agent authentication successful: release-bot / Default (acme). This login can use only phase ai commands.
+```
+
+An Agent token can only be used with `phase ai` and `phase relay` commands. It cannot read application secrets: `phase secrets`, `phase run`, `phase shell` and the other secrets commands refuse it.
+
+**With your own login.** If you are logged in with `phase auth` or a Personal Access Token, set a default Workflow when you enable Phase AI with `phase ai enable --workflow <workflowId>`, or pass `--workflow` to `phase ai run` and `phase ai exec`.
+
+### 2. Enable Phase AI for your harness
+
+Run this yourself, in your own terminal. AI agents are not allowed to run it.
+
+```fish
+phase ai enable --harness claude-code
+```
+
+Use `claude-code`, `cursor`, `codex`, `opencode`, `devin` or `copilot`. Without `--harness`, the command asks which harness to set up. Run it again with another `--harness` to add more; existing integrations stay installed.
+
+`phase ai enable`:
+
+1. Creates a local certificate authority (CA) for the proxy, and offers to trust it for your user. See [The proxy CA](#the-proxy-ca).
+2. Installs two skills for the harness: `phase-cli-ai-relay`, which teaches the Agent to use the proxy, Connections and requests, and `phase-cli-app-secrets`, for Phase application secrets.
+3. Installs the harness's hook or plugin, which starts the proxy in the background when the Agent needs it.
+4. Asks whether AI agents may read secret values from `phase secrets` commands. Pass `--mask` or `--no-mask` to answer without a prompt.
+
+It ends with the steps to take before the harness can use Phase.
+
+### 3. Restart the harness
+
+Fully quit and restart the harness, start a new chat or session, and repeat your original prompt. For Codex, first open the Codex CLI, run `/hooks`, and trust every hook from `phase-ai-bootstrap@phase-cli-local`.
+
+## How each harness uses Phase
+
+| Harness | What `phase ai enable` installs | How commands use Phase |
+| --- | --- | --- |
+| Claude Code | Skills in `~/.claude/skills/` and the `phase-ai-bootstrap` hook plugin | Automatic. Every shell command uses Phase-managed credentials while the proxy runs. |
+| OpenCode | Skills in `~/.config/opencode/skills/` and the plugin `~/.config/opencode/plugins/phase-ai-bootstrap.js` | Automatic, as for Claude Code. |
+| Cursor | Skills in `~/.cursor/skills/` and the plugin `~/.cursor/plugins/local/phase-ai-bootstrap/` | Explicit. Ordinary commands keep their usual credentials; the Agent runs Phase-managed commands with `phase ai exec`. |
+| Codex | Skills in `~/.agents/skills/` and the `phase-ai-bootstrap` plugin from a local marketplace (needs the Codex CLI on `PATH`) | Explicit, as for Cursor. |
+| Devin (preview) | Skills in `~/.agents/skills/` and hooks in Devin's `config.json` | Explicit, as for Cursor. |
+| VS Code Copilot | Skills in `~/.copilot/skills/` only | Explicit, with `phase ai exec`. |
+
+In Claude Code and OpenCode, the harness's shell loads the Phase AI environment before each command, so provider CLIs and HTTP clients use the Workflow's Connections without a wrapper. Each session and prompt carries a `Phase AI:` status line. If the proxy isn't running, commands run with your usual credentials.
+
+<Note>
+In Codex's default sandbox, each Phase call needs Codex's network approval. To skip it, set `network_access = true` under `[sandbox_workspace_write]` in `~/.codex/config.toml`.
+</Note>
+
+## Check status
+
+```fish
+phase ai status
+```
+
+```
+Phase AI:    enabled, local proxy
+Harnesses:   claude-code, codex
+Login:       release-bot, Workflow Default @ https://console.phase.dev
+Proxy:       running (pid 48213, up 1h05m)
+Connections: Analytics DB (postgres): ready
+             AWS prod (aws): expired
+Environment: /Users/alex/.phase/ai/env.sh (proxy routing active)
+CA:          /Users/alex/.phase/ai/ca.pem, expires 2027-01-20
+Skills:      /Users/alex/.claude/skills/phase-cli-ai-relay/SKILL.md
+```
+
+Status never sends a credential. It reads local files and asks the running proxy for its [status](/cli/ai/control-api#get-status). A Connection is `ready`, `expired` (its credential's expiry has passed) or `unavailable`.
+
+## Run an Agent or a command
+
+`phase ai enable` must have been run first; both commands need Phase AI to be enabled.
+
+### `phase ai exec`
+
+Run one command with Phase-managed credentials:
+
+```fish
+phase ai exec -- aws s3 ls
+```
+
+If a Phase AI proxy is already running, because a harness started it or because you are inside a Phase-managed shell, `exec` reuses it. Otherwise it starts a short-lived proxy and session for the command and closes them when the command exits. The command's exit code is passed through.
+
+When the Workflow has several Connections for one service, pick one with `--connection` and the Connection ID from `phase ai status`:
+
+```fish
+phase ai exec --connection 3f2b8c1e-5a7d-4e9f-b0c4-1d2e3f4a5b6c -- aws sts get-caller-identity
+```
+
+Without it, a request that matches more than one Connection is refused (`ambiguous_agent_binding`).
+
+### `phase ai run`
+
+Launch an Agent harness with every command it runs behind the proxy:
+
+```fish
+phase ai run -- claude
+```
+
+`run` recognises `claude`, `cursor-agent`, `codex`, `opencode`, `devin`, `goose` and `amp`. For any other launcher, pass a label with `--harness`. For one-off commands use `exec` instead.
+
+A `run` session can't be renewed in place. When it expires, or when an approved request needs a restart (`runtimeAction: restart_required`), the CLI stops the Agent and asks you to run `phase ai run` again.
+
+### Options
+
+| Flag | Command | Description |
+| --- | --- | --- |
+| `--workflow <id>` | `run`, `exec` | The Agent Workflow to use. Defaults to the one set with `phase ai enable --workflow`. Ignored with an Agent token login, which names its own Workflow. |
+| `--connection <id>` | `exec` | The Connection to use when a service has several. |
+| `--harness <label>` | `run` | A label for a launcher `run` doesn't recognise. |
+| `--listen <address>` | `run`, `exec` | The proxy's loopback address. Default `127.0.0.1:9543`. |
+| `--lockdown` | `run`, `exec` | Block hosts that aren't bound to a Connection, instead of passing them through. |
+
+### The process environment
+
+Processes behind the proxy get:
+
+| Variable | Value |
+| --- | --- |
+| `PHASE_AI_ENABLED` | `1` |
+| `HTTP_PROXY`, `HTTPS_PROXY` (and lowercase) | The proxy URL, with a per-process password that only works with this proxy. |
+| `NO_PROXY` (and lowercase) | `127.0.0.1,localhost,::1`, plus your own entries that don't cover a bound host. |
+| `PHASE_AI_CA_BUNDLE`, `NODE_EXTRA_CA_CERTS` | A CA bundle that includes the proxy CA. |
+| `SSL_CERT_FILE`, `REQUESTS_CA_BUNDLE`, `CURL_CA_BUNDLE`, `GIT_SSL_CAINFO`, `PIP_CERT`, `DENO_CERT` and similar | The same bundle, when the CLI found your system's CA store to merge it with. |
+| Provider variables | Decoys and settings for each Connection, for example `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` and `AWS_REGION`, or `PGHOST`, `PGPORT`, `PGUSER` and `PGPASSWORD`. Conflicting variables such as `AWS_PROFILE` or `DATABASE_URL` are unset. |
+
+`PHASE_SERVICE_TOKEN` and `PHASE_AGENT_TOKEN` are always removed. When two Connections share a service, neither one's provider variables are set; use `--connection`.
+
+## Supported services
+
+Phase Console defines which services Phase AI can manage; Agents read the current list from [`/v1/capabilities`](/cli/ai/control-api#get-capabilities).
+
+- **AWS**: requests are signed with the decoy key and re-signed by the proxy with the live key. Presigned URLs are not supported, and calls that mint new credentials (such as `sts:AssumeRole`, `sts:GetSessionToken`, `iam:CreateAccessKey` and `ecr:GetAuthorizationToken`) are refused. Live keys are redacted from responses.
+- **PostgreSQL**: clients connect to the local adapter on port `9544` over TLS (`PGSSLMODE=verify-full`) with the decoy password, and the proxy logs in to the database as the real user. Replication connections are refused.
+
+## Requests and approvals
+
+When an Agent needs a service the Workflow has no Connection for, or a provider rejects the current credential, the Agent creates a request through the [control API](/cli/ai/control-api#requests) and shows you a link to it in the Phase Console. There you create or choose the Integration credential and approve or deny the request. The Agent waits for your decision and then continues.
+
+Agents never ask you to paste a credential into the chat or into a request.
+
+## The proxy CA
+
+The proxy inspects traffic to bound hosts over TLS with certificates from a local CA. `phase ai enable` creates it in `~/.phase/ai/ca.pem` and keeps its private key in your OS keyring.
+
+- The CA is valid for 90 days and renews automatically when 14 days or less remain, on the next `phase ai enable` or proxy start. After a renewal, run `phase ai enable` again to trust the new CA.
+- Processes behind the proxy trust the CA through their environment (`SSL_CERT_FILE`, `NODE_EXTRA_CA_CERTS`, `REQUESTS_CA_BUNDLE`, `AWS_CA_BUNDLE` and similar), whether or not you trust it in your OS. Trusting it in your user trust store matters for browsers, and for Go programs on macOS and Windows.
+- Trust is only ever added for your user, never system-wide, and never needs `sudo`:
+  - **macOS**: the login keychain. macOS asks for your login password or Touch ID once.
+  - **Windows**: your user Root store. Windows shows a security warning to confirm.
+  - **Linux**: your NSS database in `~/.pki/nssdb`, which needs NSS `certutil` (`libnss3-tools` on Debian and Ubuntu, `nss-tools` on Fedora, RHEL and Alpine, `nss` on Arch, `mozilla-nss-tools` on openSUSE). Without it, enable skips the step and tells you which package to install.
+
+Pass `--trust-ca` to trust the CA without a prompt, or `--trust-ca=false` to decline.
+
+## Disable Phase AI
+
+```fish
+phase ai disable
+```
+
+`phase ai disable` stops the proxy, removes the Phase AI environment so the next shell command uses your usual credentials, and removes the hooks, plugins and `phase-cli-ai-relay` skill it installed. Customized files are left alone. It keeps the `phase-cli-app-secrets` skill, the CA, your login, and your settings in `~/.phase/ai.json`, so `phase ai enable` restores the same setup later.
+
+Run it yourself; AI agents are not allowed to.
+
+## Security
+
+- **Live credentials stay in the proxy.** Agent processes only see decoys. The proxy checks each request against the Workflow's Connections before swapping the decoy for the live credential.
+- **No new credentials.** Calls that would mint new credentials, such as `sts:GetSessionToken` or `iam:CreateAccessKey`, are refused.
+- **Every request is recorded.** The proxy reports an event to the Console for each request to a bound host, and returns its ID in the `X-Phase-Event-Id` response header so you can find it.
+- **Your login stays in the CLI.** The Agent never sees your Phase token or the proxy's Console session. The proxy URL's password only works with the running proxy.
+- **Setup stays with you.** AI agents can't run `phase ai enable` or `phase ai disable`.
+- **Application secrets are guarded.** When the CLI detects an AI agent, `phase secrets` commands redact secret values according to your `--mask` choice (sealed values are always hidden), `phase run` refuses commands that dump the environment, and `phase shell` is refused.
