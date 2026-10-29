@@ -230,6 +230,9 @@ export const navigation = [
       { title: 'Install', href: '/cli/install' },
       { title: 'Quickstart', href: '/cli/usage' },
       { title: 'Commands', href: '/cli/commands' },
+      { title: 'Phase AI', href: '/cli/ai' },
+      { title: 'Phase AI relay', href: '/cli/ai/relay' },
+      { title: 'Phase AI control API', href: '/cli/ai/control-api' },
     ],
   },
   {

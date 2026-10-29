@@ -1,0 +1,624 @@
+import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
+
+export const metadata = {
+  title: 'Phase AI control API',
+  description:
+    'Reference for the local phase.invalid control API that the Phase AI proxy serves to Agents running in a Phase AI session.',
+}
+
+<Tag variant="small">CLI</Tag>
+
+# Phase AI control API
+
+The Phase AI proxy serves a small HTTP API at the reserved host `http://phase.invalid`. Agents running behind the proxy use it to see which Connections they can use, discover what Phase can manage, and ask a human for a new or updated Integration credential. {{ className: 'lead' }}
+
+<Note>
+This is not the [Phase public API](/public-api). It is served locally by the CLI's Phase AI proxy (`phase ai run`, `phase ai exec`, the background proxy that `phase ai enable` sets up, or a [relay](/cli/ai/relay)), only to processes running inside a Phase AI session. It is not reachable from anywhere else, and it does not accept Phase tokens.
+</Note>
+
+<DocActions />
+
+## Reaching the API
+
+`phase.invalid` never resolves in DNS. A request only reaches the API through the Phase AI proxy, which answers it itself before any upstream connection is made.
+
+Inside a Phase AI session the proxy settings are already in the environment (`HTTP_PROXY` and `HTTPS_PROXY`), so any HTTP client that honours them works:
+
+```bash
+curl --fail --silent --show-error http://phase.invalid/v1/status
+```
+
+| | |
+| --- | --- |
+| Base URL | `http://phase.invalid` (plain `http`; the proxy answers it locally) |
+| Authentication | `Proxy-Authorization: Basic base64("phase:<capability>")`. The capability is the per-process proxy password in the session's proxy URL. It is never a Phase token. |
+| Connection scope | The proxy username `phase.<connectionId>` instead of `phase` scopes a request to one Connection. |
+| Format | JSON request and response bodies. Every response is sent with `Cache-Control: no-store`. |
+| Query strings | Rejected with `400 invalid_control_query`, except `wait` on request creation and polling, and `serviceType` on context. |
+| Browsers | A `POST` that carries `Origin`, `Referer`, or a `Sec-Fetch-Site` header other than `none` is refused with `403 browser_control_mutation_rejected`. |
+| Limits | Request bodies up to 64 KiB. IDs match `^[A-Za-z0-9._-]{1,128}$`. `markdown` up to 16 KiB. `wait` is 0 to 300 whole seconds. Unknown JSON fields are rejected. |
+
+A missing or wrong capability is refused before any route runs:
+
+```text
+HTTP/1.1 407 Proxy Authentication Required
+Proxy-Authenticate: Basic realm="Phase Agent session"
+X-Phase-Error-Code: invalid_runtime_capability
+Content-Type: application/json
+
+{"error":{"code":"invalid_runtime_capability","message":"A valid Phase AI runtime capability is required.","retryable":false,"details":{}}}
+```
+
+### Local proxy and relay
+
+A [relay](/cli/ai/relay) serves the same API over its TLS proxy, with these differences:
+
+| Route | Local proxy | Relay |
+| --- | --- | --- |
+| `GET /v1/bootstrap` | Not available | Available |
+| `GET /v1/discover` | Available | Not available |
+| `POST /v1/rotate` | Available | Not available |
+| `POST /v1/revoke` | Available | Not available |
+
+Every other route is available on both. An unknown or unavailable route returns `404 control_route_not_found`.
+
+## Errors
+
+Every error uses the same envelope and also sets the `X-Phase-Error-Code` header:
+
+```json
+{
+  "error": {
+    "code": "invalid_control_request",
+    "message": "Use setup with serviceType or credential_update with connectionId and credentialId. credentialProvider, credentialName, markdown, and an optional dedupKey are required.",
+    "retryable": false,
+    "details": {}
+  }
+}
+```
+
+When Phase Console rejects a call, the proxy passes Console's status, code and message through. If Console can't be reached, the proxy returns `502 agent_control_relay_failed` with `retryable: true`.
+
+| Code | Status | Meaning |
+| --- | --- | --- |
+| `invalid_runtime_capability` | 407 | The proxy capability is missing or wrong. |
+| `invalid_control_query` | 400 | The route does not accept a query string. |
+| `invalid_control_wait` | 400 | `wait` is not a whole number from 0 to 300. |
+| `invalid_control_request` | 400 | The request body is not a valid request. |
+| `invalid_control_content_type` | 415 | The body is not `application/json`. |
+| `browser_control_mutation_rejected` | 403 | A browser sent the `POST`. |
+| `control_route_not_found` | 404 | No such route on this proxy. |
+| `agent_session_unavailable` | 503 | The session is refreshing or unavailable. Retry shortly. |
+| `agent_control_relay_failed` | 502 | Phase Console could not complete the call. Retryable. |
+| `approved_request_refresh_failed` | 502 | A request was approved, but the proxy could not apply the new configuration safely. Wait until status shows the Connection as `ready`. |
+
+---
+
+## Get status {{ tag: 'GET', label: '/v1/status' }}
+
+<Row>
+  <Col>
+
+    A summary of the current Workflow session: every Connection this session can use, with its Integration credential and state. It contains no credential, decoy or proxy material and is safe to print.
+
+    Check status first. If it lists a `ready` Connection for the service you need, use it; nothing else needs to be fetched.
+
+    ### Connection properties
+
+    <Properties>
+      <Property name="connectionId" type="string">
+        The Connection ID. Pass it to `phase ai exec --connection` when a service has several Connections.
+      </Property>
+      <Property name="name" type="string">
+        The Connection's name.
+      </Property>
+      <Property name="credentialId" type="string">
+        The Integration credential behind the Connection.
+      </Property>
+      <Property name="credentialName" type="string">
+        The Integration credential's name.
+      </Property>
+      <Property name="credentialProvider" type="string">
+        The credential provider, for example `aws`, `aws_assume_role` or `postgres`.
+      </Property>
+      <Property name="credentialRevision" type="string">
+        The credential's current revision.
+      </Property>
+      <Property name="serviceType" type="string">
+        The service the Connection is for.
+      </Property>
+      <Property name="protocol" type="string">
+        `http` or `postgres`.
+      </Property>
+      <Property name="state" type="string">
+        `ready`, `expired` (the credential's expiry has passed) or `unavailable`.
+      </Property>
+      <Property name="expiresAt" type="timestamp">
+        When the credential expires, if it does.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/v1/status">
+
+    ```bash {{ title: 'cURL' }}
+    curl http://phase.invalid/v1/status
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+      "schemaVersion": 1,
+      "kind": "phase.ai.status",
+      "safeToPrint": true,
+      "connections": [
+        {
+          "connectionId": "3f2b8c1e-5a7d-4e9f-b0c4-1d2e3f4a5b6c",
+          "name": "AWS read-only",
+          "credentialId": "8a9b0c1d-2e3f-4a5b-8c7d-9e0f1a2b3c4d",
+          "credentialName": "aws-agent-readonly",
+          "credentialProvider": "aws",
+          "credentialRevision": "7",
+          "serviceType": "aws",
+          "protocol": "http",
+          "state": "ready",
+          "expiresAt": "2026-12-31T00:00:00Z"
+        }
+      ],
+      "links": {
+        "status": "http://phase.invalid/v1/status",
+        "capabilities": "http://phase.invalid/v1/capabilities",
+        "context": "http://phase.invalid/v1/context",
+        "createRequest": "http://phase.invalid/v1/requests",
+        "listRequests": "http://phase.invalid/v1/requests",
+        "pollRequest": "http://phase.invalid/v1/requests/{requestId}",
+        "cancelRequest": "http://phase.invalid/v1/requests/{requestId}/cancel",
+        "connectionEnvironment": "http://phase.invalid/v1/connections/{connectionId}/environment"
+      }
+    }
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Get capabilities {{ tag: 'GET', label: '/v1/capabilities' }}
+
+<Row>
+  <Col>
+
+    The versioned catalog of services this Phase instance can manage, with the IDs of any Connections this Workflow already has for each. Fetch it when status has no suitable Connection and you need to request one.
+
+    An empty `connectionIds` list means the service is supported but not connected to this Workflow: create a [setup request](#create-a-request) using the exact `serviceType` and one of the `credentialProviders`.
+
+    `clientMatchers` describe which executables and URI schemes usually involve a service. They are descriptive only and never grant anything.
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/v1/capabilities">
+
+    ```bash {{ title: 'cURL' }}
+    curl http://phase.invalid/v1/capabilities
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+      "schemaVersion": 1,
+      "matcherSchemaVersion": 1,
+      "kind": "phase.ai.capabilities",
+      "sessionUid": "b6f1c2d3-4e5f-4a6b-9c8d-7e6f5a4b3c2d",
+      "services": [
+        {
+          "serviceType": "aws",
+          "displayName": "Amazon Web Services",
+          "credentialProviders": ["aws", "aws_assume_role"],
+          "clientMatchers": [
+            { "kind": "executable", "values": ["aws"] }
+          ],
+          "connectionIds": ["3f2b8c1e-5a7d-4e9f-b0c4-1d2e3f4a5b6c"]
+        },
+        {
+          "serviceType": "postgres",
+          "displayName": "PostgreSQL",
+          "credentialProviders": ["postgres"],
+          "clientMatchers": [
+            { "kind": "executable", "values": ["psql", "pg_dump"] },
+            { "kind": "uri_scheme", "values": ["postgres", "postgresql"] }
+          ],
+          "connectionIds": []
+        }
+      ]
+    }
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Get context {{ tag: 'GET', label: '/v1/context' }}
+
+<Row>
+  <Col>
+
+    Service-specific guidance written by Phase Console for this Workflow: supported operations, limitations, and how the proxy handles the service's credentials. Use it when a provider command fails or the service is unfamiliar.
+
+    ### Query parameters
+
+    <Properties>
+      <Property name="serviceType" type="string">
+        Optional. Exactly one service type from status or capabilities. Omit it for the general context.
+      </Property>
+    </Properties>
+
+    Errors: `400 invalid_context_query` for anything other than one valid `serviceType`.
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/v1/context">
+
+    ```bash {{ title: 'cURL' }}
+    curl 'http://phase.invalid/v1/context?serviceType=aws'
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+      "schemaVersion": 1,
+      "sessionUid": "b6f1c2d3-4e5f-4a6b-9c8d-7e6f5a4b3c2d",
+      "serviceType": "aws",
+      "markdown": "Requests are re-signed with the live key. Presigned URLs and calls that mint new credentials are refused. …"
+    }
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Requests
+
+When no suitable Connection exists, or a provider rejects the current credential, an Agent asks a human through a request. The human reviews it in Phase Console at the request's `approvalUrl`, creates or picks the Integration credential, and approves or denies it.
+
+There are two kinds:
+
+- **`setup`** asks for a new Integration credential and Connection for a service.
+- **`credential_update`** asks for a change to the credential behind an existing Connection, for example a missing permission or an expired key.
+
+A request is `pending` until a human acts. It ends as `approved`, `denied`, `cancelled`, or `expired`; pending requests expire after 7 days. A Workflow can have at most 20 pending requests (`429 pending_request_limit`).
+
+### Runtime action
+
+An approved request tells the runtime what the approval changed:
+
+| `runtimeAction` | Meaning | What to do |
+| --- | --- | --- |
+| `retry` | The proxy already applied the change without changing what the Agent's processes see. | Retry the operation. |
+| `restart_required` | Decoys, identifiers, routes or the process environment changed. | The background proxy that `phase ai enable` set up recycles its session on its own, and the next command picks up the change. Relaunch `phase ai run`. |
+
+An approved `setup` normally returns `restart_required`. An approved `credential_update` returns `retry` unless the change affected what processes see.
+
+---
+
+## Create a request {{ tag: 'POST', label: '/v1/requests' }}
+
+<Row>
+  <Col>
+
+    Ask a human for a new or updated Integration credential.
+
+    ### Body
+
+    <Properties>
+      <Property name="kind" type="string">
+        `setup` or `credential_update`.
+      </Property>
+      <Property name="credentialProvider" type="string">
+        Required. A provider from capabilities (for `setup`) or status (for `credential_update`).
+      </Property>
+      <Property name="credentialName" type="string">
+        Required. Up to 64 characters. A descriptive name for the credential, saying what it is for.
+      </Property>
+      <Property name="markdown" type="string">
+        Required. Up to 16 KiB. Explain what access is needed and why, and recommend the narrowest practical setup. Never include credential values; Console rejects credential-shaped text.
+      </Property>
+      <Property name="serviceType" type="string">
+        `setup` only, and required for it. The exact service type from capabilities.
+      </Property>
+      <Property name="connectionId" type="string">
+        `credential_update` only, and required for it. From status.
+      </Property>
+      <Property name="credentialId" type="string">
+        `credential_update` only, and required for it. From status.
+      </Property>
+      <Property name="dedupKey" type="string">
+        Optional. A stable key for the purpose. Sending the same `dedupKey` again for the same target returns the existing request instead of asking the human twice; sending it for a different target returns `409 dedup_key_conflict`.
+      </Property>
+      <Property name="relatedRequestId" type="string">
+        Optional. Links a credential update to an earlier request.
+      </Property>
+    </Properties>
+
+    ### Query parameters
+
+    <Properties>
+      <Property name="wait" type="integer">
+        Optional. Wait up to this many seconds (0 to 300) for the human to act before responding, so a quick approval comes back in the same response.
+      </Property>
+    </Properties>
+
+    A new request returns `201`; a repeated `dedupKey` returns the existing request with `200`.
+
+    A pending response includes `approvalUrl`, the Console page where the human reviews the request, and `pollUrl`, the local URL to poll. Show `approvalUrl` to the human exactly as returned, then poll `pollUrl`.
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="POST" label="/v1/requests">
+
+    ```bash {{ title: 'Setup' }}
+    curl 'http://phase.invalid/v1/requests?wait=60' \
+      -H 'Content-Type: application/json' \
+      -d '{
+        "kind": "setup",
+        "credentialProvider": "postgres",
+        "credentialName": "Analytics read-only database",
+        "serviceType": "postgres",
+        "markdown": "Run read-only reporting queries on the analytics database. Recommended: a role with SELECT on the reporting schema only.",
+        "dedupKey": "analytics-readonly-db"
+      }'
+    ```
+
+    ```bash {{ title: 'Credential update' }}
+    curl http://phase.invalid/v1/requests \
+      -H 'Content-Type: application/json' \
+      -d '{
+        "kind": "credential_update",
+        "connectionId": "3f2b8c1e-5a7d-4e9f-b0c4-1d2e3f4a5b6c",
+        "credentialId": "8a9b0c1d-2e3f-4a5b-8c7d-9e0f1a2b3c4d",
+        "credentialProvider": "aws",
+        "credentialName": "aws-agent-readonly",
+        "markdown": "s3:PutObject on acme-artifacts was denied. Please allow s3:PutObject on arn:aws:s3:::acme-artifacts/*.",
+        "dedupKey": "aws-readonly-s3-put"
+      }'
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Pending' }}
+    {
+      "schemaVersion": 1,
+      "id": "5c4d3e2f-1a0b-4c9d-8e7f-6a5b4c3d2e1f",
+      "status": "pending",
+      "kind": "setup",
+      "credentialProvider": "postgres",
+      "credentialName": "Analytics read-only database",
+      "serviceType": "postgres",
+      "approvalUrl": "https://console.phase.dev/acme/agents/requests?request=5c4d3e2f-1a0b-4c9d-8e7f-6a5b4c3d2e1f&action=setup",
+      "pollUrl": "http://phase.invalid/v1/requests/5c4d3e2f-1a0b-4c9d-8e7f-6a5b4c3d2e1f",
+      "progress": { "stage": "awaiting_credentials" },
+      "requestExpiresAt": "2026-11-05T09:00:00Z"
+    }
+    ```
+
+    ```json {{ title: 'Approved' }}
+    {
+      "schemaVersion": 1,
+      "id": "5c4d3e2f-1a0b-4c9d-8e7f-6a5b4c3d2e1f",
+      "status": "approved",
+      "kind": "setup",
+      "credentialId": "0e1f2a3b-4c5d-4e6f-8a7b-9c0d1e2f3a4b",
+      "connectionId": "7d6c5b4a-3e2f-4d1c-9b0a-8f7e6d5c4b3a",
+      "grantId": "2b3c4d5e-6f7a-4b8c-9d0e-1f2a3b4c5d6e",
+      "runtimeAction": "restart_required",
+      "resolvedAt": "2026-10-29T09:12:30Z"
+    }
+    ```
+
+    ```json {{ title: 'Denied' }}
+    {
+      "schemaVersion": 1,
+      "id": "5c4d3e2f-1a0b-4c9d-8e7f-6a5b4c3d2e1f",
+      "status": "denied",
+      "kind": "setup",
+      "resolutionNote": "Use the existing deploy bot account instead.",
+      "resolvedAt": "2026-10-29T09:12:30Z"
+    }
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Poll a request {{ tag: 'GET', label: '/v1/requests/:requestId' }}
+
+<Row>
+  <Col>
+
+    Get one request. With `wait`, the proxy waits up to that many seconds (0 to 300) for the request to leave `pending`, and returns it as `pending` if time runs out. The response has the same shape as [Create a request](#create-a-request).
+
+    Keep polling the same request while it is pending. A denied request may include a `resolutionNote` from the human.
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/v1/requests/:requestId">
+
+    ```bash {{ title: 'cURL' }}
+    curl 'http://phase.invalid/v1/requests/5c4d3e2f-1a0b-4c9d-8e7f-6a5b4c3d2e1f?wait=300'
+    ```
+
+    </CodeGroup>
+
+  </Col>
+</Row>
+
+---
+
+## List pending requests {{ tag: 'GET', label: '/v1/requests' }}
+
+<Row>
+  <Col>
+
+    The Workflow's pending requests, so an Agent can resume waiting after a restart.
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/v1/requests">
+
+    ```bash {{ title: 'cURL' }}
+    curl http://phase.invalid/v1/requests
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+      "schemaVersion": 1,
+      "requests": [
+        {
+          "id": "5c4d3e2f-1a0b-4c9d-8e7f-6a5b4c3d2e1f",
+          "status": "pending",
+          "kind": "setup",
+          "credentialProvider": "postgres",
+          "credentialName": "Analytics read-only database",
+          "serviceType": "postgres",
+          "approvalUrl": "https://console.phase.dev/acme/agents/requests?request=5c4d3e2f-1a0b-4c9d-8e7f-6a5b4c3d2e1f&action=setup",
+          "pollUrl": "http://phase.invalid/v1/requests/5c4d3e2f-1a0b-4c9d-8e7f-6a5b4c3d2e1f"
+        }
+      ]
+    }
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Cancel a request {{ tag: 'POST', label: '/v1/requests/:requestId/cancel' }}
+
+<Row>
+  <Col>
+
+    Cancel a pending request. The body must be empty or `{}`. Agents should only cancel when the human asks. Returns the request with `"status": "cancelled"`.
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="POST" label="/v1/requests/:requestId/cancel">
+
+    ```bash {{ title: 'cURL' }}
+    curl -X POST http://phase.invalid/v1/requests/5c4d3e2f-1a0b-4c9d-8e7f-6a5b4c3d2e1f/cancel \
+      -H 'Content-Type: application/json' -d '{}'
+    ```
+
+    </CodeGroup>
+
+  </Col>
+</Row>
+
+---
+
+## Get a Connection's environment {{ tag: 'GET', label: '/v1/connections/:connectionId/environment' }}
+
+<Row>
+  <Col>
+
+    The process environment for one Connection: the proxy URL with the username `phase.<connectionId>`, the CA variables, and that Connection's decoys, plus the variables to unset. `phase ai exec --connection` uses it to run one command against a chosen Connection when a service has several.
+
+    <Note>
+    This response contains the proxy password. Agents should not fetch, print or store it; run `phase ai exec --connection <connectionId>` instead.
+    </Note>
+
+    Errors: `400 invalid_connection_id`, `404 connection_unavailable`, and `409 connection_environment_unavailable` (retryable) when the environment can't be built.
+
+  </Col>
+  <Col sticky>
+
+    ```json {{ title: 'Response' }}
+    {
+      "schemaVersion": 1,
+      "connectionId": "3f2b8c1e-5a7d-4e9f-b0c4-1d2e3f4a5b6c",
+      "configGeneration": 4,
+      "processEnvironment": {
+        "set": {
+          "PHASE_AI_ENABLED": "1",
+          "HTTPS_PROXY": "http://phase.3f2b8c1e-5a7d-4e9f-b0c4-1d2e3f4a5b6c:<capability>@127.0.0.1:9543",
+          "HTTP_PROXY": "http://phase.3f2b8c1e-5a7d-4e9f-b0c4-1d2e3f4a5b6c:<capability>@127.0.0.1:9543",
+          "NO_PROXY": "127.0.0.1,localhost,::1",
+          "AWS_ACCESS_KEY_ID": "<decoy>",
+          "AWS_SECRET_ACCESS_KEY": "<decoy>"
+        },
+        "unset": ["AWS_PROFILE", "AWS_SESSION_TOKEN", "PHASE_SERVICE_TOKEN", "PHASE_AGENT_TOKEN"]
+      }
+    }
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Get the relay bootstrap {{ tag: 'GET', label: '/v1/bootstrap' }}
+
+<Row>
+  <Col>
+
+    Relay only. A POSIX `sh` script (`Content-Type: text/x-shellscript`) that sets a sandbox up to use the relay. `phase relay start` prints the one-line command that fetches and runs it. See [Phase AI relay](/cli/ai/relay) for what it does.
+
+    The script contains the proxy credential and the Workflow's decoys, never live credential material. Errors: `503 agent_session_unavailable` while the relay's session refreshes, `502 relay_bootstrap_unavailable`.
+
+  </Col>
+  <Col sticky>
+
+    ```bash {{ title: 'Sandbox shell' }}
+    eval "$(curl -fsS --proxy 'https://phase:<capability>@relay.example.ts.net:9543' http://phase.invalid/v1/bootstrap)"
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Session routes
+
+These routes manage the proxy's session. Agents don't need them; they are used by the CLI and by tooling.
+
+| Route | Available | What it does |
+| --- | --- | --- |
+| `POST /v1/refresh` | Local and relay | Re-reads the Workflow's configuration from Console now. Body empty or `{}`. Agents should not call it. |
+| `POST /v1/rotate` | Local only | Rotates the proxy's session credential with Console. No body. The proxy capability does not change. |
+| `POST /v1/revoke` | Local only | Revokes the session in Console and stops the proxy. No body. `phase ai disable` uses it. |
+| `GET /v1/discover` | Local only | The Console configuration for this session: Connections, hosts and bindings, never live credentials. For diagnostics. |
+
+The proxy also serves its full runtime manifest at `GET /.well-known/agents`. The CLI reads it to build a managed command's environment. It contains the proxy password, decoys and the CA certificate, so Agents must not fetch, print or store it; use [status](#get-status) instead.
+
+## Proxied traffic
+
+Everything not sent to `phase.invalid` is ordinary proxied traffic. Requests to hosts bound to one of the Workflow's Connections are intercepted, checked, and sent upstream with the live credential in place of the decoy. Other hosts pass through untouched, unless the proxy runs with `--lockdown`, which blocks them.
+
+Every response to bound traffic, and every refusal, carries an `X-Phase-Event-Id` header with the ID of the event the proxy reported to Console for that request. It contains no credential material. Quote it when reporting a problem so the human can find the request in Console. AWS-style error responses repeat it as `RequestId`. Pass-through traffic has no event and no header.
+
+Failures on bound traffic use the error envelope above, except for AWS Connections, which return an AWS-style XML error. Failures tied to a Connection also set `X-Phase-Connection-Id` and `X-Phase-Grant-Id`.
+
+| Code | Status | Meaning |
+| --- | --- | --- |
+| `agent_connection_denied` | 403 | The Connection is not authorized for this request. |
+| `credential_minting_blocked` | 403 | The call would mint new credentials (for example `sts:GetSessionToken` or `iam:CreateAccessKey`), which the proxy never allows. |
+| `agent_credential_injection_failed` | 403 | The live credential could not be injected, for example because the request was not signed with the decoy. |
+| `ambiguous_agent_binding` | 403 | Several Connections match and none was selected. Use `phase ai exec --connection`. |
+| `unbound_host_blocked` | 403 | The host is not bound to the Workflow and the proxy runs with `--lockdown`. |
+| `agent_binding_unavailable` | 503 | The session is recycling. Retry shortly. |
+| `upstream_unavailable` | 502 | The upstream service could not be reached. |
