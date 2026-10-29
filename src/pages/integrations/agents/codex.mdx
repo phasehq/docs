@@ -1,89 +1,174 @@
 import { Tag } from '@/components/Tag'
 import { DocActions } from '@/components/DocActions'
 
-export const description = 'Integrate Phase with OpenAI Codex'
+export const metadata = {
+  title: 'OpenAI Codex',
+  description: 'Use Phase with OpenAI Codex: workflow-scoped Connections to AWS and PostgreSQL, and application secrets management.',
+}
 
 <Tag variant="small">INTEGRATE</Tag>
 
 # OpenAI Codex
 
-Manage Phase secrets directly from [OpenAI Codex](https://developers.openai.com/codex/cli). Codex can list, create, update, and delete secrets, run processes with injected secrets, and manage your Phase environments — all from natural language.
+Use Phase from [OpenAI Codex](https://developers.openai.com/codex/cli) in two ways. {{ className: 'lead' }}
+
+- **Connections**: Codex uses services such as AWS and PostgreSQL through your Agent Workflow's Connections, approved in the Phase Console. It only ever sees decoy credentials; the Phase AI proxy swaps in the live ones. See [Phase AI](/cli/ai).
+- **Application secrets**: Codex can list, create, rotate and delete secrets in your Phase apps without reading their values.
 
 <DocActions />
 
 ## Prerequisites
 
-- [Phase CLI installed and authenticated](/cli/usage)
-- [OpenAI Codex CLI](https://developers.openai.com/codex/cli) installed
+- The [Phase CLI](/cli/install), installed and up to date.
+- [OpenAI Codex](https://developers.openai.com/codex/cli) installed.
+- The Codex CLI on your `PATH`, even if you use Codex Desktop. `phase ai enable` uses it to install the plugin.
+- For Connections: an Agent and a Workflow in the Phase Console.
 
 ## Setup
 
-### 1. Enable AI integration
+### 1. Log in
+
+For Connections, log in with an Agent token for the Agent's Workflow, created in the Phase Console:
 
 ```fish
-phase ai enable
+phase auth --mode token
 ```
 
-Select **Codex** when prompted. This installs the Phase skill to `~/.agents/skills/phase-cli/SKILL.md` and configures secret visibility.
+For application secrets, log in as yourself with `phase auth`: Agent tokens can't access application secrets. To use Connections with your own login, set the Workflow in the next step with `--workflow <workflowId>`.
 
-You'll be asked whether AI agents can see secret values:
-- **Mask values** (recommended) — `secret` and `sealed` types show as `[REDACTED]`
-- **Show values** — `secret` and `config` types are visible; `sealed` is always hidden
+### 2. Enable Phase for Codex
 
-### 2. Start using Phase in Codex
+Run this yourself, in your own terminal. Codex isn't allowed to run it.
 
-Invoke the skill explicitly with `$phase-cli` or let Codex auto-detect it from task context:
-
+```fish
+phase ai enable --harness codex
 ```
-You: $phase-cli list my secrets
-You: create a DATABASE_URL as config with value postgres://localhost:5432/mydb
-You: rotate the API_KEY as a sealed secret with random base64
-```
+
+It installs:
+
+- The `phase-cli-ai-relay` and `phase-cli-app-secrets` skills in `~/.agents/skills/`.
+- The `phase-ai-bootstrap` plugin, from a Phase-owned local marketplace in `~/.phase/ai/codex-marketplace/` that `phase ai enable` registers with the Codex CLI. It starts the proxy when Codex first calls Phase.
+
+It also creates the Phase AI CA and offers to trust it for your user (see [The proxy CA](/cli/ai#the-proxy-ca)), and asks whether Codex may read secret values.
+
+### 3. Restart Codex
+
+Open the Codex CLI, run `/hooks`, and trust every hook from `phase-ai-bootstrap@phase-cli-local`. Then fully quit and restart Codex (the CLI or Codex Desktop), start a new task, and repeat your original prompt.
 
 ---
 
-## How it works
+## Using Connections
 
-The Phase CLI installs a **skill document** that teaches Codex how to use the Phase CLI. Codex runs Phase commands directly — no separate server or middleware.
+Ordinary commands keep your usual credentials. When you ask Codex to use Phase, it runs the command with `phase ai exec`, adding `--connection <connectionId>` when a service has several Connections:
 
-The skill is installed at `~/.agents/skills/phase-cli/SKILL.md`, which is the user-level skill directory scanned by Codex for all projects.
+```fish
+phase ai exec -- aws s3 ls
+```
+
+The plugin starts the Phase AI proxy the first time Codex calls Phase, and `phase ai exec` reuses it.
+
+<Note>
+In Codex's default sandbox, each Phase call needs Codex's network approval. To skip it, set `network_access = true` under `[sandbox_workspace_write]` in `~/.codex/config.toml`.
+</Note>
+
+```
+You: what can Phase manage here?
+You: use Phase to list the S3 buckets in our dev AWS account
+You: use Phase to count yesterday's orders in the analytics database
+```
+
+When the Workflow has no Connection for what you asked, Codex creates a request and shows you a link to it in the Phase Console. Create or choose the credential there and approve the request; Codex waits and then carries on. See [Requests and approvals](/cli/ai#requests-and-approvals).
 
 ---
 
-## Secret types and AI visibility
+## Managing application secrets
 
-| Type | AI visibility | Description |
-| ---- | ------------- | ----------- |
-| `config` | **Always visible** | Non-sensitive configuration (ports, hosts, flags) |
-| `secret` | Controlled by `phase ai enable` | Standard encrypted secrets |
-| `sealed` | **Never visible** | Write-only secrets (API keys, tokens, passwords) |
+The `phase-cli-app-secrets` skill lets Codex work with your Phase apps and environments without seeing sensitive values:
+Invoke a skill explicitly with `$phase-cli-ai-relay` or `$phase-cli-app-secrets`, or let Codex pick it from the task.
+
+
+- List apps, environments and secret keys.
+- Create or rotate secrets with random values (`--random`), so the value never appears in the conversation.
+- Create and update non-sensitive `config` values.
+- Delete secrets, after confirming the app, environment and path.
+
+```
+You: list the secret keys in staging for the backend app
+You: create STRIPE_WEBHOOK_SECRET as a sealed secret with a random value
+You: rotate API_TOKEN in development
+You: set LOG_LEVEL to debug in development
+```
+
+Codex doesn't read secret values (`phase secrets get`, `phase secrets list --show`, `phase secrets export`), import `.env` files, or run `phase run` or `phase shell`. Run those yourself in a terminal. When a sensitive value has to be entered by hand, Codex asks you to enter it in the Phase Console or your terminal rather than in the chat.
+
+### Secret visibility
+
+| Type | Visible to Codex | Description |
+| ---- | ------------------ | ----------- |
+| `config` | **Always** | Non-sensitive configuration, such as ports, hosts and flags |
+| `secret` | Your choice in `phase ai enable` (`--mask` or `--no-mask`) | Standard encrypted secrets |
+| `sealed` | **Never** | Write-only secrets, such as API keys, tokens and passwords |
 
 <Warning>
-Sealed secret values are **never** exposed to AI agents regardless of configuration.
+Sealed secret values are **never** shown to AI agents, whatever you choose. Codex creates and rotates them with `--random`, so the value never appears in the conversation.
 </Warning>
 
 ---
 
 ## Security guardrails
 
-The Phase CLI enforces guardrails when it detects an AI agent:
-
-- `printenv`, `env`, `export`, `set`, `declare`, `compgen` are **blocked** inside `phase run`
-- `phase shell` is **blocked entirely** in AI mode
-- Sealed secret values are **always redacted** in output
-- `phase ai enable` / `phase ai disable` **must be run by the user** directly
+| Guardrail | Enforcement |
+| --------- | ----------- |
+| Live provider credentials | **Stay in the Phase AI proxy**; Codex only sees decoys |
+| Calls that mint new credentials (for example `sts:GetSessionToken`) | **Blocked by the proxy** |
+| `phase ai enable` / `phase ai disable` | **Blocked**; run them yourself |
+| `printenv`, `env`, `export`, `set`, `declare`, `compgen` inside `phase run` | **Blocked by the CLI** |
+| `phase shell` | **Blocked** for AI agents |
+| Sealed secret values in output | **Always redacted** |
+| Secret values in `phase secrets` output | **Redacted** according to your visibility choice |
 
 ---
 
 ## Managing the integration
 
 ```fish
-# Update the skill (re-run after CLI upgrade)
-phase ai enable
+# Check setup, the proxy and the Workflow's Connections
+phase ai status
+
+# Refresh the skills and plugin after a CLI upgrade
+phase ai enable --harness codex
 
 # Remove the integration
 phase ai disable
 
-# View the skill document
+# Print the Phase AI skill
 phase ai skill
 ```
+
+---
+
+## Troubleshooting
+
+### Codex doesn't know about Phase
+
+Check that the skills are installed:
+
+```fish
+ls ~/.agents/skills/phase-cli-ai-relay/SKILL.md ~/.agents/skills/phase-cli-app-secrets/SKILL.md
+```
+
+If they're missing, run `phase ai enable --harness codex` and restart Codex.
+
+### Phase-managed commands fail
+
+Run `phase ai status` and check the `Proxy` and `Connections` lines. A Connection must be `ready`. When Codex reports a Phase error, it quotes the `X-Phase-Event-Id` from the response, which you can look up in the Phase Console.
+
+### Authentication errors
+
+Check who you're logged in as:
+
+```fish
+phase users whoami
+```
+
+Log in again with `phase auth --mode token` for an Agent token, or `phase auth` for your own account.
