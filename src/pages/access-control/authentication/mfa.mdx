@@ -129,7 +129,7 @@ If you have lost all of your methods and your recovery codes, you cannot turn 2F
 
 ## Self-hosted instances
 
-Passkeys and hardware security keys are bound to your Console's domain. By default Phase uses the host of the first entry in `ALLOWED_ORIGINS`. If that domain changes, existing passkeys stop working: users sign in with their authenticator app or a recovery code, then add their passkeys again. To use passkeys across subdomains, set [`WEBAUTHN_RP_ID`](/self-hosting/configuration/envars#additional-environment-variables) to the parent domain before anyone adds one.
+Passkeys and hardware security keys are bound to your Console's domain: the host of the first entry in [`ALLOWED_ORIGINS`](/self-hosting/configuration/envars), the same URL Phase uses in email links. There is nothing else to configure. If that domain changes, or the entries are reordered so another host comes first, existing passkeys stop working: users sign in with their authenticator app or a recovery code, then add their passkeys again.
 
 ## Security notes
 
