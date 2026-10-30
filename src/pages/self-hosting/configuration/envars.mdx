@@ -1015,6 +1015,11 @@ These variables are not required if using the suggested [docker-compose template
 
     Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
+  <Property name="WEBAUTHN_RP_ID" type="string (Optional)">
+    The domain that passkeys and hardware security keys used for [two-factor authentication](/access-control/authentication/mfa) are bound to (the WebAuthn relying party ID). Defaults to the host of the first entry in `ALLOWED_ORIGINS`. Set it to a parent domain, for example `example.com` for a Console at `console.example.com`, only if passkeys must work across subdomains. Changing it later makes existing passkeys stop working: users then sign in with another two-factor method or a recovery code and add their passkeys again.
+
+    Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
+  </Property>
   <Property name="NEXTAUTH_URL" type="string">
     The base console URL for NextAuth. References `${HTTP_PROTOCOL}${HOST}`
     

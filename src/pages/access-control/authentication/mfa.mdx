@@ -1,86 +1,141 @@
 import { Tag } from '@/components/Tag'
 import { DocActions } from '@/components/DocActions'
 
-export const description = 'Protect your Phase account with TOTP-based two-factor authentication.'
+export const description =
+  'Protect your Phase account with a passkey, a hardware security key or an authenticator app.'
 
 <Tag variant="small">AUTHENTICATION</Tag>
 
 # Two-Factor Authentication (2FA)
 
-Phase supports two-factor authentication using time-based one-time passwords (TOTP) with any standard authenticator app. Once enabled, every Console sign-in to your account (password, OAuth, or SSO) requires a 6-digit code from your authenticator in addition to your primary sign-in method.
+Two-factor authentication adds a second step to every Console sign-in to your account, whether you sign in with a password, OAuth or SSO. Phase supports:
+
+- **Hardware security keys** such as YubiKey, Google Titan or Feitian (FIDO2 / WebAuthn, over USB or NFC).
+- **Passkeys** on your device (Touch ID, Face ID, Windows Hello) or in a password manager such as iCloud Keychain, Google Password Manager, 1Password or Bitwarden.
+- **Authenticator apps** that generate 6-digit time-based codes (TOTP), such as Google Authenticator, 1Password or Authy.
+
+Use one method or several, for example a hardware key with an authenticator app as a backup. All your methods share one set of [recovery codes](#recovery-codes).
 
 <DocActions />
 
 <Note>
-Two-factor authentication protects **Console sign-in** only. Personal access tokens, service account tokens, and CLI, API, and SDK access are not affected: existing and new tokens keep working without a code.
+Two-factor authentication protects **Console sign-in** only. Personal access tokens, service account tokens, and CLI, API, and SDK access are not affected: existing and new tokens keep working without a second factor.
 </Note>
 
-## Enable 2FA
+## Where to manage 2FA
 
-1. Open the user menu in the top right corner of the Console and click your profile card to open the [Account page](/access-control/authentication/account).
-2. Under **Two-factor authentication**, click **Enable**. You may be asked to confirm it's you first: sensitive account changes require a recent session. You are returned to setup after signing in again.
-3. Scan the QR code with your authenticator app, or copy the setup secret shown below the QR code and add it manually.
+Open the user menu in the top right corner of the Console and click your profile card to open the [Account page](/access-control/authentication/account). The **Two-factor authentication** section lists your authenticator app (**TOTP**), your **Passkeys** and your **Recovery codes**.
 
-   ![2FA setup: scan the QR code or copy the secret](/assets/images/auth/account/totp-setup-1.webp)
+![Two-factor authentication on the Account page](/assets/images/auth/account/two-factor-section.webp)
 
-4. Enter the 6-digit code from your app to confirm. 2FA is only activated once a code has been verified.
+Changes to 2FA need a recent sign-in. If you last signed in more than 15 minutes ago, Phase asks you to confirm it's you first, then returns you to where you were. Once 2FA is on, adding or removing a method also asks for one of the methods you already have.
 
-   ![2FA setup: confirm with a 6-digit code](/assets/images/auth/account/totp-setup-2.webp)
+## Add a passkey or hardware security key
 
-5. Save your **recovery codes**: reveal, copy, or download them before finishing. They are shown only once.
+1. Under **Passkeys**, click **Add passkey**, then **Add a passkey**.
 
-   ![2FA setup: recovery codes](/assets/images/auth/account/totp-recovery-codes.webp)
+   ![Add a passkey](/assets/images/auth/account/passkey-add-1.webp)
 
-   ![2FA setup: recovery codes revealed](/assets/images/auth/account/totp-recovery-codes-revealed.webp)
+2. Follow your browser's prompt: tap your security key, use your device's screen lock, or choose your password manager.
 
-Once enabled, the Account page shows the TOTP status and your remaining recovery codes.
+   With a hardware key, your browser may also ask to let Phase see the key's make and model. Allowing it lets Phase show which key it is, for example *YubiKey 5 Series*. Blocking it works too: the key is then listed as a hardware security key.
 
-![TOTP enabled on the Account page](/assets/images/auth/account/totp-enabled.webp)
+3. Check the details Phase detected and change the name if you like. Tick **Yes, this is my passkey** and click **Add passkey**.
 
-Phase sends you an email notification when 2FA is enabled, when it is disabled, and when you regenerate your recovery codes.
+   ![Review the new passkey](/assets/images/auth/account/passkey-add-2.webp)
 
-## Signing in with 2FA
+4. If 2FA is already on, confirm it's you with one of your existing methods, then click **Add passkey**.
 
-After your primary sign-in method succeeds (entering your password, or completing the OAuth/SSO round trip), Phase prompts for a 6-digit code from your authenticator app. The code is accepted with a small clock-skew tolerance (one 30-second step in either direction), and each code can only be used once.
+   ![Confirm it's you with an existing method](/assets/images/auth/account/passkey-add-3.webp)
 
-![2FA challenge at sign-in](/assets/images/auth/account/login-2fa.webp)
+If this is your first two-factor method, Phase turns 2FA on and shows your [recovery codes](#recovery-codes). Save them before you finish.
 
-2FA applies uniformly to **all** of your sign-in methods, including organisation-level SSO. If your identity provider also performs its own MFA, you will complete both. Phase does not skip its challenge based on upstream MFA claims.
+Nothing is added to your account until the last step succeeds. If you close the dialog part-way, Phase asks your browser to drop the unused passkey, where the browser supports it.
 
-Enter the code within 10 minutes of your primary sign-in. After that the challenge expires and you sign in again from the start.
+## Set up an authenticator app
 
-After 10 incorrect codes, verification is locked until 15 minutes after the first failed attempt.
+1. Under **TOTP** (authenticator app), click **Enable**.
+2. Scan the QR code with your authenticator app, or copy the secret shown below it and add it manually. Click **Next**.
+
+   ![Scan the QR code or copy the secret](/assets/images/auth/account/totp-setup-1.webp)
+
+3. Enter the 6-digit code from your app.
+
+   ![Enter the code from your app](/assets/images/auth/account/totp-setup-2.webp)
+
+4. If you already have a passkey, click **Next**, confirm it's you with one of your existing methods and click **Enable**. Otherwise click **Verify and enable**.
+
+   ![Confirm it's you with an existing method](/assets/images/auth/account/totp-setup-3.webp)
+
+The authenticator app is only turned on once a code from it has been verified.
 
 ## Recovery codes
 
-When you enable 2FA, Phase generates 10 single-use recovery codes. Each can be used once in place of an authenticator code (including at sign-in via the *Use a recovery code* option) if you lose access to your device.
+When you add your first two-factor method, Phase generates 10 single-use recovery codes. Each can be used once in place of a passkey or an authenticator code, at sign-in or to confirm a change, if you lose access to your methods. All your methods share these codes: adding another method doesn't replace them.
 
-![Signing in with a recovery code](/assets/images/auth/account/login-2fa-recovery-code.webp)
+Reveal, copy or download the codes before you finish setting up: **Done** stays disabled until you do. They are shown only once. The download is a text file named `phase-console-2fa-recovery-codes.txt`.
 
-- Store them somewhere safe (a password manager or printed copy). They are displayed only at generation time.
-- Your remaining code count is shown on the Account page, with a warning when you are running low.
-- Regenerate a fresh set at any time from the Account page. Under **Two-factor authentication**, hover the TOTP card and click **Manage**, then **Regenerate recovery codes**. This invalidates all previous codes and requires a current authenticator code or an unused recovery code.
+![Save your recovery codes](/assets/images/auth/account/recovery-codes.webp)
 
-![Manage two-factor authentication dialog](/assets/images/auth/account/totp-manage.webp)
+![Recovery codes revealed](/assets/images/auth/account/recovery-codes-revealed.webp)
 
-![Regenerate recovery codes](/assets/images/auth/account/totp-regenerate.webp)
+- Store them somewhere safe, such as a password manager or a printed copy.
+- The Account page shows how many codes you have left, with a warning when you are running low.
+- To get a fresh set, hover **Recovery codes**, click **Regenerate** and confirm with one of your methods. Your previous codes stop working, so reveal, copy or download the new ones before you click **Done**.
+
+![Regenerate recovery codes](/assets/images/auth/account/recovery-regenerate.webp)
 
 <Note>
 Recovery codes protect your **sign-in**, not your encrypted data. Your secrets remain protected by your sudo password and recovery kit. Keep both independently safe.
 </Note>
 
-## Disable 2FA
+## Signing in with 2FA
 
-On the Account page, under **Two-factor authentication**, hover the TOTP card and click **Manage**, then **Disable two-factor authentication**. Enter a current authenticator code or an unused recovery code to confirm. Signing in no longer requires a code afterwards, and your remaining recovery codes are invalidated.
+After your primary sign-in succeeds (your password, or the OAuth/SSO round trip), Phase asks for your second factor. Choose a method:
 
-![Disable two-factor authentication](/assets/images/auth/account/totp-disable.webp)
+- **Passkey**: click **Use passkey** and follow your browser's prompt.
+- **Authenticator app**: enter the current 6-digit code from your app.
+- **Recovery code**: enter one of your saved codes.
 
-If you have lost both your authenticator device and your recovery codes, you cannot disable 2FA yourself. Contact your instance administrator (self-hosted) or Phase support (cloud).
+![Choose how to confirm it's you](/assets/images/auth/account/login-2fa.webp)
+
+![Signing in with an authenticator app code](/assets/images/auth/account/login-2fa-totp.webp)
+
+![Signing in with a recovery code](/assets/images/auth/account/login-2fa-recovery-code.webp)
+
+2FA applies uniformly to **all** of your sign-in methods, including organisation-level SSO. If your identity provider also performs its own MFA, you will complete both. Phase does not skip its challenge based on upstream MFA claims.
+
+Complete the second step within 10 minutes of your primary sign-in. After that the challenge expires and you sign in again from the start. After 10 incorrect codes, codes are locked until 15 minutes after the first one. Passkeys keep working while codes are locked: they can't be guessed, so someone who knows your password can't lock you out of them.
+
+## Manage your methods
+
+Hover a passkey to show **Details** and **Remove**.
+
+- **Details** shows everything Phase stores about the passkey: its credential ID, public key, transports, sign count, and when it was added and last used. None of it is secret: the private key never leaves your authenticator.
+
+  ![Passkey details](/assets/images/auth/account/passkey-details.webp)
+
+- **Remove** asks you to confirm it's you. Choose a passkey, your authenticator app or a recovery code.
+
+  ![Remove a passkey](/assets/images/auth/account/passkey-remove.webp)
+
+To stop using your authenticator app, hover **TOTP**, click **Disable** and confirm the same way.
+
+![Disable the authenticator app](/assets/images/auth/account/totp-disable.webp)
+
+Removing your **last** method turns 2FA off and deletes your recovery codes. Phase warns you before you confirm. Phase also emails you whenever a method is added or removed, and when your recovery codes are regenerated.
+
+If you have lost all of your methods and your recovery codes, you cannot turn 2FA off yourself. Contact your instance administrator (self-hosted) or Phase support (cloud).
+
+## Self-hosted instances
+
+Passkeys and hardware security keys are bound to your Console's domain. By default Phase uses the host of the first entry in `ALLOWED_ORIGINS`. If that domain changes, existing passkeys stop working: users sign in with their authenticator app or a recovery code, then add their passkeys again. To use passkeys across subdomains, set [`WEBAUTHN_RP_ID`](/self-hosting/configuration/envars#additional-environment-variables) to the parent domain before anyone adds one.
 
 ## Security notes
 
-- TOTP follows RFC 6238 with standard parameters (SHA-1, 6 digits, 30-second period) for maximum authenticator app compatibility.
-- The TOTP seed is encrypted at rest with the server's keypair and is only shown once, during setup.
-- Replay protection: each accepted code advances a per-account high-water mark, so an intercepted code cannot be used a second time even within its validity window.
+- Passkeys and hardware security keys use WebAuthn. Each one is bound to your Console's domain and signs a fresh challenge every time, so a look-alike site can't phish it.
+- Phase stores only a passkey's public key and metadata. For device-bound passkeys such as most hardware keys, Phase also checks the signature counter and refuses a key whose counter goes backwards, a sign that it was cloned.
+- When you add a passkey, Phase asks the browser for its make and model (WebAuthn attestation) only to label it. It doesn't limit which keys you can use.
+- TOTP follows RFC 6238 with standard parameters (SHA-1, 6 digits, 30-second period) for maximum authenticator app compatibility. The seed is encrypted at rest and shown only once, during setup. Each accepted code advances a per-account high-water mark, so a code can't be used twice.
 - Recovery codes are stored as salted Argon2id hashes; the plaintext is never persisted.
-- Brute-force protection: per-account attempt limits are enforced server-side, alongside IP-based rate limiting on the verification endpoint.
+- Brute-force protection: per-account attempt limits are enforced server-side, alongside IP-based rate limiting on the verification endpoints.
