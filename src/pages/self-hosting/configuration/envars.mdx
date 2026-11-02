@@ -1069,6 +1069,8 @@ These variables are not required if using the suggested [docker-compose template
   <Property name="ALLOWED_ORIGINS" type="string">
     Comma-separated list of allowed origins used by the Phase backend. References `${HTTP_PROTOCOL}${HOST}`
 
+    The first entry is the Console's canonical URL: it is used in email links, and passkeys and hardware security keys for [two-factor authentication](/access-control/authentication/mfa) are bound to its domain. Keep your Console's URL first; changing it makes existing passkeys stop working.
+
     Example: `https://[**YOUR_DOMAIN**]`
 
     Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
