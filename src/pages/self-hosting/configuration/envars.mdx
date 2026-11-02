@@ -648,6 +648,11 @@ These logs can be useful for troubleshooting email delivery issues when self-hos
 
     Referenced by the [`backend`](https://hub.docker.com/r/phasehq/backend) container.
   </Property>
+  <Property name="GITHUB_ENTERPRISE_INTEGRATION_HOST_URL" type="string">
+    URL of the GitHub Enterprise Server instance the OAuth application is registered on, e.g. `https://github.yourdomain.com`. The integration only connects to this server. The API URL is derived from it as `https://github.yourdomain.com/api/v3`.
+
+    Referenced by the [`frontend`](https://hub.docker.com/r/phasehq/frontend) and [`backend`](https://hub.docker.com/r/phasehq/backend) containers.
+  </Property>
 </Properties>
 
 ## AWS Integration
