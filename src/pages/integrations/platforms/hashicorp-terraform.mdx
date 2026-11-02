@@ -55,7 +55,7 @@ To configure the provider, you need to provide your Phase API credentials. We re
 
 ```hcl
 provider "phase" {
-  phase_token = "pss_service:v2:..." # or "pss_user:v1:..." // A Phase Service Account Token or a Phase User Token (PAT)
+  phase_token = "pss_service:v2:..." # or "pss_user:v1:..." // A Phase Service Account Token or a Phase Personal Access Token (PAT)
   // Alternatively supply a PHASE_TOKEN environment variable 
 }
 ```
@@ -66,7 +66,7 @@ If you are using a self-hosted instance of Phase, you can specify the API host u
 provider "phase" {
   host                 = "https://phase.example.io"
   skip_tls_verification = true # Optional, if your Phase instance is using a self-signed certificate, you can set this to true to skip TLS verification.
-  phase_token          = "pss_service:v2:..." # or "pss_user:v1:..." // A Phase Service Account Token or a Phase User Token (PAT)
+  phase_token          = "pss_service:v2:..." # or "pss_user:v1:..." // A Phase Service Account Token or a Phase Personal Access Token (PAT)
 }
 ```
 
@@ -359,7 +359,7 @@ output "secret_created_at" {
 
 Personal Secret Overrides allow individual users to temporarily override a secret's value for their own use, without affecting the value for other users or systems. Important points to note:
 
-1. **User Token Requirement**: Personal Secret Overrides require authentication with a Phase User Token (Personal Access Token or PAT). Service tokens do not support this feature.
+1. **Personal Access Token Requirement**: Personal Secret Overrides require authentication with a Phase Personal Access Token (PAT). Service account tokens do not support this feature.
 
 2. **Activation**: Personal Secret Overrides must be activated through the Phase Console or the Phase CLI. They cannot be directly triggered or modified through the Terraform provider.
 

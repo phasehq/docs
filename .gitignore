@@ -32,3 +32,7 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+# markdown copies of each page, generated at build time by scripts/export-mdx-to-md.js
+/public/**/*.md
+!/public/self-hosting/skills/**

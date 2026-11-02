@@ -77,3 +77,60 @@ Once the transfer is complete:
 - The selected member becomes the new **Owner** of the organisation.
 - You will be demoted to an **Admin** and will continue to remain a member of the organisation until removed.
 - Both the old and new Owner will receive an email notification about the transfer.
+
+## Delete an Organisation
+
+Organisation Owners can delete an organisation. Deleting it locks the organisation at once. After 7 days, Phase permanently deletes the organisation and all of its data. Until then, the Owner can restore it.
+
+On Phase Cloud, an organisation with unpaid invoices can't be deleted. Pay them first.
+
+<Warning>
+  Once the 7 days have passed, deletion **can't be undone**. Audit logs and secret access logs are deleted with the organisation.
+</Warning>
+
+To delete an organisation:
+
+1. Log in as the Organisation **Owner** and navigate to your Organisation **Settings**. Scroll down to the **Danger Zone** section and click **Delete Organisation**.
+![delete organisation settings](/assets/images/console/organisation/organisation-delete-1.webp)
+2. Review what stops working now and what will be deleted. Type the organisation name to confirm, then click **Delete organisation**.
+![confirm organisation deletion](/assets/images/console/organisation/organisation-delete-2.webp)
+
+### Pending Deletion
+
+For the next 7 days, the organisation is locked:
+
+- Nobody can open it. It stays in the organisation list, with its deletion date.
+- Access tokens, service accounts, SCIM and external identities stop working, so apps and CI pipelines can't fetch secrets.
+- Secret syncs and secret rotations pause.
+- On Phase Cloud, a paid subscription is set to cancel at the end of the current billing period.
+
+### Restore an Organisation
+
+The Owner can restore the organisation at any time during the 7 days, or later while its [deletion is delayed](#delayed-deletion). In the organisation list, click **Restore organisation** on its card. Other members can see the deletion date, but only the Owner can restore it.
+
+![restore organisation](/assets/images/console/organisation/organisation-restore.webp)
+
+After a restore, the organisation works as before, and paused syncs and rotations resume.
+
+On Phase Cloud, the subscription continues if you restore the organisation before the end of the billing period. If the period has already ended, so has the subscription: the organisation is on the Free plan, and you need to subscribe again.
+
+### Permanent Deletion
+
+After 7 days, Phase:
+
+- Revokes active [dynamic secret](/console/dynamic-secrets) leases and [rotating secret](/console/rotating-secrets) credentials at the provider.
+- Stops syncs and log streams. Secrets already synced to other services stay there.
+- On Phase Cloud, cancels the remaining subscription.
+- Deletes the organisation and all of its data: apps, environments, secrets and secret history, members, invites, teams, roles, network access policies, service accounts and access tokens, integrations, log streams, SSO and SCIM configuration, audit logs and secret access logs.
+- Deletes accounts provisioned by SCIM that don't belong to another organisation.
+- Emails the Owner to confirm the deletion.
+
+### Delayed Deletion
+
+If a lease or credential can't be revoked, Phase deletes nothing, emails the Owner and tries again every hour, so a temporary problem at the provider resolves itself. Meanwhile the organisation's card shows **Deletion delayed**.
+
+If Phase no longer has access to the provider, the Owner can still restore the organisation, even after the 7 days. Give Phase access to the provider again, for example by updating its third-party credentials, then delete the organisation again.
+
+### Self-hosting
+
+Permanent deletion runs on the `maintenance` queue. The bundled worker (`python manage.py rqworker`) starts a worker for it. If you run split workers (e.g. one Deployment per queue on Kubernetes), add a consumer for the `maintenance` queue. Without one, deleted organisations stay locked after the 7 days and are never deleted.

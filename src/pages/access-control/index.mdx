@@ -93,6 +93,6 @@ Users can only grant permissions that their own role holds. The `Owner` and `Adm
 
 ### External Auth Method Considerations
 
-- To use an external auth provider for programmatic authentication with Phase to access sensitive data (e.g., Secrets) via the Phase API, SDKs, or the Kubernetes Operator, you must enable Server-side Encryption (SSE) so that Phase can generate a Service Token on the server side with access to given application(s) or environment(s).
+- To use an external auth provider for programmatic authentication with Phase to access sensitive data (e.g., Secrets) via the Phase API, SDKs, or the Kubernetes Operator, you must enable Server-side Encryption (SSE) so that Phase can generate a service account token on the server side with access to given application(s) or environment(s).
 
 - When using an external auth method (e.g., Kubernetes), Phase will call the external service at the time of authentication and for subsequent token renewals. If the status of an entity changes in the external system (e.g., an account expires or is disabled), Phase will deny requests to renew tokens associated with that entity. However, any existing tokens remain valid for their original grant period unless explicitly revoked.

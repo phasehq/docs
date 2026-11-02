@@ -55,7 +55,7 @@ pipeline {
             steps {
                 script {
                     withCredentials([string(credentialsId: 'PHASE_SERVICE_TOKEN', variable: 'PHASE_SERVICE_TOKEN')]) {
-                        // Set the credential ID for the phase service token ☝️ you set in step 1
+                        // Set the credential ID for the Phase service account token ☝️ you set in step 1
                         docker.image('phasehq/cli:1.18.5').inside {
                             // Set the cli version ☝️
                             withCredentials([usernamePassword(credentialsId: 'docker-credentials', 
