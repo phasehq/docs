@@ -1,151 +1,136 @@
 import { Tag } from '@/components/Tag'
 import { DocActions } from '@/components/DocActions'
 
-export const description = 'Integrate Phase with Claude Code'
+export const metadata = {
+  title: 'Claude Code',
+  description: 'Use Phase with Claude Code: workflow-scoped Connections to AWS and PostgreSQL, and application secrets management.',
+}
 
 <Tag variant="small">INTEGRATE</Tag>
 
 # Claude Code
 
-Manage Phase secrets directly from [Claude Code](https://docs.anthropic.com/en/docs/claude-code). Claude can list, create, update, and delete secrets, run processes with injected secrets, and manage your Phase environments — all from natural language.
+Use Phase from [Claude Code](https://docs.anthropic.com/en/docs/claude-code) in two ways. {{ className: 'lead' }}
+
+- **Connections**: Claude Code uses services such as AWS and PostgreSQL through your Agent Workflow's Connections, approved in the Phase Console. It only ever sees decoy credentials; the Phase AI proxy swaps in the live ones. See [Phase AI](/cli/ai).
+- **Application secrets**: Claude Code can list, create, rotate and delete secrets in your Phase apps without reading their values.
 
 <DocActions />
 
 ## Prerequisites
 
-- [Phase CLI installed and authenticated](/cli/usage)
-- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) installed
+- The [Phase CLI](/cli/install), installed and up to date.
+- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) installed.
+- For Connections: an Agent and a Workflow in the Phase Console.
 
 ## Setup
 
-### 1. Enable AI integration
+### 1. Log in
+
+For Connections, log in with an Agent token for the Agent's Workflow, created in the Phase Console:
 
 ```fish
-phase ai enable
+phase auth --mode token
 ```
 
-Select **Claude Code** when prompted. This installs the Phase skill to `~/.claude/skills/phase-cli/SKILL.md` and configures secret visibility.
+For application secrets, log in as yourself with `phase auth`: Agent tokens can't access application secrets. To use Connections with your own login, set the Workflow in the next step with `--workflow <workflowId>`.
 
-You'll be asked whether AI agents can see secret values:
-- **Mask values** (recommended) — `secret` and `sealed` types show as `[REDACTED]`
-- **Show values** — `secret` and `config` types are visible; `sealed` is always hidden
+### 2. Enable Phase for Claude Code
 
-### 2. Start using Phase in Claude Code
+Run this yourself, in your own terminal. Claude Code isn't allowed to run it.
 
-Open Claude Code in your project directory. You can immediately start managing secrets:
-
+```fish
+phase ai enable --harness claude-code
 ```
-You: list my secrets
-You: create a DATABASE_URL as config with value postgres://localhost:5432/mydb
-You: rotate the API_KEY as a sealed secret with random base64
-You: run npm start with my secrets
-```
+
+It installs:
+
+- The `phase-cli-ai-relay` and `phase-cli-app-secrets` skills in `~/.claude/skills/`.
+- The `phase-ai-bootstrap` hook plugin in `~/.claude/skills/phase-ai-bootstrap/`, which starts the proxy and loads the Phase AI environment into Claude Code's shell.
+
+It also creates the Phase AI CA and offers to trust it for your user (see [The proxy CA](/cli/ai#the-proxy-ca)), and asks whether Claude Code may read secret values.
+
+### 3. Restart Claude Code
+
+Fully quit and restart Claude Code (or Claude Desktop), start a new chat, then repeat your original prompt.
 
 ---
 
-## How it works
+## Using Connections
 
-The Phase CLI installs a **skill document** that teaches Claude Code how to use the Phase CLI. Claude runs Phase commands directly in your terminal — no separate server or middleware.
+Every shell command Claude Code runs uses the Workflow's Connections while the Phase AI proxy runs. The hook starts the proxy when Claude Code needs it, and Claude Code's shell loads the Phase AI environment before each command, so provider CLIs and HTTP clients work with no wrapper. If the proxy isn't running, commands use your usual credentials.
+
+Each session and prompt carries a `Phase AI:` status line, so Claude knows which Connections are ready. You can also launch Claude Code behind the proxy with `phase ai run -- claude`.
 
 ```
-Claude Code → phase CLI commands → Phase API
+You: what can Phase manage here?
+You: list the S3 buckets in our dev AWS account
+You: count yesterday's orders in the analytics database
 ```
 
-The skill is installed globally at `~/.claude/skills/phase-cli/SKILL.md` and is automatically loaded by Claude Code for all projects.
+When the Workflow has no Connection for what you asked, Claude Code creates a request and shows you a link to it in the Phase Console. Create or choose the credential there and approve the request; Claude Code waits and then carries on. See [Requests and approvals](/cli/ai#requests-and-approvals).
 
 ---
 
-## Secret types and AI visibility
+## Managing application secrets
 
-Phase supports three secret types with different security levels:
+The `phase-cli-app-secrets` skill lets Claude Code work with your Phase apps and environments without seeing sensitive values:
 
-| Type | AI visibility | Description |
-| ---- | ------------- | ----------- |
-| `config` | **Always visible** | Non-sensitive configuration (ports, hosts, flags) |
-| `secret` | Controlled by `phase ai enable` | Standard encrypted secrets |
-| `sealed` | **Never visible** | Write-only secrets (API keys, tokens, passwords) |
+- List apps, environments and secret keys.
+- Create or rotate secrets with random values (`--random`), so the value never appears in the conversation.
+- Create and update non-sensitive `config` values.
+- Delete secrets, after confirming the app, environment and path.
+
+```
+You: list the secret keys in staging for the backend app
+You: create STRIPE_WEBHOOK_SECRET as a sealed secret with a random value
+You: rotate API_TOKEN in development
+You: set LOG_LEVEL to debug in development
+```
+
+Claude Code doesn't read secret values (`phase secrets get`, `phase secrets list --show`, `phase secrets export`), import `.env` files, or run `phase run` or `phase shell`. Run those yourself in a terminal. When a sensitive value has to be entered by hand, Claude Code asks you to enter it in the Phase Console or your terminal rather than in the chat.
+
+### Secret visibility
+
+| Type | Visible to Claude Code | Description |
+| ---- | ------------------ | ----------- |
+| `config` | **Always** | Non-sensitive configuration, such as ports, hosts and flags |
+| `secret` | Your choice in `phase ai enable` (`--mask` or `--no-mask`) | Standard encrypted secrets |
+| `sealed` | **Never** | Write-only secrets, such as API keys, tokens and passwords |
 
 <Warning>
-Sealed secret values are **never** exposed to AI agents regardless of configuration. When Claude creates or rotates a sealed secret, it uses `--random` generation — the actual value never appears in the conversation.
+Sealed secret values are **never** shown to AI agents, whatever you choose. Claude Code creates and rotates them with `--random`, so the value never appears in the conversation.
 </Warning>
 
 ---
 
 ## Security guardrails
 
-The Phase CLI enforces guardrails when it detects an AI agent:
-
 | Guardrail | Enforcement |
 | --------- | ----------- |
-| `printenv`, `env`, `export`, `set`, `declare`, `compgen` inside `phase run` | **Blocked by CLI** |
-| `phase shell` | **Blocked entirely** in AI mode |
+| Live provider credentials | **Stay in the Phase AI proxy**; Claude Code only sees decoys |
+| Calls that mint new credentials (for example `sts:GetSessionToken`) | **Blocked by the proxy** |
+| `phase ai enable` / `phase ai disable` | **Blocked**; run them yourself |
+| `printenv`, `env`, `export`, `set`, `declare`, `compgen` inside `phase run` | **Blocked by the CLI** |
+| `phase shell` | **Blocked** for AI agents |
 | Sealed secret values in output | **Always redacted** |
-| Secret values in `phase secrets export` | **Redacted** based on type and config |
-| `phase ai enable` / `phase ai disable` | **Blocked** — must be run by user directly |
-
-### Viewing secrets out-of-band
-
-When values are hidden from the AI, view them directly in your terminal:
-
-```fish
-# View all secrets with values
-phase secrets list --show
-
-# View a specific secret
-phase secrets get SECRET_KEY
-
-# Export secrets
-phase secrets export
-```
-
-Claude will suggest these commands when it cannot see values itself.
-
----
-
-## Example use cases
-
-### Managing secrets through conversation
-
-```
-You: list my secrets for staging
-Claude: [runs phase secrets list --env staging]
-
-You: create STRIPE_SECRET_KEY as a sealed secret with random base64
-Claude: [runs phase secrets create STRIPE_SECRET_KEY --random base64 --length 32 --type sealed]
-
-You: import my .env file
-Claude: [runs phase secrets import .env]
-```
-
-### Running applications with secrets
-
-```
-You: start my dev server
-Claude: [runs phase run 'npm run dev']
-
-You: run it with staging secrets instead
-Claude: [runs phase run --env staging 'npm run dev']
-```
-
-### Rotating secrets
-
-```
-You: rotate the DATABASE_PASSWORD
-Claude: [runs phase secrets update DATABASE_PASSWORD --random hex --length 64]
-```
+| Secret values in `phase secrets` output | **Redacted** according to your visibility choice |
 
 ---
 
 ## Managing the integration
 
 ```fish
-# Update the skill (re-run after CLI upgrade)
-phase ai enable
+# Check setup, the proxy and the Workflow's Connections
+phase ai status
+
+# Refresh the skills and hook after a CLI upgrade
+phase ai enable --harness claude-code
 
 # Remove the integration
 phase ai disable
 
-# View the skill document
+# Print the Phase AI skill
 phase ai skill
 ```
 
@@ -153,30 +138,26 @@ phase ai skill
 
 ## Troubleshooting
 
-### Claude doesn't know about Phase
+### Claude Code doesn't know about Phase
 
-Make sure the skill is installed:
+Check that the skills are installed:
 
 ```fish
-ls ~/.claude/skills/phase-cli/SKILL.md
+ls ~/.claude/skills/phase-cli-ai-relay/SKILL.md ~/.claude/skills/phase-cli-app-secrets/SKILL.md
 ```
 
-If missing, run `phase ai enable` and select Claude Code.
+If they're missing, run `phase ai enable --harness claude-code` and restart Claude Code.
 
-### "auth error" from commands
+### Phase-managed commands fail
 
-Ensure you are logged in:
+Run `phase ai status` and check the `Proxy` and `Connections` lines. A Connection must be `ready`. When Claude Code reports a Phase error, it quotes the `X-Phase-Event-Id` from the response, which you can look up in the Phase Console.
+
+### Authentication errors
+
+Check who you're logged in as:
 
 ```fish
-phase auth
 phase users whoami
 ```
 
-### Project not linked
-
-If commands return "no application found", link your project:
-
-```fish
-phase apps list
-phase init --app-id "your-app-id" --env Development
-```
+Log in again with `phase auth --mode token` for an Agent token, or `phase auth` for your own account.
