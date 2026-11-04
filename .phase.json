@@ -1,0 +1,8 @@
+{
+  "version": "2",
+  "phaseApp": "Satcom",
+  "appId": "b9fb7a0d-534f-4e46-aa0f-c619a651477e",
+  "defaultEnv": "Development",
+  "envId": "88e733de-3126-4602-8089-5fd019a2b798",
+  "monorepoSupport": false
+}

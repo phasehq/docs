@@ -51,17 +51,15 @@ function CodePanelHeader({ tag, label }) {
   }
 
   return (
-    <div className="flex h-9 items-center gap-2 border-y border-b-white/7.5 border-t-transparent bg-white/2.5 bg-zinc-900 px-4 dark:border-b-white/5 dark:bg-white/1">
+    <div className="flex h-8 items-center gap-2 border-b border-zinc-200 bg-zinc-100 px-4 dark:border-zinc-800 dark:bg-zinc-800/40">
       {tag && (
-        <div className="dark flex">
+        <div className="flex">
           <Tag variant="small">{tag}</Tag>
         </div>
       )}
-      {tag && label && (
-        <span className="h-0.5 w-0.5 rounded-full bg-zinc-500" />
-      )}
+      {tag && label && <span className="h-0.5 w-0.5 bg-zinc-600" />}
       {label && (
-        <span className="font-mono text-xs text-zinc-400">{label}</span>
+        <span className="font-mono text-xs text-zinc-500 dark:text-zinc-400">{label}</span>
       )}
     </div>
   )
@@ -71,17 +69,19 @@ function CodePanel({ tag, label, code, children }) {
   let child = Children.only(children)
 
   return (
-    <div className="group dark:bg-white/2.5">
+    <div className="group">
       <CodePanelHeader
         tag={child.props.tag ?? tag}
         label={child.props.label ?? label}
       />
       <div className="relative">
-        <pre className="overflow-x-auto p-4 text-xs text-white">{children}</pre>
-        <div className="group/button absolute right-4 top-3.5 opacity-0 backdrop-blur transition focus:opacity-100 group-hover:opacity-100">
-          <CopyButton value={child.props.code ?? code}>
+        <pre className="overflow-x-auto p-4 text-xs text-zinc-800 dark:text-white">
+          {children}
+        </pre>
+        <div className="group/button absolute right-4 top-3.5 opacity-0 transition focus-within:opacity-100 group-hover:opacity-100">
+          <CopyButton value={child.props.code ?? code} className="!px-3 !py-1">
             <div className="flex items-center gap-1 text-xs">
-              <ClipboardIcon className="h-5 w-5 fill-zinc-500/20 stroke-zinc-500 transition-colors group-hover/button:stroke-zinc-400" />
+              <ClipboardIcon className="h-5 w-5 fill-zinc-500/20 stroke-zinc-500 transition-colors group-hover/button:stroke-zinc-700 dark:group-hover/button:stroke-zinc-300" />
               Copy
             </div>
           </CopyButton>
@@ -99,21 +99,24 @@ function CodeGroupHeader({ title, children, selectedIndex }) {
   }
 
   return (
-    <div className="flex min-h-[calc(theme(spacing.12)+1px)] flex-wrap items-start gap-x-4 border-b border-zinc-700 bg-zinc-800 px-4 dark:border-zinc-800 dark:bg-transparent">
+    <div className="flex min-h-8 flex-wrap items-stretch gap-x-4 border-b border-zinc-200 bg-zinc-100 px-4 dark:border-zinc-800 dark:bg-zinc-800/40">
       {title && (
-        <h3 className="mr-auto pt-3 text-xs font-semibold text-white">
+        <div className="mr-auto flex items-center font-mono text-[11px] uppercase leading-none tracking-[0.12em] text-zinc-500">
           {title}
-        </h3>
+        </div>
       )}
+      {/* Underline tabs matching TabGroup: the active tab's emerald rule
+          sits on the strip's bottom hairline via -mb-px. Sans labels,
+          leading-none keeps the strip compact. */}
       {hasTabs && (
-        <Tab.List className="-mb-px flex gap-4 text-xs font-medium">
+        <Tab.List className="-mb-px flex flex-wrap items-stretch gap-4">
           {Children.map(children, (child, childIndex) => (
             <Tab
               className={clsx(
-                'border-b py-3 transition focus:[&:not(:focus-visible)]:outline-none',
+                'flex shrink-0 items-center whitespace-nowrap border-b py-2 text-2xs leading-none transition-colors duration-150 focus:[&:not(:focus-visible)]:outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-zinc-400',
                 childIndex === selectedIndex
-                  ? 'border-emerald-500 text-emerald-400'
-                  : 'border-transparent text-zinc-400 hover:text-zinc-300'
+                  ? 'border-emerald-500 text-emerald-600 dark:text-emerald-400'
+                  : 'border-transparent text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'
               )}
             >
               {getPanelTitle(child.props)}
@@ -223,7 +226,8 @@ export function CodeGroup({ children, title, ...props }) {
     <CodeGroupContext.Provider value={true}>
       <Container
         {...containerProps}
-        className="not-prose my-6 overflow-hidden rounded-2xl bg-zinc-900 shadow-md dark:ring-1 dark:ring-white/10"
+        translate="no"
+        className="not-prose my-6 overflow-hidden bg-zinc-50 ring-1 ring-zinc-200 dark:bg-zinc-900 dark:ring-zinc-800"
       >
         <CodeGroupHeader title={title} {...headerProps}>
           {children}

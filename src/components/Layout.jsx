@@ -16,24 +16,28 @@ export function Layout({ children, sections = [] }) {
           layoutScroll
           className="contents lg:pointer-events-none lg:fixed lg:inset-0 lg:z-40 lg:flex"
         >
-          <div className="contents lg:pointer-events-auto lg:block lg:w-72 lg:overflow-y-auto lg:border-r lg:border-zinc-900/10 lg:px-6 lg:pb-8 lg:pt-4 lg:dark:border-white/10 xl:w-80">
+          <div className="contents bg-white dark:bg-zinc-925 lg:pointer-events-auto lg:block lg:w-72 lg:overflow-y-auto lg:border-r lg:border-zinc-200 lg:px-6 lg:pb-8 lg:pt-4 lg:dark:border-zinc-800 xl:w-80">
             <div className="hidden lg:flex">
               <Link
                 href="/"
                 aria-label="Home"
-                className="flex items-center gap-1"
+                className="flex items-center gap-2"
               >
-                <Logo className="h-10 fill-black dark:fill-white" />
-                <div className="flex gap-1 border-none font-mono uppercase text-emerald-400 bg-emerald-400/10 rounded-md px-1 md:text-xl font-semibold">
+                <Logo className="h-10 fill-zinc-900 dark:fill-zinc-100" />
+                <span className="font-mono text-sm uppercase tracking-[0.12em] text-zinc-500">
                   docs
-                </div>
+                </span>
               </Link>
             </div>
             <Header />
             <Navigation className="hidden lg:mt-10 lg:block" />
           </div>
         </motion.header>
-        <div className="relative px-4 pt-14 sm:px-6 lg:px-8">
+        {/* Deliberately NOT `relative`: HeroPattern's absolute sheet must
+            resolve against the page (initial containing block) so it spans
+            the full viewport width behind the sidebar. Footer's absolute
+            elements have their own local `relative` containers. */}
+        <div className="px-4 pt-14 sm:px-6 lg:px-8">
           <main className="py-16">
             <Prose as="article">{children}</Prose>
           </main>
