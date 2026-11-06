@@ -113,9 +113,27 @@ To set up a new sync:
 
 1. Navigate to the "Syncing" tab in your App.
 2. Click on "Create a new sync" and select the desired service.
-3. Follow the prompts to configure the sync, including selecting the Environment and specific secrets to sync.
+3. Follow the prompts to configure the sync, including selecting the Environment and the [Path](#choosing-a-source-path) to sync secrets from.
 
 ![secret syncing](/assets/images/console/apps/app-sync.webp)
+
+### Choosing a source path
+
+A sync reads secrets from one folder in the chosen Environment. Click the **Path** field to see every folder in that Environment, along with how many folders and secrets are directly inside each one. The list follows the Environment selected above it, so pick the Environment first.
+
+![Choose a folder to sync from](/assets/images/platform-integrations/sync-path-picker.webp)
+
+Start typing to filter the folders by name or path. Use the arrow keys to move through the list and press **Enter** to choose a folder. You can also type a path that doesn't have a folder yet and choose **Use** to sync from it once secrets are added there.
+
+![Filter folders by typing](/assets/images/platform-integrations/sync-path-picker-search.webp)
+
+Once a path is chosen, a summary below the field shows how many secrets the sync will send. Click **View folder** to open that folder in a new tab and check its secrets without leaving the sync setup. You can also open any folder from the list with the link icon next to it.
+
+![Summary of the secrets that will be synced](/assets/images/platform-integrations/sync-path-summary.webp)
+
+<Note>
+A sync only sends the secrets stored directly in the chosen folder. Secrets in its subfolders are not included. To sync a subfolder, create a separate sync for it.
+</Note>
 
 Syncing allows Phase to keep your secrets up-to-date across different platforms automatically. This ensures consistency and reduces manual secret management tasks.
 
