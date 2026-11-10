@@ -1086,7 +1086,7 @@ These variables are not required if using the suggested [docker-compose template
     Required by the [`backend`](https://hub.docker.com/r/phasehq/backend) and [`worker`](https://hub.docker.com/r/phasehq/backend) containers.
   </Property>
   <Property name="SESSION_LIFETIME_HOURS" type="number (Optional)">
-    How long a sign-in session lasts, in hours. When it ends, the user is asked to sign in again. Defaults to `24`.
+    How long a session lasts after sign-in, in hours. The time is counted from sign-in and activity does not extend it. When it ends, the user is asked to sign in again. Defaults to `24`.
 
     Must be a whole number, `1` or more. The backend does not start with any other value.
 
