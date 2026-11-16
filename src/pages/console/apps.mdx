@@ -20,17 +20,17 @@ You can also optionally choose to initialize your App with example secrets. This
 
 ## App Readme
 
-Each App can have a readme that serves as a space for developer documentation, runbooks, onboarding notes, or any other relevant information. The readme is displayed on the App's **Home** tab and supports full markdown rendering, including headings, lists, links, code blocks, and blockquotes.
+Each App can have a readme that serves as a space for developer documentation, runbooks, onboarding notes, or any other relevant information. The readme is opened with the "README" button at the top of the App, next to "One-click Access", and supports full markdown rendering, including headings, lists, links, code blocks, and blockquotes.
 
-![app readme on home tab](/assets/images/console/apps/app-readme-home.webp)
+![README button at the top of an App](/assets/images/console/apps/app-readme-home.webp)
 
-Click the readme to expand it in a full-screen dialog for easier reading.
+Click the button to open the readme in a dialog.
 
 ![expanded app readme with markdown rendering](/assets/images/console/apps/app-readme-expanded.webp)
 
 ### Editing the readme
 
-To add or edit a readme, go to the App's **Settings** tab. The editor supports a **Write** and **Preview** toggle so you can author Markdown and preview the rendered output before saving.
+To edit a readme, click "Edit" in the readme dialog, or go to the App's **Settings** tab. The editor supports a **Write** and **Preview** toggle so you can author Markdown and preview the rendered output before saving. If an App does not have a readme yet, the button at the top of the App reads "Add README" instead.
 
 ![app readme editor in settings](/assets/images/console/apps/app-readme-editor.webp)
 
@@ -40,14 +40,14 @@ New organisations are created with an example app that includes a sample readme 
 
 ## Secrets
 
-This screen shows an overview of all Secrets in this App across all Environments. You can explore a specific Environment by clicking the Environment name in the column headers.
-You can expand a Secret to view its status in each Environment. Clicking an Environment name will take you to this Secret in the respective Environment management screen.
+The **Home** tab of an App shows all of its Secrets across all Environments in a single editor, with a column for each Environment. You can focus on a specific Environment by clicking the Environment name in the column headers.
+Secrets can be created, updated, and deleted in any Environment right here, and all of your changes are deployed together. See [Secrets](/console/secrets) for a full guide.
 
 ![app secrets](/assets/images/console/apps/app-secrets.webp)
 
 ### One-click secret access
 
-The Phase Console has a "One-click access" menu in the top right of the screen when inside of an App. Open this menu and click to copy a one-liner for either the CLI or REST API to fetch secrets from the current environment and path based on the context (this defaults to the first environment and the root / path if in the App home). The ability to access secrets over the REST API requires an SSE (Server-Side Encryption) enabled App.
+The Phase Console has a "One-click access" menu in the top right of the screen when inside of an App. Open this menu and click to copy a one-liner for either the CLI or REST API to fetch secrets from the current environment and path based on the context (this defaults to the first environment that is shown in the secrets editor and the folder you are currently viewing). The ability to access secrets over the REST API requires an SSE (Server-Side Encryption) enabled App.
 
 ![One-click access menu inside an App](/assets/images/console/apps/app-one-click-access.webp)
 
