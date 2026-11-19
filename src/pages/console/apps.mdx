@@ -215,6 +215,8 @@ If a lease or credential can't be revoked, Phase deletes nothing, emails the sam
 
 While its deletion is delayed, the App can still be restored, even after the 24 hours or after an immediate deletion. If Phase no longer has access to the provider, give it access again, for example by updating its third-party credentials.
 
+In rare cases the delay comes after Phase has started deleting the App's data. The App can then no longer be restored, and the email says so.
+
 #### Self-hosting
 
 Permanent deletion of Apps and Environments runs on the `maintenance` queue, as [organisation deletion](/console/organisation#self-hosting) does. Without a worker for that queue, deleted Apps and Environments stay locked and are never deleted.
