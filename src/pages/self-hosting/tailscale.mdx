@@ -320,8 +320,10 @@ The `nginx`, `backend` and `worker` containers live inside the `tailscale` servi
 ### Updating
 
 ```fish
-docker compose pull && docker compose up -d
+docker compose pull && docker compose build --pull nginx && docker compose up -d
 ```
+
+The `nginx` service is built locally from the official Nginx image, so `docker compose pull` alone does not update it. `docker compose build --pull nginx` rebuilds it on the latest Nginx release. See [Docker Compose upgrade steps](/self-hosting/docker-compose#upgrade) for details.
 
 The Tailscale machine identity is kept in the `phase-tailscale-state` volume, so updates do not require a new auth key.
 
