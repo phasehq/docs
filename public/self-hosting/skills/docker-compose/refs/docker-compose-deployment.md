@@ -345,8 +345,11 @@ echo | openssl s_client -connect {DOMAIN}:443 -servername {DOMAIN} 2>/dev/null \
 
 ```bash
 docker compose pull
+docker compose build --pull nginx
 docker compose up -d
 ```
+
+`docker compose pull` skips `nginx` because it is built locally from `nginx/Dockerfile`. `docker compose build --pull nginx` rebuilds it on the latest official Nginx image. Check the running version with `docker compose exec nginx nginx -v`.
 
 The certbot volumes and cron job are unaffected by upgrades.
 
