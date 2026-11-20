@@ -33,21 +33,40 @@ Environment names must match the pattern `^[a-zA-Z0-9\-_]{1,32}$`. This means th
 
 To create a new environment:
 
-1. Navigate to the Secrets overview screen inside your app in the Phase console.
-2. Click the "+ New Environment" button.
+1. Navigate to the **Home** tab of your App in the Phase Console.
+2. Open the "New Secret" menu and click "New Environment". You can also click the "+" column at the end of the secrets editor.
 ![Create a new environment button](/assets/images/console/environments/new-environment-button.webp)
-3. In the popup dialog, you'll see a message: "Create a new Environment in this App". Enter a name for your new environment in the "Environment name" field. For example, you might enter "QA" for a quality assurance environment.
+3. In the popup dialog, you'll see a message: "Create a new Environment in this App". Enter a name for your new environment in the "Environment name" field. For example, you might enter "QA" for a quality assurance environment. You can click the color swatch next to the name to choose the color that marks this environment in the secrets editor.
+4. Under "Access", select the members and service accounts that should have access to the new environment.
 ![Create a new environment](/assets/images/console/environments/create-new-environment.webp)
-4. Click `Create`
+5. Click `Create`
 
 Note: All Organisation Admins will have access to this Environment.
+
+The new environment is added as a column at the end of the [secrets editor](/console/secrets#working-across-environments).
+
+### Cloning an Environment
+
+You can create a new environment that starts with a copy of the secrets and folders of an existing one. This is useful for adding another environment, such as a second region or a preview environment, without having to enter every secret again.
+
+1. On the **Home** tab of your App, open the options menu in the column header of the environment you want to copy, and click "Clone environment". Alternatively, choose the environment under "Clone from" when creating a new environment.
+![Environment options menu with the Clone environment option](/assets/images/console/environments/environment-column-menu.webp)
+2. Enter a name for the new environment and choose who should have access to it. The members and service accounts that have access to the environment you are cloning are selected by default.
+![Clone an environment](/assets/images/console/environments/environment-clone.webp)
+3. Click `Create`
+
+<Note>
+Sealed secrets, rotating secrets, dynamic secrets, and personal secret overrides are not copied to the new environment.
+</Note>
+
+You can also start a new environment from just a few secrets: [select the secrets](/console/secrets#select-multiple-secrets) in the secrets editor and click "New Environment".
 
 ## Managing Existing Environments
 
 To manage an existing environment:
 
-1. On the Secrets overview screen, locate the environment card you want to manage.
-2. Click on the cog icon (⚙️) at the top right of the environment card.
+1. On the **Home** tab of your App, hover over the column header of the environment you want to manage.
+2. Click on the cog icon (⚙️) that appears in the column header.
 
 ![Manage environment cog button](/assets/images/console/environments/manage-environment-cog-button.webp) 
 
@@ -58,12 +77,16 @@ To manage an existing environment:
 
 ### Renaming an Environment
 
-1. Enter the new name in the "Environment name" field.
-2. Click the `Rename` button to apply the change.
+1. Enter the new name in the "Environment name" field. You can also change the color of the environment by clicking the color swatch next to its name.
+2. Click the `Save` button to apply the change.
 
 <Warning>
 Changing the environment name will affect how you construct references to secrets.
 </Warning>
+
+### Reordering Environments
+
+Environments are shown as columns in the secrets editor. To change their order, drag an environment by the grip in its column header, or open the options menu in the column header and click "Move left" or "Move right".
 
 ### Managing Access
 
@@ -76,7 +99,7 @@ Changing the environment name will affect how you construct references to secret
 
 1. At the bottom of the dialog, you'll find a "Delete Environment" section.
 2. Be aware that deleting an environment will permanently delete this Environment and all associated Secrets and Integrations.
-3. Click the `Delete` button to remove the environment. Use this option with caution.
+3. Click the `Delete` button, then type the name of the environment to confirm. Use this option with caution.
 
 ![Delete environment section and confirmation](/assets/images/console/environments/environment-delete.webp)
 
