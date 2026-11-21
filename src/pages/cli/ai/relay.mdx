@@ -1,0 +1,109 @@
+import { Tag } from '@/components/Tag'
+import { DocActions } from '@/components/DocActions'
+
+export const metadata = {
+  title: 'Phase AI relay',
+  description:
+    'Run a Phase AI relay so remote Agent sandboxes that cannot run the Phase CLI can use a Workflow\'s Connections.',
+}
+
+<Tag variant="small">CLI</Tag>
+
+# Phase AI relay
+
+A relay is a [Phase AI](/cli/ai) proxy that remote Agent sandboxes reach over TLS. Use it when an Agent runs somewhere the Phase CLI can't, such as a container or a hosted sandbox that only has `curl` and a shell. {{ className: 'lead' }}
+
+<DocActions />
+
+The relay runs on a machine you control and is logged in with an Agent token. Each sandbox runs a one-line bootstrap that points it at the relay. From then on, the sandbox's commands use the Workflow's Connections through the relay, and the sandbox only ever sees decoy credentials.
+
+## Prerequisites
+
+- A machine with the [Phase CLI](/cli/install), reachable from your sandboxes.
+- A login with an **Agent token**: `phase auth --mode token`. A relay can't use your own login.
+- A DNS name for the relay (not an IP address) and a TLS certificate for it that your sandboxes already trust, for example from `tailscale cert`. The private key file must be readable only by you (mode `0600` or `0400`).
+- In each sandbox: a POSIX shell and `curl`.
+
+## Start a relay
+
+```fish
+phase relay start \
+  --advertise-host relay.example.ts.net \
+  --tls-cert relay.example.ts.net.crt \
+  --tls-key relay.example.ts.net.key
+```
+
+```
+🛰️  Phase AI relay ready
+   Proxy:       https://relay.example.ts.net:9543
+   PostgreSQL:  relay.example.ts.net:9544
+   Connections: Analytics DB (postgres), AWS dev (aws)
+
+Hand this line to a trusted sandbox. It contains the relay credential and stays valid until this process stops:
+
+  eval "$(curl -fsS --proxy 'https://phase:<capability>@relay.example.ts.net:9543' http://phase.invalid/v1/bootstrap)"
+
+The bootstrap installs the Phase CA, loads the Phase AI environment into that shell and future login shells, and installs the phase-cli-ai-relay skill.
+Press Ctrl+C to stop.
+```
+
+The relay's proxy listens on port `9543`. Its PostgreSQL adapter listens on the next port, `9544`, only when the Workflow has a PostgreSQL Connection. Both use your TLS certificate.
+
+On macOS, type `c` and press Enter to copy the handoff line.
+
+### Options
+
+| Flag | Description |
+| --- | --- |
+| `--advertise-host <name>` | Required. The DNS name sandboxes dial. The certificate must cover it. |
+| `--tls-cert <file>` | Required. The certificate chain (PEM) for the advertised host. |
+| `--tls-key <file>` | Required. The certificate's private key (PEM), readable only by you. |
+| `--tls-ca <file>` | For private PKI: the root certificates (PEM) that issued `--tls-cert`. Sandboxes must already trust them. By default the system trust store is used. |
+| `--listen <address>` | The proxy's bind address. Default `0.0.0.0:9543`. The PostgreSQL adapter binds the same host on the next port. |
+| `--lockdown` | Block hosts that aren't bound to a Connection, instead of passing them through. |
+
+Without `--lockdown`, traffic to unbound hosts passes through the relay only to public IP addresses.
+
+## Bootstrap a sandbox
+
+Run the handoff line in the sandbox's shell:
+
+```bash
+eval "$(curl -fsS --proxy 'https://phase:<capability>@relay.example.ts.net:9543' http://phase.invalid/v1/bootstrap)"
+```
+
+The bootstrap:
+
+1. Writes the Phase CA to `~/.phase/ai/phase-ca.pem`, and merges it with the sandbox's system CA store into `~/.phase/ai/ca-bundle.pem`.
+2. Writes `~/.phase/ai/env.sh` with the relay's proxy settings, CA variables, the Workflow's decoys and the PostgreSQL adapter settings.
+3. Installs the `phase-cli-ai-relay` skill for Claude Code, Cursor, Codex, Devin, OpenCode and VS Code Copilot.
+4. Loads `env.sh` into the current shell, and adds a loader to `~/.profile` (and to `~/.bashrc` and `~/.zshrc` if they exist) so new login shells load it too.
+
+```
+Phase AI relay environment loaded for Analytics DB (postgres), AWS dev (aws). New login shells load ~/.phase/ai/env.sh automatically.
+```
+
+Running it again is safe. The bootstrap contains the relay credential and the Workflow's decoys, but never a live credential.
+
+<Note>
+The handoff line contains the relay's credential. Anyone with it can use the Workflow's Connections through the relay until the relay stops. Only give it to sandboxes you trust, and don't commit it.
+</Note>
+
+## While the relay runs
+
+- **Sessions renew in place.** When the relay's session with Phase Console expires or the Workflow's Connections change, the relay opens a new one without interrupting sandboxes. The relay credential stays the same, and decoys from earlier sessions keep working.
+
+  ```
+  2026-10-29T09:12:30Z Phase AI session changed; opening a new one.
+  2026-10-29T09:12:31Z Phase AI session refreshed; sandboxes keep working.
+  ```
+
+- **Console outages are retried.** If the relay can't open a session, it retries with a backoff of up to 30 seconds. If the Agent token is rejected, the relay stops.
+- **Requests work as usual.** Agents in sandboxes use the [control API](/cli/ai/control-api) through the relay to check status and request Connections. `GET /v1/discover`, `POST /v1/rotate` and `POST /v1/revoke` are local-only and not available through a relay.
+- **The proxy CA renews every 90 days.** After a renewal, bootstrap your sandboxes again.
+
+Stop the relay with Ctrl+C. The handoff credential stops working as soon as it exits.
+
+```
+Phase AI relay stopped; the handoff credential is no longer valid.
+```
