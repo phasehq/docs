@@ -116,20 +116,24 @@ To delete or restore an Environment that contains [rotating secrets](/console/ro
 
 For the next 24 hours, the Environment is locked:
 
-- It leaves the App's list of Environments. It shows under "Scheduled for deletion" on the App's Home tab, with its deletion time.
+- Its column in the [secrets editor](/console/secrets#working-across-environments) is struck out and collapsed, with a clock in its header. Click the column to see its deletion time.
 - Its Secrets can't be read or changed from the Console, the CLI, the API or the SDKs.
 - Its secret syncs and secret rotations pause.
 - Its name stays reserved. You can't create another Environment with that name in the App, or rename one to it, until the Environment has been deleted.
 
-![Environment scheduled for deletion on the App's Home tab](/assets/images/console/environments/environment-scheduled-for-deletion.webp)
+![Environment scheduled for deletion in the secrets editor](/assets/images/console/environments/environment-scheduled-for-deletion.webp)
+
+The column keeps its place among the App's Environments, also when you [reorder](#reordering-environments) the others. Once Phase has started deleting the Environment, the clock becomes a spinner until the column is gone.
 
 If you change a member's, service account's or team's access to the App's Environments in the meantime, they lose their access to this Environment, and a restore doesn't bring it back.
 
 #### Restoring an Environment
 
-To restore an Environment, click `Restore` next to it under "Scheduled for deletion". Anyone who can delete the Environment can restore it.
+To restore an Environment, click its struck-out column in the secrets editor, then click `Restore`. Anyone who can delete the Environment can restore it.
 
-After a restore, the Environment works as before, and its paused syncs and rotations resume.
+![Restore an environment that is scheduled for deletion](/assets/images/console/environments/environment-restore.webp)
+
+After a restore, the Environment works as before, in the place it had, and its paused syncs and rotations resume.
 
 #### Deleting an Environment Immediately
 
@@ -137,7 +141,7 @@ To skip the 24 hours, tick "Delete immediately" in the confirmation dialog. The 
 
 ![Delete an environment immediately](/assets/images/console/environments/environment-delete-immediately.webp)
 
-For an Environment that is already scheduled for deletion, click `Delete now` next to it under "Scheduled for deletion".
+For an Environment that is already scheduled for deletion, click its struck-out column in the secrets editor, then click `Delete now`.
 
 #### Permanent Deletion
 
