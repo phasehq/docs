@@ -133,7 +133,7 @@ This screen shows you audit logs for all CRUD events for all Secrets and Environ
 
 ## Settings
 
-This screen shows you metadata for the App and allows you to perform administrative tasks such as changing the encryption mode of the App or deleting it permanently.
+This screen shows you metadata for the App and allows you to perform administrative tasks such as changing the encryption mode of the App or deleting it.
 
 ![App settings tab](/assets/images/console/apps/app-settings.webp)
 
@@ -159,11 +159,64 @@ Once enabled, the settings page will show you the updated Encryption mode:
 
 ### Delete an App
 
-To delete an App, click the "Delete" button in the Settings tab.
+Deleting an App locks it at once. After 24 hours, Phase permanently deletes the App and all of its Environments and Secrets. Until then, you can restore it. You can also [delete it immediately](#delete-an-app-immediately).
 
-![Delete an App confirmation dialog](/assets/images/console/apps/app-delete.webp)
+You need permission to delete Apps. See [Roles](/access-control/roles).
 
 <Warning>
- Deleting an App will permanently delete all Environments and Secrets
- associated with it.
+  Once an App has been permanently deleted, this **can't be undone**. Its secret history and logs are deleted with it.
 </Warning>
+
+To delete an App:
+
+1. Open the App's **Settings** tab, scroll down to the **Danger Zone** and click **Delete**.
+![Delete button in the App settings](/assets/images/console/apps/app-delete-button.webp)
+2. The dialog shows when the App will be deleted. Type the App name to confirm, then click **Schedule for deletion**.
+![Delete an App confirmation dialog](/assets/images/console/apps/app-delete.webp)
+
+#### Scheduled for Deletion
+
+For the next 24 hours, the App is locked:
+
+- It leaves your list of Apps. It shows under **Scheduled for deletion** at the bottom of the Apps screen, with its deletion time.
+- Its Environments and Secrets can't be read or changed from the Console, the CLI, the API or the SDKs.
+- Its secret syncs and secret rotations pause.
+
+![App scheduled for deletion on the Apps screen](/assets/images/console/apps/app-scheduled-for-deletion.webp)
+
+#### Restore an App
+
+To restore an App, click **Restore** next to it under **Scheduled for deletion**. Anyone who can delete the App can restore it.
+
+After a restore, the App works as before, and its paused syncs and rotations resume.
+
+#### Delete an App Immediately
+
+To skip the 24 hours, tick **Delete immediately** in the dialog. The button changes to **Delete now**. Phase starts deleting the App right away, and it **can't be restored**.
+
+![Delete an App immediately](/assets/images/console/apps/app-delete-immediately.webp)
+
+For an App that is already scheduled for deletion, click **Delete now** next to it under **Scheduled for deletion**.
+
+The App shows as **Being deleted** until it is gone. This usually takes a few seconds, and longer for an App with a lot of logs.
+
+#### Permanent Deletion
+
+When the 24 hours are up, or right away if you delete immediately, Phase:
+
+- Revokes active [dynamic secret](/console/dynamic-secrets) leases and [rotating secret](/console/rotating-secrets) credentials at the provider.
+- Stops the App's syncs. Secrets already synced to other services stay there.
+- Deletes the App and all of its data: Environments, Secrets, secret history and the App's logs. The organisation's audit logs keep a record of the deletion.
+- Emails the organisation's Owners, and the member who deleted the App, to confirm the deletion.
+
+#### Delayed Deletion
+
+If a lease or credential can't be revoked, Phase deletes nothing, emails the same people and tries again every hour, so a temporary problem at the provider resolves itself. Meanwhile the App shows **Deletion delayed**.
+
+While its deletion is delayed, the App can still be restored, even after the 24 hours or after an immediate deletion. If Phase no longer has access to the provider, give it access again, for example by updating its third-party credentials.
+
+In rare cases the delay comes after Phase has started deleting the App's data. The App can then no longer be restored, and the email says so.
+
+#### Self-hosting
+
+Permanent deletion of Apps and Environments runs on the `maintenance` queue, as [organisation deletion](/console/organisation#self-hosting) does. Without a worker for that queue, deleted Apps and Environments stay locked and are never deleted.

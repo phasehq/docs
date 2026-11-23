@@ -206,8 +206,11 @@ Both should return a 200 response. If any container is unhealthy, consult `refs/
 
 ```bash
 docker compose pull
+docker compose build --pull nginx
 docker compose up -d
 ```
+
+`docker compose pull` skips `nginx` because it is built locally from `nginx/Dockerfile`. `docker compose build --pull nginx` rebuilds it on the latest official Nginx image. Check the running version with `docker compose exec nginx nginx -v`.
 
 ## Uninstalling
 

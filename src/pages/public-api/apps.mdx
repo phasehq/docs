@@ -350,10 +350,10 @@ Apps created via the API are SSE-enabled by default. The list endpoint returns m
 <Row>
   <Col>
 
-    Permanently delete an app and all its associated data.
+    Schedule an app for deletion. The app is locked at once, and it is permanently deleted with all its associated data after 24 hours. Until then, it can be restored from the [Console](/console/apps#restore-an-app).
 
     <Note>
-    This action is irreversible. All environments, secrets, and access configurations associated with the app will be permanently deleted.
+    Once the 24 hours have passed, this action is irreversible. All environments, secrets, and access configurations associated with the app will be permanently deleted.
     </Note>
 
     ### URL parameters

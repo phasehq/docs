@@ -333,10 +333,10 @@ The Environments API requires server-side encryption (SSE) to be enabled for the
 <Row>
   <Col>
 
-    Permanently delete an environment and all its secrets.
+    Schedule an environment for deletion. The environment is locked at once, and it is permanently deleted with all its secrets after 24 hours. Until then, it can be restored from the [Console](/console/environments#restoring-an-environment), and its name can't be used by another environment in the app.
 
     <Note>
-    This action is irreversible. All secrets and access keys in the environment will be permanently deleted.
+    Once the 24 hours have passed, this action is irreversible. All secrets and access keys in the environment will be permanently deleted.
     </Note>
 
     ### URL parameters

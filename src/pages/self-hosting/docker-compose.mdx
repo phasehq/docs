@@ -115,6 +115,32 @@ Your Phase Console deployment will be accessible at `https://<your-host-ip-addre
 
 ---
 
+## Upgrade
+
+Check the [release notes](https://github.com/phasehq/console/releases) for anything you need to do before upgrading, and back up your database. See [Database Migrations when Upgrading Phase](/self-hosting/maintenance#database-migrations-when-upgrading-phase) for details.
+
+To upgrade Phase and the bundled Nginx reverse proxy, run:
+
+```fish
+docker compose pull
+docker compose build --pull nginx
+docker compose up -d
+```
+
+`docker compose pull` updates the Phase `frontend` and `backend` images. The `nginx` service is different: Docker Compose builds it on your machine from `nginx/Dockerfile`, which uses the latest official [Nginx image](https://hub.docker.com/_/nginx). `docker compose pull` skips it, and `docker compose up -d` keeps using the image that was built the first time you started Phase. `docker compose build --pull nginx` rebuilds it on the latest Nginx release.
+
+Nginx is the only Phase service exposed to the internet, so rebuild it regularly, even between Phase releases, to pick up Nginx security fixes. To check which version you are running:
+
+```fish
+docker compose exec nginx nginx -v
+```
+
+<Warning>
+Nginx 1.31.8 and earlier are affected by [CVE-2026-123007](https://cert.europa.eu/publications/security-advisories/2026-022/) and related vulnerabilities, which allow remote code execution over HTTP/2. If your Nginx image was built before November 18, 2026, run `docker compose build --pull nginx && docker compose up -d nginx` and confirm the version is 1.31.9 or later.
+</Warning>
+
+---
+
 ## Stop services
 
 To stop the Phase Console services, run:
