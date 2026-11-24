@@ -1,94 +1,167 @@
 import { Tag } from '@/components/Tag'
 import { DocActions } from '@/components/DocActions'
 
-export const description = 'Integrate Phase with OpenCode'
+export const metadata = {
+  title: 'OpenCode',
+  description: 'Use Phase with OpenCode: workflow-scoped Connections to AWS and PostgreSQL, and application secrets management.',
+}
 
 <Tag variant="small">INTEGRATE</Tag>
 
 # OpenCode
 
-Manage Phase secrets directly from [OpenCode](https://opencode.ai). OpenCode can list, create, update, and delete secrets, run processes with injected secrets, and manage your Phase environments — all from natural language.
+Use Phase from [OpenCode](https://opencode.ai) in two ways. {{ className: 'lead' }}
+
+- **Connections**: OpenCode uses services such as AWS and PostgreSQL through your Agent Workflow's Connections, approved in the Phase Console. It only ever sees decoy credentials; the Phase AI proxy swaps in the live ones. See [Phase AI](/cli/ai).
+- **Application secrets**: OpenCode can list, create, rotate and delete secrets in your Phase apps without reading their values.
 
 <DocActions />
 
 ## Prerequisites
 
-- [Phase CLI installed and authenticated](/cli/usage)
-- [OpenCode](https://opencode.ai) installed
+- The [Phase CLI](/cli/install), installed and up to date.
+- [OpenCode](https://opencode.ai) installed.
+- For Connections: an Agent and a Workflow in the Phase Console.
 
 ## Setup
 
-### 1. Enable AI integration
+### 1. Log in
+
+For Connections, log in with an Agent token for the Agent's Workflow, created in the Phase Console:
 
 ```fish
-phase ai enable
+phase auth --mode token
 ```
 
-Select **OpenCode** when prompted. This installs the Phase skill to `~/.config/opencode/skills/phase-cli/SKILL.md` and configures secret visibility.
+For application secrets, log in as yourself with `phase auth`: Agent tokens can't access application secrets. To use Connections with your own login, set the Workflow in the next step with `--workflow <workflowId>`.
 
-You'll be asked whether AI agents can see secret values:
-- **Mask values** (recommended) — `secret` and `sealed` types show as `[REDACTED]`
-- **Show values** — `secret` and `config` types are visible; `sealed` is always hidden
+### 2. Enable Phase for OpenCode
+
+Run this yourself, in your own terminal. OpenCode isn't allowed to run it.
+
+```fish
+phase ai enable --harness opencode
+```
+
+It installs:
+
+- The `phase-cli-ai-relay` and `phase-cli-app-secrets` skills in `~/.config/opencode/skills/`.
+- The plugin `~/.config/opencode/plugins/phase-ai-bootstrap.js`, which starts the proxy and loads the Phase AI environment into every shell OpenCode starts.
+
+It also creates the Phase AI CA and offers to trust it for your user (see [The proxy CA](/cli/ai#the-proxy-ca)), and asks whether OpenCode may read secret values.
 
 <Note>
-OpenCode also reads skills from `~/.claude/skills/` and `~/.agents/skills/`. If you've already installed the Phase skill for Claude Code or Codex, OpenCode will pick it up automatically.
+OpenCode also reads skills from `~/.claude/skills/` and `~/.agents/skills/`, so it picks up the Phase skills you installed for Claude Code or Codex too.
 </Note>
 
-### 2. Start using Phase in OpenCode
+### 3. Restart OpenCode
 
-You can immediately start managing secrets:
-
-```
-You: list my secrets
-You: create a DATABASE_URL as config with value postgres://localhost:5432/mydb
-You: rotate the API_KEY as a sealed secret with random base64
-You: run npm start with my secrets
-```
+Fully quit and restart OpenCode, start a new session, then repeat your original prompt.
 
 ---
 
-## How it works
+## Using Connections
 
-The Phase CLI installs a **skill document** that teaches OpenCode how to use the Phase CLI. OpenCode runs Phase commands directly in your terminal — no separate server or middleware.
+Every shell command OpenCode runs uses the Workflow's Connections while the Phase AI proxy runs. The plugin starts the proxy when OpenCode needs it, and OpenCode's shell loads the Phase AI environment before each command, so provider CLIs and HTTP clients work with no wrapper. If the proxy isn't running, commands use your usual credentials.
 
-The skill is installed at `~/.config/opencode/skills/phase-cli/SKILL.md`, the user-level skill directory for OpenCode.
+You can also launch OpenCode behind the proxy with `phase ai run -- opencode`.
+
+```
+You: what can Phase manage here?
+You: list the S3 buckets in our dev AWS account
+You: count yesterday's orders in the analytics database
+```
+
+When the Workflow has no Connection for what you asked, OpenCode creates a request and shows you a link to it in the Phase Console. Create or choose the credential there and approve the request; OpenCode waits and then carries on. See [Requests and approvals](/cli/ai#requests-and-approvals).
 
 ---
 
-## Secret types and AI visibility
+## Managing application secrets
 
-| Type | AI visibility | Description |
-| ---- | ------------- | ----------- |
-| `config` | **Always visible** | Non-sensitive configuration (ports, hosts, flags) |
-| `secret` | Controlled by `phase ai enable` | Standard encrypted secrets |
-| `sealed` | **Never visible** | Write-only secrets (API keys, tokens, passwords) |
+The `phase-cli-app-secrets` skill lets OpenCode work with your Phase apps and environments without seeing sensitive values:
+
+- List apps, environments and secret keys.
+- Create or rotate secrets with random values (`--random`), so the value never appears in the conversation.
+- Create and update non-sensitive `config` values.
+- Delete secrets, after confirming the app, environment and path.
+
+```
+You: list the secret keys in staging for the backend app
+You: create STRIPE_WEBHOOK_SECRET as a sealed secret with a random value
+You: rotate API_TOKEN in development
+You: set LOG_LEVEL to debug in development
+```
+
+OpenCode doesn't read secret values (`phase secrets get`, `phase secrets list --show`, `phase secrets export`), import `.env` files, or run `phase run` or `phase shell`. Run those yourself in a terminal. When a sensitive value has to be entered by hand, OpenCode asks you to enter it in the Phase Console or your terminal rather than in the chat.
+
+### Secret visibility
+
+| Type | Visible to OpenCode | Description |
+| ---- | ------------------ | ----------- |
+| `config` | **Always** | Non-sensitive configuration, such as ports, hosts and flags |
+| `secret` | Your choice in `phase ai enable` (`--mask` or `--no-mask`) | Standard encrypted secrets |
+| `sealed` | **Never** | Write-only secrets, such as API keys, tokens and passwords |
 
 <Warning>
-Sealed secret values are **never** exposed to AI agents regardless of configuration.
+Sealed secret values are **never** shown to AI agents, whatever you choose. OpenCode creates and rotates them with `--random`, so the value never appears in the conversation.
 </Warning>
 
 ---
 
 ## Security guardrails
 
-The Phase CLI enforces guardrails when it detects an AI agent:
-
-- `printenv`, `env`, `export`, `set`, `declare`, `compgen` are **blocked** inside `phase run`
-- `phase shell` is **blocked entirely** in AI mode
-- Sealed secret values are **always redacted** in output
-- `phase ai enable` / `phase ai disable` **must be run by the user** directly
+| Guardrail | Enforcement |
+| --------- | ----------- |
+| Live provider credentials | **Stay in the Phase AI proxy**; OpenCode only sees decoys |
+| Calls that mint new credentials (for example `sts:GetSessionToken`) | **Blocked by the proxy** |
+| `phase ai enable` / `phase ai disable` | **Blocked**; run them yourself |
+| `printenv`, `env`, `export`, `set`, `declare`, `compgen` inside `phase run` | **Blocked by the CLI** |
+| `phase shell` | **Blocked** for AI agents |
+| Sealed secret values in output | **Always redacted** |
+| Secret values in `phase secrets` output | **Redacted** according to your visibility choice |
 
 ---
 
 ## Managing the integration
 
 ```fish
-# Update the skill (re-run after CLI upgrade)
-phase ai enable
+# Check setup, the proxy and the Workflow's Connections
+phase ai status
+
+# Refresh the skills and plugin after a CLI upgrade
+phase ai enable --harness opencode
 
 # Remove the integration
 phase ai disable
 
-# View the skill document
+# Print the Phase AI skill
 phase ai skill
 ```
+
+---
+
+## Troubleshooting
+
+### OpenCode doesn't know about Phase
+
+Check that the skills are installed:
+
+```fish
+ls ~/.config/opencode/skills/phase-cli-ai-relay/SKILL.md ~/.config/opencode/skills/phase-cli-app-secrets/SKILL.md
+```
+
+If they're missing, run `phase ai enable --harness opencode` and restart OpenCode.
+
+### Phase-managed commands fail
+
+Run `phase ai status` and check the `Proxy` and `Connections` lines. A Connection must be `ready`. When OpenCode reports a Phase error, it quotes the `X-Phase-Event-Id` from the response, which you can look up in the Phase Console.
+
+### Authentication errors
+
+Check who you're logged in as:
+
+```fish
+phase users whoami
+```
+
+Log in again with `phase auth --mode token` for an Agent token, or `phase auth` for your own account.

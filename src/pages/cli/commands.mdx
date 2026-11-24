@@ -44,9 +44,13 @@ Commands:
   dynamic-secrets lease get         🔍 Get leases for a dynamic secret
   dynamic-secrets lease renew       🔁 Renew a lease
   dynamic-secrets lease revoke      🗑️ Revoke a lease
-  ai enable                         🪄 Enable AI integrations and configure secret visibility
+  ai enable                         🪄 Enable the local Phase AI credential proxy
   ai disable                        🚫 Disable AI integrations
+  ai status                         📡 Show Phase AI setup and proxy health
   ai skill                          📄 Print the Phase AI skill document
+  ai run                            🚀 Launch an AI Agent behind the Phase AI credential proxy
+  ai exec                           ⚡ Execute one command behind a transient Phase AI credential proxy
+  relay start                       🛰️ Run a Phase AI relay for remote Agent sandboxes
   users whoami                      🙋 See details of the current user
   users switch                      🪄 Switch between Phase users, orgs and hosts
   users logout                      🏃 Logout from phase-cli
@@ -110,13 +114,15 @@ Please authenticate via the Phase Console: https://console.phase.dev/webauth/OTM
 This opens the Phase Console in a new tab. Enter your `sudo` password when prompted. The CLI securely receives your credentials via encrypted POST requests to finalize authentication. If you are already authenticated, it will display your email address and provide instructions for switching accounts.
 
 
-2. **Token**: This allows you to authenticate to Phase directly using a Personal Access Token (PAT) or a Service Account Token that you may have manually created in the Phase Console.
+2. **Token**: This allows you to authenticate to Phase directly using a Personal Access Token (PAT), a Service Account Token, or an Agent token that you may have manually created in the Phase Console.
 
 For `token` mode, provide the following:
 
 - Host URL - _Only for Self-hosted instances_
 - Email
-- Personal Access Token (PAT) or a Service Account Token
+- Personal Access Token (PAT), Service Account Token, or Agent token
+
+An Agent token (`pss_agent:v1:…`) logs in as an AI Agent and its Workflow, for use with [Phase AI](/cli/ai). It is stored only in your OS keyring and can only be used with `phase ai` and `phase relay` commands.
 
 Obtain a Personal Access Token (PAT) from the [Phase Console](https://console.phase.dev) by going to Access Control -> Authentication -> Personal Access Tokens -> + `Create Token`.
 
@@ -1083,40 +1089,35 @@ Notes:
 
 ## 🥷 `ai`
 
-Configure AI integrations for Phase. The `ai` command group controls how AI coding agents interact with your Phase secrets. When enabled, the CLI installs a skill document to your AI tool's global skill directory and applies security guardrails automatically.
+Give AI coding agents workflow-scoped access to third-party services through [Phase AI](/cli/ai). Agents run behind a local proxy that swaps decoy credentials for the live ones in the Workflow's Connections. The `ai` commands also control how agents can read Phase application secrets.
 
-See [AI agent integration pages](/integrations/agents/claude-code) for setup guides for each supported tool.
+See [Phase AI](/cli/ai) for a setup guide and the [Phase AI control API](/cli/ai/control-api) for the API Agents use.
 
 ### 🪄 `ai enable`
 
-Enable AI integrations: installs the Phase skill document for your chosen AI agent and configures secret visibility. This command **cannot be run by AI agents** — it must be run by the user directly.
+Enable Phase AI for a harness. It creates the proxy's CA and offers to trust it, installs the Phase skills and the harness's hook or plugin, and asks whether AI agents may read secret values. This command **cannot be run by AI agents**; run it yourself.
 
 Usage:
 
 ```fish
-# Interactive — select AI agent and visibility
+# Interactive: choose the harness, CA trust and secret visibility
 > phase ai enable
 
 # Non-interactive
-> phase ai enable --mask --path ~/.claude/skills/phase-cli/SKILL.md
-> phase ai enable --no-mask --path ~/.cursor/skills/phase-cli/SKILL.md
+> phase ai enable --harness claude-code --trust-ca --mask
+> phase ai enable --harness codex --workflow <workflowId>
 ```
 
-Interactive mode first asks which AI agent to install for, then prompts for secret visibility:
+Options:
 
-```
-🪄  Install Phase AI skill for
-❯ Claude Code (global) → ~/.claude/skills/phase-cli/SKILL.md
-  Cursor (global) → ~/.cursor/skills/phase-cli/SKILL.md
-  VS Code Copilot (global) → ~/.copilot/skills/phase-cli/SKILL.md
-  Codex (global) → ~/.agents/skills/phase-cli/SKILL.md
-  OpenCode (global) → ~/.config/opencode/skills/phase-cli/SKILL.md
-  Custom path...
+- `--harness`: `claude-code`, `cursor`, `codex`, `opencode`, `devin` or `copilot`. Run it again with another harness to add one; existing integrations stay installed.
+- `--workflow`: the default Agent Workflow for `phase ai run` and `phase ai exec` when you are logged in as yourself. Not needed with an Agent token login.
+- `--trust-ca`: trust the Phase AI CA for your user without a prompt. `--trust-ca=false` declines.
+- `--mask` / `--no-mask`: hide or show secret values from `phase secrets` commands run by AI agents.
+- `--path`: install the skill to a custom path.
+- `--mode`: the proxy mode. Only `local` is supported.
 
-🔒 Mask secret values from AI agents?
-❯ Yes — mask secret values (recommended for production)
-  No — allow AI to read secret values (e.g. development environments)
-```
+Secret visibility:
 
 <Note>
 Sealed secret values are **always** hidden from AI tools regardless of this setting. This is a hard security boundary — sealed secrets (API keys, tokens, passwords) can only be created/updated with random generation and their values never appear in AI conversations.
@@ -1132,15 +1133,52 @@ Sealed secret values are **always** hidden from AI tools regardless of this sett
 
 ### 🚫 `ai disable`
 
-Disable AI integrations. Removes `~/.phase/ai.json` and uninstalls the skill document from all known AI agent directories.
+Disable Phase AI. Stops the proxy, removes the Phase AI shell environment so commands use your usual credentials again, and removes the hooks, plugins and runtime skill that `phase ai enable` installed. Your settings, the CA and the `phase-cli-app-secrets` skill are kept for a later `phase ai enable`. AI agents cannot run it.
 
 ```fish
 > phase ai disable
 ```
 
+### 📡 `ai status`
+
+Show Phase AI's setup and health: harnesses, login and Workflow, the proxy, the Workflow's Connections and their state, the CA and the installed skills. It never sends credentials.
+
+```fish
+> phase ai status
+```
+
+### 🚀 `ai run`
+
+Launch an AI Agent harness behind the Phase AI proxy.
+
+```fish
+> phase ai run -- claude
+```
+
+Options:
+
+- `--workflow`: the Agent Workflow to use. Defaults to the one from `phase ai enable --workflow`; ignored with an Agent token login.
+- `--harness`: a label for a launcher `run` doesn't recognise.
+- `--listen`: the proxy's loopback address. Default `127.0.0.1:9543`.
+- `--lockdown`: block hosts that aren't bound to a Connection.
+
+### ⚡ `ai exec`
+
+Run one command behind the Phase AI proxy. It reuses a running Phase AI proxy when there is one, and otherwise starts a short-lived one for the command.
+
+```fish
+> phase ai exec -- aws s3 ls
+> phase ai exec --connection <connectionId> -- psql -c 'select 1'
+```
+
+Options:
+
+- `--connection`: the Connection to use when a service has several.
+- `--workflow`, `--listen`, `--lockdown`: as for `ai run`.
+
 ### 📄 `ai skill`
 
-Print the raw Phase AI skill document to stdout. Useful for piping to a custom location or inspecting the skill content.
+Print the Phase AI runtime skill (`phase-cli-ai-relay`) to stdout.
 
 ```fish
 > phase ai skill
@@ -1165,6 +1203,25 @@ When the CLI detects it is being run by an AI agent:
 
 ---
 
+## 🛰️ `relay`
+
+### `relay start`
+
+Run a [Phase AI relay](/cli/ai/relay): a Phase AI proxy that remote Agent sandboxes reach over TLS. Requires an Agent token login (`phase auth --mode token`) and a TLS certificate for the relay's DNS name that the sandboxes trust. It prints a one-line bootstrap to run in each sandbox.
+
+```fish
+> phase relay start --advertise-host relay.example.ts.net --tls-cert relay.crt --tls-key relay.key
+```
+
+Options:
+
+- `--advertise-host`: required. The DNS name sandboxes dial; the certificate must cover it.
+- `--tls-cert`, `--tls-key`: required. The certificate chain and its private key (PEM). The key must be readable only by you.
+- `--tls-ca`: the root certificates that issued `--tls-cert`, for private PKI.
+- `--listen`: the bind address. Default `0.0.0.0:9543`; the PostgreSQL adapter uses the next port.
+- `--lockdown`: block hosts that aren't bound to a Connection.
+
+---
 ## 👥 `users`
 
 Manage users and accounts in the Phase CLI. This command includes sub-commands for user management.

@@ -1,90 +1,166 @@
 import { Tag } from '@/components/Tag'
 import { DocActions } from '@/components/DocActions'
 
-export const description = 'Integrate Phase with VS Code Copilot'
+export const metadata = {
+  title: 'VS Code Copilot',
+  description: 'Use Phase with VS Code Copilot: workflow-scoped Connections to AWS and PostgreSQL, and application secrets management.',
+}
 
 <Tag variant="small">INTEGRATE</Tag>
 
 # VS Code Copilot
 
-Manage Phase secrets directly from [GitHub Copilot in VS Code](https://code.visualstudio.com/docs/copilot/overview). Copilot Agent can list, create, update, and delete secrets, run processes with injected secrets, and manage your Phase environments — all from natural language.
+Use Phase from [VS Code Copilot](https://code.visualstudio.com/docs/copilot/overview) in two ways. {{ className: 'lead' }}
+
+- **Connections**: Copilot uses services such as AWS and PostgreSQL through your Agent Workflow's Connections, approved in the Phase Console. It only ever sees decoy credentials; the Phase AI proxy swaps in the live ones. See [Phase AI](/cli/ai).
+- **Application secrets**: Copilot can list, create, rotate and delete secrets in your Phase apps without reading their values.
 
 <DocActions />
 
 ## Prerequisites
 
-- [Phase CLI installed and authenticated](/cli/usage)
-- [VS Code](https://code.visualstudio.com/) with GitHub Copilot extension
+- The [Phase CLI](/cli/install), installed and up to date.
+- [VS Code Copilot](https://code.visualstudio.com/docs/copilot/overview) installed.
+- For Connections: an Agent and a Workflow in the Phase Console.
 
 ## Setup
 
-### 1. Enable AI integration
+### 1. Log in
+
+For Connections, log in with an Agent token for the Agent's Workflow, created in the Phase Console:
 
 ```fish
-phase ai enable
+phase auth --mode token
 ```
 
-Select **VS Code Copilot** when prompted. This installs the Phase skill to `~/.copilot/skills/phase-cli/SKILL.md` and configures secret visibility.
+For application secrets, log in as yourself with `phase auth`: Agent tokens can't access application secrets. To use Connections with your own login, set the Workflow in the next step with `--workflow <workflowId>`.
 
-You'll be asked whether AI agents can see secret values:
-- **Mask values** (recommended) — `secret` and `sealed` types show as `[REDACTED]`
-- **Show values** — `secret` and `config` types are visible; `sealed` is always hidden
+### 2. Enable Phase for Copilot
 
-### 2. Start using Phase in Copilot
+Run this yourself, in your own terminal. Copilot isn't allowed to run it.
 
-Open Copilot Chat in Agent mode. You can immediately start managing secrets:
-
+```fish
+phase ai enable --harness copilot
 ```
-You: list my secrets
-You: create a DATABASE_URL as config with value postgres://localhost:5432/mydb
-You: rotate the API_KEY as a sealed secret with random base64
-You: run npm start with my secrets
-```
+
+It installs:
+
+- The `phase-cli-ai-relay` and `phase-cli-app-secrets` skills in `~/.copilot/skills/`. Copilot gets no hook or plugin.
+
+It also creates the Phase AI CA and offers to trust it for your user (see [The proxy CA](/cli/ai#the-proxy-ca)), and asks whether Copilot may read secret values.
+
+### 3. Restart Copilot
+
+Start a new Copilot chat in Agent mode so it loads the skills.
 
 ---
 
-## How it works
+## Using Connections
 
-The Phase CLI installs a **skill document** that teaches Copilot Agent how to use the Phase CLI. Copilot runs Phase commands directly in your terminal — no separate server or middleware.
+Ordinary commands keep your usual credentials. When you ask Copilot to use Phase, it runs the command with `phase ai exec`, adding `--connection <connectionId>` when a service has several Connections:
 
-The skill is installed globally at `~/.copilot/skills/phase-cli/SKILL.md` and is automatically discovered by VS Code Copilot for all projects. Copilot also reads from `~/.claude/skills/` and `~/.agents/skills/` as fallback locations.
+```fish
+phase ai exec -- aws s3 ls
+```
+
+With no hook, each `phase ai exec` starts a short-lived proxy for its command, unless another harness's proxy is already running.
+
+```
+You: what can Phase manage here?
+You: use Phase to list the S3 buckets in our dev AWS account
+You: use Phase to count yesterday's orders in the analytics database
+```
+
+When the Workflow has no Connection for what you asked, Copilot creates a request and shows you a link to it in the Phase Console. Create or choose the credential there and approve the request; Copilot waits and then carries on. See [Requests and approvals](/cli/ai#requests-and-approvals).
 
 ---
 
-## Secret types and AI visibility
+## Managing application secrets
 
-| Type | AI visibility | Description |
-| ---- | ------------- | ----------- |
-| `config` | **Always visible** | Non-sensitive configuration (ports, hosts, flags) |
-| `secret` | Controlled by `phase ai enable` | Standard encrypted secrets |
-| `sealed` | **Never visible** | Write-only secrets (API keys, tokens, passwords) |
+The `phase-cli-app-secrets` skill lets Copilot work with your Phase apps and environments without seeing sensitive values:
+
+- List apps, environments and secret keys.
+- Create or rotate secrets with random values (`--random`), so the value never appears in the conversation.
+- Create and update non-sensitive `config` values.
+- Delete secrets, after confirming the app, environment and path.
+
+```
+You: list the secret keys in staging for the backend app
+You: create STRIPE_WEBHOOK_SECRET as a sealed secret with a random value
+You: rotate API_TOKEN in development
+You: set LOG_LEVEL to debug in development
+```
+
+Copilot doesn't read secret values (`phase secrets get`, `phase secrets list --show`, `phase secrets export`), import `.env` files, or run `phase run` or `phase shell`. Run those yourself in a terminal. When a sensitive value has to be entered by hand, Copilot asks you to enter it in the Phase Console or your terminal rather than in the chat.
+
+### Secret visibility
+
+| Type | Visible to Copilot | Description |
+| ---- | ------------------ | ----------- |
+| `config` | **Always** | Non-sensitive configuration, such as ports, hosts and flags |
+| `secret` | Your choice in `phase ai enable` (`--mask` or `--no-mask`) | Standard encrypted secrets |
+| `sealed` | **Never** | Write-only secrets, such as API keys, tokens and passwords |
 
 <Warning>
-Sealed secret values are **never** exposed to AI agents regardless of configuration.
+Sealed secret values are **never** shown to AI agents, whatever you choose. Copilot creates and rotates them with `--random`, so the value never appears in the conversation.
 </Warning>
 
 ---
 
 ## Security guardrails
 
-The Phase CLI enforces guardrails when it detects an AI agent:
-
-- `printenv`, `env`, `export`, `set`, `declare`, `compgen` are **blocked** inside `phase run`
-- `phase shell` is **blocked entirely** in AI mode
-- Sealed secret values are **always redacted** in output
-- `phase ai enable` / `phase ai disable` **must be run by the user** directly
+| Guardrail | Enforcement |
+| --------- | ----------- |
+| Live provider credentials | **Stay in the Phase AI proxy**; Copilot only sees decoys |
+| Calls that mint new credentials (for example `sts:GetSessionToken`) | **Blocked by the proxy** |
+| `phase ai enable` / `phase ai disable` | **Blocked**; run them yourself |
+| `printenv`, `env`, `export`, `set`, `declare`, `compgen` inside `phase run` | **Blocked by the CLI** |
+| `phase shell` | **Blocked** for AI agents |
+| Sealed secret values in output | **Always redacted** |
+| Secret values in `phase secrets` output | **Redacted** according to your visibility choice |
 
 ---
 
 ## Managing the integration
 
 ```fish
-# Update the skill (re-run after CLI upgrade)
-phase ai enable
+# Check setup, the proxy and the Workflow's Connections
+phase ai status
+
+# Refresh the skills after a CLI upgrade
+phase ai enable --harness copilot
 
 # Remove the integration
 phase ai disable
 
-# View the skill document
+# Print the Phase AI skill
 phase ai skill
 ```
+
+---
+
+## Troubleshooting
+
+### Copilot doesn't know about Phase
+
+Check that the skills are installed:
+
+```fish
+ls ~/.copilot/skills/phase-cli-ai-relay/SKILL.md ~/.copilot/skills/phase-cli-app-secrets/SKILL.md
+```
+
+If they're missing, run `phase ai enable --harness copilot` and restart Copilot.
+
+### Phase-managed commands fail
+
+Run `phase ai status` and check the `Proxy` and `Connections` lines. A Connection must be `ready`. When Copilot reports a Phase error, it quotes the `X-Phase-Event-Id` from the response, which you can look up in the Phase Console.
+
+### Authentication errors
+
+Check who you're logged in as:
+
+```fish
+phase users whoami
+```
+
+Log in again with `phase auth --mode token` for an Agent token, or `phase auth` for your own account.
